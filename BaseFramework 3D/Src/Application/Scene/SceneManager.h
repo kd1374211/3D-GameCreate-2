@@ -34,6 +34,10 @@ public :
 	// 現在のシーンにオブジェクトを追加
 	void AddObject(const std::shared_ptr<KdGameObject>& _obj);
 
+	//追加7/9
+	//シーン生成後に追加するオブジェクトを待機
+	void AddWaitingObject(const std::shared_ptr<KdGameObject>& _obj) { m_waitingObjList.push_back(_obj); }
+
 private :
 
 	// マネージャーの初期化
@@ -56,6 +60,10 @@ private :
 	// 次のシーンの種類を保持している変数
 	SceneType m_nextSceneType = m_currentSceneType;
 
+	//追加7/9
+	//Init後に追加するオブジェクトを待機させておくリスト
+	std::list<std::shared_ptr<KdGameObject>> m_waitingObjList;
+
 private:
 
 	SceneManager() { Init(); }
@@ -73,3 +81,5 @@ public:
 		return instance;
 	}
 };
+
+#define SCENEMGR SceneManager::Instance()

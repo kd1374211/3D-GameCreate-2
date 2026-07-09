@@ -9,7 +9,6 @@ public :
 	GameScene()  { Init(); }
 	~GameScene() {}
 
-
 private:
 
 	void Event() override;

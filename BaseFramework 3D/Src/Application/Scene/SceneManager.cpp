@@ -68,6 +68,15 @@ void SceneManager::ChangeScene(SceneType _sceneType)
 		break;
 	}
 
+	//追加7/9
+	//シーン生成後に待機オブジェクトを追加する
+	for (auto& obj : m_waitingObjList)
+	{
+		m_currentScene->AddObject(obj);
+	}
+	//リストリセット
+	m_waitingObjList.clear();
+
 	// 現在のシーン情報を更新
 	m_currentSceneType = _sceneType;
 }
