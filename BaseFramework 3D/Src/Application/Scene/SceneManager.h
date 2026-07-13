@@ -38,15 +38,15 @@ public :
 	//シーン生成後に追加するオブジェクトを待機
 	void AddWaitingObject(const std::shared_ptr<KdGameObject>& _obj) { m_waitingObjList.push_back(_obj); }
 
-private :
-
 	// マネージャーの初期化
-	// インスタンス生成(アプリ起動)時にコンストラクタで自動実行
+	// インスタンス生成(アプリ起動)時にコンストラクタで自動実行はしないでおく
 	void Init()
 	{
 		// 開始シーンに切り替え
 		ChangeScene(m_currentSceneType);
 	}
+
+private :
 
 	// シーン切り替え関数
 	void ChangeScene(SceneType _sceneType);
@@ -66,7 +66,7 @@ private :
 
 private:
 
-	SceneManager() { Init(); }
+	SceneManager() {}
 	~SceneManager() {}
 
 public:

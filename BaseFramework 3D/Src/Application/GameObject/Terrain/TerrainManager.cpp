@@ -5,7 +5,7 @@ void TerrainManager::GenerateTerrain()
 {
 	//とりあえず仮地面を配置
 	std::shared_ptr<Ground> ground = std::make_shared<Ground>();
-	ground->SetPos(Math::Vector3::Zero);
+	ground->SetPos(Math::Vector3(0, 0, 0));
 	SCENEMGR.AddWaitingObject(ground);
 }
 

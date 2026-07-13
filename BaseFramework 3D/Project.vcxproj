@@ -276,6 +276,12 @@
     <ClInclude Include="Src\Application\GameObject\Camera\CameraBase.h" />
     <ClInclude Include="Src\Application\GameObject\Camera\FPSCamera\FPSCamera.h" />
     <ClInclude Include="Src\Application\GameObject\Camera\TPSCamera\TPSCamera.h" />
+    <ClInclude Include="Src\Application\GameObject\Chara\CharaBase.h" />
+    <ClInclude Include="Src\Application\GameObject\Chara\Player\Player.h" />
+    <ClInclude Include="Src\Application\GameObject\Terrain\Ground\Ground.h" />
+    <ClInclude Include="Src\Application\GameObject\Terrain\TerrainBase.h" />
+    <ClInclude Include="Src\Application\GameObject\Terrain\TerrainInclude.h" />
+    <ClInclude Include="Src\Application\GameObject\Terrain\TerrainManager.h" />
     <ClInclude Include="Src\Application\main.h" />
     <ClInclude Include="Src\Application\Scene\BaseScene\BaseScene.h" />
     <ClInclude Include="Src\Application\Scene\GameScene\GameScene.h" />
@@ -332,6 +338,11 @@
     <ClCompile Include="Src\Application\GameObject\Camera\CameraBase.cpp" />
     <ClCompile Include="Src\Application\GameObject\Camera\FPSCamera\FPSCamera.cpp" />
     <ClCompile Include="Src\Application\GameObject\Camera\TPSCamera\TPSCamera.cpp" />
+    <ClCompile Include="Src\Application\GameObject\Chara\CharaBase.cpp" />
+    <ClCompile Include="Src\Application\GameObject\Chara\Player\Player.cpp" />
+    <ClCompile Include="Src\Application\GameObject\Terrain\Ground\Ground.cpp" />
+    <ClCompile Include="Src\Application\GameObject\Terrain\TerrainBase.cpp" />
+    <ClCompile Include="Src\Application\GameObject\Terrain\TerrainManager.cpp" />
     <ClCompile Include="Src\Application\main.cpp" />
     <ClCompile Include="Src\Application\Scene\BaseScene\BaseScene.cpp" />
     <ClCompile Include="Src\Application\Scene\GameScene\GameScene.cpp" />

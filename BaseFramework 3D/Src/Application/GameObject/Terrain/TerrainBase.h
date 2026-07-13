@@ -7,6 +7,7 @@ public:
 	TerrainBase() {}
 	virtual ~TerrainBase()override {}
 
+	void Update()override;
 	void DrawLit()override;
 
 	//セッター

@@ -88,6 +88,18 @@
     <Filter Include="Src\Application\GameObject\Camera\FPSCamera">
       <UniqueIdentifier>{cd662ee1-c913-4e31-addc-42ef89e2668c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\GameObject\Terrain">
+      <UniqueIdentifier>{7ceaf4f7-45ef-4649-97f7-a76c033965cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\GameObject\Terrain\Ground">
+      <UniqueIdentifier>{a5d9d1fc-d036-4a29-ba57-83eb0db30b00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\GameObject\Chara">
+      <UniqueIdentifier>{24a8cfb5-65b6-402a-bd0e-b1dd068ccc63}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\GameObject\Chara\Player">
+      <UniqueIdentifier>{e11e679e-4750-46e6-ab20-b07c7254af4f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -273,6 +285,24 @@
     <ClInclude Include="Src\Application\GameObject\Camera\FPSCamera\FPSCamera.h">
       <Filter>Src\Application\GameObject\Camera\FPSCamera</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\Terrain\TerrainBase.h">
+      <Filter>Src\Application\GameObject\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\Terrain\Ground\Ground.h">
+      <Filter>Src\Application\GameObject\Terrain\Ground</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\Terrain\TerrainManager.h">
+      <Filter>Src\Application\GameObject\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\Terrain\TerrainInclude.h">
+      <Filter>Src\Application\GameObject\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\Chara\Player\Player.h">
+      <Filter>Src\Application\GameObject\Chara\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\Chara\CharaBase.h">
+      <Filter>Src\Application\GameObject\Chara</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -427,6 +457,21 @@
     </ClCompile>
     <ClCompile Include="Src\Application\GameObject\Camera\FPSCamera\FPSCamera.cpp">
       <Filter>Src\Application\GameObject\Camera\FPSCamera</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\Terrain\TerrainBase.cpp">
+      <Filter>Src\Application\GameObject\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\Terrain\Ground\Ground.cpp">
+      <Filter>Src\Application\GameObject\Terrain\Ground</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\Terrain\TerrainManager.cpp">
+      <Filter>Src\Application\GameObject\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\Chara\Player\Player.cpp">
+      <Filter>Src\Application\GameObject\Chara\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\Chara\CharaBase.cpp">
+      <Filter>Src\Application\GameObject\Chara</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
