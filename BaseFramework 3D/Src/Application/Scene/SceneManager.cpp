@@ -6,6 +6,9 @@
 
 void SceneManager::PreUpdate()
 {
+	//デバッグ
+	KdDebugGUI::Instance().ClearLog();
+
 	// シーン切替
 	if (m_currentSceneType != m_nextSceneType)
 	{
