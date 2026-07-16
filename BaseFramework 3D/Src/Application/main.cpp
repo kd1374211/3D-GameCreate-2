@@ -1,6 +1,7 @@
 ﻿#include "main.h"
 
 #include "Scene/SceneManager.h"
+#include "Physics/PhysicsManager.h"
 
 // ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// /////
 // エントリーポイント
@@ -189,6 +190,10 @@ bool Application::Init(int w, int h)
 		}
 	}
 
+	//追加7/16
+	//JoltPhysics初期化
+	PHYSICSMGR.Init();
+
 	//===================================================================
 	// imgui初期化
 	//===================================================================
@@ -340,6 +345,9 @@ void Application::Release()
 	KdAudioManager::Instance().Release();
 
 	KdDirect3D::Instance().Release();
+
+	//追加7/16
+	PHYSICSMGR.Release();
 
 	// ウィンドウ削除
 	m_window.Release();
