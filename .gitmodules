@@ -1,3 +1,3 @@
-[submodule "thirdparty/JoltPhysics"]
-	path = thirdparty/JoltPhysics
+[submodule "Library/JoltPhysics"]
+	path = Library/JoltPhysics
 	url = https://github.com/jrouwe/JoltPhysics.git

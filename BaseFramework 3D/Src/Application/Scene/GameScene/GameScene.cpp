@@ -24,8 +24,8 @@ void GameScene::Init()
 	//カメラとプレイヤー生成
 	std::shared_ptr<TPSCamera> camera = std::make_shared<TPSCamera>();
 	camera->Init();
-	std::shared_ptr<Player> player = std::make_shared<Player>();
-	player->SetPos(Math::Vector3(0, 0.5f, 0));
+	std::shared_ptr<Player> player = std::make_shared<Player>(Math::Vector3(0, 0.5f, 0), 0.5f);
+	//player->SetPos(Math::Vector3(0, 0.5f, 0));
 	
 	//相互リンク
 	camera->SetTarget(player);

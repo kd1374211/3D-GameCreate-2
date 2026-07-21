@@ -20,12 +20,7 @@ protected:
 
 	//座標
 	Math::Vector3 m_pos = Math::Vector3::Zero;
-	Math::Vector3 m_nextPos = Math::Vector3::Zero;
 
-	//移動関連
-	float m_moveSpeed = 0.0f;
-
-	//重力
-	static inline const float GRAVITY = 0.02f;
-	static inline const float GRAVITYMAX = -1.0f;
+	//角度
+	Math::Quaternion m_rotation = Math::Quaternion::Identity;
 };

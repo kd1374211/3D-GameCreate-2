@@ -4,6 +4,11 @@
 #include "TitleScene/TitleScene.h"
 #include "GameScene/GameScene.h"
 
+//追加7/17
+//使うインクルード達
+#include "../main.h"
+#include "../Physics/PhysicsManager.h"
+
 void SceneManager::PreUpdate()
 {
 	//デバッグ
@@ -25,6 +30,9 @@ void SceneManager::Update()
 
 void SceneManager::PostUpdate()
 {
+	//追加7/17（仮）
+	PHYSICSMGR.Update(Application::Instance().GetDeltaTime());
+
 	m_currentScene->PostUpdate();
 }
 
@@ -56,6 +64,15 @@ const std::list<std::shared_ptr<KdGameObject>>& SceneManager::GetObjList()
 void SceneManager::AddObject(const std::shared_ptr<KdGameObject>& _obj)
 {
 	m_currentScene->AddObject(_obj);
+}
+
+void SceneManager::Release()
+{
+	//シーン破壊
+	m_currentScene = nullptr;
+
+	//待機オブジェクトも
+	m_waitingObjList.clear();
 }
 
 void SceneManager::ChangeScene(SceneType _sceneType)

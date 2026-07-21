@@ -346,6 +346,9 @@ void Application::Release()
 
 	KdDirect3D::Instance().Release();
 
+	//追加7/17
+	SCENEMGR.Release();
+
 	//追加7/16
 	PHYSICSMGR.Release();
 

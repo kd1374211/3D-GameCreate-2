@@ -46,6 +46,9 @@ public :
 		ChangeScene(m_currentSceneType);
 	}
 
+	//終了
+	void Release();
+
 private :
 
 	// シーン切り替え関数

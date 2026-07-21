@@ -1,5 +1,4 @@
 ﻿#include "PhysicsManager.h"
-#include <Jolt/Core/Memory.h> // ★アロケータの登録に必要なヘッダー
 
 // --- Joltのエラーメッセージを受け取ってコンソールに出力する関数 ---
 static void TraceImpl(const char* inFMT, ...)
