@@ -9,4 +9,8 @@ public:
 
 	void Init()				override;
 	void PostUpdate()		override;
+
+private:
+
+	Math::Matrix m_mLocalRot = Math::Matrix::Identity;
 };

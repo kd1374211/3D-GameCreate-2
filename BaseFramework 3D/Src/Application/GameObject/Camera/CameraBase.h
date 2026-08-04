@@ -37,6 +37,11 @@ public:
 			   DirectX::XMConvertToRadians(m_DegAng.y));
 	}
 
+	const void SetRotationYMatrix(const Math::Matrix& mRot)
+	{
+		m_mRotation = mRot;
+	}
+
 	void RegistHitObject(const std::shared_ptr<KdGameObject>& object)
 	{
 		m_wpHitObjectList.push_back(object);
@@ -45,8 +50,6 @@ public:
 protected:
 	// カメラ回転用角度
 	Math::Vector3								m_DegAng		= Math::Vector3::Zero;
-
-	void UpdateRotateByMouse();
 
 	std::shared_ptr<KdCamera>					m_spCamera		= nullptr;
 	std::weak_ptr<KdGameObject>					m_wpTarget;

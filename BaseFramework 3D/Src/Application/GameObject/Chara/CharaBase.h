@@ -20,7 +20,4 @@ protected:
 
 	//座標
 	Math::Vector3 m_pos = Math::Vector3::Zero;
-
-	//角度
-	Math::Quaternion m_rotation = Math::Quaternion::Identity;
 };

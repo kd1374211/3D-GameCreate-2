@@ -6,9 +6,10 @@ void TPSCamera::Init()
 	CameraBase::Init();
 
 	// 注視点
-	m_mLocalPos = Math::Matrix::CreateTranslation(0, 1.5f, -10.0f);
-
-	SetCursorPos(m_FixMousePos.x, m_FixMousePos.y);
+	m_mLocalPos = Math::Matrix::CreateTranslation(0, 0.7f, -3.0f);
+	
+	// 見下ろし
+	m_mLocalRot = Math::Matrix::CreateRotationX(DirectX::XMConvertToRadians(40.0f));
 }
 
 void TPSCamera::PostUpdate()
@@ -21,10 +22,7 @@ void TPSCamera::PostUpdate()
 		_targetMat = Math::Matrix::CreateTranslation(_spTarget->GetPos());
 	}
 
-	// カメラの回転
-	UpdateRotateByMouse();
-	m_mRotation = GetRotationMatrix();
-	m_mWorld = m_mLocalPos * m_mRotation * _targetMat;
+	m_mWorld = m_mLocalPos * m_mLocalRot * m_mRotation * _targetMat;
 
 	// ↓めり込み防止の為の座標補正計算↓
 	// ①当たり判定(レイ判定)用の情報作成

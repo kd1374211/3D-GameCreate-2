@@ -15,8 +15,13 @@ void Ground::Init()
 	m_cPhysics = std::make_shared<PhysicsComponent>();
 
 	// 🚀 ファイルパスを渡すだけで、ロードから Jolt への地形登録まで完結！
-	if (!m_cPhysics->Init(path)) {
+	if (!m_cPhysics->Init(path, true)) {
 		// エラー処理
+	}
+	else  //成功時
+	{
+		//摩擦設定
+		m_cPhysics->SetFriction(0.2f);
 	}
 
 	//m_pCollider = std::make_unique<KdCollider>();
