@@ -148,6 +148,16 @@ void PhysicsComponent::SetFriction(float friction)
 	}
 }
 
+void PhysicsComponent::SetRestitution(float restitution)
+{
+	auto& bodyInterface = PHYSICSMGR.GetBodyInterface();
+	JPH::BodyID bodyID = m_bodyID;
+
+	if (!bodyID.IsInvalid()) {
+		bodyInterface.SetRestitution(bodyID, restitution);
+	}
+}
+
 void PhysicsComponent::SetDamping(float linearDamp, float angularDamp)
 {
 	//動かないものには設定しない

@@ -14,6 +14,7 @@ public:
 	
 	//ステータスの設定s
 	void SetFriction(float friction);		//摩擦力
+	void SetRestitution(float restitution);		//反発力
 	void SetDamping(float linearDamp, float angularDamp);		//抵抗
 
 	// 力を加える（転がす）
