@@ -2,10 +2,9 @@
 #include "../../Physics/PhysicsManager.h"
 #include "../../../Framework/Direct3D/KdGLTFLoader.h"
 
-bool PhysicsComponent::Init(const std::string& path, bool isStatic)
+bool PhysicsComponent::Init(const std::string& path, PhysicsInitData initData)
 {
-	//用意
-	m_isStatic = isStatic;
+	m_isStatic = initData.isStatic;
 	auto& bodyInterface = PHYSICSMGR.GetBodyInterface();
 
 	//モデル読み込み
@@ -66,7 +65,7 @@ bool PhysicsComponent::Init(const std::string& path, bool isStatic)
 	JPH::ShapeRefC finalShape;
 
 	//生成する形状の種分け
-	if (isStatic)
+	if (m_isStatic)
 	{
 		// 【静的オブジェクト】三角形メッシュ（MeshShape）として作成
 		JPH::MeshShapeSettings meshSettings(jphVertices, jphTriangles);
@@ -88,54 +87,68 @@ bool PhysicsComponent::Init(const std::string& path, bool isStatic)
 	}
 
 	// 3. Body を作成して登録
-	JPH::EMotionType motionType = isStatic ? JPH::EMotionType::Static : JPH::EMotionType::Dynamic;
-	JPH::ObjectLayer layer = isStatic ? Layers::NON_MOVING : Layers::MOVING;
-
 	JPH::BodyCreationSettings creationSettings(
 		finalShape,
-		JPH::Vec3::sZero(),
-		JPH::Quat::sIdentity(),
-		motionType,
-		layer
+		JPH::Vec3(initData.pos.x, initData.pos.y, initData.pos.z),
+		JPH::Quat(initData.rot.x, initData.rot.y, initData.rot.z, initData.rot.w),
+		initData.motionType,
+		initData.layer
 	);
+
+	creationSettings.mOverrideMassProperties = JPH::EOverrideMassProperties::CalculateInertia;
+	creationSettings.mMassPropertiesOverride.mMass = initData.mass; 
+	creationSettings.mMotionQuality = initData.motionQuality;
+	creationSettings.mUserData = initData.userData;
 
 	// 3. Joltワールドに登録してIDを保存
 	m_bodyID = bodyInterface.CreateAndAddBody(creationSettings, JPH::EActivation::Activate);
 
+	// 4. 物理パラメータの設定
+	SetFriction(initData.friction);
+	SetRestitution(initData.restitution);
+	SetDamping(initData.linearDamping, initData.angularDamping);
+
 	return true;
 }
 
-void PhysicsComponent::Init(const Math::Vector3& inPos, float inRadius, bool inIsStatic)
+void PhysicsComponent::Init(float radius, PhysicsInitData initData)
 {
-	m_isStatic = inIsStatic;
+	m_isStatic = initData.isStatic;
 	auto& bodyInterface = PHYSICSMGR.GetBodyInterface();
 
 	// 1. コライダー（球体）の作成
-	JPH::SphereShapeSettings sphereSettings(inRadius);
+	JPH::SphereShapeSettings sphereSettings(radius);
 
 	JPH::Shape::ShapeResult shapeResult = sphereSettings.Create();
 	JPH::Ref<JPH::Shape> ballShape = shapeResult.Get();
 
 	// 2. 設定オブジェクトの構築
-	JPH::Vec3 initPos(inPos.x, inPos.y, inPos.z);
-	JPH::EMotionType motionType = inIsStatic ? JPH::EMotionType::Static : JPH::EMotionType::Dynamic;
+	JPH::Vec3 initPos(initData.pos.x, initData.pos.y, initData.pos.z);
+	JPH::EMotionType motionType = initData.motionType;
 
 	// ※レイヤーの定義（MOVING等）はお使いの設定に合わせてください
-	JPH::ObjectLayer layer = inIsStatic ? Layers::NON_MOVING : Layers::MOVING;
+	JPH::ObjectLayer layer = initData.layer;
 
 	JPH::BodyCreationSettings creationSettings(
 		ballShape,
 		initPos,
-		JPH::Quat::sIdentity(),
+		JPH::Quat(initData.rot.x, initData.rot.y, initData.rot.z, initData.rot.w),
 		motionType,
 		layer
 	);
 
 	creationSettings.mOverrideMassProperties = JPH::EOverrideMassProperties::CalculateInertia;
-	creationSettings.mMassPropertiesOverride.mMass = 1.0f; // ★ ここで質量を指定（1.0kg）
+	creationSettings.mMassPropertiesOverride.mMass = initData.mass;
+	creationSettings.mMotionQuality = initData.motionQuality;
+	creationSettings.mUserData = initData.userData;
 
 	// 3. Joltワールドに登録してIDを保存
 	m_bodyID = bodyInterface.CreateAndAddBody(creationSettings, JPH::EActivation::Activate);
+
+	// 4. 物理パラメータの設定
+	SetFriction(initData.friction);
+	SetRestitution(initData.restitution);
+	SetDamping(initData.linearDamping, initData.angularDamping);
 }
 
 void PhysicsComponent::SetFriction(float friction)
@@ -179,13 +192,26 @@ void PhysicsComponent::SetDamping(float linearDamp, float angularDamp)
 	}
 }
 
-void PhysicsComponent::AddForce(const Math::Vector3 & inForce)
+void PhysicsComponent::SetPosition(const JPH::RVec3& pos)
+{
+	if (m_bodyID.IsInvalid()) return;
+
+	// Jolt Physics の BodyInterface を取得して座標を書き換える
+	// (EActivation::Activate を渡すことで、休止状態の物理ボディも起こす)
+	PHYSICSMGR.GetSystem().GetBodyInterface().SetPosition(
+		m_bodyID,
+		pos,
+		JPH::EActivation::Activate
+	);
+}
+
+void PhysicsComponent::AddImpulse(const JPH::Vec3& inForce)
 {
 	auto& bodyInterface = PHYSICSMGR.GetBodyInterface();
 	JPH::BodyID bodyID = m_bodyID;
 
 	if (!bodyID.IsInvalid() && !m_isStatic) {
-		bodyInterface.AddForce(bodyID, JPH::Vec3(inForce.x, inForce.y, inForce.z));
+		bodyInterface.AddImpulse(bodyID, inForce);
 	}
 }
 
@@ -258,10 +284,28 @@ void PhysicsComponent::Sync(Math::Vector3& outPos)
 		JPH::RVec3 pos = bodyInterface.GetPosition(bodyID);
 		JPH::Quat rot = bodyInterface.GetRotation(bodyID);
 
-		// 呼び出し元の変数（プレイヤーの座標）に格納
+		// 呼び出し元の変数（座標）に格納
 		outPos = Math::Vector3(pos.GetX(), pos.GetY(), pos.GetZ());
 		// outRot = Math::Quaternion(rot.GetX(), rot.GetY(), rot.GetZ(), rot.GetW());
 	}
+}
+
+float PhysicsComponent::GetMass() const
+{
+	if (m_bodyID.IsInvalid()) return 1.0f;
+
+	JPH::BodyLockRead lock(PHYSICSMGR.GetSystem().GetBodyLockInterface(), m_bodyID);
+	if (lock.Succeeded())
+	{
+		const JPH::Body& body = lock.GetBody();
+		// Dynamic ボディの場合は MotionProperties から逆質量を取得
+		if (const auto* motionProps = body.GetMotionProperties())
+		{
+			float invMass = motionProps->GetInverseMass();
+			if (invMass > 0.0f) return 1.0f / invMass; // 逆数の逆数で質量を返す
+		}
+	}
+	return 1.0f; // デフォルト値
 }
 
 JPH::Vec3 PhysicsComponent::GetPos() const

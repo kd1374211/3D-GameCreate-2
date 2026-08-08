@@ -6,13 +6,25 @@
 
 Player::Player(const Math::Vector3& a_startPos, float a_radius)
 {
+	//物理Initに投げるパラメータ設定
+	PhysicsInitData initData = {};
+	initData.pos = a_startPos;
+	initData.rot = Math::Quaternion::Identity;
+	initData.motionType = JPH::EMotionType::Dynamic;
+	initData.motionQuality = JPH::EMotionQuality::LinearCast;
+	initData.isStatic = false;
+	initData.layer = Layers::PLAYER;
+	initData.mass = 10000.0f;
+	initData.friction = 0.0f;
+	initData.restitution = 0.0f;
+	initData.linearDamping = 0.0f;
+	initData.angularDamping = 0.0f;
+	initData.userData = reinterpret_cast<JPH::uint64>(this);	//自分自身のポインタを登録
+
 	//物理Init
 	m_cPhysics = std::make_shared<PhysicsComponent>();
-	m_cPhysics->Init(a_startPos, a_radius, false);
-	m_cPhysics->SetFriction(0.0f);
-	m_cPhysics->SetRestitution(0.0f);
-	m_cPhysics->SetDamping(1.0f, 1.0f);
-
+	m_cPhysics->Init(a_radius, initData);
+	
 	//半径保存
 	m_radius = a_radius;
 
@@ -28,10 +40,8 @@ void Player::Update()
 	const float BASE_MAX_SPEED = 4.0f;   // 基本の最高速度
 	const float ACCEL_POWER = 2.0f;   // 加速度(秒)
 	const float DECEL_POWER = 3.0f;   // 最高速を超えた時の減速の滑らかさ(秒)
-	const float TURN_SPEED = 120.0f;   // 旋回性能(秒)
-	float dt = Application::Instance().GetDeltaTime(); //デルタタイム
-
-	bool isAccelPressed = (GetAsyncKeyState('W') & 0x8000) != 0;
+	const float TURN_SPEED = 120.0f;  // 旋回性能(秒)
+	float dt = Application::Instance().GetDeltaTime(); // デルタタイム
 
 
 	// =================================================================
@@ -55,7 +65,8 @@ void Player::Update()
 	// =================================================================
 	// 3. 接地判定 & 地面の傾き（法線）の取得
 	// =================================================================
-	float rayLength = m_radius + 0.10f; // 中心から足元＋10cmまでレイを伸ばす
+	// ★ レイの長さを 0.10f -> 0.03f に短縮（小段差でのチカチカ防止）
+	float rayLength = m_radius + 0.03f;
 
 	JPH::RVec3 ballPos = m_cPhysics->GetPos(); // 中心位置を取得
 	JPH::RRayCast ray{ ballPos, JPH::Vec3(0.0f, -rayLength, 0.0f) };
@@ -70,15 +81,18 @@ void Player::Update()
 	if (PHYSICSMGR.GetSystem().GetNarrowPhaseQuery().CastRay(ray, hit, {}, {}, bodyFilter))
 	{
 		float hitDistance = hit.mFraction * rayLength;
-		// 中心から見て足元付近で当たっているか確認
-		if (hitDistance <= m_radius + 0.08f)
+
+		if (hitDistance <= m_radius + 0.03f)
 		{
 			rawGrounded = true;
 
-			JPH::BodyLockRead lock(PHYSICSMGR.GetSystem().GetBodyLockInterface(), hit.mBodyID);
-			if (lock.Succeeded()) {
-				const JPH::Body& body = lock.GetBody();
-				groundNormal = body.GetWorldSpaceSurfaceNormal(hit.mSubShapeID2, ray.GetPointOnRay(hit.mFraction)).Normalized();
+			// スコープを作って lock の寿命をここで終わらせる
+			{
+				JPH::BodyLockRead lock(PHYSICSMGR.GetSystem().GetBodyLockInterface(), hit.mBodyID);
+				if (lock.Succeeded()) {
+					const JPH::Body& body = lock.GetBody();
+					groundNormal = body.GetWorldSpaceSurfaceNormal(hit.mSubShapeID2, ray.GetPointOnRay(hit.mFraction)).Normalized();
+				}
 			}
 		}
 	}
@@ -93,25 +107,18 @@ void Player::Update()
 	}
 	bool isGrounded = (groundedGradiantTimer > 0);
 
+
 	// =================================================================
-// 4. 現在の物理状態の取得
-// =================================================================
+	// 4. 現在の物理状態の取得
+	// =================================================================
 	JPH::Vec3 currentVel = m_cPhysics->GetDirection();
-	JPH::Vec3 currentVelXZ(currentVel.GetX(), 0.0f, currentVel.GetZ());
-	float joltSpeedXZ = currentVelXZ.Length(); // Joltが計算した現実の速度
 
-	// 内部で管理している速度をベースにする
-	float currentSpeedXZ = m_currentSpeedXZ;
-
-	// ★【重要】正面衝突などで Jolt 側で物理的にガツンと止められた場合だけ、内部速度を同期して下げる
-	// (壁擦りや坂道の微小な引っかかりでスピードが殺されるのを防ぐ)
-	if (joltSpeedXZ < currentSpeedXZ * 0.5f) {
-		currentSpeedXZ = joltSpeedXZ;
-	}
+	// ★【重要】Joltの壁押し戻し速度による内部速度（m_currentSpeedXZ）の直接上書きを廃止。
+	// （減速処理は OnHitWall 側の接触イベントに完全に任せることでガタツキをカット）
 
 
 	// =================================================================
-	// 5. 坂道による可変パラメータの計算（減速感をマイルドに調整）
+	// 5. 坂道による可変パラメータの計算
 	// =================================================================
 	float dynamicMaxSpeed = BASE_MAX_SPEED;
 	float dynamicAccel = ACCEL_POWER;
@@ -128,10 +135,8 @@ void Player::Update()
 
 		float slopeFactor = moveDirOnSlope.GetY();
 
-		// ★ 坂道の影響度をマイルドに修正 (1.2f 程度に下げる)
+		// 坂道の影響度をマイルドに計算
 		float speedMultiplier = 1.0f - (slopeFactor * 1.2f);
-
-		// 最小でも 0.6 倍は保証（登り坂で極端に遅くならないようにする）
 		speedMultiplier = std::clamp(speedMultiplier, 0.6f, 1.5f);
 
 		dynamicMaxSpeed = BASE_MAX_SPEED * speedMultiplier;
@@ -140,26 +145,34 @@ void Player::Update()
 
 
 	// =================================================================
-	// 6. 加速と旋回処理
+	// 6. 加速と進行方向の計算（壁すべり投影・完全対応版）
 	// =================================================================
 
-	// --- A. スピードの計算 ---
+	// 壁接触タイマーの更新（OnHitWallで2がセットされ、毎フレーム減算）
+	if (m_wallContactTimer > 0) {
+		m_wallContactTimer--;
+	}
+
+	// -----------------------------------------------------------------
+	// A. スピードの計算（オートアクセル）
+	// -----------------------------------------------------------------
 	if (isGrounded)
 	{
-		// 自分の内部速度から素直に ACCEL_POWER で加速する
-		if (currentSpeedXZ < dynamicMaxSpeed)
+		if (m_currentSpeedXZ < dynamicMaxSpeed)
 		{
-			currentSpeedXZ += dynamicAccel * dt;
-			if (currentSpeedXZ > dynamicMaxSpeed) currentSpeedXZ = dynamicMaxSpeed;
+			m_currentSpeedXZ += dynamicAccel * dt;
+			if (m_currentSpeedXZ > dynamicMaxSpeed) m_currentSpeedXZ = dynamicMaxSpeed;
 		}
-		else if (currentSpeedXZ > dynamicMaxSpeed)
+		else if (m_currentSpeedXZ > dynamicMaxSpeed)
 		{
-			currentSpeedXZ -= DECEL_POWER * dt;
-			if (currentSpeedXZ < dynamicMaxSpeed) currentSpeedXZ = dynamicMaxSpeed;
+			m_currentSpeedXZ -= DECEL_POWER * dt;
+			if (m_currentSpeedXZ < dynamicMaxSpeed) m_currentSpeedXZ = dynamicMaxSpeed;
 		}
 	}
 
-	// --- B. 進行方向の作成と旋回 ---
+	// -----------------------------------------------------------------
+	// B. 進行方向の作成（地面の傾き・坂道に沿わせる）
+	// -----------------------------------------------------------------
 	JPH::Vec3 moveDir = targetDir;
 	if (isGrounded)
 	{
@@ -170,235 +183,58 @@ void Player::Update()
 		}
 	}
 
-	// 基礎となる速度ベクトル
-	JPH::Vec3 newVel = moveDir * currentSpeedXZ;
+	// -----------------------------------------------------------------
+	// C. 壁衝突時のベクトル投影（★最初の10Fの荒ぶりを消す最重要処理）
+	// -----------------------------------------------------------------
+	JPH::Vec3 finalMoveDir = moveDir;
 
-	// 旋回（レスポンス補元）
-	JPH::Vec3 currentDir = (currentVelXZ.LengthSq() > 0.0001f) ? currentVelXZ.Normalized() : moveDir;
-	float turnResponse = std::min(TURN_SPEED * 2.5f * dt, 1.0f);
-	JPH::Vec3 blendedDir = currentDir + (moveDir - currentDir) * turnResponse;
+	if (m_wallContactTimer > 0)
+	{
+		// 壁法線（m_lastWallNormal：壁 -> プレイヤー向き）への突撃度を計算
+		float dotWall = finalMoveDir.Dot(m_lastWallNormal);
 
-	if (blendedDir.LengthSq() > 0.0001f) {
-		newVel = blendedDir.Normalized() * currentSpeedXZ;
+		// 壁の中に突き進もうとしている場合（dot < 0）のみ、壁と平行な成分だけに投影する
+		if (dotWall < 0.0f)
+		{
+			// 壁に突き刺さる成分を除去し、壁と完全に平行な滑りベクトルを作成
+			finalMoveDir = finalMoveDir - m_lastWallNormal * dotWall;
+
+			if (finalMoveDir.LengthSq() > 0.0001f) {
+				finalMoveDir = finalMoveDir.Normalized();
+			}
+			else {
+				// 正面完全衝突時はその場に留まるベクトル（ゼロ）
+				finalMoveDir = JPH::Vec3::sZero();
+			}
+		}
 	}
-
-	// =================================================================
-	// 7. 物理エンジン（Jolt）への反映
-	// =================================================================
-	if (!isGrounded) {
-		newVel.SetY(currentVel.GetY());
-	}
-
-	// Joltに速度をセット（壁に突っ込むとJoltが勝手に滑らせて速度を削ってくれる）
-	m_cPhysics->SetLinearVelocity(newVel);
-	m_cPhysics->SetAngularVelocity(JPH::Vec3::sZero());
-
-	// 内部変数に保存
-	m_currentSpeedXZ = currentSpeedXZ;
-
-//	// =================================================================
-//	// 4. 現在の物理状態の取得
-//	// =================================================================
-//	JPH::Vec3 currentVel = m_cPhysics->GetDirection();
-//	JPH::Vec3 currentVelXZ(currentVel.GetX(), 0.0f, currentVel.GetZ());
-//
-//	// ★ 速度の「大きさ」は物理から拾わず、内部変数を使う（物理の微小な減衰で最高速がブレるのを防ぐ）
-//	float currentSpeedXZ = m_currentSpeedXZ;
-//
-//	// 向きのベクトルだけ物理から取得
-//	JPH::Vec3 currentDir = (currentVelXZ.LengthSq() > 0.0001f) ? currentVelXZ.Normalized() : targetDir;
-//
-//	// =================================================================
-//// 5. 坂道による可変パラメータの計算（moveDirのY成分直接判定版）
-//// =================================================================
-//	float dynamicMaxSpeed = BASE_MAX_SPEED;
-//	float dynamicAccel = ACCEL_POWER;
-//	float slopeFactor = 0.0f;
-//
-//	if (isGrounded)
-//	{
-//		// 地面の傾きに沿わせた進行方向ベクトルをまず作成
-//		JPH::Vec3 moveDirOnSlope = targetDir;
-//		float dot = targetDir.Dot(groundNormal);
-//		JPH::Vec3 projected = targetDir - groundNormal * dot;
-//
-//		if (projected.LengthSq() > 0.0001f) {
-//			moveDirOnSlope = projected.Normalized();
-//		}
-//
-//		// ★ 進行ベクトルの Y 成分を直接見る！
-//		// 上り坂: moveDirOnSlope.GetY() > 0 (プラス)
-//		// 下り坂: moveDirOnSlope.GetY() < 0 (マイナス)
-//		slopeFactor = moveDirOnSlope.GetY();
-//
-//		// 上り坂(slopeFactor > 0) ➔ 1.0 - (プラス) ＝ 減速
-//		// 下り坂(slopeFactor < 0) ➔ 1.0 - (マイナス) ＝ 加速
-//		float speedMultiplier = 1.0f - (slopeFactor * 2.0f); // 影響度を2.0fでわかりやすく調整
-//
-//		// 速度倍率を 0.3倍 〜 1.8倍 の範囲に収める
-//		speedMultiplier = std::clamp(speedMultiplier, 0.3f, 1.8f);
-//
-//		dynamicMaxSpeed = BASE_MAX_SPEED * speedMultiplier;
-//		dynamicAccel = ACCEL_POWER * speedMultiplier;
-//	}
-//
-//	// =================================================================
-//	// 6. 加速・旋回・坂道・壁判定処理（オート前進・新仕様版）
-//	// =================================================================
-//
-//	// -----------------------------------------------------------------
-//	// A. スピード（currentSpeedXZ）の計算（坂道の影響のみを受ける）
-//	// -----------------------------------------------------------------
-//	if (isGrounded)
-//	{
-//		// 基本の目標速度（BASE_MAX_SPEED）に向けて加速しつつ、
-//		// 坂道（slopeFactor）の影響で最高速と加速度がリアルタイムに変化する
-//		if (currentSpeedXZ < dynamicMaxSpeed)
-//		{
-//			currentSpeedXZ += dynamicAccel * dt;
-//			if (currentSpeedXZ > dynamicMaxSpeed) currentSpeedXZ = dynamicMaxSpeed;
-//		}
-//		else if (currentSpeedXZ > dynamicMaxSpeed)
-//		{
-//			// 下り坂から平地に戻った時など、オーバーしたスピードを自然に減速
-//			currentSpeedXZ -= DECEL_POWER * dt;
-//			if (currentSpeedXZ < dynamicMaxSpeed) currentSpeedXZ = dynamicMaxSpeed;
-//		}
-//	}
-//
-//	// -----------------------------------------------------------------
-//	// B. 進行方向（moveDir）の算出と旋回（ターニング）処理
-//	// -----------------------------------------------------------------
-//	JPH::Vec3 moveDir = targetDir;
-//
-//	if (isGrounded)
-//	{
-//		float dot = targetDir.Dot(groundNormal);
-//		JPH::Vec3 projected = targetDir - groundNormal * dot;
-//		if (projected.LengthSq() > 0.0001f) {
-//			moveDir = projected.Normalized();
-//		}
-//	}
-//
-//	// 旋回（現在の進行方向から目標方向へ向ける）
-//	float turnResponse = std::min(TURN_SPEED * 2.5f * dt, 1.0f);
-//	JPH::Vec3 blendedDir = currentDir + (moveDir - currentDir) * turnResponse;
-//
-//	if (blendedDir.LengthSq() > 0.0001f) {
-//		blendedDir = blendedDir.Normalized();
-//	}
-//	else {
-//		blendedDir = moveDir;
-//	}
-//
-//	// ★ 決定した「向き」に「内部管理の速度」を掛けて速度ベクトルを作成
-//	JPH::Vec3 newVel = blendedDir * currentSpeedXZ;
-//
-//	// =================================================================
-//	// C. 垂直な壁の判定と滑り・離脱補正（手前判定防止＆比例減速版）
-//	// =================================================================
-//	JPH::SphereShapeSettings sphereSettings(m_radius);
-//	JPH::Shape::ShapeResult sphereResult = sphereSettings.Create();
-//
-//	if (sphereResult.IsValid())
-//	{
-//		JPH::RefConst<JPH::Shape> sphereShape = sphereResult.Get();
-//
-//		JPH::Vec3 checkDir = targetDir;
-//		if (checkDir.LengthSq() < 0.0001f) checkDir = moveDir;
-//
-//		// ★修正1: 判定距離を 0.15f -> 0.03f に短縮（手前での誤検知を防止）
-//		JPH::RShapeCast shapeCast(
-//			sphereShape.GetPtr(),
-//			JPH::Vec3::sReplicate(1.0f),
-//			JPH::RMat44::sTranslation(ballPos),
-//			checkDir * 0.03f                    // 見た目通りのギリギリで反応させる
-//		);
-//
-//		JPH::ShapeCastSettings castSettings;
-//		JPH::ClosestHitCollisionCollector<JPH::CastShapeCollector> collector;
-//
-//		PHYSICSMGR.GetSystem().GetNarrowPhaseQuery().CastShape(shapeCast, castSettings, ballPos, collector, {}, {}, bodyFilter);
-//
-//		if (collector.HadHit())
-//		{
-//			const JPH::ShapeCastResult& castHit = collector.mHit;
-//
-//			JPH::BodyLockRead lock(PHYSICSMGR.GetSystem().GetBodyLockInterface(), castHit.mBodyID2);
-//			if (lock.Succeeded())
-//			{
-//				const JPH::Body& body = lock.GetBody();
-//				JPH::Vec3 wallNormal = -castHit.mPenetrationAxis.Normalized();
-//
-//				// 垂直な壁（Y成分 < 0.3）のみ判定
-//				if (abs(wallNormal.GetY()) < 0.3f)
-//				{
-//					float targetDot = targetDir.Dot(wallNormal);
-//
-//					if (targetDot < -0.01f)
-//					{
-//						float impactFactor = abs(targetDot); // 1.0 = 正面衝突, 0.0 = 完全な平行
-//
-//						// ★ 1. 乗算（*=）ではなく、衝突角度に応じた「目標速度」を計算する
-//						// 正面衝突(1.0)なら目標速度 0.0、浅い擦り(0.2)なら目標速度は最高速の 80%
-//						float targetSpeedOnWall = dynamicMaxSpeed * (1.0f - impactFactor);
-//
-//						// ★ 2. 現在の速度が目標速度より高い場合、減速パワー（DECEL_POWER）に沿って「徐々に」落とす
-//						// これにより、毎フレーム一瞬で 0 になる現象を完全に防ぐ！
-//						if (currentSpeedXZ > targetSpeedOnWall)
-//						{
-//							// 衝突角度が急なほど強くブレーキがかかる
-//							float brakePower = DECEL_POWER * (1.0f + impactFactor * 3.0f);
-//							currentSpeedXZ -= brakePower * dt;
-//
-//							if (currentSpeedXZ < targetSpeedOnWall) {
-//								currentSpeedXZ = targetSpeedOnWall;
-//							}
-//						}
-//
-//						// ★ 3. 浅い角度（画像のような擦り）の場合は、絶対に完全停止させない最低保障速度をつくる
-//						if (impactFactor < 0.6f && currentSpeedXZ < 1.0f)
-//						{
-//							currentSpeedXZ = 1.0f; // 1.0 m/s は最低維持して進ませる
-//						}
-//
-//						// 4. 壁に沿う平行方向ベクトルを作成
-//						JPH::Vec3 wallParallelDir = targetDir - wallNormal * targetDot;
-//
-//						if (wallParallelDir.LengthSq() > 0.0001f)
-//						{
-//							// 減速された速度で壁沿いに進む
-//							newVel = wallParallelDir.Normalized() * currentSpeedXZ;
-//						}
-//						else
-//						{
-//							newVel = targetDir * currentSpeedXZ;
-//						}
-//
-//						// 内部速度変数を更新
-//						m_currentSpeedXZ = currentSpeedXZ;
-//					}
-//				}
-//			}
-//		}
-//	}
 
 	// -----------------------------------------------------------------
-	// D. 物理エンジン（Jolt）への反映
+	// D. 最終的な目標速度ベクトルの生成
 	// -----------------------------------------------------------------
-	if (!isGrounded) {
-		// 空中時は物理エンジンの落下Y速度（重力）を優先
-		newVel.SetY(currentVel.GetY());
+	JPH::Vec3 newVel = finalMoveDir * m_currentSpeedXZ;
+
+	// =================================================================
+	// 7. 物理エンジン（Jolt）への反映（SetLinearVelocity）
+	// =================================================================
+	JPH::Vec3 finalVel = newVel;
+
+	if (isGrounded)
+	{
+		// 接地中：上向き速度（Y > 0）をシャットアウト（0以下にリセット）し、
+		// 地面への吸いつきと跳ね防止を両立させる
+		float currentY = currentVel.GetY();
+		finalVel.SetY(std::min(currentY, 0.0f));
+	}
+	else
+	{
+		// 空中：Jolt の重力・落下速度をそのまま維持
+		finalVel.SetY(currentVel.GetY());
 	}
 
-	// 移動速度を適用（常に一定以上のスピードで動き続けるため非常に安定します）
-	m_cPhysics->SetLinearVelocity(newVel);
-
-	// 物理的な角速度は0に固定（横暴走を完璧に防止）
+	// 速度と回転の書き換え
+	m_cPhysics->SetLinearVelocity(finalVel);
 	m_cPhysics->SetAngularVelocity(JPH::Vec3::sZero());
-
-	//速度記録
-	m_currentSpeedXZ = currentSpeedXZ;
 
 	//カメラに設定
 	if (m_wpCamera.expired())return;
@@ -406,6 +242,7 @@ void Player::Update()
 	m_wpCamera.lock()->SetRotationYMatrix(Math::Matrix::CreateRotationY(DirectX::XMConvertToRadians(m_facingAngle)));
 	KdDebugGUI::Instance().AddLog("Facing Angle : %.2f\n", m_facingAngle);
 	KdDebugGUI::Instance().AddLog("IsGround : %d\n", isGrounded == true ? 1 : 0);
+	KdDebugGUI::Instance().AddLog("IsHitWall : %d\n", m_wallContactTimer > 0 ? 1 : 0);
 	KdDebugGUI::Instance().AddLog("Current Speed : %.2f\n", m_currentSpeedXZ);
 	KdDebugGUI::Instance().AddLog("DeltaTime : %.3f\n", Application::Instance().GetDeltaTime());
 }
@@ -443,14 +280,36 @@ void Player::PostUpdate()
 
 	// C. 位置（Translation）
 	Math::Matrix matTrans = Math::Matrix::CreateTranslation(
-		(float)ballPos.GetX(),
-		(float)ballPos.GetY(),
-		(float)ballPos.GetZ()
+		m_pos
 	);
 
-	// D. ワールド行列の合成（ 転がり → 旋回 → 移動 ）
+	// D. ワールド行列の合成（ 転がり → 旋回 → 移動  )
 	// ※ご使用の環境の行列乗算順序に合わせて「*」の順序を調整してください
 	m_mWorld = matRoll * matYaw * matTrans;
+}
+
+void Player::OnHitWall(const JPH::Vec3& wallNormal)
+{
+	JPH::Vec3 horizNormal(wallNormal.GetX(), 0.0f, wallNormal.GetZ());
+	if (horizNormal.LengthSq() < 0.0001f) return;
+
+	// 壁法線を保存（壁からプレイヤーに向かう向き）
+	m_lastWallNormal = horizNormal.Normalized();
+	m_wallContactTimer = 2; // 2フレーム接触状態を保持
+
+	// --- 減速処理（dt考慮版） ---
+	float rad = DirectX::XMConvertToRadians(m_facingAngle);
+	JPH::Vec3 moveDir(std::sin(rad), 0.0f, std::cos(rad));
+	if (moveDir.LengthSq() < 0.0001f) return;
+	moveDir = moveDir.Normalized();
+
+	float wallDot = -moveDir.Dot(m_lastWallNormal);
+	if (wallDot > 0.0f)
+	{
+		float dt = Application::Instance().GetDeltaTime();
+		m_currentSpeedXZ -= 5.0f * wallDot * dt;
+		if (m_currentSpeedXZ < 0.0f) m_currentSpeedXZ = 0.0f;
+	}
 }
 
 void Player::Init()

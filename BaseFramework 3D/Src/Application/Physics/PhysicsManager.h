@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "PhysicsLayer.h"
+#include "GameContactListener.h"
 
 class PhysicsManager {
 public:
@@ -35,6 +36,9 @@ private:
 	BPLayerInterfaceImpl m_BPLayerInterface;
 	ObjectLayerPairFilterImpl m_objectLayerPairFilter;
 	ObjectVsBroadPhaseLayerFilterImpl m_objectVsBroadPhaseLayerFilter;
+
+	// 衝突判定のリスナー
+	GameContactListener m_contactListener;
 
 public:
 

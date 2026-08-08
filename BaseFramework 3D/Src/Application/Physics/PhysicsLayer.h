@@ -4,9 +4,11 @@
 namespace Layers
 {
 	// オブジェクトレイヤー（細かな分類）
-	static constexpr JPH::ObjectLayer NON_MOVING = 0;
-	static constexpr JPH::ObjectLayer MOVING = 1;
-	static constexpr JPH::ObjectLayer NUM_LAYERS = 2;
+	static constexpr JPH::ObjectLayer TERRAIN = 0;
+	static constexpr JPH::ObjectLayer PLAYER = 1;
+	static constexpr JPH::ObjectLayer PIN_STATIC = 2;
+	static constexpr JPH::ObjectLayer PIN_MOVING = 3;
+	static constexpr JPH::ObjectLayer NUM_LAYERS = 4;
 
 	// ブロードフェーズレイヤー（大雑把な分類）
 	static constexpr JPH::BroadPhaseLayer BP_NON_MOVING(0);
@@ -23,10 +25,14 @@ public:
 	{
 		switch (inObject1)
 		{
-		case Layers::NON_MOVING:
-			return inObject2 == Layers::MOVING; // 動かないものは、動くものとだけ衝突する（床同士は計算しない）
-		case Layers::MOVING:
-			return true; // 動くものは、何とでも衝突する
+		case Layers::TERRAIN:
+			return inObject2 == Layers::PLAYER||inObject2 == Layers::PIN_STATIC||inObject2 == Layers::PIN_MOVING; // 地形は動くものと当たる
+		case Layers::PLAYER:
+			return true; // プレイヤーはそのまま
+		case Layers::PIN_STATIC:
+			return inObject2 == Layers::PLAYER||inObject2 == Layers::TERRAIN; // 静止ピンはプレイヤー/地形と当たる
+		case Layers::PIN_MOVING:
+			return true; // 動くピンは全てと当たる
 		default:
 			return false;
 		}
@@ -41,8 +47,10 @@ public:
 	BPLayerInterfaceImpl()
 	{
 		// マッピングの登録
-		mObjectToBroadPhase[Layers::NON_MOVING] = Layers::BP_NON_MOVING;
-		mObjectToBroadPhase[Layers::MOVING] = Layers::BP_MOVING;
+		mObjectToBroadPhase[Layers::TERRAIN] = Layers::BP_NON_MOVING;
+		mObjectToBroadPhase[Layers::PLAYER] = Layers::BP_MOVING;
+		mObjectToBroadPhase[Layers::PIN_STATIC] = Layers::BP_MOVING;
+		mObjectToBroadPhase[Layers::PIN_MOVING] = Layers::BP_MOVING;
 	}
 
 	virtual JPH::uint GetNumBroadPhaseLayers() const override
@@ -80,9 +88,11 @@ public:
 	{
 		switch (inLayer1)
 		{
-		case Layers::NON_MOVING:
+		case Layers::TERRAIN:
 			return inLayer2 == Layers::BP_MOVING; // 動かないグループは、動くグループとだけ衝突する
-		case Layers::MOVING:
+		case Layers::PLAYER:
+		case Layers::PIN_STATIC:
+		case Layers::PIN_MOVING:
 			return true; // 動くグループは、何とでも衝突する
 		default:
 			return false;

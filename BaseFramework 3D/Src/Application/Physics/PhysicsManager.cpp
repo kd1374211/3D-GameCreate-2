@@ -55,6 +55,9 @@ void PhysicsManager::Init() {
 
 	// デフォルトの重力を設定
 	m_physicsSystem->SetGravity(JPH::Vec3(0.0f, -9.81f, 0.0f));
+
+	//Joltにリスナーを登録する
+	m_physicsSystem->SetContactListener(&m_contactListener);
 }
 
 void PhysicsManager::Update(float deltaTime) {

@@ -643,6 +643,8 @@
     <ClInclude Include="..\Library\tinygltf\stb_image_write.h" />
     <ClInclude Include="..\Library\tinygltf\tiny_gltf.h" />
     <ClInclude Include="Src\Application\Component\PhysicsComponent\PhysicsComponent.h" />
+    <ClInclude Include="Src\Application\GameObject\BowlingPin\NormalPin\NormalPin.h" />
+    <ClInclude Include="Src\Application\GameObject\BowlingPin\PinBase\PinBase.h" />
     <ClInclude Include="Src\Application\GameObject\Camera\CameraBase.h" />
     <ClInclude Include="Src\Application\GameObject\Camera\FPSCamera\FPSCamera.h" />
     <ClInclude Include="Src\Application\GameObject\Camera\TPSCamera\TPSCamera.h" />
@@ -653,6 +655,7 @@
     <ClInclude Include="Src\Application\GameObject\Terrain\TerrainInclude.h" />
     <ClInclude Include="Src\Application\GameObject\Terrain\TerrainManager.h" />
     <ClInclude Include="Src\Application\main.h" />
+    <ClInclude Include="Src\Application\Physics\GameContactListener.h" />
     <ClInclude Include="Src\Application\Physics\PhysicsLayer.h" />
     <ClInclude Include="Src\Application\Physics\PhysicsManager.h" />
     <ClInclude Include="Src\Application\Scene\BaseScene\BaseScene.h" />
@@ -861,6 +864,8 @@
     <ClCompile Include="..\Library\JoltPhysics\Jolt\TriangleSplitter\TriangleSplitterBinning.cpp" />
     <ClCompile Include="..\Library\JoltPhysics\Jolt\TriangleSplitter\TriangleSplitterMean.cpp" />
     <ClCompile Include="Src\Application\Component\PhysicsComponent\PhysicsComponent.cpp" />
+    <ClCompile Include="Src\Application\GameObject\BowlingPin\NormalPin\NormalPin.cpp" />
+    <ClCompile Include="Src\Application\GameObject\BowlingPin\PinBase\PinBase.cpp" />
     <ClCompile Include="Src\Application\GameObject\Camera\CameraBase.cpp" />
     <ClCompile Include="Src\Application\GameObject\Camera\FPSCamera\FPSCamera.cpp" />
     <ClCompile Include="Src\Application\GameObject\Camera\TPSCamera\TPSCamera.cpp" />
@@ -870,6 +875,7 @@
     <ClCompile Include="Src\Application\GameObject\Terrain\TerrainBase.cpp" />
     <ClCompile Include="Src\Application\GameObject\Terrain\TerrainManager.cpp" />
     <ClCompile Include="Src\Application\main.cpp" />
+    <ClCompile Include="Src\Application\Physics\GameContactListener.cpp" />
     <ClCompile Include="Src\Application\Physics\PhysicsManager.cpp" />
     <ClCompile Include="Src\Application\Scene\BaseScene\BaseScene.cpp" />
     <ClCompile Include="Src\Application\Scene\GameScene\GameScene.cpp" />

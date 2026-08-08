@@ -4,6 +4,7 @@
 #include "../../GameObject/Terrain/TerrainManager.h"
 #include "../../GameObject/Camera/TPSCamera/TPSCamera.h"
 #include "../../GameObject/Chara/Player/Player.h"
+#include "../../GameObject/BowlingPin/NormalPin/NormalPin.h"
 
 void GameScene::Event()
 {
@@ -20,6 +21,10 @@ void GameScene::Init()
 {
 	//地形生成
 	TERRAINMGR.GenerateTerrain();
+
+	//仮置きピン
+	std::shared_ptr<NormalPin> pin = std::make_shared<NormalPin>(Math::Vector3(2.5f, 1.0f, 2.5f));
+	AddObject(pin);
 
 	//カメラとプレイヤー生成
 	std::shared_ptr<TPSCamera> camera = std::make_shared<TPSCamera>();

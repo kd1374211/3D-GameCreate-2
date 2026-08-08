@@ -112,6 +112,15 @@
     <Filter Include="Src\Application\Component\PhysicsComponent">
       <UniqueIdentifier>{9981982f-0e99-4079-bd3d-8f86f7029c81}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\GameObject\BowlingPin">
+      <UniqueIdentifier>{5233518e-dbb5-4b2e-ac20-f0f70a15cad8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\GameObject\BowlingPin\PinBase">
+      <UniqueIdentifier>{c6da9d48-665e-4ef3-8271-066753893816}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\GameObject\BowlingPin\NormalPin">
+      <UniqueIdentifier>{ee23d941-af8a-4e63-b80a-c6da28702815}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -1425,6 +1434,15 @@
     <ClInclude Include="Src\Application\Component\PhysicsComponent\PhysicsComponent.h">
       <Filter>Src\Application\Component\PhysicsComponent</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\BowlingPin\PinBase\PinBase.h">
+      <Filter>Src\Application\GameObject\BowlingPin\PinBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\BowlingPin\NormalPin\NormalPin.h">
+      <Filter>Src\Application\GameObject\BowlingPin\NormalPin</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Physics\GameContactListener.h">
+      <Filter>Src\Application\Physics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -2059,6 +2077,15 @@
     </ClCompile>
     <ClCompile Include="Src\Application\Component\PhysicsComponent\PhysicsComponent.cpp">
       <Filter>Src\Application\Component\PhysicsComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\BowlingPin\PinBase\PinBase.cpp">
+      <Filter>Src\Application\GameObject\BowlingPin\PinBase</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\BowlingPin\NormalPin\NormalPin.cpp">
+      <Filter>Src\Application\GameObject\BowlingPin\NormalPin</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Physics\GameContactListener.cpp">
+      <Filter>Src\Application\Physics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

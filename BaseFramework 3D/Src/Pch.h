@@ -141,6 +141,7 @@
 #include <Jolt/Physics/Collision/ShapeCast.h>          // スフィアキャスト (RShapeCast / ShapeCast) 用
 #include <Jolt/Physics/Collision/Shape/Shape.h>
 #include <Jolt/Physics/Collision/CollisionCollectorImpl.h>
+#include <Jolt/Physics/Collision/ContactListener.h>
 
 //いらないかもなやつ
 //#include <Jolt/Core/Memory.h>

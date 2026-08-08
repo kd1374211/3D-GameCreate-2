@@ -18,6 +18,9 @@ public:
 	//カメラ設定
 	void SetCamera(const std::shared_ptr<CameraBase>& camera) { m_wpCamera = camera; }
 	
+	//壁との衝突
+	void OnHitWall(const JPH::Vec3& wallNormal);
+
 private:
 
 	void Init()override;
@@ -48,5 +51,9 @@ private:
 
 	//速度
 	float m_currentSpeedXZ = 0.0f;
+
+	//壁いろいろ
+	JPH::Vec3 m_lastWallNormal = JPH::Vec3::sZero();
+	int m_wallContactTimer = 0; // 壁接触フラグ（チャタリング防止）
 
 };
