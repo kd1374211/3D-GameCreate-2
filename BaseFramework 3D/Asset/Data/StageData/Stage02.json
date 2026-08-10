@@ -1,0 +1,23 @@
+{
+    "objects": [],
+    "stage_name": "CustomStage",
+    "terrain": {
+        "model_path": "Asset/Models/Terrain/Stage01/TestGround.gltf",
+        "position": [
+            0.0,
+            0.0,
+            0.0
+        ],
+		"rotation": [
+			0.0,
+			0.0,
+			0.0,
+			1.0
+		],
+        "scale": [
+            1.0,
+            1.0,
+            1.0
+        ]
+    }
+}

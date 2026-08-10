@@ -1,10 +1,12 @@
 ﻿#pragma once
 
+class CameraBase;
+
 class BaseScene
 {
 public :
 
-	BaseScene()			 { Init(); }
+	BaseScene()			 {}
 	virtual ~BaseScene() {}
 
 	void PreUpdate();
@@ -28,12 +30,19 @@ public :
 		m_objList.push_back(_obj);
 	}
 
+	//カメラ取得
+	std::weak_ptr<CameraBase> GetCamera() { return m_wpCamera; }
+
+	virtual void Init();
+
 protected :
 
 	// 継承先シーンで必要ならオーバーライドする
 	virtual void Event();
-	virtual void Init();
 
 	// 全オブジェクトのアドレスをリストで管理
 	std::list<std::shared_ptr<KdGameObject>> m_objList;
+
+	//カメラ
+	std::weak_ptr<CameraBase> m_wpCamera;
 };

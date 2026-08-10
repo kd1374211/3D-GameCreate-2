@@ -6,11 +6,12 @@ class GameScene : public BaseScene
 {
 public :
 
-	GameScene()  { Init(); }
+	GameScene()  {}
 	~GameScene() {}
+
+	void Init()  override;
 
 private:
 
 	void Event() override;
-	void Init()  override;
 };

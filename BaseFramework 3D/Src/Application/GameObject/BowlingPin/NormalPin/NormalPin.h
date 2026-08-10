@@ -5,7 +5,7 @@ class NormalPin :public PinBase
 {
 public:
 
-	NormalPin(Math::Vector3 pos);
+	NormalPin(Math::Vector3 pos, Math::Quaternion rotat);
 	~NormalPin()override {}
 
 private:

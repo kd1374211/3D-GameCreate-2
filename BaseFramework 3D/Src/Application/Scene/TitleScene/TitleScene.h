@@ -6,11 +6,12 @@ class TitleScene : public BaseScene
 {
 public :
 
-	TitleScene()  { Init(); }
+	TitleScene()  {}
 	~TitleScene() {}
+
+	void Init()  override;
 
 private :
 
 	void Event() override;
-	void Init()  override;
 };

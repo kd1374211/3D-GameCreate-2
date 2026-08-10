@@ -1,11 +1,10 @@
 ﻿#pragma once
-#include "../CharaBase.h"
 #include "../../../Component/PhysicsComponent/PhysicsComponent.h"
 
 //カメラ情報取得用
 class CameraBase;
 
-class Player :public CharaBase
+class Player :public KdGameObject
 {
 public:
 
@@ -14,6 +13,9 @@ public:
 
 	void Update()override;
 	void PostUpdate()override;
+
+	void DrawLit()override;
+	void GenerateDepthMapFromLight()override;
 
 	//カメラ設定
 	void SetCamera(const std::shared_ptr<CameraBase>& camera) { m_wpCamera = camera; }
@@ -56,4 +58,9 @@ private:
 	JPH::Vec3 m_lastWallNormal = JPH::Vec3::sZero();
 	int m_wallContactTimer = 0; // 壁接触フラグ（チャタリング防止）
 
+	//モデル
+	std::shared_ptr<KdModelWork> m_model;
+
+	//位置
+	Math::Vector3 m_pos;
 };

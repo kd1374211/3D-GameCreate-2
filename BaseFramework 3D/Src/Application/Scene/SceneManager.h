@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 class BaseScene;
+class CameraBase;
 
 class SceneManager
 {
@@ -34,10 +35,6 @@ public :
 	// 現在のシーンにオブジェクトを追加
 	void AddObject(const std::shared_ptr<KdGameObject>& _obj);
 
-	//追加7/9
-	//シーン生成後に追加するオブジェクトを待機
-	void AddWaitingObject(const std::shared_ptr<KdGameObject>& _obj) { m_waitingObjList.push_back(_obj); }
-
 	// マネージャーの初期化
 	// インスタンス生成(アプリ起動)時にコンストラクタで自動実行はしないでおく
 	void Init()
@@ -45,6 +42,9 @@ public :
 		// 開始シーンに切り替え
 		ChangeScene(m_currentSceneType);
 	}
+
+	//カメラ取得
+	std::weak_ptr<CameraBase> GetCamera();
 
 	//終了
 	void Release();
@@ -62,10 +62,6 @@ private :
 	
 	// 次のシーンの種類を保持している変数
 	SceneType m_nextSceneType = m_currentSceneType;
-
-	//追加7/9
-	//Init後に追加するオブジェクトを待機させておくリスト
-	std::list<std::shared_ptr<KdGameObject>> m_waitingObjList;
 
 private:
 

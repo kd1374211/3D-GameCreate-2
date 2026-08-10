@@ -3,7 +3,8 @@
 void TerrainBase::Update()
 {
 	Math::Matrix trans = Math::Matrix::CreateTranslation(m_pos);
-	m_mWorld = trans;
+	Math::Matrix rotat = Math::Matrix::CreateFromQuaternion(m_rot);
+	m_mWorld = rotat * trans;
 }
 
 void TerrainBase::DrawLit()

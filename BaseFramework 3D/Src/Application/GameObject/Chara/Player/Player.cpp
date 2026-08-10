@@ -4,6 +4,8 @@
 #include "../../../Physics/PhysicsManager.h"
 #include "../../../main.h"
 
+#include "../../../StageManager/StageManager.h"
+
 Player::Player(const Math::Vector3& a_startPos, float a_radius)
 {
 	//物理Initに投げるパラメータ設定
@@ -34,6 +36,12 @@ Player::Player(const Math::Vector3& a_startPos, float a_radius)
 
 void Player::Update()
 {
+	// エディットモード中はプレイヤーの移動・操作・物理を停止
+	if (STAGEMGR.IsEditMode())
+	{
+		return;
+	}
+
 	// =================================================================
 	// パラメータ設定（エアライダー風チューニング）
 	// =================================================================
@@ -42,7 +50,6 @@ void Player::Update()
 	const float DECEL_POWER = 3.0f;   // 最高速を超えた時の減速の滑らかさ(秒)
 	const float TURN_SPEED = 120.0f;  // 旋回性能(秒)
 	float dt = Application::Instance().GetDeltaTime(); // デルタタイム
-
 
 	// =================================================================
 	// 1. 方向転換（A/Dキーによる向き更新）
@@ -286,6 +293,16 @@ void Player::PostUpdate()
 	// D. ワールド行列の合成（ 転がり → 旋回 → 移動  )
 	// ※ご使用の環境の行列乗算順序に合わせて「*」の順序を調整してください
 	m_mWorld = matRoll * matYaw * matTrans;
+}
+
+void Player::DrawLit()
+{
+	KdShaderManager::Instance().m_StandardShader.DrawModel(*m_model, m_mWorld);
+}
+
+void Player::GenerateDepthMapFromLight()
+{
+	KdShaderManager::Instance().m_StandardShader.DrawModel(*m_model, m_mWorld);
 }
 
 void Player::OnHitWall(const JPH::Vec3& wallNormal)

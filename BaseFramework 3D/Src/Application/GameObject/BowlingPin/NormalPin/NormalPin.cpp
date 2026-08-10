@@ -1,6 +1,6 @@
 ﻿#include "NormalPin.h"
 
-NormalPin::NormalPin(Math::Vector3 pos)
+NormalPin::NormalPin(Math::Vector3 pos, Math::Quaternion rotat)
 {
 	std::string path_hit = "Asset/Models/Pin/Hit/pin.gltf";
 	std::string path_draw = "Asset/Models/Pin/Draw/pin.gltf";
@@ -12,7 +12,7 @@ NormalPin::NormalPin(Math::Vector3 pos)
 	//物理Initに投げるパラメータ設定
 	PhysicsInitData initData = {};
 	initData.pos = pos;
-	initData.rot = Math::Quaternion::Identity;
+	initData.rot = rotat;
 	initData.motionType = JPH::EMotionType::Dynamic;
 	initData.isStatic = false;
 	initData.layer = Layers::PIN_STATIC;

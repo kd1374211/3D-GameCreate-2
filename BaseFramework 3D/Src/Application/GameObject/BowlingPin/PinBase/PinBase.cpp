@@ -1,8 +1,16 @@
 ﻿#include "PinBase.h"
 #include "../../../main.h"
+#include "../../../StageManager/StageManager.h"
 
 void PinBase::Update()
 {
+	if (STAGEMGR.IsEditMode())
+	{
+		// エディット中は物理ボディの位置を動かさず、
+		// STAGEMGR からもらった Position / Rotation をそのまま維持する
+		return;
+	}
+
 	// デルタタイム
 	float dt = Application::Instance().GetDeltaTime();
 

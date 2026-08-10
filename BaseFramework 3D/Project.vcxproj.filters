@@ -121,6 +121,9 @@
     <Filter Include="Src\Application\GameObject\BowlingPin\NormalPin">
       <UniqueIdentifier>{ee23d941-af8a-4e63-b80a-c6da28702815}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\StageManager">
+      <UniqueIdentifier>{a6fae5d5-e7a1-4091-a0e8-0bb8b013630b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -312,17 +315,8 @@
     <ClInclude Include="Src\Application\GameObject\Terrain\Ground\Ground.h">
       <Filter>Src\Application\GameObject\Terrain\Ground</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Application\GameObject\Terrain\TerrainManager.h">
-      <Filter>Src\Application\GameObject\Terrain</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Application\GameObject\Terrain\TerrainInclude.h">
-      <Filter>Src\Application\GameObject\Terrain</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Application\GameObject\Chara\Player\Player.h">
       <Filter>Src\Application\GameObject\Chara\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Application\GameObject\Chara\CharaBase.h">
-      <Filter>Src\Application\GameObject\Chara</Filter>
     </ClInclude>
     <ClInclude Include="Src\Application\Physics\PhysicsLayer.h">
       <Filter>Src\Application\Physics</Filter>
@@ -1443,6 +1437,15 @@
     <ClInclude Include="Src\Application\Physics\GameContactListener.h">
       <Filter>Src\Application\Physics</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\StageManager\StageManager.h">
+      <Filter>Src\Application\StageManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\StageManager\StageObjectInclude.h">
+      <Filter>Src\Application\StageManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\Chara\CharaManager.h">
+      <Filter>Src\Application\GameObject\Chara</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -1604,14 +1607,8 @@
     <ClCompile Include="Src\Application\GameObject\Terrain\Ground\Ground.cpp">
       <Filter>Src\Application\GameObject\Terrain\Ground</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Application\GameObject\Terrain\TerrainManager.cpp">
-      <Filter>Src\Application\GameObject\Terrain</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Application\GameObject\Chara\Player\Player.cpp">
       <Filter>Src\Application\GameObject\Chara\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Application\GameObject\Chara\CharaBase.cpp">
-      <Filter>Src\Application\GameObject\Chara</Filter>
     </ClCompile>
     <ClCompile Include="Src\Application\Physics\PhysicsManager.cpp">
       <Filter>Src\Application\Physics</Filter>
@@ -2086,6 +2083,12 @@
     </ClCompile>
     <ClCompile Include="Src\Application\Physics\GameContactListener.cpp">
       <Filter>Src\Application\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\StageManager\StageManager.cpp">
+      <Filter>Src\Application\StageManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\Chara\CharaManager.cpp">
+      <Filter>Src\Application\GameObject\Chara</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

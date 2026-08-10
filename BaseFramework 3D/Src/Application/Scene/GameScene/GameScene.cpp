@@ -1,10 +1,11 @@
 ﻿#include "GameScene.h"
 #include"../SceneManager.h"
 
-#include "../../GameObject/Terrain/TerrainManager.h"
+#include "../../StageManager/StageManager.h"
 #include "../../GameObject/Camera/TPSCamera/TPSCamera.h"
 #include "../../GameObject/Chara/Player/Player.h"
 #include "../../GameObject/BowlingPin/NormalPin/NormalPin.h"
+#include "../../GameObject/Chara/CharaManager.h"
 
 void GameScene::Event()
 {
@@ -19,19 +20,18 @@ void GameScene::Event()
 
 void GameScene::Init()
 {
-	//地形生成
-	TERRAINMGR.GenerateTerrain();
-
-	//仮置きピン
-	std::shared_ptr<NormalPin> pin = std::make_shared<NormalPin>(Math::Vector3(2.5f, 1.0f, 2.5f));
-	AddObject(pin);
+	//ステージデータ読み込み
+	STAGEMGR.LoadStage("Asset/Data/StageData/Stage01.json");
 
 	//カメラとプレイヤー生成
 	std::shared_ptr<TPSCamera> camera = std::make_shared<TPSCamera>();
 	camera->Init();
 	std::shared_ptr<Player> player = std::make_shared<Player>(Math::Vector3(0, 1.0f, 0), 0.1f);
-	//player->SetPos(Math::Vector3(0, 0.5f, 0));
 	
+	//取得用にセット
+	m_wpCamera = camera;
+	CHARAMGR.SetPlayer(player);
+
 	//リンク
 	camera->SetTarget(player);
 	player->SetCamera(camera);

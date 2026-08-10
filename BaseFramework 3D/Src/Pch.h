@@ -143,5 +143,9 @@
 #include <Jolt/Physics/Collision/CollisionCollectorImpl.h>
 #include <Jolt/Physics/Collision/ContactListener.h>
 
+//追加8/8
+//Json
+#include <json.hpp>
+
 //いらないかもなやつ
 //#include <Jolt/Core/Memory.h>
