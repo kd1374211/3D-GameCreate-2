@@ -52,6 +52,9 @@ public:
 	void SetSelectedIndex(int index) { m_selectedIndex = index; }
 	int GetSelectedIndex() const { return m_selectedIndex; }
 
+	//選択時アウトライン追加
+	void DrawSelectedObjectOutline();
+
 	// ImGuiやBuildStageから呼ばれるターゲット設定関数
 	void ApplyCameraTarget();
 
@@ -74,8 +77,11 @@ private:
 	//オブジェクトデータ管理
 	std::vector<StageObjectData> m_stageObjects;
 
-	StageMode m_mode = StageMode::Edit; // 初期状態はエディットモード
+	StageMode m_mode = StageMode::Play; // 初期状態はエディットモード
 	int m_selectedIndex = -1; // 選択中のオブジェクトインデックス（-1は未選択）
+
+	//デバッグ用
+	std::unique_ptr<KdDebugWireFrame> m_debugWireFrame;
 
 public:
 

@@ -54,8 +54,8 @@ void Player::Update()
 	// =================================================================
 	// 1. 方向転換（A/Dキーによる向き更新）
 	// =================================================================
-	if (GetAsyncKeyState('A') & 0x8000) { m_facingAngle -= TURN_SPEED * dt; }
-	if (GetAsyncKeyState('D') & 0x8000) { m_facingAngle += TURN_SPEED * dt; }
+	if (GetAsyncKeyState(VK_LEFT) & 0x8000) { m_facingAngle -= TURN_SPEED * dt; }
+	if (GetAsyncKeyState(VK_RIGHT) & 0x8000) { m_facingAngle += TURN_SPEED * dt; }
 
 	if (m_facingAngle >= 360.0f)     m_facingAngle -= 360.0f;
 	else if (m_facingAngle < 0.0f)   m_facingAngle += 360.0f;

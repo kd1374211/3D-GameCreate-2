@@ -60,6 +60,7 @@ void StageManager::ResetStage()
 		//削除
 		obj.lock()->SetExpire();
 	}
+	m_wpStageObject.clear();
 }
 
 bool StageManager::SaveStage(const std::string& filePath)
@@ -144,6 +145,28 @@ void StageManager::SetMode(StageMode mode)
 	BuildStage();
 }
 
+void StageManager::DrawSelectedObjectOutline()
+{
+	// エディットモード中かつ有効なインデックスが選択されている場合のみ
+	if (!IsEditMode() || m_selectedIndex < 0) return;
+
+	//DEBUG
+	KdDebugGUI::Instance().AddLog("obj: %d\n", m_wpStageObject.size());
+
+	size_t targetIdx = static_cast<size_t>(m_selectedIndex);
+	if (targetIdx < m_wpStageObject.size() && !m_wpStageObject[targetIdx].expired())
+	{
+		auto spObj = m_wpStageObject[targetIdx].lock();
+
+		// オブジェクトの現在位置を取得
+		Math::Vector3 pos = spObj->GetPos();
+
+		// オブジェクト位置にワイヤーフレームを描画
+		m_debugWireFrame->AddDebugSphere(pos, 1.5f, kBlueColor);
+		m_debugWireFrame->Draw();
+	}
+}
+
 void StageManager::ApplyCameraTarget()
 {
 	auto wpCamera = SCENEMGR.GetCamera();
@@ -182,7 +205,9 @@ void StageManager::ApplyCameraTarget()
 }
 
 void StageManager::Init()
-{}
+{
+	m_debugWireFrame = std::make_unique<KdDebugWireFrame>();
+}
 
 void StageManager::Release()
 {}
