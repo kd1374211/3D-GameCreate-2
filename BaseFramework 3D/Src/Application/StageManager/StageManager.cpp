@@ -20,12 +20,15 @@ void StageManager::BuildStage()
 	for (const auto& objData : m_stageObjects)
 	{
 		std::shared_ptr<KdGameObject> obj;
+		
+		//タイプ名有効フラグ
 		bool isValidType = false;
 
-		if (objData.type == "NormalPin")
+		if (objData.m_type == "NormalPin")
 		{
-			// ピンの生成処理（例）
-			obj = std::make_shared<NormalPin>(objData.position, objData.rotation);
+			// ピンの生成
+			obj = std::make_shared<NormalPin>(objData.m_position, objData.m_rotation);
+
 			isValidType = true;
 		}
 
@@ -61,6 +64,9 @@ void StageManager::ResetStage()
 		obj.lock()->SetExpire();
 	}
 	m_wpStageObject.clear();
+
+	//ピン数リセット
+	ResetPinCount();
 }
 
 bool StageManager::SaveStage(const std::string& filePath)
@@ -78,10 +84,10 @@ bool StageManager::SaveStage(const std::string& filePath)
 	for (const auto& obj : m_stageObjects)
 	{
 		nlohmann::json jObj;
-		jObj["type"] = obj.type;
-		jObj["position"] = { obj.position.x, obj.position.y, obj.position.z };
-		jObj["rotation"] = { obj.rotation.x, obj.rotation.y, obj.rotation.z, obj.rotation.w };
-		jObj["scale"] = { obj.scale.x,    obj.scale.y,    obj.scale.z };
+		jObj["type"] = obj.m_type;
+		jObj["position"] = { obj.m_position.x, obj.m_position.y, obj.m_position.z };
+		jObj["rotation"] = { obj.m_rotation.x, obj.m_rotation.y, obj.m_rotation.z, obj.m_rotation.w };
+		jObj["scale"] = { obj.m_scale.x,    obj.m_scale.y,    obj.m_scale.z };
 
 		objList.push_back(jObj);
 	}
@@ -92,6 +98,11 @@ bool StageManager::SaveStage(const std::string& filePath)
 
 	outFile << rootJson.dump(4);
 	return true;
+}
+
+bool StageManager::LoadStage(int stageNo)
+{
+	return LoadStage(GetStagePath(stageNo));
 }
 
 bool StageManager::LoadStage(const std::string& filePath)
@@ -118,23 +129,22 @@ bool StageManager::LoadStage(const std::string& filePath)
 		for (const auto& jObj : rootJson["objects"])
 		{
 			StageObjectData data;
-			data.type = jObj.value("type", "Pin");
+			data.m_type = jObj.value("type", "Pin");
 
 			if (jObj.contains("position")) {
-				data.position = { jObj["position"][0], jObj["position"][1], jObj["position"][2] };
+				data.m_position = { jObj["position"][0], jObj["position"][1], jObj["position"][2] };
 			}
 			if (jObj.contains("rotation")) {
-				data.rotation = { jObj["rotation"][0], jObj["rotation"][1], jObj["rotation"][2], jObj["rotation"][3] };
+				data.m_rotation = { jObj["rotation"][0], jObj["rotation"][1], jObj["rotation"][2], jObj["rotation"][3] };
 			}
 			if (jObj.contains("scale")) {
-				data.scale = { jObj["scale"][0], jObj["scale"][1], jObj["scale"][2] };
+				data.m_scale = { jObj["scale"][0], jObj["scale"][1], jObj["scale"][2] };
 			}
 
 			m_stageObjects.push_back(data);
 		}
 	}
 
-	BuildStage();
 	return true;
 }
 
@@ -207,6 +217,97 @@ void StageManager::ApplyCameraTarget()
 void StageManager::Init()
 {
 	m_debugWireFrame = std::make_unique<KdDebugWireFrame>();
+
+	if (!LoadStageMasterData())
+	{
+		//ロード失敗時の処理があるなら書く
+	}
+}
+
+const StageInfo* StageManager::GetStageInfo(int stageNo) const
+{
+	auto it = m_stageTable.find(stageNo);
+	if (it != m_stageTable.end())
+	{
+		return &(it->second);
+	}
+	return nullptr;
+}
+
+int StageManager::CalculateStarCount(int stageNo, float clearTime) const
+{
+	// マスタデータが存在しない、または無効なステージ番号の場合は最小の★1を返す
+	auto it = m_stageTable.find(stageNo);
+	if (it == m_stageTable.end())
+	{
+		return 1;
+	}
+
+	const auto& info = it->second;
+
+	// 目標タイム以下なら評価達成（タイムアタック形式の場合）
+	if (clearTime <= info.m_3StarTime)
+	{
+		return 3;
+	}
+	if (clearTime <= info.m_2StarTime)
+	{
+		return 2;
+	}
+
+	return 1; // クリアした時点で★1は確定
+}
+
+int StageManager::CalculateCurrentStageStarCount(float clearTime) const
+{
+	// 現在選択されているステージ番号（m_currentStageNo）を使って計算
+	return CalculateStarCount(SCENEMGR.GetStageNo(), clearTime);
+}
+
+bool StageManager::LoadStageMasterData()
+{
+	// パスはクラス内部に直書きで保持
+	const std::string masterJsonPath = "Asset/Data/StageData/StageMasterData.json";
+
+	std::ifstream file(masterJsonPath);
+	if (!file.is_open())
+	{
+		return false; // ファイルが開けない場合
+	}
+
+	nlohmann::json rootJson;
+	try
+	{
+		file >> rootJson;
+	}
+	catch (...)
+	{
+		file.close();
+		return false; // JSONの構文エラー等
+	}
+	file.close();
+
+	// 既存データをクリア
+	m_stageTable.clear();
+
+	// 配列要素を1つずつ走査して構造体に格納
+	for (const auto& item : rootJson)
+	{
+		StageInfo info;
+
+		// .value("キー名", デフォルト値) を使うことで、キーが存在しなくても安全に取得可能
+		info.m_stageNo = item.value("stageNo", 0);
+		info.m_2StarTime = item.value("2StarTime", 0.0f);
+		info.m_3StarTime = item.value("3StarTime", 0.0f);
+
+		// stageNo をキーとしてマップに格納
+		if (info.m_stageNo > 0)
+		{
+			m_stageTable[info.m_stageNo] = info;
+		}
+	}
+
+	return true;
 }
 
 void StageManager::Release()

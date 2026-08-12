@@ -2,6 +2,8 @@
 
 #include "Scene/SceneManager.h"
 #include "Physics/PhysicsManager.h"
+#include "StageManager/StageManager.h"
+#include "GameObject/Chara/CharaManager.h"
 
 // ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// /////
 // エントリーポイント
@@ -224,6 +226,8 @@ bool Application::Init(int w, int h)
 	//===================================================================
 	// 例えばカーソルを消したい場合
 	//ShowCursor(false);
+	CHARAMGR.Init();
+	STAGEMGR.Init();
 
 	return true;
 }

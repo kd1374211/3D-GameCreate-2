@@ -2,7 +2,9 @@
 
 #include "BaseScene/BaseScene.h"
 #include "TitleScene/TitleScene.h"
+#include "StageSelectScene/StageSelectScene.h"
 #include "GameScene/GameScene.h"
+#include "ResultScene/ResultScene.h"
 
 //追加7/17
 //使うインクルード達
@@ -95,8 +97,14 @@ void SceneManager::ChangeScene(SceneType _sceneType)
 	case SceneType::Title:
 		m_currentScene = std::make_shared<TitleScene>();
 		break;
+	case SceneType::StageSelect:
+		m_currentScene = std::make_shared<StageSelectScene>();
+		break;
 	case SceneType::Game:
 		m_currentScene = std::make_shared<GameScene>();
+		break;
+	case SceneType::Result:
+		m_currentScene = std::make_shared<ResultScene>();
 		break;
 	}
 

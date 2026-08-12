@@ -133,4 +133,13 @@ void PinBase::OnHitByPlayer(JPH::Vec3 playerVelocity)
 	// OnContactAdded 内では直接 BodyInterface をいじらず、フラグと速度だけメモして抜ける
 	m_isHitPending = true;
 	m_pendingVelocity = playerVelocity;
+
+	//ピンが倒れたという情報を送る
+	STAGEMGR.OnPinFallen();
+}
+
+void PinBase::Init()
+{
+	//ピン数追加
+	STAGEMGR.OnPinSpawn();
 }

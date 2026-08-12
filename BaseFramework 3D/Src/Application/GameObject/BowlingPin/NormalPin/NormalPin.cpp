@@ -2,6 +2,9 @@
 
 NormalPin::NormalPin(Math::Vector3 pos, Math::Quaternion rotat)
 {
+	//本体
+	PinBase::Init();
+
 	std::string path_hit = "Asset/Models/Pin/Hit/pin.gltf";
 	std::string path_draw = "Asset/Models/Pin/Draw/pin.gltf";
 	m_model = std::make_shared<KdModelWork>();

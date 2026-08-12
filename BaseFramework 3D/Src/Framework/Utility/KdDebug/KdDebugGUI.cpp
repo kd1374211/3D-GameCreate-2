@@ -134,10 +134,10 @@ void KdDebugGUI::GuiProcess()
 			if (ImGui::Button("+ Add NormalPin"))
 			{
 				StageObjectData newPin;
-				newPin.type = "NormalPin";
-				newPin.position = { 0.0f, 0.0f, 0.0f };
-				newPin.rotation = { 0.0f, 0.0f, 0.0f, 1.0f };
-				newPin.scale = { 1.0f, 1.0f, 1.0f };
+				newPin.m_type = "NormalPin";
+				newPin.m_position = { 0.0f, 0.0f, 0.0f };
+				newPin.m_rotation = { 0.0f, 0.0f, 0.0f, 1.0f };
+				newPin.m_scale = { 1.0f, 1.0f, 1.0f };
 
 				STAGEMGR.AddStageObject(newPin);
 				selectedIndex = static_cast<int>(stageObjects.size()) - 1;
@@ -149,7 +149,7 @@ void KdDebugGUI::GuiProcess()
 			ImGui::BeginChild("ObjectList", ImVec2(0, 150), true);
 			for (int i = 0; i < stageObjects.size(); ++i)
 			{
-				std::string label = "[" + std::to_string(i) + "] " + stageObjects[i].type;
+				std::string label = "[" + std::to_string(i) + "] " + stageObjects[i].m_type;
 				bool isSelected = (selectedIndex == i);
 
 				if (ImGui::Selectable(label.c_str(), isSelected))
@@ -172,9 +172,9 @@ void KdDebugGUI::GuiProcess()
 				auto& obj = stageObjects[selectedIndex];
 
 				bool isChanged = false;
-				isChanged |= ImGui::DragFloat3("Position", &obj.position.x, 0.05f);
-				isChanged |= ImGui::DragFloat4("Rotation (Quat)", &obj.rotation.x, 0.01f);
-				isChanged |= ImGui::DragFloat3("Scale", &obj.scale.x, 0.05f);
+				isChanged |= ImGui::DragFloat3("Position", &obj.m_position.x, 0.05f);
+				isChanged |= ImGui::DragFloat4("Rotation (Quat)", &obj.m_rotation.x, 0.01f);
+				isChanged |= ImGui::DragFloat3("Scale", &obj.m_scale.x, 0.05f);
 
 				if (isChanged)
 				{

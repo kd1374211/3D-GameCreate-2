@@ -1,0 +1,17 @@
+【ステージエディター開発の現在の状況】
+■ 現在の仕様・実装状況：
+1. モード切り替え（Edit / Play）
+   - StageManagerでStageMode（Edit / Play）を管理。
+   - Play時は物理演算・プレイヤー操作を有効化。Edit時はリセット＆物理停止。
+   - ImGuiに「PLAY STAGE」「EDIT STAGE (Reset)」ボタンを設置。
+
+2. オブジェクト選択・編集機能
+   - STAGEMGR.SetSelectedIndex(selectedIndex) で選択中インデックスを同期。
+   - ImGui側で「+ Add NormalPin」「Delete Selected」「DragFloat3/4 (Pos/Rot/Scale)」でのリアルタイム編集（即座にBuildStageでリビルド）を実装済み。
+   - 変数の二重定義（シャドウイング）を修正し、ImGuiとStageManager間のインデックス同期が正常動作することを確認済み。
+
+3. カメラ関連
+   - カメラ追従は一旦未実装とし、元通りの構成に戻した状態。
+
+■ 次回やりたいこと（予定）：
+- エディター再開時：選択中オブジェクトの可視化（デバッグワイヤーフレーム表示など）、複製（Duplicate）、スナップ機能などの追加。

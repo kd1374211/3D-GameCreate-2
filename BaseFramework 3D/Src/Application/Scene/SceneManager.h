@@ -11,7 +11,9 @@ public :
 	enum class SceneType
 	{
 		Title,
+		StageSelect,
 		Game,
+		Result
 	};
 
 	void PreUpdate();
@@ -49,6 +51,14 @@ public :
 	//終了
 	void Release();
 
+	//追加8/11
+	//現在のシーン取得
+	SceneType GetCurrentSceneType()const { return m_currentSceneType; }
+
+	//ステージ番号セッター・ゲッター
+	void SetStageNo(int No) { m_stageNo = No; }
+	int GetStageNo()const { return m_stageNo; }
+
 private :
 
 	// シーン切り替え関数
@@ -58,10 +68,14 @@ private :
 	std::shared_ptr<BaseScene> m_currentScene = nullptr;
 
 	// 現在のシーンの種類を保持している変数
-	SceneType m_currentSceneType = SceneType::Game;
+	SceneType m_currentSceneType = SceneType::Title;
 	
 	// 次のシーンの種類を保持している変数
 	SceneType m_nextSceneType = m_currentSceneType;
+
+	//追加8/11
+	//ステージ番号
+	int m_stageNo = 1;
 
 private:
 

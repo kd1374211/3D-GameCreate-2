@@ -14,4 +14,7 @@ public :
 private:
 
 	void Event() override;
+
+	//ステージ時間管理
+	float m_stageTimer = 0.0f;
 };

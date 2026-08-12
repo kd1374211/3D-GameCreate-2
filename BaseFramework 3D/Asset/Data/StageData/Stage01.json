@@ -75,6 +75,25 @@
                 1.0
             ],
             "type": "NormalPin"
+        },
+        {
+            "position": [
+                1.100000023841858,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "type": "NormalPin"
         }
     ],
     "stage_name": "CustomStage",

@@ -124,6 +124,27 @@
     <Filter Include="Src\Application\StageManager">
       <UniqueIdentifier>{a6fae5d5-e7a1-4091-a0e8-0bb8b013630b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\Scene\StageSelectScene">
+      <UniqueIdentifier>{3ca7c845-6af3-4df3-b83d-a1adec3d7e43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\Scene\ResultScene">
+      <UniqueIdentifier>{539cb27a-20a5-410b-a90b-099405629c97}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\GameObject\UI">
+      <UniqueIdentifier>{37ada888-3b74-4423-bcf1-4cca0dccf4ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\GameObject\UI\SceneUIObjects">
+      <UniqueIdentifier>{15e0af84-e7a5-46a8-a64f-65f41fac64f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\GameObject\UI\SceneUIObjects\Title">
+      <UniqueIdentifier>{a5f061d2-ffb6-47b9-be4a-416c371b284b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\GameObject\UI\SceneUIObjects\StageSelect">
+      <UniqueIdentifier>{1657147c-19c9-4fce-8daf-ff1dc05ff3e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\GameObject\UI\SceneUIObjects\Result">
+      <UniqueIdentifier>{ebfe013a-6658-4591-aa0d-b3181bd00407}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -1446,6 +1467,21 @@
     <ClInclude Include="Src\Application\GameObject\Chara\CharaManager.h">
       <Filter>Src\Application\GameObject\Chara</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\Scene\StageSelectScene\StageSelectScene.h">
+      <Filter>Src\Application\Scene\StageSelectScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Scene\ResultScene\ResultScene.h">
+      <Filter>Src\Application\Scene\ResultScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\UI\SceneUIObjects\Title\TitleUIObjects.h">
+      <Filter>Src\Application\GameObject\UI\SceneUIObjects\Title</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\UI\SceneUIObjects\StageSelect\StageSelectUIObjects.h">
+      <Filter>Src\Application\GameObject\UI\SceneUIObjects\StageSelect</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\UI\SceneUIObjects\Result\ResultUIObjects.h">
+      <Filter>Src\Application\GameObject\UI\SceneUIObjects\Result</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -2089,6 +2125,21 @@
     </ClCompile>
     <ClCompile Include="Src\Application\GameObject\Chara\CharaManager.cpp">
       <Filter>Src\Application\GameObject\Chara</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Scene\StageSelectScene\StageSelectScene.cpp">
+      <Filter>Src\Application\Scene\StageSelectScene</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Scene\ResultScene\ResultScene.cpp">
+      <Filter>Src\Application\Scene\ResultScene</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\UI\SceneUIObjects\Title\TitleUIObjects.cpp">
+      <Filter>Src\Application\GameObject\UI\SceneUIObjects\Title</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\UI\SceneUIObjects\StageSelect\StageSelectUIObjects.cpp">
+      <Filter>Src\Application\GameObject\UI\SceneUIObjects\StageSelect</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\UI\SceneUIObjects\Result\ResultUIObjects.cpp">
+      <Filter>Src\Application\GameObject\UI\SceneUIObjects\Result</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
