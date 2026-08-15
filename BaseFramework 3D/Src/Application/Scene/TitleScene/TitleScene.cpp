@@ -1,10 +1,12 @@
 ﻿#include "TitleScene.h"
 #include "../SceneManager.h"
 #include "../../GameObject/UI/SceneUIObjects/Title/TitleUIObjects.h"
+#include "../../StageManager/StageManager.h"
+#include "../../GameObject/Camera/StageViewCamera/StageViewCamera.h"
 
 void TitleScene::Event()
 {
-	if (GetAsyncKeyState('Q') & 0x8000)
+	if (GetAsyncKeyState(VK_SPACE) & 0x8000)
 	{
 		SceneManager::Instance().SetNextScene
 		(
@@ -15,6 +17,28 @@ void TitleScene::Event()
 
 void TitleScene::Init()
 {
+	//ランダムに背景ステージ読み込み
+	//読み込むステージをランダムで決定
+	int backStageNo = (int)(rand() / RAND_MAX * (STAGEMGR.GetMaxStageNo() - STAGEMGR.GetMinStageNo()) + STAGEMGR.GetMinStageNo());
+	STAGEMGR.LoadStage(backStageNo);
+	//背景モードで生成
+	STAGEMGR.BuildStage(StageBuildMode::Background);
+
+	//ステージ確認カメラ
+	std::shared_ptr<StageViewCamera> camera = std::make_shared<StageViewCamera>();
+	camera->Init();
+	camera->SetViewDistance(20.0f);
+
+	//さっき生成した地形をターゲットに
+	if (!STAGEMGR.GetTerrain().expired())
+	{
+		camera->SetTarget(STAGEMGR.GetTerrain().lock());
+	}
+
+	//追加
+	m_wpCamera = camera;
+	AddObject(camera);
+
 	//UI全般
 	std::shared_ptr<TitleUIObject> UIObj = std::make_shared<TitleUIObject>();
 	AddObject(UIObj);

@@ -228,6 +228,7 @@ bool Application::Init(int w, int h)
 	//ShowCursor(false);
 	CHARAMGR.Init();
 	STAGEMGR.Init();
+	srand(timeGetTime());
 
 	return true;
 }

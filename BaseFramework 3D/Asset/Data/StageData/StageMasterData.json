@@ -1,11 +1,17 @@
 [
 	{
 		"stageNo": 1,
+		"stageListName": "ステージ１",
+		"stageName": "ステージ１ : ステージ名",
+		"thumbnail": "Asset/Textures/StageThumbnail/Stage01.png",
 		"2StarTime": 20.0,
 		"3StarTime": 10.0
 	},
 	{
 		"stageNo": 2,
+		"stageListName": "ステージ２",
+		"stageName": "ステージ２ : ステージ名",
+		"thumbnail": "Asset/Textures/StageThumbnail/Stage02.png",
 		"2StarTime": 25.0,
 		"3StarTime": 12.0
 	}

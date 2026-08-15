@@ -145,6 +145,15 @@
     <Filter Include="Src\Application\GameObject\UI\SceneUIObjects\Result">
       <UniqueIdentifier>{ebfe013a-6658-4591-aa0d-b3181bd00407}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\GameObject\UI\SceneUIObjects\Game">
+      <UniqueIdentifier>{9fa9667a-6dfc-4be7-8c94-b793920180a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\GameObject\SkySphere">
+      <UniqueIdentifier>{4e5ff77b-897d-4bd0-b02b-2c6ee8ee7c45}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\GameObject\Camera\StageViewCamera">
+      <UniqueIdentifier>{d75b1193-1036-48d8-9753-9daaa77bc08a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -1482,6 +1491,15 @@
     <ClInclude Include="Src\Application\GameObject\UI\SceneUIObjects\Result\ResultUIObjects.h">
       <Filter>Src\Application\GameObject\UI\SceneUIObjects\Result</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\UI\SceneUIObjects\Game\GameUIObjects.h">
+      <Filter>Src\Application\GameObject\UI\SceneUIObjects\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\SkySphere\SkySphere.h">
+      <Filter>Src\Application\GameObject\SkySphere</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\Camera\StageViewCamera\StageViewCamera.h">
+      <Filter>Src\Application\GameObject\Camera\StageViewCamera</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -2140,6 +2158,15 @@
     </ClCompile>
     <ClCompile Include="Src\Application\GameObject\UI\SceneUIObjects\Result\ResultUIObjects.cpp">
       <Filter>Src\Application\GameObject\UI\SceneUIObjects\Result</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\UI\SceneUIObjects\Game\GameUIObjects.cpp">
+      <Filter>Src\Application\GameObject\UI\SceneUIObjects\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\SkySphere\SkySphere.cpp">
+      <Filter>Src\Application\GameObject\SkySphere</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\Camera\StageViewCamera\StageViewCamera.cpp">
+      <Filter>Src\Application\GameObject\Camera\StageViewCamera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

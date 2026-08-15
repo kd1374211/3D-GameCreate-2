@@ -1,27 +1,30 @@
 {
-    "objects": [
-        {
-            "position": [
-                0.0,
-                0.0,
-                0.0
-            ],
-            "rotation": [
-                0.0,
-                0.0,
-                0.0,
-                1.0
-            ],
-            "scale": [
-                1.0,
-                1.0,
-                1.0
-            ],
-            "type": "NormalPin"
-        }
-    ],
-    "stage_name": "CustomStage",
-    "terrain": {
-        "model_path": "Asset/Models/Terrain/Stage01/TestGround.gltf"
-    }
+	"objects": [
+		{
+			"position": [
+				0.0,
+				0.0,
+				0.0
+			],
+			"rotation": [
+				0.0,
+				0.0,
+				0.0,
+				1.0
+			],
+			"scale": [
+				1.0,
+				1.0,
+				1.0
+			],
+			"type": "NormalPin"
+		}
+	],
+	"stage_name": "CustomStage",
+	"terrain": {
+		"model_path": "Asset/Models/Terrain/Stage01/TestGround.gltf"
+	},
+	"sky": {
+		"model_path": "Asset/Models/Sky/SkySphere/SkySphere.gltf"
+	}
 }

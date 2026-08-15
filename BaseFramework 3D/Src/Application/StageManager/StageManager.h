@@ -16,11 +16,21 @@ enum class StageMode
 	Play    // プレイモード（物理動作・編集不可）
 };
 
+// ステージ生成をどこまでするか
+enum class StageBuildMode
+{
+	Full,       // 本編用（地形＋天球＋プレイヤー＋ピン＋ギミック等）
+	Background  // 背景用（地形＋天球のみ）
+};
+
 struct StageInfo
 {
-	int m_stageNo = 0;
-	float m_2StarTime = 0.0f; // ★2の目標時間
-	float m_3StarTime = 0.0f; // ★3の目標時間
+	int m_stageNo = 0;				//ステージ番号
+	std::string m_stageListName;	//リスト上でのステージ名
+	std::string m_stageName;		//詳細上でのステージ名（本当の名前）
+	std::string m_stageThumbPath;	//サムネイル画像パス
+	float m_2StarTime = 0.0f;		// ★2の目標時間
+	float m_3StarTime = 0.0f;		// ★3の目標時間
 };
 
 class StageManager
@@ -31,7 +41,7 @@ public:
 	void Init();
 
 	//地形生成
-	void BuildStage();
+	void BuildStage(StageBuildMode mode = StageBuildMode::Full);
 
 	//リセット
 	void ResetStage();
@@ -51,6 +61,9 @@ public:
 	// ゲッター(操作用)
 	std::string& GetTerrainPath() { return m_terrainPath; }
 	std::vector<StageObjectData>& GetStageObjects() { return m_stageObjects; }
+
+	//ゲッター（カメラ用）
+	std::weak_ptr<KdGameObject>& GetTerrain() { return m_wpTerrain; }
 
 	void AddStageObject(const StageObjectData& objectData) { m_stageObjects.push_back(objectData); }
 	void RemoveStageObject(size_t index)
@@ -114,6 +127,7 @@ public:
 
 	//ステージ数ゲッター（仮置き）
 	int GetMaxStageNo()const { return static_cast<int>(m_stageTable.size()); }
+	int GetMinStageNo()const { return 1; }
 
 private:
 
@@ -144,11 +158,13 @@ private:
 	}
 
 	//オブジェクトのリスト管理
+	std::weak_ptr<KdGameObject> m_wpSkySphere;
 	std::weak_ptr<KdGameObject> m_wpTerrain;
 	std::vector<std::weak_ptr<KdGameObject>> m_wpStageObject;
 
 	//地形データ管理
 	std::string m_terrainPath; //地形データのパス
+	std::string m_skySpherePath; //天球のパス
 
 	//オブジェクトデータ管理
 	std::vector<StageObjectData> m_stageObjects;

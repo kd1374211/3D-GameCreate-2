@@ -12,7 +12,7 @@ void StageSelectScene::Init()
 
 void StageSelectScene::Event()
 {
-	if (GetAsyncKeyState(VK_RETURN) & 0x8000)
+	if (GetAsyncKeyState(VK_SPACE) & 0x8000)
 	{
 		//ステージ準備
 		if (!m_wpUI.expired())

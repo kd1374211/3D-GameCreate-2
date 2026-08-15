@@ -3,56 +3,18 @@
 #include "../GameObject/Chara/CharaManager.h"
 #include "../GameObject/Camera/CameraBase.h"
 
-void StageManager::BuildStage()
-{
-	//リセット
-	ResetStage();
-
-	//地形生成
-	std::shared_ptr<Ground> ground = std::make_shared<Ground>(m_terrainPath, Math::Vector3::Zero, Math::Quaternion::Identity);
-	// ゲームシーンの管理リストに追加
-	SCENEMGR.AddObject(ground);
-
-	//後で消せるようにリスト持ち
-	m_wpTerrain = ground;
-
-	// 読み込んだデータをもとにオブジェクト生成
-	for (const auto& objData : m_stageObjects)
-	{
-		std::shared_ptr<KdGameObject> obj;
-		
-		//タイプ名有効フラグ
-		bool isValidType = false;
-
-		if (objData.m_type == "NormalPin")
-		{
-			// ピンの生成
-			obj = std::make_shared<NormalPin>(objData.m_position, objData.m_rotation);
-
-			isValidType = true;
-		}
-
-		// タイプ名チェック
-		if (isValidType)
-		{
-			// ゲームシーンの管理リストに追加
-			SCENEMGR.AddObject(obj);
-
-			//後で消せるようにリスト持ち
-			m_wpStageObject.push_back(obj);
-		}
-	}
-
-	// ★ リビルド完了後、新しい実体のポインタをカメラに再設定する
-	//ApplyCameraTarget();
-}
-
 void StageManager::ResetStage()
 {
 	//地形削除
 	if (!m_wpTerrain.expired())
 	{
 		m_wpTerrain.lock()->SetExpire();
+	}
+
+	//天球削除
+	if (!m_wpSkySphere.expired())
+	{
+		m_wpSkySphere.lock()->SetExpire();
 	}
 
 	//オブジェクトリセット
@@ -79,7 +41,12 @@ bool StageManager::SaveStage(const std::string& filePath)
 	{ "model_path", m_terrainPath }
 	};
 
-	// 2. 配置オブジェクト一覧
+	// 2. 天球情報
+	rootJson["sky"] = {
+	{ "model_path", m_skySpherePath }
+	};
+
+	// 3. 配置オブジェクト一覧
 	nlohmann::json objList = nlohmann::json::array();
 	for (const auto& obj : m_stageObjects)
 	{
@@ -120,10 +87,17 @@ bool StageManager::LoadStage(const std::string& filePath)
 	// Load 時
 	if (rootJson.contains("terrain"))
 	{
-		m_terrainPath = rootJson["terrain"].value("model_path", "Asset/Data/Model/Stage01.gltf");
+		m_terrainPath = rootJson["terrain"].value("model_path", "Asset/Models/Terrain/Stage01/TestGround.gltf");
 	}
 
-	// 2. 配置オブジェクトの読み込み
+	// 2. 地形情報の読み込み
+	// Load 時
+	if (rootJson.contains("sky"))
+	{
+		m_skySpherePath = rootJson["sky"].value("model_path", "Asset/Models/Sky/SkySphere/SkySphere.gltf");
+	}
+
+	// 3. 配置オブジェクトの読み込み
 	if (rootJson.contains("objects") && rootJson["objects"].is_array())
 	{
 		for (const auto& jObj : rootJson["objects"])
@@ -224,6 +198,59 @@ void StageManager::Init()
 	}
 }
 
+void StageManager::BuildStage(StageBuildMode mode)
+{
+	//リセット
+	ResetStage();
+
+	//地形生成
+	std::shared_ptr<Ground> ground = std::make_shared<Ground>(m_terrainPath, Math::Vector3::Zero, Math::Quaternion::Identity);
+	// ゲームシーンの管理リストに追加
+	SCENEMGR.AddObject(ground);
+	//後で消せるようにリスト持ち
+	m_wpTerrain = ground;
+
+	//天球生成
+	std::shared_ptr<SkySphere> sky = std::make_shared<SkySphere>(m_skySpherePath);
+	// ゲームシーンの管理リストに追加
+	SCENEMGR.AddObject(sky);
+	//後で消せるようにリスト持ち
+	m_wpSkySphere = sky;
+
+	//背景モードはこれ以降をロードしない
+	if (mode == StageBuildMode::Background)return;
+
+	// 読み込んだデータをもとにオブジェクト生成
+	for (const auto& objData : m_stageObjects)
+	{
+		std::shared_ptr<KdGameObject> obj;
+
+		//タイプ名有効フラグ
+		bool isValidType = false;
+
+		if (objData.m_type == "NormalPin")
+		{
+			// ピンの生成
+			obj = std::make_shared<NormalPin>(objData.m_position, objData.m_rotation);
+
+			isValidType = true;
+		}
+
+		// タイプ名チェック
+		if (isValidType)
+		{
+			// ゲームシーンの管理リストに追加
+			SCENEMGR.AddObject(obj);
+
+			//後で消せるようにリスト持ち
+			m_wpStageObject.push_back(obj);
+		}
+	}
+
+	// ★ リビルド完了後、新しい実体のポインタをカメラに再設定する
+	//ApplyCameraTarget();
+}
+
 const StageInfo* StageManager::GetStageInfo(int stageNo) const
 {
 	auto it = m_stageTable.find(stageNo);
@@ -297,6 +324,9 @@ bool StageManager::LoadStageMasterData()
 
 		// .value("キー名", デフォルト値) を使うことで、キーが存在しなくても安全に取得可能
 		info.m_stageNo = item.value("stageNo", 0);
+		info.m_stageListName = item.value("stageListName", "エラー");
+		info.m_stageName = item.value("stageName", "エラー");
+		info.m_stageThumbPath = item.value("thumbnail", "Asset/Textures/System/WhiteNoise.png");
 		info.m_2StarTime = item.value("2StarTime", 0.0f);
 		info.m_3StarTime = item.value("3StarTime", 0.0f);
 

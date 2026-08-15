@@ -5,8 +5,8 @@
 #include "../../StageManager/StageManager.h"
 #include "../../GameObject/Camera/TPSCamera/TPSCamera.h"
 #include "../../GameObject/Chara/Player/Player.h"
-#include "../../GameObject/BowlingPin/NormalPin/NormalPin.h"
 #include "../../GameObject/Chara/CharaManager.h"
+#include "../../GameObject/UI/SceneUIObjects/Game/GameUIObjects.h"
 
 void GameScene::Event()
 {
@@ -24,6 +24,11 @@ void GameScene::Event()
 
 	//時間経過
 	m_stageTimer += Application::Instance().GetDeltaTime();
+	//UIタイマーに適応
+	if (!m_wpUI.expired())
+	{
+		m_wpUI.lock()->SetTimer((int)m_stageTimer);
+	}
 
 	//ピン残数確認(DEBUG)
 	KdDebugGUI::Instance().AddLog("Total Pin :%d\n", STAGEMGR.GetTotalPinCount());
@@ -59,4 +64,9 @@ void GameScene::Init()
 	//追加
 	AddObject(camera);
 	AddObject(player);
+
+	//UI
+	std::shared_ptr<GameUIObjects> UIObj = std::make_shared<GameUIObjects>();
+	m_wpUI = UIObj;
+	AddObject(UIObj);
 }
