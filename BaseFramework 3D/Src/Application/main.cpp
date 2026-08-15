@@ -215,6 +215,7 @@ bool Application::Init(int w, int h)
 	// フォント初期化
 	//===================================================================
 	KdFontManager::Instance().Init(GetWindowHandle());
+	KdFontManager::Instance().LoadFonts();	//追加8/15
 	
 	//===================================================================
 	// シーン初期化

@@ -275,6 +275,13 @@ void KdFontManager::Init(HWND hWnd)
 	m_hDC	= GetDC(m_hWnd);
 }
 
+void KdFontManager::LoadFonts()
+{
+	//追加8/15
+	//cp.period入れる
+	KdFontManager::Instance().AddFontResource("Asset/Fonts/cp_period.ttf");
+}
+
 void KdFontManager::Release()
 {
 	for(auto& font : m_FontTbl)
@@ -296,6 +303,14 @@ void KdFontManager::AddFont(int fontNo, const std::string& fontName, int h)
 	HFONT hFont = MakeFont(fontName.c_str(), h, 0);
 	m_FontTbl[fontNo].hFont = hFont;
 	m_FontTbl[fontNo].CreatedFontDataTbl.fill(nullptr);
+}
+
+void KdFontManager::AddFont(int fontIndex, int h)
+{
+	//無かったらリターン
+	if (m_fontTitles.find(fontIndex) == m_fontTitles.end())return;
+
+	AddFont(0, m_fontTitles.find(fontIndex)->second, h);
 }
 
 std::shared_ptr<KdFontSprite> KdFontManager::CreateFontTexture(int fontNo, const std::string& text, int antiAliasingFlag)

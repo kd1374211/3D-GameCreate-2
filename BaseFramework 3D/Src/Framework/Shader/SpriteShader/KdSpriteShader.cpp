@@ -498,3 +498,21 @@ void KdSpriteShader::DrawFont(const Math::Vector2& Pos, const Math::Color* color
 
 	DrawFont(fontSprite, Pos, color, 0);
 }
+
+//追加8/15
+//フォント番号、高さ設定版
+void KdSpriteShader::DrawFont(int fontIndex, float fontH, const Math::Vector2& Pos, const Math::Color* color, const char* format, ...)
+{
+	char tmpStr[128]{};
+	va_list argptr;
+	va_start(argptr, format);
+	vsprintf_s(tmpStr, format, argptr);
+	va_end(argptr);
+
+	//引数から新しく生成
+	KdFontManager::Instance().AddFont(fontIndex, fontH);
+
+	std::shared_ptr<KdFontSprite> fontSprite = KdFontManager::Instance().CreateFontTexture(0, tmpStr, false);
+
+	DrawFont(fontSprite, Pos, color, 0);
+}
