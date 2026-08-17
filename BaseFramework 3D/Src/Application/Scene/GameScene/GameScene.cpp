@@ -10,6 +10,30 @@
 
 void GameScene::Event()
 {
+	//デルタタイム取得
+	float dt = Application::Instance().GetDeltaTime();
+
+	//シーンステート分岐
+	switch (m_currentSceneState)
+	{
+	case SceneState::CountDown:
+		//時間経過
+		m_countdownTimer -= dt;
+		
+		//Playingに切り替え
+		if (m_countdownTimer < 0.0f)m_currentSceneState = SceneState::Playing;
+		
+		//仮表示
+		KdDebugGUI::Instance().AddLog("CountDown : %.2f\n", m_countdownTimer);
+		break;
+	case SceneState::Playing:
+		break;
+	case SceneState::GameOver:
+		break;
+	case SceneState::GameClear:
+		break;
+	}
+
 	//ピンが全て倒れたらリザルト移行
 	if (STAGEMGR.IsAllPinsFallen())
 	{
@@ -23,7 +47,7 @@ void GameScene::Event()
 	}
 
 	//時間経過
-	m_stageTimer += Application::Instance().GetDeltaTime();
+	m_stageTimer += dt;
 	//UIタイマーに適応
 	if (!m_wpUI.expired())
 	{

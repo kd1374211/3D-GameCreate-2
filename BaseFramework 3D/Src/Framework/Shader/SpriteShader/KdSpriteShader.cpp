@@ -435,48 +435,106 @@ void KdSpriteShader::DrawFont(std::shared_ptr<KdFontSprite>& fontSprite, const M
 	// フォントの高さ
 	float _moveY = (float)fontSprite->GetTexList()[0]->FontTex->GetInfo().Height;
 
-	// 全ての文字テクスチャを描画する
-	float			_moveX	= 0;
-	Math::Vector2	_pos	= Pos;
+	//Pos引数を中心として描画したい
+	//ので計算を試す
+
+	//計算チャレンジ
+	float			_moveX = 0;
+	std::list<Math::Vector2> _pos;
+	Math::Vector2 _currentPos = Math::Vector2::Zero;
+	Math::Vector2 _overallSize = Math::Vector2::Zero;
+
+	//１行目
+	_overallSize.y += _moveY;
+
 	for (auto& data : fontSprite->GetTexList())
 	{
 		// 改行文字の場合は、X,Y座標を操作
 		if (data->Code == '\n')
 		{
-			_pos.x -= _moveX;
-			_pos.y -= _moveY;
+			_currentPos.x -= _moveX;
+			_currentPos.y -= _moveY;
 			_moveX = 0;
+
+			//全体サイズ（縦）拡張
+			_overallSize.y += _moveY;
 		}
 		// その他の文字
 		else {
-			// テクスチャをセット
-			KdDirect3D::Instance().WorkDevContext()->PSSetShaderResources(0, 1, data->FontTex->WorkSRViewAddress());
 
-			// UV
-			Math::Vector2 uvMin = { 0, 0 };
-			Math::Vector2 uvMax = { 1, 1 };
-
-			// 頂点作成
-			float imageW = (float)data->FontTex->GetInfo().Width;
-			float imageH = (float)data->FontTex->GetInfo().Height;
-			float x1 = (float)_pos.x;
-			float y1 = (float)_pos.y;
-			float x2 = (float)(x1 + imageW);
-			float y2 = (float)(y1 + imageH);
-
-			Vertex vertex[] = {
-				{ {x1, y1, 0},	{uvMin.x, uvMax.y} },
-				{ {x1, y2, 0},	{uvMin.x, uvMin.y} },
-				{ {x2, y1, 0},	{uvMax.x, uvMax.y} },
-				{ {x2, y2, 0},	{uvMax.x, uvMin.y} }
-			};
-			// 描画
-			KdDirect3D::Instance().DrawVertices(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP, 4, vertex, sizeof(Vertex));
+			//位置を格納する
+			_pos.push_back(_currentPos);
 
 			// 次の文字のため、X座標を進める
-			_pos.x += data->FontTex->GetInfo().Width;
+			_currentPos.x += data->FontTex->GetInfo().Width;
 			_moveX += data->FontTex->GetInfo().Width;
+
+			//最高を更新したら全体サイズ（横）拡張
+			if (_overallSize.x < _currentPos.x)_overallSize.x = _currentPos.x;
 		}
+	}
+
+	//描画開始位置設定
+	Math::Vector2 _beginPos;
+
+	////Xは引数で変動
+	//switch (Base)
+	//{
+	//	//左揃え
+	//case TextDrawBase::Left:
+	//	_beginPos.x = Pos.x;
+	//	break;
+	//	//中央揃え
+	//case TextDrawBase::Center:
+	_beginPos.x = Pos.x - _overallSize.x / 2.0f;
+	//	break;
+	//	//右揃え
+	//case TextDrawBase::Right:
+	//	_beginPos.x = Pos.x - _overallSize.x;
+	//	break;
+	//}
+
+	//Yは共通
+	_beginPos.y = Pos.y + _overallSize.y / 2.0f;
+	//仕様上Yは1文字分ずらす
+	_beginPos.y -= _moveY;
+
+	// 全ての文字テクスチャを描画する
+	for (auto& data : fontSprite->GetTexList())
+	{
+		// 改行文字の場合は無視
+		if (data->Code == '\n')continue;
+
+		//座標の最初を取得
+		Math::Vector2 _drawPos = _pos.front();
+
+		// その他の文字
+		// テクスチャをセット
+		KdDirect3D::Instance().WorkDevContext()->PSSetShaderResources(0, 1, data->FontTex->WorkSRViewAddress());
+
+		// UV
+		Math::Vector2 uvMin = { 0, 0 };
+		Math::Vector2 uvMax = { 1, 1 };
+
+		// 頂点作成
+		float imageW = (float)data->FontTex->GetInfo().Width;
+		float imageH = (float)data->FontTex->GetInfo().Height;
+		float x1 = (float)_beginPos.x + _drawPos.x;
+		float y1 = (float)_beginPos.y + _drawPos.y;
+		float x2 = (float)(x1 + imageW);
+		float y2 = (float)(y1 + imageH);
+
+		Vertex vertex[] = {
+			{ {x1, y1, 0},	{uvMin.x, uvMax.y} },
+			{ {x1, y2, 0},	{uvMin.x, uvMin.y} },
+			{ {x2, y1, 0},	{uvMax.x, uvMax.y} },
+			{ {x2, y2, 0},	{uvMax.x, uvMin.y} }
+		};
+		// 描画
+		KdDirect3D::Instance().DrawVertices(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP, 4, vertex, sizeof(Vertex));
+
+		//ポップ
+		_pos.pop_front();
 	}
 
 	// セットしたテクスチャを解除しておく

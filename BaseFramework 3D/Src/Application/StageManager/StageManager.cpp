@@ -324,8 +324,8 @@ bool StageManager::LoadStageMasterData()
 
 		// .value("キー名", デフォルト値) を使うことで、キーが存在しなくても安全に取得可能
 		info.m_stageNo = item.value("stageNo", 0);
-		info.m_stageListName = item.value("stageListName", "エラー");
-		info.m_stageName = item.value("stageName", "エラー");
+		info.m_stageListName = Utf8ToMultiByte(item.value("stageListName", "エラー"));
+		info.m_stageName = Utf8ToMultiByte(item.value("stageName", "エラー"));
 		info.m_stageThumbPath = item.value("thumbnail", "Asset/Textures/System/WhiteNoise.png");
 		info.m_2StarTime = item.value("2StarTime", 0.0f);
 		info.m_3StarTime = item.value("3StarTime", 0.0f);
@@ -342,3 +342,25 @@ bool StageManager::LoadStageMasterData()
 
 void StageManager::Release()
 {}
+
+std::string StageManager::Utf8ToMultiByte(const std::string & utf8Str)
+{
+	if (utf8Str.empty()) return "";
+
+	// 1. UTF-8 -> ワイド文字列 (UTF-16) へ変換
+	int wideLen = MultiByteToWideChar(CP_UTF8, 0, utf8Str.c_str(), -1, nullptr, 0);
+	std::wstring wstr(wideLen, 0);
+	MultiByteToWideChar(CP_UTF8, 0, utf8Str.c_str(), -1, &wstr[0], wideLen);
+
+	// 2. ワイド文字列 (UTF-16) -> Shift-JIS (CP932) へ変換
+	int ansiLen = WideCharToMultiByte(932, 0, wstr.c_str(), -1, nullptr, 0, nullptr, nullptr);
+	std::string ansiStr(ansiLen, 0);
+	WideCharToMultiByte(932, 0, wstr.c_str(), -1, &ansiStr[0], ansiLen, nullptr, nullptr);
+
+	// 末尾のヌル文字を除外して返す
+	if (!ansiStr.empty() && ansiStr.back() == '\0') {
+		ansiStr.pop_back();
+	}
+
+	return ansiStr;
+}

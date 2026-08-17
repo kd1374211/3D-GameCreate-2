@@ -12,17 +12,26 @@ void StageSelectScene::Init()
 
 void StageSelectScene::Event()
 {
+	//長押し対策
+	static bool isSpacePressed = true;
+
 	if (GetAsyncKeyState(VK_SPACE) & 0x8000)
 	{
-		//ステージ準備
-		if (!m_wpUI.expired())
+		if (!isSpacePressed)
 		{
-			SCENEMGR.SetStageNo(m_wpUI.lock()->GetSelectedStageNo());
+			//ステージ準備
+			if (!m_wpUI.expired())
+			{
+				SCENEMGR.SetStageNo(m_wpUI.lock()->GetSelectedStageNo());
+			}
+
+			SceneManager::Instance().SetNextScene
+			(
+				SceneManager::SceneType::Game
+			);
 		}
 
-		SceneManager::Instance().SetNextScene
-		(
-			SceneManager::SceneType::Game
-		);
+		isSpacePressed = true;
 	}
+	else isSpacePressed = false;
 }

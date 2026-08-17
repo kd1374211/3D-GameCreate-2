@@ -157,6 +157,9 @@ private:
 		return std::string(path);
 	}
 
+	// UTF-8 の std::string を Shift-JIS (ANSI) の std::string に変換する関数
+	std::string Utf8ToMultiByte(const std::string& utf8Str);
+
 	//オブジェクトのリスト管理
 	std::weak_ptr<KdGameObject> m_wpSkySphere;
 	std::weak_ptr<KdGameObject> m_wpTerrain;
