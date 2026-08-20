@@ -154,6 +154,9 @@
     <Filter Include="Src\Application\GameObject\Camera\StageViewCamera">
       <UniqueIdentifier>{d75b1193-1036-48d8-9753-9daaa77bc08a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\FadeManager">
+      <UniqueIdentifier>{f78b039e-913d-40ff-945f-de3c2dbeff14}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -1500,6 +1503,9 @@
     <ClInclude Include="Src\Application\GameObject\Camera\StageViewCamera\StageViewCamera.h">
       <Filter>Src\Application\GameObject\Camera\StageViewCamera</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\FadeManager\FadeManager.h">
+      <Filter>Src\Application\FadeManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -2167,6 +2173,9 @@
     </ClCompile>
     <ClCompile Include="Src\Application\GameObject\Camera\StageViewCamera\StageViewCamera.cpp">
       <Filter>Src\Application\GameObject\Camera\StageViewCamera</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\FadeManager\FadeManager.cpp">
+      <Filter>Src\Application\FadeManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

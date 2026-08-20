@@ -8,6 +8,9 @@ void ResultScene::Init()
 	//UI全般
 	std::shared_ptr<ResultUIObject> UIObj = std::make_shared<ResultUIObject>();
 	AddObject(UIObj);
+
+	//ゲーム速度戻す
+	SCENEMGR.SetGameSpeed(1.0f);
 }
 
 void ResultScene::Event()

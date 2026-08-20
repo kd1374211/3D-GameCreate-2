@@ -7,7 +7,7 @@ static bool isSJIS(char a)
 }
 
 // フォント作成
-static HFONT MakeFont(const std::string& fontName, int h, int angle)
+static HFONT MakeFont(const std::string& fontName, int h, int angle, bool isItalic, int charSet)
 {
 	HFONT hFont;
 	hFont = CreateFont(h,		//フォント高さ
@@ -15,10 +15,10 @@ static HFONT MakeFont(const std::string& fontName, int h, int angle)
 		angle,					//テキストの角度
 		0,						//ベースラインとｘ軸との角度
 		FW_REGULAR,				//フォントの重さ（太さ）
-		FALSE,					//イタリック体
+		isItalic,				//イタリック体
 		FALSE,					//アンダーライン
 		FALSE,					//打ち消し線
-		SHIFTJIS_CHARSET,		//文字セット
+		charSet,				//文字セット
 		OUT_DEFAULT_PRECIS,		//出力精度
 		CLIP_DEFAULT_PRECIS,	//クリッピング精度
 		PROOF_QUALITY,			//出力品質
@@ -280,6 +280,9 @@ void KdFontManager::LoadFonts()
 	//追加8/15
 	//cp.period入れる
 	KdFontManager::Instance().AddFontResource("Asset/Fonts/cp_period.ttf");
+
+	//faster one入れる
+	KdFontManager::Instance().AddFontResource("Asset/Fonts/FasterOne-Regular.ttf");
 }
 
 void KdFontManager::Release()
@@ -298,9 +301,9 @@ void KdFontManager::Release()
 
 }
 
-void KdFontManager::AddFont(int fontNo, const std::string& fontName, int h)
+void KdFontManager::AddFont(int fontNo, const std::string& fontName, int h, bool isItalic, int charSet)
 {
-	HFONT hFont = MakeFont(fontName.c_str(), h, 0);
+	HFONT hFont = MakeFont(fontName.c_str(), h, 0, isItalic, charSet);
 	m_FontTbl[fontNo].hFont = hFont;
 	m_FontTbl[fontNo].CreatedFontDataTbl.fill(nullptr);
 }
@@ -308,9 +311,11 @@ void KdFontManager::AddFont(int fontNo, const std::string& fontName, int h)
 void KdFontManager::AddFont(int fontIndex, int h)
 {
 	//無かったらリターン
-	if (m_fontTitles.find(fontIndex) == m_fontTitles.end())return;
+	if (m_fontDatas.find(fontIndex) == m_fontDatas.end())return;
 
-	AddFont(0, m_fontTitles.find(fontIndex)->second, h);
+	//データ
+	FontSetData data = m_fontDatas.find(fontIndex)->second;
+	AddFont(0, data.m_title, h, data.m_isItalic, data.m_charSet);
 }
 
 std::shared_ptr<KdFontSprite> KdFontManager::CreateFontTexture(int fontNo, const std::string& text, int antiAliasingFlag)

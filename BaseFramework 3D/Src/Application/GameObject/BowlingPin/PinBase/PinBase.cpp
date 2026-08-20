@@ -1,5 +1,5 @@
 ﻿#include "PinBase.h"
-#include "../../../main.h"
+#include "../../../Scene/SceneManager.h"
 #include "../../../StageManager/StageManager.h"
 
 void PinBase::Update()
@@ -11,8 +11,8 @@ void PinBase::Update()
 		return;
 	}
 
-	// デルタタイム
-	float dt = Application::Instance().GetDeltaTime();
+	// デルタタイム(ゲーム)
+	float gameDt = SCENEMGR.GetDeltaGameTime();
 
 	if (!m_cPhysics || m_cPhysics->GetBodyID().IsInvalid()) return;
 
@@ -85,7 +85,7 @@ void PinBase::Update()
 	else
 	{
 		// 吹き飛び後：消去タイマー減算
-		m_destroyTimer -= dt;
+		m_destroyTimer -= gameDt;
 		if (m_destroyTimer <= 0.0f)
 		{
 			m_isExpired = true;
@@ -95,8 +95,6 @@ void PinBase::Update()
 
 void PinBase::PostUpdate()
 {
-	float dt = Application::Instance().GetDeltaTime(); // デルタタイム
-
 	// 物理コンポーネントおよび BodyID の生存確認
 	if (!m_cPhysics || m_cPhysics->GetBodyID().IsInvalid()) return;
 

@@ -23,6 +23,12 @@ public:
 	//壁との衝突
 	void OnHitWall(const JPH::Vec3& wallNormal);
 
+	//移動可能フラグ切り替え
+	void SetIsMovable(bool flg) { m_isMovable = flg; }
+
+	//操作可能フラグ切り替え
+	void SetIsInputEnabled(bool flg) { m_isInputEnabled = flg; }
+
 private:
 
 	void Init()override;
@@ -63,4 +69,10 @@ private:
 
 	//位置
 	Math::Vector3 m_pos;
+
+	//移動可能フラグ
+	bool m_isMovable = false;
+
+	//操作可能フラグ
+	bool m_isInputEnabled = false;
 };

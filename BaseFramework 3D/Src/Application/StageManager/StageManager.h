@@ -29,8 +29,7 @@ struct StageInfo
 	std::string m_stageListName;	//リスト上でのステージ名
 	std::string m_stageName;		//詳細上でのステージ名（本当の名前）
 	std::string m_stageThumbPath;	//サムネイル画像パス
-	float m_2StarTime = 0.0f;		// ★2の目標時間
-	float m_3StarTime = 0.0f;		// ★3の目標時間
+	float m_timeLimit;				//制限時間
 };
 
 class StageManager

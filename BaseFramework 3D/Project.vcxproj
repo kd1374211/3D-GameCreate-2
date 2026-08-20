@@ -643,6 +643,7 @@
     <ClInclude Include="..\Library\tinygltf\stb_image_write.h" />
     <ClInclude Include="..\Library\tinygltf\tiny_gltf.h" />
     <ClInclude Include="Src\Application\Component\PhysicsComponent\PhysicsComponent.h" />
+    <ClInclude Include="Src\Application\FadeManager\FadeManager.h" />
     <ClInclude Include="Src\Application\GameObject\BowlingPin\NormalPin\NormalPin.h" />
     <ClInclude Include="Src\Application\GameObject\BowlingPin\PinBase\PinBase.h" />
     <ClInclude Include="Src\Application\GameObject\Camera\CameraBase.h" />
@@ -872,6 +873,7 @@
     <ClCompile Include="..\Library\JoltPhysics\Jolt\TriangleSplitter\TriangleSplitterBinning.cpp" />
     <ClCompile Include="..\Library\JoltPhysics\Jolt\TriangleSplitter\TriangleSplitterMean.cpp" />
     <ClCompile Include="Src\Application\Component\PhysicsComponent\PhysicsComponent.cpp" />
+    <ClCompile Include="Src\Application\FadeManager\FadeManager.cpp" />
     <ClCompile Include="Src\Application\GameObject\BowlingPin\NormalPin\NormalPin.cpp" />
     <ClCompile Include="Src\Application\GameObject\BowlingPin\PinBase\PinBase.cpp" />
     <ClCompile Include="Src\Application\GameObject\Camera\CameraBase.cpp" />

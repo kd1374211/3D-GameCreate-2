@@ -10,63 +10,196 @@
 
 void GameScene::Event()
 {
-	//デルタタイム取得
-	float dt = Application::Instance().GetDeltaTime();
-
 	//シーンステート分岐
 	switch (m_currentSceneState)
 	{
 	case SceneState::CountDown:
-		//時間経過
-		m_countdownTimer -= dt;
-		
-		//Playingに切り替え
-		if (m_countdownTimer < 0.0f)m_currentSceneState = SceneState::Playing;
-		
-		//仮表示
-		KdDebugGUI::Instance().AddLog("CountDown : %.2f\n", m_countdownTimer);
+		UpdateCountDown();
 		break;
 	case SceneState::Playing:
+		UpdatePlaying();
 		break;
 	case SceneState::GameOver:
+		UpdateGameOver();
 		break;
 	case SceneState::GameClear:
+		UpdateGameClear();
 		break;
 	}
 
-	//ピンが全て倒れたらリザルト移行
+	//ピン残数確認(DEBUG)
+	KdDebugGUI::Instance().AddLog("Total Pin :%d\n", STAGEMGR.GetTotalPinCount());
+	KdDebugGUI::Instance().AddLog("Remaining Pin :%d\n", STAGEMGR.GetRemainingPinCount());
+}
+
+void GameScene::UpdateCountDown()
+{
+	//デルタタイム取得
+	float dt = Application::Instance().GetDeltaTime();
+
+	//フェードイン終了待ち
+	if (FADEMGR.IsFadeInEnd())
+	{
+		m_isFadeInEnd = true;
+	}
+
+	//終了後
+	if (m_isFadeInEnd)
+	{
+		//時間経過
+		m_countdownTimer -= dt;
+
+		//流れるテキスト召喚
+		for (int i = 0; i < GameSceneConsts::MovingTextCount; i++)
+		{
+			if (m_countdownTimer < GameSceneConsts::MovingTextsSpawn[i] && !m_isMovingTextSpawned[i])
+			{
+				//タイマー表示
+				if (!m_wpUI.expired())
+				{
+					Math::Color color = i == GameSceneConsts::MovingTextColorGreen ? kGreenColor : kRedColor;
+					m_wpUI.lock()->SpawnMovingText(MovingTexts[i], color);
+				}
+
+				m_isMovingTextSpawned[i] = true;
+			}
+		}
+
+		//開始
+		if (m_countdownTimer < 0.0f)
+		{
+			//Playingに切り替え
+			m_currentSceneState = SceneState::Playing;
+
+			//プレイヤーの移動操作解禁
+			if (!CHARAMGR.GetPlayer().expired())
+			{
+				std::shared_ptr<Player> player = CHARAMGR.GetPlayer().lock();
+
+				player->SetIsMovable(true);
+				player->SetIsInputEnabled(true);
+			}
+
+			//タイマー表示
+			if (!m_wpUI.expired())
+			{
+				m_wpUI.lock()->SetIsDrawTimer(true);
+			}
+		}
+
+		//仮表示
+		KdDebugGUI::Instance().AddLog("CountDown : %.2f\n", m_countdownTimer);
+	}
+}
+
+void GameScene::UpdatePlaying()
+{
+	//デルタタイム取得
+	float dt = Application::Instance().GetDeltaTime();
+	float gameDt = SCENEMGR.GetDeltaGameTime();
+
+	//ピンが全て倒れたらクリア移行
 	if (STAGEMGR.IsAllPinsFallen())
 	{
 		//リザルトをセット
 		STAGEMGR.SetGameResult(m_stageTimer);
 
+		//仮置きタイマーセット
+		m_countdownTimer = GameSceneConsts::CountDownOnClear;
+
+		//ゲーム速度ダウン
+		SCENEMGR.SetGameSpeed(0.1f);
+
+		//プレイヤーの操作ストップ
+		if (!CHARAMGR.GetPlayer().expired())
+		{
+			std::shared_ptr<Player> player = CHARAMGR.GetPlayer().lock();
+
+			player->SetIsInputEnabled(false);
+		}
+
+		//移行
+		m_currentSceneState = SceneState::GameClear;
+	}
+	// タイムアップでゲームオーバー
+	else if (m_stageTimer < 0.0)
+	{
+		//仮置きタイマーセット
+		m_countdownTimer = GameSceneConsts::CountDownOnFail;
+
+		//ゲーム速度ダウン
+		SCENEMGR.SetGameSpeed(0.1f);
+
+		//プレイヤーの操作ストップ
+		if (!CHARAMGR.GetPlayer().expired())
+		{
+			std::shared_ptr<Player> player = CHARAMGR.GetPlayer().lock();
+
+			player->SetIsInputEnabled(false);
+		}
+
+		//移行
+		m_currentSceneState = SceneState::GameOver;
+	}
+
+	//時間経過
+	m_stageTimer -= gameDt;
+	//UIタイマーに適応
+	if (!m_wpUI.expired())
+	{
+		m_wpUI.lock()->SetTimer((int)m_stageTimer);
+	}
+}
+
+void GameScene::UpdateGameOver()
+{
+	//デルタタイム取得
+	float dt = Application::Instance().GetDeltaTime();
+
+	//時間経過
+	m_countdownTimer -= dt;
+
+	//リザルト移行
+	if (m_countdownTimer < 0.0f)
+	{
 		SceneManager::Instance().SetNextScene
 		(
 			SceneManager::SceneType::Result
 		);
 	}
 
+	//仮表示
+	KdDebugGUI::Instance().AddLog("CountDown : %.2f\n", m_countdownTimer);
+}
+
+void GameScene::UpdateGameClear()
+{
+	//デルタタイム取得
+	float dt = Application::Instance().GetDeltaTime();
+
 	//時間経過
-	m_stageTimer += dt;
-	//UIタイマーに適応
-	if (!m_wpUI.expired())
+	m_countdownTimer -= dt;
+
+	//リザルト移行
+	if (m_countdownTimer < 0.0f)
 	{
-		m_wpUI.lock()->SetTimer((int)m_stageTimer);
+		SceneManager::Instance().SetNextScene
+		(
+			SceneManager::SceneType::Result
+		);
 	}
 
-	//ピン残数確認(DEBUG)
-	KdDebugGUI::Instance().AddLog("Total Pin :%d\n", STAGEMGR.GetTotalPinCount());
-	KdDebugGUI::Instance().AddLog("Remaining Pin :%d\n", STAGEMGR.GetRemainingPinCount());
-
-	//ステージ情報取得チェック
-	KdDebugGUI::Instance().AddLog("2 Star Time : %.2f\n", STAGEMGR.GetStageInfo(SCENEMGR.GetStageNo())->m_2StarTime);
-	KdDebugGUI::Instance().AddLog("3 Star Time : %.2f\n", STAGEMGR.GetStageInfo(SCENEMGR.GetStageNo())->m_3StarTime);
+	//仮表示
+	KdDebugGUI::Instance().AddLog("CountDown : %.2f\n", m_countdownTimer);
 }
 
 void GameScene::Init()
 {
+	//ステージ番号
+	int stageNumber = SCENEMGR.GetStageNo();
+
 	//ステージデータ読み込み（ステージ番号取得）
-	if (STAGEMGR.LoadStage(SCENEMGR.GetStageNo()))
+	if (STAGEMGR.LoadStage(stageNumber))
 	{
 		//ステージ生成
 		STAGEMGR.BuildStage();
@@ -93,4 +226,18 @@ void GameScene::Init()
 	std::shared_ptr<GameUIObjects> UIObj = std::make_shared<GameUIObjects>();
 	m_wpUI = UIObj;
 	AddObject(UIObj);
+
+	//時間制限取得
+	m_stageTimer = STAGEMGR.GetStageInfo(stageNumber)->m_timeLimit;
+
+	//フェードイン
+	FADEMGR.StartFadeIn();
+
+	for (int i = 0; i < GameSceneConsts::MovingTextCount; i++)
+	{
+		m_isMovingTextSpawned[i] = false;
+	}
+
+	//一応ゲームスピードリセット	
+	SCENEMGR.SetGameSpeed(1.0f);
 }

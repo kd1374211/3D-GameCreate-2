@@ -19,4 +19,7 @@ private:
 
 	//ステージセレクトUI
 	std::weak_ptr<StageSelectUIObject> m_wpUI;
+
+	//フェードイン終了待ち
+	bool m_isFadeInEnd = false;
 };

@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "../../FadeManager/FadeManager.h"
 
 class CameraBase;
 

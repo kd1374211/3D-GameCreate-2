@@ -272,15 +272,7 @@ int StageManager::CalculateStarCount(int stageNo, float clearTime) const
 
 	const auto& info = it->second;
 
-	// 目標タイム以下なら評価達成（タイムアタック形式の場合）
-	if (clearTime <= info.m_3StarTime)
-	{
-		return 3;
-	}
-	if (clearTime <= info.m_2StarTime)
-	{
-		return 2;
-	}
+	// ここで評価の計算
 
 	return 1; // クリアした時点で★1は確定
 }
@@ -327,8 +319,8 @@ bool StageManager::LoadStageMasterData()
 		info.m_stageListName = Utf8ToMultiByte(item.value("stageListName", "エラー"));
 		info.m_stageName = Utf8ToMultiByte(item.value("stageName", "エラー"));
 		info.m_stageThumbPath = item.value("thumbnail", "Asset/Textures/System/WhiteNoise.png");
-		info.m_2StarTime = item.value("2StarTime", 0.0f);
-		info.m_3StarTime = item.value("3StarTime", 0.0f);
+		info.m_timeLimit = item.value("timeLimit", 10.0f);
+		
 
 		// stageNo をキーとしてマップに格納
 		if (info.m_stageNo > 0)

@@ -55,6 +55,12 @@ public :
 	//現在のシーン取得
 	SceneType GetCurrentSceneType()const { return m_currentSceneType; }
 
+	//追加8/20
+	//ゲームスピード関連
+	void SetGameSpeed(float speed) { m_gameSpeedMulti = speed; }
+	float GetGameSpeed()const { return m_gameSpeedMulti; }
+	float GetDeltaGameTime()const;
+
 	//ステージ番号セッター・ゲッター
 	void SetStageNo(int No) { m_stageNo = No; }
 	int GetStageNo()const { return m_stageNo; }
@@ -76,6 +82,10 @@ private :
 	//追加8/11
 	//ステージ番号
 	int m_stageNo = 1;
+
+	//追加8/20
+	//ゲーム速度
+	float m_gameSpeedMulti = 1.0f;
 
 private:
 

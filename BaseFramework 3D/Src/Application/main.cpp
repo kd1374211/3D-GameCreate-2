@@ -4,6 +4,7 @@
 #include "Physics/PhysicsManager.h"
 #include "StageManager/StageManager.h"
 #include "GameObject/Chara/CharaManager.h"
+#include "FadeManager/FadeManager.h"
 
 // ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// /////
 // エントリーポイント
@@ -229,6 +230,7 @@ bool Application::Init(int w, int h)
 	//ShowCursor(false);
 	CHARAMGR.Init();
 	STAGEMGR.Init();
+	FADEMGR.Init();
 	srand(timeGetTime());
 
 	return true;

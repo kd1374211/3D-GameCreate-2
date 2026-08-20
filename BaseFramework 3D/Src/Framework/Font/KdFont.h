@@ -1,5 +1,13 @@
 ﻿#pragma once
 
+//追加8/20
+struct FontSetData
+{
+	std::string m_title;
+	int m_charSet;
+	bool m_isItalic;
+};
+
 //=====================================================================
 // 文字のデータ
 //
@@ -100,8 +108,10 @@ public:
 	//[in] fontNo		… 登録するIndex番号
 	//[in] fontName		… 追加するフォント名
 	//[in] h			… フォントの大きさ(高さ)
+	//[in] h			… イタリック体 追加
+	//[in] h			… CharSet 追加
 	//------------------------------------------------------------
-	void AddFont(int fontNo, const std::string& fontName, int h);
+	void AddFont(int fontNo, const std::string& fontName, int h, bool isItalic, int charSet);
 	//追加8/15
 	//フォント種と高さのみ
 	void AddFont(int fontIndex, int h);
@@ -141,9 +151,10 @@ private:
 
 	//追加8/15
 	//番号とタイトルの組み合わせ
-	std::map<int, std::string> m_fontTitles =
+	std::map<int, FontSetData> m_fontDatas =
 	{
-		{1,"チェックポイント．（ピリオド）"}
+		{1,FontSetData("チェックポイント．（ピリオド）",SHIFTJIS_CHARSET,false)},
+		{2,FontSetData("Faster One Regular",DEFAULT_CHARSET,false)}
 	};
 
 	// フォント登録データ

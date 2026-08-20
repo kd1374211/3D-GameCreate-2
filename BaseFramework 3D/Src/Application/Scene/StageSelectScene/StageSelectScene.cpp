@@ -8,10 +8,30 @@ void StageSelectScene::Init()
 	std::shared_ptr<StageSelectUIObject> UIObj = std::make_shared<StageSelectUIObject>();
 	m_wpUI = UIObj;
 	AddObject(UIObj);
+
+	//フェードイン
+	FADEMGR.StartFadeIn();
 }
 
 void StageSelectScene::Event()
 {
+	//フェードイン終了待機
+	if (FADEMGR.IsFadeInEnd())
+	{
+		m_isFadeInEnd = true;
+	}
+
+	//フェードインが終わってかつフェードアウトも終わったら
+	if (m_isFadeInEnd && FADEMGR.IsFadeOutEnd())
+	{
+		SceneManager::Instance().SetNextScene
+		(
+			SceneManager::SceneType::Game
+		);
+
+		return;
+	}
+
 	//長押し対策
 	static bool isSpacePressed = true;
 
@@ -19,16 +39,18 @@ void StageSelectScene::Event()
 	{
 		if (!isSpacePressed)
 		{
-			//ステージ準備
-			if (!m_wpUI.expired())
+			//フェードインが終わっていたら
+			if (m_isFadeInEnd)
 			{
-				SCENEMGR.SetStageNo(m_wpUI.lock()->GetSelectedStageNo());
-			}
+				//ステージ準備
+				if (!m_wpUI.expired())
+				{
+					SCENEMGR.SetStageNo(m_wpUI.lock()->GetSelectedStageNo());
+				}
 
-			SceneManager::Instance().SetNextScene
-			(
-				SceneManager::SceneType::Game
-			);
+				//フェードアウト
+				FADEMGR.StartFadeOut();
+			}
 		}
 
 		isSpacePressed = true;

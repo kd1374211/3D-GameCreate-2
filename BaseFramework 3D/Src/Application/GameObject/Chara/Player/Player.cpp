@@ -42,6 +42,9 @@ void Player::Update()
 		return;
 	}
 
+	//移動不可ならリターン
+	if (!m_isMovable)return;
+
 	// =================================================================
 	// パラメータ設定（エアライダー風チューニング）
 	// =================================================================
@@ -49,17 +52,20 @@ void Player::Update()
 	const float ACCEL_POWER = 2.0f;   // 加速度(秒)
 	const float DECEL_POWER = 3.0f;   // 最高速を超えた時の減速の滑らかさ(秒)
 	const float TURN_SPEED = 120.0f;  // 旋回性能(秒)
-	float dt = Application::Instance().GetDeltaTime(); // デルタタイム
+	float gameDt = SCENEMGR.GetDeltaGameTime(); // デルタタイム(ゲーム)
 
 	// =================================================================
 	// 1. 方向転換（A/Dキーによる向き更新）
 	// =================================================================
-	if (GetAsyncKeyState(VK_LEFT) & 0x8000) { m_facingAngle -= TURN_SPEED * dt; }
-	if (GetAsyncKeyState(VK_RIGHT) & 0x8000) { m_facingAngle += TURN_SPEED * dt; }
 
+	//操作不可ならスキップ
+	if (m_isInputEnabled)
+	{
+		if (GetAsyncKeyState(VK_LEFT) & 0x8000) { m_facingAngle -= TURN_SPEED * gameDt; }
+		if (GetAsyncKeyState(VK_RIGHT) & 0x8000) { m_facingAngle += TURN_SPEED * gameDt; }
+	}
 	if (m_facingAngle >= 360.0f)     m_facingAngle -= 360.0f;
 	else if (m_facingAngle < 0.0f)   m_facingAngle += 360.0f;
-
 
 	// =================================================================
 	// 2. 「Z+ 基準」の水平正面ベクトル（targetDir）を作成
@@ -167,12 +173,12 @@ void Player::Update()
 	{
 		if (m_currentSpeedXZ < dynamicMaxSpeed)
 		{
-			m_currentSpeedXZ += dynamicAccel * dt;
+			m_currentSpeedXZ += dynamicAccel * gameDt;
 			if (m_currentSpeedXZ > dynamicMaxSpeed) m_currentSpeedXZ = dynamicMaxSpeed;
 		}
 		else if (m_currentSpeedXZ > dynamicMaxSpeed)
 		{
-			m_currentSpeedXZ -= DECEL_POWER * dt;
+			m_currentSpeedXZ -= DECEL_POWER * gameDt;
 			if (m_currentSpeedXZ < dynamicMaxSpeed) m_currentSpeedXZ = dynamicMaxSpeed;
 		}
 	}

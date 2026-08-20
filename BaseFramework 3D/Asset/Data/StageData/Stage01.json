@@ -1,106 +1,49 @@
 {
-	"objects": [
-		{
-			"position": [
-				0.0,
-				0.0,
-				3.0
-			],
-			"rotation": [
-				0.0,
-				0.0,
-				0.0,
-				1.0
-			],
-			"scale": [
-				1.0,
-				1.0,
-				1.0
-			],
-			"type": "NormalPin"
-		},
-		{
-			"position": [
-				0.0,
-				0.0,
-				3.700000047683716
-			],
-			"rotation": [
-				0.0,
-				0.0,
-				0.0,
-				1.0
-			],
-			"scale": [
-				1.0,
-				1.0,
-				1.0
-			],
-			"type": "NormalPin"
-		},
-		{
-			"position": [
-				0.0,
-				0.0,
-				4.0
-			],
-			"rotation": [
-				0.0,
-				0.0,
-				0.0,
-				1.0
-			],
-			"scale": [
-				1.0,
-				1.0,
-				1.0
-			],
-			"type": "NormalPin"
-		},
-		{
-			"position": [
-				0.0,
-				0.0,
-				2.8499999046325684
-			],
-			"rotation": [
-				0.0,
-				0.0,
-				0.0,
-				1.0
-			],
-			"scale": [
-				1.0,
-				1.0,
-				1.0
-			],
-			"type": "NormalPin"
-		},
-		{
-			"position": [
-				1.100000023841858,
-				0.0,
-				0.0
-			],
-			"rotation": [
-				0.0,
-				0.0,
-				0.0,
-				1.0
-			],
-			"scale": [
-				1.0,
-				1.0,
-				1.0
-			],
-			"type": "NormalPin"
-		}
-	],
-	"stage_name": "CustomStage",
-	"terrain": {
-		"model_path": "Asset/Models/Terrain/Stage01/TestGround.gltf"
-	},
-	"sky": {
-		"model_path": "Asset/Models/Sky/SkySphere/SkySphere.gltf"
-	}
+    "objects": [
+        {
+            "position": [
+                1.100000023841858,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "type": "NormalPin"
+        },
+        {
+            "position": [
+                0.0,
+                0.0,
+                0.699999988079071
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "type": "NormalPin"
+        }
+    ],
+    "sky": {
+        "model_path": "Asset/Models/Sky/SkySphere/SkySphere.gltf"
+    },
+    "stage_name": "CustomStage",
+    "terrain": {
+        "model_path": "Asset/Models/Terrain/Stage01/Stage01.gltf"
+    }
 }

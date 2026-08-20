@@ -8,6 +8,13 @@ void TitleScene::Event()
 {
 	if (GetAsyncKeyState(VK_SPACE) & 0x8000)
 	{
+		//フェードアウト
+		FADEMGR.StartFadeOut();
+	}
+
+	//フェードアウト終了チェック
+	if (FADEMGR.IsFadeOutEnd())
+	{
 		SceneManager::Instance().SetNextScene
 		(
 			SceneManager::SceneType::StageSelect

@@ -11,6 +11,7 @@
 #include "../main.h"
 #include "../Physics/PhysicsManager.h"
 #include "../StageManager/StageManager.h"
+#include "../FadeManager/FadeManager.h"
 
 void SceneManager::PreUpdate()
 {
@@ -28,6 +29,10 @@ void SceneManager::PreUpdate()
 
 void SceneManager::Update()
 {
+	//追加8/20
+	//暗転用
+	FADEMGR.Update();
+
 	m_currentScene->Update();
 }
 
@@ -37,7 +42,7 @@ void SceneManager::PostUpdate()
 	if (!STAGEMGR.IsEditMode())
 	{
 		//追加7/17（仮）
-		PHYSICSMGR.Update(Application::Instance().GetDeltaTime());
+		PHYSICSMGR.Update(GetDeltaGameTime());
 	}
 
 	m_currentScene->PostUpdate();
@@ -61,6 +66,10 @@ void SceneManager::Draw()
 void SceneManager::DrawSprite()
 {
 	m_currentScene->DrawSprite();
+
+	//追加8/20
+	//暗転用
+	FADEMGR.DrawFade();
 }
 
 void SceneManager::DrawDebug()
@@ -87,6 +96,11 @@ void SceneManager::Release()
 {
 	//シーン破壊
 	m_currentScene = nullptr;
+}
+
+float SceneManager::GetDeltaGameTime() const
+{
+	return Application::Instance().GetDeltaTime() * m_gameSpeedMulti;
 }
 
 void SceneManager::ChangeScene(SceneType _sceneType)
