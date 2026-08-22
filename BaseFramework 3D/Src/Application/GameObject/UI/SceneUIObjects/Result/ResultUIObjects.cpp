@@ -1,14 +1,16 @@
 ﻿#include "ResultUIObjects.h"
 
 void ResultUIObject::DrawSprite()
-{
-	//仮画像
-	KdShaderManager::Instance().m_spriteShader.DrawTex(m_resultTex, 0, 0, 1280, 720);
+{	
+	//ウィンドウ背景
+	Math::Color color = Math::Color(0, 0, 0, 0.92f);
+	KdShaderManager::Instance().m_spriteShader.DrawBox(0, 0, 250, 300, &color);
+
+	//リザルト
+	KdShaderManager::Instance().m_spriteShader.DrawFont(4, Math::Vector2(0, 250.0f), & kWhiteColor, "リザルト");
 }
 
 void ResultUIObject::Init()
 {
-	//画像ロード
-	m_resultTex = std::make_shared<KdTexture>();
-	m_resultTex->Load("Asset/Textures/UI/SceneUI/Result/kResult.png");
+	
 }

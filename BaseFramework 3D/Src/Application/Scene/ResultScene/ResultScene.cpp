@@ -3,26 +3,65 @@
 #include "../../GameObject/UI/SceneUIObjects/Result/ResultUIObjects.h"
 #include "../../StageManager/StageManager.h"
 
+#include "../../GameObject/Camera/StageViewCamera/StageViewCamera.h"
+#include "../../FadeManager/FadeManager.h"
+
 void ResultScene::Init()
 {
+	//背景ステージ読み込み
+	STAGEMGR.LoadStage(SCENEMGR.GetStageNo());
+	//背景モードで生成
+	STAGEMGR.BuildStage(StageBuildMode::Background);
+
+	//ステージ確認カメラ
+	std::shared_ptr<StageViewCamera> camera = std::make_shared<StageViewCamera>();
+	camera->Init();
+	camera->SetViewDistance(20.0f);
+
+	//さっき生成した地形をターゲットに
+	if (!STAGEMGR.GetTerrain().expired())
+	{
+		camera->SetTarget(STAGEMGR.GetTerrain().lock());
+	}
+
+	//追加
+	m_wpCamera = camera;
+	AddObject(camera);
+
 	//UI全般
 	std::shared_ptr<ResultUIObject> UIObj = std::make_shared<ResultUIObject>();
 	AddObject(UIObj);
 
 	//ゲーム速度戻す
 	SCENEMGR.SetGameSpeed(1.0f);
+
+	//フェードイン
+	FADEMGR.StartFadeIn();
 }
 
 void ResultScene::Event()
 {
-	if (GetAsyncKeyState('R') & 0x8000)
+	//フェードイン終了待ち
+	if (FADEMGR.IsFadeInEnd())
+	{
+		m_isFadeInEnd = true;
+	}
+
+	if (m_isFadeInEnd && FADEMGR.IsFadeOutEnd())
 	{
 		SceneManager::Instance().SetNextScene
 		(
-			SceneManager::SceneType::Title
+			SceneManager::SceneType::StageSelect
 		);
+
+		return;
 	}
 
-	KdDebugGUI::Instance().AddLog("Stage Time : %.2f\n", STAGEMGR.GetLastClearTime());
-	KdDebugGUI::Instance().AddLog("Stage Star : %d\n", STAGEMGR.GetLastStarCount());
+	if (GetAsyncKeyState(VK_SPACE) & 0x8000)
+	{
+		if (m_isFadeInEnd)
+		{
+			FADEMGR.StartFadeOut();
+		}
+	}
 }

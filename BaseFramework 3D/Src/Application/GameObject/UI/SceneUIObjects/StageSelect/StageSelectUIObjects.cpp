@@ -74,7 +74,7 @@ void StageSelectUIObject::DrawSprite()
 
 		//ステージリスト名
 		std::string stageListName = STAGEMGR.GetStageInfo(i)->m_stageListName;
-		KdShaderManager::Instance().m_spriteShader.DrawFont(1, UILayoutConfig::StageListNameFontSize, drawPos, &kWhiteColor, stageListName.c_str());
+		KdShaderManager::Instance().m_spriteShader.DrawFont(UILayoutConfig::StageListNameFontIndex, drawPos, &kWhiteColor, stageListName.c_str());
 
 		//位置移動
 		drawPos.y -= UILayoutConfig::LineSpacing;
@@ -88,14 +88,13 @@ void StageSelectUIObject::DrawSprite()
 	KdShaderManager::Instance().m_spriteShader.DrawTex(m_stageThumbTex, UILayoutConfig::ThumbnailPos.x, UILayoutConfig::ThumbnailPos.y, UILayoutConfig::ThumbnailSize.x, UILayoutConfig::ThumbnailSize.y, nullptr);
 
 	//ステージ名
-	KdShaderManager::Instance().m_spriteShader.DrawFont(1, UILayoutConfig::StageNameFontSize, UILayoutConfig::StageNamePos, &kWhiteColor, stageInfo->m_stageName.c_str());
+	KdShaderManager::Instance().m_spriteShader.DrawFont(UILayoutConfig::StageNameFontIndex, UILayoutConfig::StageNamePos, &kWhiteColor, stageInfo->m_stageName.c_str());
 
 	// 操作キーヘルプ
 	std::string keyHelpText = "[▲/▼] 選択   [SPACE] 決定";
 
 	KdShaderManager::Instance().m_spriteShader.DrawFont(
-		1,
-		UILayoutConfig::KeyHelpFontSize,
+		UILayoutConfig::KeyGuideFontIndex,
 		UILayoutConfig::KeyHelpPos,
 		&kWhiteColor,
 		keyHelpText.c_str()

@@ -250,6 +250,7 @@ void KdFontSprite::CreateFontTexture(HDC hdc, const std::string& text, int antiA
 			if (pFontDataArray)
 			{
 				(*pFontDataArray)[code] = data;
+				KdDebugGUI::Instance().AddLog("Size : %d\n", code);
 			}
 
 		}
@@ -283,6 +284,9 @@ void KdFontManager::LoadFonts()
 
 	//faster one入れる
 	KdFontManager::Instance().AddFontResource("Asset/Fonts/FasterOne-Regular.ttf");
+
+	//black ops one入れる
+	KdFontManager::Instance().AddFontResource("Asset/Fonts/BlackOpsOne-Regular.ttf");
 }
 
 void KdFontManager::Release()
@@ -292,6 +296,7 @@ void KdFontManager::Release()
 		DeleteObject(font.hFont);
 		font.hFont = nullptr;
 		font.CreatedFontDataTbl.fill(nullptr);
+		font.isCreated = false;
 	}
 
 	if(m_hDC)
@@ -306,16 +311,17 @@ void KdFontManager::AddFont(int fontNo, const std::string& fontName, int h, bool
 	HFONT hFont = MakeFont(fontName.c_str(), h, 0, isItalic, charSet);
 	m_FontTbl[fontNo].hFont = hFont;
 	m_FontTbl[fontNo].CreatedFontDataTbl.fill(nullptr);
+	m_FontTbl[fontNo].isCreated = true;
 }
 
-void KdFontManager::AddFont(int fontIndex, int h)
+void KdFontManager::AddFont(int fontIndex)
 {
-	//無かったらリターン
-	if (m_fontDatas.find(fontIndex) == m_fontDatas.end())return;
+	//無かったらor作成済みならリターン
+	if (m_fontDatas.find(fontIndex) == m_fontDatas.end() || m_FontTbl[fontIndex].isCreated)return;
 
 	//データ
 	FontSetData data = m_fontDatas.find(fontIndex)->second;
-	AddFont(0, data.m_title, h, data.m_isItalic, data.m_charSet);
+	AddFont(fontIndex, data.m_title, data.m_charSize, data.m_isItalic, data.m_charSet);
 }
 
 std::shared_ptr<KdFontSprite> KdFontManager::CreateFontTexture(int fontNo, const std::string& text, int antiAliasingFlag)

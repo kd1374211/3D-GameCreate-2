@@ -21,7 +21,13 @@ struct GameUIConsts
 	static constexpr float SlowMoveStartSec = 0.2f;
 	static constexpr float SlowMoveEndSec = 0.7f;
 	static constexpr float MovingTextPosY = 0.0f;
-	static constexpr float MovingTextSize = 200.0f;
+	static constexpr int MovingTextFontIndex = 5;
+
+	//ステージ終了演出
+	static constexpr float WindowExpandSpeed_StageFinish = 6.0f;
+	static constexpr Math::Vector2 WindowSize = Math::Vector2(640.0f, 120.0f);
+	static constexpr float WindowAlpha = 0.95f;
+	static constexpr int FinishTextFontIndex = 6;
 };
 
 class GameUIObjects :public KdGameObject
@@ -39,6 +45,9 @@ public:
 
 	// 流れる文字召喚（カウントダウン用）
 	void SpawnMovingText(std::string text, Math::Color color);
+
+	// ステージクリア・クリア失敗演出召喚(trueクリアfalse失敗)
+	void SpawnStageFinishText(bool isClear);
 
 	//時間描画
 	void SetIsDrawTimer(bool flg) { m_isTimerDraw = flg; }
@@ -58,4 +67,9 @@ private:
 
 	//流れる文字
 	MovingText m_movingTexts;
+
+	//ステージ終了演出用
+	bool m_isStageFinishTextDraw = false;
+	bool m_isStageClear = false;
+	float m_windowSize_stageFinish = 0.0f;
 };

@@ -7,6 +7,7 @@
 #include "../../GameObject/Chara/Player/Player.h"
 #include "../../GameObject/Chara/CharaManager.h"
 #include "../../GameObject/UI/SceneUIObjects/Game/GameUIObjects.h"
+#include "../../FadeManager/FadeManager.h"
 
 void GameScene::Event()
 {
@@ -104,6 +105,12 @@ void GameScene::UpdatePlaying()
 		//リザルトをセット
 		STAGEMGR.SetGameResult(m_stageTimer);
 
+		//ステージ終了演出召喚
+		if (!m_wpUI.expired())
+		{
+			m_wpUI.lock()->SpawnStageFinishText(true);
+		}
+
 		//仮置きタイマーセット
 		m_countdownTimer = GameSceneConsts::CountDownOnClear;
 
@@ -124,6 +131,12 @@ void GameScene::UpdatePlaying()
 	// タイムアップでゲームオーバー
 	else if (m_stageTimer < 0.0)
 	{
+		//ステージ終了演出召喚
+		if (!m_wpUI.expired())
+		{
+			m_wpUI.lock()->SpawnStageFinishText(false);
+		}
+
 		//仮置きタイマーセット
 		m_countdownTimer = GameSceneConsts::CountDownOnFail;
 
@@ -147,25 +160,33 @@ void GameScene::UpdatePlaying()
 	//UIタイマーに適応
 	if (!m_wpUI.expired())
 	{
-		m_wpUI.lock()->SetTimer((int)m_stageTimer);
+		m_wpUI.lock()->SetTimer((int)std::ceil(m_stageTimer));
 	}
 }
 
 void GameScene::UpdateGameOver()
 {
+	//リザルト移行
+	if (FADEMGR.IsFadeOutEnd())
+	{
+		SceneManager::Instance().SetNextScene
+		(
+			SceneManager::SceneType::Result
+		);
+
+		return;
+	}
+
 	//デルタタイム取得
 	float dt = Application::Instance().GetDeltaTime();
 
 	//時間経過
 	m_countdownTimer -= dt;
 
-	//リザルト移行
+	//暗転
 	if (m_countdownTimer < 0.0f)
 	{
-		SceneManager::Instance().SetNextScene
-		(
-			SceneManager::SceneType::Result
-		);
+		FADEMGR.StartFadeOut();
 	}
 
 	//仮表示
@@ -174,19 +195,27 @@ void GameScene::UpdateGameOver()
 
 void GameScene::UpdateGameClear()
 {
+	//リザルト移行
+	if (FADEMGR.IsFadeOutEnd())
+	{
+		SceneManager::Instance().SetNextScene
+		(
+			SceneManager::SceneType::Result
+		);
+
+		return;
+	}
+
 	//デルタタイム取得
 	float dt = Application::Instance().GetDeltaTime();
 
 	//時間経過
 	m_countdownTimer -= dt;
 
-	//リザルト移行
+	//暗転
 	if (m_countdownTimer < 0.0f)
 	{
-		SceneManager::Instance().SetNextScene
-		(
-			SceneManager::SceneType::Result
-		);
+		FADEMGR.StartFadeOut();
 	}
 
 	//仮表示

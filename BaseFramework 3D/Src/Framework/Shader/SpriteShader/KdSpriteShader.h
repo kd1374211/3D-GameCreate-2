@@ -135,7 +135,7 @@ public:
 	// フォント描画
 	void DrawFont(const Math::Vector2& Pos, const Math::Color* color, const char* format, ...);
 	//追加8/15
-	void DrawFont(int fontIndex,float fontH, const Math::Vector2& Pos, const Math::Color* color, const char* format, ...);
+	void DrawFont(int fontIndex, const Math::Vector2& Pos, const Math::Color* color, const char* format, ...);
 
 private:
 	// フォント描画

@@ -6,6 +6,7 @@ struct FontSetData
 	std::string m_title;
 	int m_charSet;
 	bool m_isItalic;
+	float m_charSize;
 };
 
 //=====================================================================
@@ -114,7 +115,7 @@ public:
 	void AddFont(int fontNo, const std::string& fontName, int h, bool isItalic, int charSet);
 	//追加8/15
 	//フォント種と高さのみ
-	void AddFont(int fontIndex, int h);
+	void AddFont(int fontIndex);
 
 	//------------------------------------------------------------
 	// 指定番号のフォントを使用し、文字列をフォントテクスチャとして生成する
@@ -153,8 +154,12 @@ private:
 	//番号とタイトルの組み合わせ
 	std::map<int, FontSetData> m_fontDatas =
 	{
-		{1,FontSetData("チェックポイント．（ピリオド）",SHIFTJIS_CHARSET,false)},
-		{2,FontSetData("Faster One Regular",DEFAULT_CHARSET,false)}
+		{1,FontSetData("チェックポイント．（ピリオド）",SHIFTJIS_CHARSET,false,24.0f)},
+		{2,FontSetData("チェックポイント．（ピリオド）",SHIFTJIS_CHARSET,false,30.0f)},
+		{3,FontSetData("チェックポイント．（ピリオド）",SHIFTJIS_CHARSET,false,40.0f)},
+		{4,FontSetData("チェックポイント．（ピリオド）",SHIFTJIS_CHARSET,false,48.0f)},
+		{5,FontSetData("Faster One Regular",DEFAULT_CHARSET,false,200.0f)},
+		{6,FontSetData("Black Ops One Regular",DEFAULT_CHARSET,false,200.0f)}
 	};
 
 	// フォント登録データ
@@ -162,6 +167,10 @@ private:
 	{
 		HFONT hFont;														// フォントハンドル
 		std::array<std::shared_ptr<KdFontData>, 65536>	CreatedFontDataTbl;	// 作成済みフォントデータ配列
+
+		//追加8/22
+		//追加済みフラグ
+		bool isCreated = false;
 	};
 	std::array<FontData, 10>			m_FontTbl;							// 登録されたフォントの配列
 

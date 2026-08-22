@@ -13,7 +13,4 @@ private:
 
 	void Init()override;
 
-	//仮画像
-	std::shared_ptr<KdTexture> m_resultTex = nullptr;
-
 };

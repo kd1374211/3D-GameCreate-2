@@ -14,4 +14,7 @@ public:
 private:
 
 	void Event() override;
+
+	//フェードイン終了フラグ
+	bool m_isFadeInEnd = false;
 };

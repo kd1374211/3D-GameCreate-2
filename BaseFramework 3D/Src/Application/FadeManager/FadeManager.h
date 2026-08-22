@@ -11,7 +11,7 @@ enum FadeState
 struct FadeManagerConsts
 {
 	// alphaChange
-	static constexpr float AlphaChange = 1.5f;
+	static constexpr float AlphaChange = 2.5f;
 };
 
 class FadeManager
