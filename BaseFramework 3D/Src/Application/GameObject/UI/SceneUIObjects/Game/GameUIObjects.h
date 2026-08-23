@@ -21,13 +21,22 @@ struct GameUIConsts
 	static constexpr float SlowMoveStartSec = 0.2f;
 	static constexpr float SlowMoveEndSec = 0.7f;
 	static constexpr float MovingTextPosY = 0.0f;
-	static constexpr int MovingTextFontIndex = 5;
+
+	//タイマーとピン共通
+	static constexpr float TimerPinPosY = 318.0f;
+
+	//タイマー
+	static constexpr float ClockIconPosX = -80.0f;
+	static constexpr float TimeNumberTextPosX = 40.0f;
+
+	//ピン数
+	static constexpr float PinIconPosX = 200.0f;
+	static constexpr float PinTextPosX = 630.0f;
 
 	//ステージ終了演出
-	static constexpr float WindowExpandSpeed_StageFinish = 6.0f;
+	static constexpr float WindowExpandSpeed_StageFinish = 10.0f;
 	static constexpr Math::Vector2 WindowSize = Math::Vector2(640.0f, 120.0f);
 	static constexpr float WindowAlpha = 0.95f;
-	static constexpr int FinishTextFontIndex = 6;
 };
 
 class GameUIObjects :public KdGameObject
@@ -56,8 +65,11 @@ private:
 
 	void Init()override;
 
-	//タイマー画像
-	std::shared_ptr<KdTexture> m_timerTex = nullptr;
+	//時計画像
+	std::shared_ptr<KdTexture> m_clockTex = nullptr;
+
+	//ピン画像
+	std::shared_ptr<KdTexture> m_pinTex = nullptr;
 
 	//タイマー描画フラグ
 	bool m_isTimerDraw = false;

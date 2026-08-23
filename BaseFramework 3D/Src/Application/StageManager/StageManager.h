@@ -23,6 +23,11 @@ enum class StageBuildMode
 	Background  // 背景用（地形＋天球のみ）
 };
 
+struct StageManagerConsts
+{
+	static constexpr int StarCountMax = 3;		//最大星数
+};
+
 struct StageInfo
 {
 	int m_stageNo = 0;				//ステージ番号
@@ -30,6 +35,16 @@ struct StageInfo
 	std::string m_stageName;		//詳細上でのステージ名（本当の名前）
 	std::string m_stageThumbPath;	//サムネイル画像パス
 	float m_timeLimit;				//制限時間
+	std::string m_starTexts[StageManagerConsts::StarCountMax];		//星条件テキスト
+};
+
+//リザルト
+struct GameResult
+{
+	float m_stageTimer;	//残り時間
+	bool m_isCleared;	//クリアフラグ
+	int m_fallenPinCnt; //倒したピン数
+	int m_totalPinCnt; //全体のピン数
 };
 
 class StageManager
@@ -46,10 +61,10 @@ public:
 	void ResetStage();
 
 	// ゲームクリア時に呼び出して結果を保存
-	void SetGameResult(float clearTime)
+	void SetGameResult(GameResult result)
 	{
-		m_lastClearTime = clearTime;
-		m_lastStarCount = CalculateCurrentStageStarCount(clearTime);
+		m_lastGameResult = result;
+		m_lastStarCount = CalculateCurrentStageStarCount(m_lastGameResult.m_fallenPinCnt);
 	}
 
 	// ステージデータの保存・読み込み
@@ -114,15 +129,16 @@ public:
 
 	// ステージ番号からマスタ情報を取得（存在しない場合は nullptr）
 	const StageInfo* GetStageInfo(int stageNo) const;
+	const StageInfo* GetStageInfo() const;
 
-	// 指定したステージのクリアタイムから獲得星数（1〜3）を計算して返す
-	int CalculateStarCount(int stageNo, float clearTime) const;
+	// 指定したステージのピン撃破数から獲得星数（1〜3）を計算して返す
+	int CalculateStarCount(int stageNo, int pinFallen) const;
 	// 現在の選択ステージに対する星数計算（引数を減らしたい場合）
-	int CalculateCurrentStageStarCount(float clearTime) const;
+	int CalculateCurrentStageStarCount(int pinFallen) const;
 
 	// リザルト画面で取得用
-	float GetLastClearTime() const { return m_lastClearTime; }
-	int   GetLastStarCount() const { return m_lastStarCount; }
+	GameResult GetLastGameResult() const { return m_lastGameResult; }
+	int GetLastGameStarCount()const { return m_lastStarCount; }
 
 	//ステージ数ゲッター（仮置き）
 	int GetMaxStageNo()const { return static_cast<int>(m_stageTable.size()); }
@@ -185,7 +201,7 @@ private:
 	std::unordered_map<int, StageInfo> m_stageTable;
 
 	// リザルト用データ
-	float m_lastClearTime = 0.0f;
+	GameResult m_lastGameResult = {};
 	int   m_lastStarCount = 0;
 
 public:

@@ -414,7 +414,7 @@ void KdSpriteShader::SetScissorRect(const Math::Rectangle& rect)
 	KdDirect3D::Instance().WorkDevContext()->RSSetScissorRects(1, &rc);
 }
 
-void KdSpriteShader::DrawFont(std::shared_ptr<KdFontSprite>& fontSprite, const Math::Vector2& Pos, const Math::Color* color, const int antiAliasingFlag)
+void KdSpriteShader::DrawFont(std::shared_ptr<KdFontSprite>& fontSprite, const Math::Vector2& Pos, const TextAlign align, const Math::Color* color, const int antiAliasingFlag)
 {
 	if (fontSprite == nullptr)					return;
 	if (fontSprite->GetTexList().size() == 0)	return;
@@ -477,22 +477,22 @@ void KdSpriteShader::DrawFont(std::shared_ptr<KdFontSprite>& fontSprite, const M
 	//描画開始位置設定
 	Math::Vector2 _beginPos;
 
-	////Xは引数で変動
-	//switch (Base)
-	//{
-	//	//左揃え
-	//case TextDrawBase::Left:
-	//	_beginPos.x = Pos.x;
-	//	break;
-	//	//中央揃え
-	//case TextDrawBase::Center:
-	_beginPos.x = Pos.x - _overallSize.x / 2.0f;
-	//	break;
-	//	//右揃え
-	//case TextDrawBase::Right:
-	//	_beginPos.x = Pos.x - _overallSize.x;
-	//	break;
-	//}
+	//Xは引数で変動
+	switch (align)
+	{
+		//左揃え
+	case TextAlign::Left:
+		_beginPos.x = Pos.x;
+		break;
+		//中央揃え
+	case TextAlign::Center:
+		_beginPos.x = Pos.x - _overallSize.x / 2.0f;
+		break;
+		//右揃え
+	case TextAlign::Right:
+		_beginPos.x = Pos.x - _overallSize.x;
+		break;
+	}
 
 	//Yは共通
 	_beginPos.y = Pos.y + _overallSize.y / 2.0f;
@@ -554,12 +554,12 @@ void KdSpriteShader::DrawFont(const Math::Vector2& Pos, const Math::Color* color
 	va_end(argptr);
 	std::shared_ptr<KdFontSprite> fontSprite = KdFontManager::Instance().CreateFontTexture(0, tmpStr, false);
 
-	DrawFont(fontSprite, Pos, color, 0);
+	DrawFont(fontSprite, Pos, TextAlign::Center, color, 0);
 }
 
 //追加8/15
 //フォント番号、高さ設定版
-void KdSpriteShader::DrawFont(int fontIndex, const Math::Vector2& Pos, const Math::Color* color, const char* format, ...)
+void KdSpriteShader::DrawFont(int fontIndex, const Math::Vector2& Pos, const Math::Color* color, const char* format, TextAlign align, ...)
 {
 	char tmpStr[128]{};
 	va_list argptr;
@@ -572,5 +572,5 @@ void KdSpriteShader::DrawFont(int fontIndex, const Math::Vector2& Pos, const Mat
 
 	std::shared_ptr<KdFontSprite> fontSprite = KdFontManager::Instance().CreateFontTexture(fontIndex, tmpStr, false);
 
-	DrawFont(fontSprite, Pos, color, 0);
+	DrawFont(fontSprite, Pos, align, color, 0);
 }

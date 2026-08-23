@@ -6,6 +6,7 @@
 //
 //===================================================
 class KdFontSprite;
+enum class TextAlign;
 class KdSpriteShader {
 public:
 
@@ -135,11 +136,11 @@ public:
 	// フォント描画
 	void DrawFont(const Math::Vector2& Pos, const Math::Color* color, const char* format, ...);
 	//追加8/15
-	void DrawFont(int fontIndex, const Math::Vector2& Pos, const Math::Color* color, const char* format, ...);
+	void DrawFont(int fontIndex, const Math::Vector2& Pos, const Math::Color* color, const char* format, TextAlign align, ...);
 
 private:
 	// フォント描画
-	void DrawFont(std::shared_ptr<KdFontSprite>& fontSprite, const Math::Vector2& Pos, const Math::Color* color, const int antiAliasingFlag);
+	void DrawFont(std::shared_ptr<KdFontSprite>& fontSprite, const Math::Vector2& Pos, const TextAlign align, const Math::Color* color, const int antiAliasingFlag);
 
 	ID3D11VertexShader*		m_VS = nullptr;				// 頂点シェーダー
 	ID3D11InputLayout*		m_VLayout = nullptr;		// 頂点レイアウト

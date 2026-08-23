@@ -6,12 +6,6 @@
 
 void TitleScene::Event()
 {
-	if (GetAsyncKeyState(VK_SPACE) & 0x8000)
-	{
-		//フェードアウト
-		FADEMGR.StartFadeOut();
-	}
-
 	//フェードアウト終了チェック
 	if (FADEMGR.IsFadeOutEnd())
 	{
@@ -19,7 +13,21 @@ void TitleScene::Event()
 		(
 			SceneManager::SceneType::StageSelect
 		);
+
+		return;
 	}
+
+	static bool isSpacePressed = true;
+	if (GetAsyncKeyState(VK_SPACE) & 0x8000)
+	{
+		if (!isSpacePressed)
+		{
+			//フェードアウト
+			FADEMGR.StartFadeOut();
+		}
+		isSpacePressed = true;
+	}
+	else isSpacePressed = false;
 }
 
 void TitleScene::Init()

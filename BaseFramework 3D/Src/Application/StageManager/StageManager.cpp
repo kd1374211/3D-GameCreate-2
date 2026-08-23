@@ -261,7 +261,13 @@ const StageInfo* StageManager::GetStageInfo(int stageNo) const
 	return nullptr;
 }
 
-int StageManager::CalculateStarCount(int stageNo, float clearTime) const
+const StageInfo* StageManager::GetStageInfo() const
+{
+	//現在のステージ番号を見る
+	return GetStageInfo(SCENEMGR.GetStageNo());
+}
+
+int StageManager::CalculateStarCount(int stageNo, int pinFallen) const
 {
 	// マスタデータが存在しない、または無効なステージ番号の場合は最小の★1を返す
 	auto it = m_stageTable.find(stageNo);
@@ -277,10 +283,10 @@ int StageManager::CalculateStarCount(int stageNo, float clearTime) const
 	return 1; // クリアした時点で★1は確定
 }
 
-int StageManager::CalculateCurrentStageStarCount(float clearTime) const
+int StageManager::CalculateCurrentStageStarCount(int pinFallen) const
 {
 	// 現在選択されているステージ番号（m_currentStageNo）を使って計算
-	return CalculateStarCount(SCENEMGR.GetStageNo(), clearTime);
+	return CalculateStarCount(SCENEMGR.GetStageNo(), pinFallen);
 }
 
 bool StageManager::LoadStageMasterData()
@@ -320,7 +326,9 @@ bool StageManager::LoadStageMasterData()
 		info.m_stageName = Utf8ToMultiByte(item.value("stageName", "エラー"));
 		info.m_stageThumbPath = item.value("thumbnail", "Asset/Textures/System/WhiteNoise.png");
 		info.m_timeLimit = item.value("timeLimit", 10.0f);
-		
+		info.m_starTexts[0] = Utf8ToMultiByte(item.value("1StarText", "エラー"));
+		info.m_starTexts[1] = Utf8ToMultiByte(item.value("2StarText", "エラー"));
+		info.m_starTexts[2] = Utf8ToMultiByte(item.value("3StarText", "エラー"));
 
 		// stageNo をキーとしてマップに格納
 		if (info.m_stageNo > 0)

@@ -103,7 +103,7 @@ void GameScene::UpdatePlaying()
 	if (STAGEMGR.IsAllPinsFallen())
 	{
 		//リザルトをセット
-		STAGEMGR.SetGameResult(m_stageTimer);
+		STAGEMGR.SetGameResult(CalcResult(true));
 
 		//ステージ終了演出召喚
 		if (!m_wpUI.expired())
@@ -131,6 +131,8 @@ void GameScene::UpdatePlaying()
 	// タイムアップでゲームオーバー
 	else if (m_stageTimer < 0.0)
 	{
+		STAGEMGR.SetGameResult(CalcResult(false));
+
 		//ステージ終了演出召喚
 		if (!m_wpUI.expired())
 		{
@@ -220,6 +222,19 @@ void GameScene::UpdateGameClear()
 
 	//仮表示
 	KdDebugGUI::Instance().AddLog("CountDown : %.2f\n", m_countdownTimer);
+}
+
+GameResult GameScene::CalcResult(bool isClear) const
+{
+	GameResult result = {};
+	result.m_isCleared = isClear;
+	result.m_stageTimer = m_stageTimer;
+
+	//ここSTAGEMGR側でやるのもあり
+	result.m_fallenPinCnt = STAGEMGR.GetTotalPinCount() - STAGEMGR.GetRemainingPinCount();
+	result.m_totalPinCnt = STAGEMGR.GetTotalPinCount();
+
+	return result;
 }
 
 void GameScene::Init()

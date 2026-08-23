@@ -57,11 +57,18 @@ void ResultScene::Event()
 		return;
 	}
 
+	static bool isSpacePressed = true;
 	if (GetAsyncKeyState(VK_SPACE) & 0x8000)
 	{
-		if (m_isFadeInEnd)
+		if (!isSpacePressed)
 		{
-			FADEMGR.StartFadeOut();
+			if (m_isFadeInEnd)
+			{
+				FADEMGR.StartFadeOut();
+			}
 		}
+
+		isSpacePressed = true;
 	}
+	else isSpacePressed = false;
 }

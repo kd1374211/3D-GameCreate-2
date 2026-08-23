@@ -16,12 +16,9 @@ struct UILayoutConfig
 
 	// テキスト
 	static constexpr Math::Vector2 StageNamePos = { 310.0f, -40.0f };
-	static constexpr int StageListNameFontIndex = 1;
-	static constexpr int StageNameFontIndex = 2;
-
+	
 	// ── 操作ガイド ──
 	static constexpr Math::Vector2 KeyHelpPos = { 0.0f, -320.0f }; // 画面最下部・中央
-	static constexpr int KeyGuideFontIndex = 3;
 };
 
 class StageSelectUIObject :public KdGameObject

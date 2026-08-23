@@ -4,13 +4,19 @@
 		"stageListName": "ステージ１",
 		"stageName": "ステージ１ : ステージ名",
 		"thumbnail": "Asset/Textures/StageThumbnail/Stage01.png",
-		"timeLimit": 20.0
+		"timeLimit": 20.0,
+		"1StarText": "ステージクリア",
+		"2StarText": "ピンを５本以上倒す",
+		"3StarText": "ピンをすべて倒す"
 	},
 	{
 		"stageNo": 2,
 		"stageListName": "ステージ２",
 		"stageName": "ステージ２ : ステージ名",
 		"thumbnail": "Asset/Textures/StageThumbnail/Stage02.png",
-		"timeLimit":  20.0
+		"timeLimit": 20.0,
+		"1StarText": "ステージクリア",
+		"2StarText": "ピンを５本以上倒す",
+		"3StarText": "ピンをすべて倒す"
 	}
 ]

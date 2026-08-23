@@ -2,6 +2,7 @@
 
 #include"../BaseScene/BaseScene.h"
 
+struct GameResult;
 class GameUIObjects;
 
 //シーン状況
@@ -45,6 +46,9 @@ private:
 	void UpdatePlaying();
 	void UpdateGameOver();
 	void UpdateGameClear();
+
+	// リザルト計算
+	GameResult CalcResult(bool isClear)const;
 
 	// カウントダウン
 	float m_countdownTimer = GameSceneConsts::CountDownOnReady;

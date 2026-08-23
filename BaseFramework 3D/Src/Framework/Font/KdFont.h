@@ -9,6 +9,36 @@ struct FontSetData
 	float m_charSize;
 };
 
+enum class TextAlign
+{
+	Left,
+	Center,
+	Right
+};
+
+// 追加8/22
+// テキスト種
+struct FontTypeConst
+{
+	//StageSelect	
+	static constexpr int StageSelect_StageListName = 1;
+	static constexpr int StageSelect_StageName = 3;
+	static constexpr int StageSelect_KeyGuide = 2;
+
+	// Game
+	static constexpr int Game_CountDown = 7;
+	static constexpr int Game_TimerAndPin = 6;
+	static constexpr int Game_StageFinish = 8;
+
+	//Result
+	static constexpr int Result_ResultTop = 5;
+	static constexpr int Result_StageName = 3;
+	static constexpr int Result_PinCount = 4;
+	static constexpr int Result_TimeLeft = 4;
+	static constexpr int Result_StarList = 2;
+	static constexpr int Result_ButtonIndex = 5;
+};
+
 //=====================================================================
 // 文字のデータ
 //
@@ -157,9 +187,11 @@ private:
 		{1,FontSetData("チェックポイント．（ピリオド）",SHIFTJIS_CHARSET,false,24.0f)},
 		{2,FontSetData("チェックポイント．（ピリオド）",SHIFTJIS_CHARSET,false,30.0f)},
 		{3,FontSetData("チェックポイント．（ピリオド）",SHIFTJIS_CHARSET,false,40.0f)},
-		{4,FontSetData("チェックポイント．（ピリオド）",SHIFTJIS_CHARSET,false,48.0f)},
-		{5,FontSetData("Faster One Regular",DEFAULT_CHARSET,false,200.0f)},
-		{6,FontSetData("Black Ops One Regular",DEFAULT_CHARSET,false,200.0f)}
+		{4,FontSetData("チェックポイント．（ピリオド）",SHIFTJIS_CHARSET,false,50.0f)},
+		{5,FontSetData("チェックポイント．（ピリオド）",SHIFTJIS_CHARSET,false,60.0f)},
+		{6,FontSetData("チェックポイント．（ピリオド）",SHIFTJIS_CHARSET,false,80.0f)},
+		{7,FontSetData("Faster One Regular",DEFAULT_CHARSET,false,200.0f)},
+		{8,FontSetData("Black Ops One Regular",DEFAULT_CHARSET,false,200.0f)}
 	};
 
 	// フォント登録データ
