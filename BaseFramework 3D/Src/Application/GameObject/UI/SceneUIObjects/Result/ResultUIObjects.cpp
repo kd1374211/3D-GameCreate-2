@@ -14,6 +14,21 @@ void ResultUIObject::Update()
 		m_windowSizeMulti += ResultUIConsts::WindowExpandSpeed * dt;
 		if (m_windowSizeMulti >= 1.0f)m_windowSizeMulti = 1.0f;
 	}
+
+	//進捗度の制御
+	m_progress += ResultUIConsts::AlphaChangeSpeed * dt * (m_isReverse * -2 + 1);
+
+	if (m_progress >= ResultUIConsts::ProgMax)
+	{
+		m_isReverse = true;
+	}
+	else if (m_progress <= ResultUIConsts::ProgMin)
+	{
+		m_isReverse = false;
+	}
+
+	m_resultButtomTextAlpha = std::clamp(m_progress, ResultUIConsts::AlphaMin, ResultUIConsts::AlphaMax);
+	KdDebugGUI::Instance().AddLog("Prog : %.2f\n", m_progress);
 }
 
 void ResultUIObject::DrawSprite()
@@ -90,6 +105,11 @@ void ResultUIObject::DrawSprite()
 		text = info->m_starTexts[i];
 		KdShaderManager::Instance().m_spriteShader.DrawFont(FontTypeConst::Result_StarList, Math::Vector2(ResultUIConsts::StarListTextPosX, drawPosY), &kWhiteColor, text.c_str(), TextAlign::Left);
 	}
+
+	//リザルト下
+	text = "スペースキーで戻る";
+	color = Math::Color(1.0f, 1.0f, 1.0f, m_resultButtomTextAlpha);
+	KdShaderManager::Instance().m_spriteShader.DrawFont(FontTypeConst::Result_Buttom, ResultUIConsts::ResultEndTextPos, &color, text.c_str(), TextAlign::Center);
 
 	//ターゲット戻す
 	KdDirect3D::Instance().WorkDevContext()->OMSetRenderTargets(1, KdDirect3D::Instance().WorkBackBuffer()->WorkRTViewAddress(), KdDirect3D::Instance().WorkZBuffer()->WorkDSView());

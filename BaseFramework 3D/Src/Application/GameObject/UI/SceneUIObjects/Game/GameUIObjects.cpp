@@ -87,14 +87,14 @@ void GameUIObjects::DrawSprite()
 
 	// ピン数表示
 	text = "";
-	// 残り・トータルそれぞれもし１桁なら空白追加
-	int remainPins = STAGEMGR.GetRemainingPinCount();
+	// 倒した数・トータルそれぞれもし１桁なら空白追加
+	int fallenPins = STAGEMGR.GetTotalPinCount() - STAGEMGR.GetRemainingPinCount();
 	int totalPins = STAGEMGR.GetTotalPinCount();
-	if (remainPins < 10)
+	if (fallenPins < 10)
 	{
 		text += " ";
 	}
-	text += std::to_string(remainPins) + "/";
+	text += std::to_string(fallenPins) + "/";
 	if (totalPins < 10)
 	{
 		text += " ";

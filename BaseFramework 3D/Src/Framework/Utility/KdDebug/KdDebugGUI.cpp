@@ -57,7 +57,7 @@ void KdDebugGUI::GuiProcess()
 	//===========================================================
 	static bool isEditWindow = false;
 	static bool isEditWindowKey = false;
-	if (GetAsyncKeyState('1') & 0x8000)
+	if (GetAsyncKeyState('Q') & 0x8000)
 	{
 		if (!isEditWindowKey)
 		{
@@ -67,10 +67,12 @@ void KdDebugGUI::GuiProcess()
 			if (STAGEMGR.IsEditMode())
 			{
 				STAGEMGR.SetMode(StageMode::Play);
+				SCENEMGR.SetGameSpeed(1.0f);
 			}
 			else
 			{
 				STAGEMGR.SetMode(StageMode::Edit);
+				SCENEMGR.SetGameSpeed(0.0f);
 			}
 		}
 	}
@@ -173,8 +175,8 @@ void KdDebugGUI::GuiProcess()
 
 				bool isChanged = false;
 				isChanged |= ImGui::DragFloat3("Position", &obj.m_position.x, 0.05f);
-				isChanged |= ImGui::DragFloat4("Rotation (Quat)", &obj.m_rotation.x, 0.01f);
-				isChanged |= ImGui::DragFloat3("Scale", &obj.m_scale.x, 0.05f);
+				//isChanged |= ImGui::DragFloat4("Rotation (Quat)", &obj.m_rotation.x, 0.01f);
+				//isChanged |= ImGui::DragFloat3("Scale", &obj.m_scale.x, 0.05f);
 
 				if (isChanged)
 				{

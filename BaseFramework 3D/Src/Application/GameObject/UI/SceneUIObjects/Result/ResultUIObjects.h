@@ -30,10 +30,18 @@ struct ResultUIConsts
 	static constexpr float StarListBasePosY = -30.0f;
 	static constexpr float StarPosDiffY = 60.0f;
 
-	// ボタン
+	// ボタン(今は使わない)
 	static constexpr Math::Vector2 ButtonSize = Math::Vector2(0.0f, 170.0f);
 	static constexpr Math::Vector2 RestartButtonPos = Math::Vector2(0.0f, 170.0f);
 	static constexpr Math::Vector2 BackButtonPos = Math::Vector2(0.0f, 170.0f);
+
+	//終了テキスト
+	static constexpr Math::Vector2 ResultEndTextPos = Math::Vector2(0, -250.0f);
+	static constexpr float AlphaChangeSpeed = 1.5f;
+	static constexpr float AlphaMax = 1.0f;
+	static constexpr float AlphaMin = 0.2f;
+	static constexpr float ProgMax = 1.2f;
+	static constexpr float ProgMin = 0.2f;
 };
 
 class ResultUIObject :public KdGameObject
@@ -62,4 +70,8 @@ private:
 	// ★アイコン
 	std::shared_ptr<KdTexture> m_starTex = nullptr;
 
+	// リザルト下テキストの点滅
+	float m_resultButtomTextAlpha = 1.0f;
+	bool m_isReverse = false;
+	float m_progress = 0.0f;
 };

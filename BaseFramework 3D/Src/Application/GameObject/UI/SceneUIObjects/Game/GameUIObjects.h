@@ -26,11 +26,11 @@ struct GameUIConsts
 	static constexpr float TimerPinPosY = 318.0f;
 
 	//タイマー
-	static constexpr float ClockIconPosX = -80.0f;
-	static constexpr float TimeNumberTextPosX = 40.0f;
+	static constexpr float ClockIconPosX = -100.0f;
+	static constexpr float TimeNumberTextPosX = 50.0f;
 
 	//ピン数
-	static constexpr float PinIconPosX = 200.0f;
+	static constexpr float PinIconPosX = 350.0f;
 	static constexpr float PinTextPosX = 630.0f;
 
 	//ステージ終了演出

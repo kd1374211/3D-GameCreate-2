@@ -273,6 +273,7 @@ void GameScene::Init()
 
 	//時間制限取得
 	m_stageTimer = STAGEMGR.GetStageInfo(stageNumber)->m_timeLimit;
+	UIObj->SetTimer(m_stageTimer);
 
 	//フェードイン
 	FADEMGR.StartFadeIn();
