@@ -208,7 +208,34 @@ void KdDebugGUI::GuiProcess()
 //	ImGui::End();
 
 	// ログウィンドウ
-	m_uqLog->Draw("Log Window");
+	static bool isLog = false;
+	static bool isLogKey = true;
+	if (GetAsyncKeyState('W') & 0x8000)
+	{
+		if (!isLogKey)
+		{
+			isLog = !isLog;
+		}
+
+		isLogKey = true;
+	}
+	else isLogKey = false;
+	if (isLog)m_uqLog->Draw("Log Window");
+
+	static bool isCursor = false;
+	static bool isCursorKey = true;
+	if (GetAsyncKeyState('E') & 0x8000)
+	{
+		if (!isCursorKey)
+		{
+			isCursor = !isCursor;
+
+			ShowCursor(isCursor);
+		}
+
+		isCursorKey = true;
+	}
+	else isCursorKey = false;
 
 	//=====================================================
 	// ログ出力 ・・・ AddLog("～") で追加
