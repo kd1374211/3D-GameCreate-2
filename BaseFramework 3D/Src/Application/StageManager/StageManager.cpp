@@ -326,6 +326,7 @@ bool StageManager::LoadStageMasterData()
 		info.m_stageName = Utf8ToMultiByte(item.value("stageName", "エラー"));
 		info.m_stageThumbPath = item.value("thumbnail", "Asset/Textures/System/WhiteNoise.png");
 		info.m_timeLimit = item.value("timeLimit", 10.0f);
+		info.m_fallOutLine = item.value("fallOutLine", -10.0f);
 		info.m_starTexts[0] = Utf8ToMultiByte(item.value("1StarText", "エラー"));
 		info.m_starTexts[1] = Utf8ToMultiByte(item.value("2StarText", "エラー"));
 		info.m_starTexts[2] = Utf8ToMultiByte(item.value("3StarText", "エラー"));

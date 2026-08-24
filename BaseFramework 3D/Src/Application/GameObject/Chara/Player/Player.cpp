@@ -54,6 +54,41 @@ void Player::Update()
 	const float TURN_SPEED = 120.0f;  // 旋回性能(秒)
 	float gameDt = SCENEMGR.GetDeltaGameTime(); // デルタタイム(ゲーム)
 
+	// 壁接触タイマー & クールタイムの更新（dt による減算）
+	if (m_wallContactTimer > 0.0f) {
+		m_wallContactTimer -= gameDt;
+	}
+
+	if (m_wallHitCoolTime > 0.0f) {
+		m_wallHitCoolTime -= gameDt;
+	}
+
+	// ★【安全な押し出し＆減速処理】Updateの安全な文脈で実行する
+	if (m_needPushOut)
+	{
+		m_needPushOut = false; // リセット
+
+		// 1. 位置の強制押し出し（安全圏へ離脱）
+		const float pushOutDistance = 0;
+		JPH::RVec3 currentPos = m_cPhysics->GetPos();
+		JPH::RVec3 newPos = currentPos + m_lastWallNormal * pushOutDistance;
+		m_cPhysics->SetPosition(newPos);
+
+		// 2. 減速処理
+		float rad = DirectX::XMConvertToRadians(m_facingAngle);
+		JPH::Vec3 moveDir(std::sin(rad), 0.0f, std::cos(rad));
+		if (moveDir.LengthSq() > 0.0001f)
+		{
+			moveDir = moveDir.Normalized();
+			float wallDot = -moveDir.Dot(m_lastWallNormal);
+			if (wallDot > 0.0f)
+			{
+				m_currentSpeedXZ -= m_currentSpeedXZ * wallDot * 0.35f;
+				if (m_currentSpeedXZ < 0.0f) m_currentSpeedXZ = 0.0f;
+			}
+		}
+	}
+
 	// =================================================================
 	// 1. 方向転換（A/Dキーによる向き更新）
 	// =================================================================
@@ -161,11 +196,6 @@ void Player::Update()
 	// 6. 加速と進行方向の計算（壁すべり投影・完全対応版）
 	// =================================================================
 
-	// 壁接触タイマーの更新（OnHitWallで2がセットされ、毎フレーム減算）
-	if (m_wallContactTimer > 0) {
-		m_wallContactTimer--;
-	}
-
 	// -----------------------------------------------------------------
 	// A. スピードの計算（オートアクセル）
 	// -----------------------------------------------------------------
@@ -201,22 +231,19 @@ void Player::Update()
 	// -----------------------------------------------------------------
 	JPH::Vec3 finalMoveDir = moveDir;
 
-	if (m_wallContactTimer > 0)
+	// ★ float 判定（> 0.0f）に変更
+	if (m_wallContactTimer > 0.0f)
 	{
-		// 壁法線（m_lastWallNormal：壁 -> プレイヤー向き）への突撃度を計算
 		float dotWall = finalMoveDir.Dot(m_lastWallNormal);
 
-		// 壁の中に突き進もうとしている場合（dot < 0）のみ、壁と平行な成分だけに投影する
 		if (dotWall < 0.0f)
 		{
-			// 壁に突き刺さる成分を除去し、壁と完全に平行な滑りベクトルを作成
 			finalMoveDir = finalMoveDir - m_lastWallNormal * dotWall;
 
 			if (finalMoveDir.LengthSq() > 0.0001f) {
 				finalMoveDir = finalMoveDir.Normalized();
 			}
 			else {
-				// 正面完全衝突時はその場に留まるベクトル（ゼロ）
 				finalMoveDir = JPH::Vec3::sZero();
 			}
 		}
@@ -265,6 +292,7 @@ void Player::PostUpdate()
 	float dt = Application::Instance().GetDeltaTime(); // デルタタイム
 
 	// 1. 物理座標の同期（Joltから最新座標を反映）
+	Math::Vector3 lastPos = m_pos;
 	m_cPhysics->Sync(m_pos);
 
 	// 2. 最新座標を取得
@@ -273,12 +301,18 @@ void Player::PostUpdate()
 	// 3. 移動距離に応じた「転がり角度」の加算更新
 	if (m_radius > 0.001f)
 	{
-		m_rollAngle += (m_currentSpeedXZ * dt) / m_radius;
+		m_rollAngle += (m_pos - lastPos).Length() / m_radius;
 
 		// 360度（2π）超えのオーバーフロー防止
 		if (m_rollAngle >= M_PI * 2.0f) {
 			m_rollAngle -= M_PI * 2.0f;
 		}
+	}
+
+	// 落下チェック
+	if (m_pos.y < STAGEMGR.GetStageInfo()->m_fallOutLine)
+	{
+		m_isFall = true;
 	}
 
 	// 4. Math::Matrix を使って行列を作成
@@ -299,6 +333,9 @@ void Player::PostUpdate()
 	// D. ワールド行列の合成（ 転がり → 旋回 → 移動  )
 	// ※ご使用の環境の行列乗算順序に合わせて「*」の順序を調整してください
 	m_mWorld = matRoll * matYaw * matTrans;
+
+	//GUI
+	KdDebugGUI::Instance().AddLog("Pos : %.2f,%.2f,%.2f\n", m_pos.x, m_pos.y, m_pos.z);
 }
 
 void Player::DrawLit()
@@ -313,26 +350,38 @@ void Player::GenerateDepthMapFromLight()
 
 void Player::OnHitWall(const JPH::Vec3& wallNormal)
 {
+	//JPH::Vec3 horizNormal(wallNormal.GetX(), 0.0f, wallNormal.GetZ());
+	//if (horizNormal.LengthSq() < 0.0001f) return;
+
+	//// 壁法線を保存（壁からプレイヤーに向かう向き）
+	//m_lastWallNormal = horizNormal.Normalized();
+	//m_wallContactTimer = 2; // 2フレーム接触状態を保持
+
+	//// --- 減速処理（dt考慮版） ---
+	//float rad = DirectX::XMConvertToRadians(m_facingAngle);
+	//JPH::Vec3 moveDir(std::sin(rad), 0.0f, std::cos(rad));
+	//if (moveDir.LengthSq() < 0.0001f) return;
+	//moveDir = moveDir.Normalized();
+
+	//float wallDot = -moveDir.Dot(m_lastWallNormal);
+	//if (wallDot > 0.0f)
+	//{
+	//	float dt = Application::Instance().GetDeltaTime();
+	//	m_currentSpeedXZ -= 5.0f * wallDot * dt;
+	//	if (m_currentSpeedXZ < 0.0f) m_currentSpeedXZ = 0.0f;
+	//}
+
+	// クールタイム中なら無視
+	if (m_wallHitCoolTime > 0.0f) return;
+
 	JPH::Vec3 horizNormal(wallNormal.GetX(), 0.0f, wallNormal.GetZ());
 	if (horizNormal.LengthSq() < 0.0001f) return;
 
-	// 壁法線を保存（壁からプレイヤーに向かう向き）
+	// 壁法線とフラグだけをセットしてすぐ抜ける（安全）
 	m_lastWallNormal = horizNormal.Normalized();
-	m_wallContactTimer = 2; // 2フレーム接触状態を保持
-
-	// --- 減速処理（dt考慮版） ---
-	float rad = DirectX::XMConvertToRadians(m_facingAngle);
-	JPH::Vec3 moveDir(std::sin(rad), 0.0f, std::cos(rad));
-	if (moveDir.LengthSq() < 0.0001f) return;
-	moveDir = moveDir.Normalized();
-
-	float wallDot = -moveDir.Dot(m_lastWallNormal);
-	if (wallDot > 0.0f)
-	{
-		float dt = Application::Instance().GetDeltaTime();
-		m_currentSpeedXZ -= 5.0f * wallDot * dt;
-		if (m_currentSpeedXZ < 0.0f) m_currentSpeedXZ = 0.0f;
-	}
+	m_wallContactTimer = 0.08f;
+	m_wallHitCoolTime = 0.10f;
+	m_needPushOut = true; // ★押し出しリクエストを出すだけ
 }
 
 void Player::Init()

@@ -69,7 +69,7 @@ void PinBase::Update()
 
 		// 4. プレイヤーの速度をもとにピンを弾き飛ばす
 		JPH::Vec3 blowDir = m_pendingVelocity;
-		blowDir.SetY(std::max(blowDir.GetY(), 3.0f)); // 上向きに跳ね上げる
+		blowDir.SetY(std::max(blowDir.GetY(), 2.0f)); // 上向きに跳ね上げる
 
 		bodyInterface.AddImpulse(bodyID, blowDir * 2.0f);
 	}

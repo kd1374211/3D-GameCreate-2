@@ -35,6 +35,7 @@ struct StageInfo
 	std::string m_stageName;		//詳細上でのステージ名（本当の名前）
 	std::string m_stageThumbPath;	//サムネイル画像パス
 	float m_timeLimit;				//制限時間
+	float m_fallOutLine;			//落下死境界
 	std::string m_starTexts[StageManagerConsts::StarCountMax];		//星条件テキスト
 };
 

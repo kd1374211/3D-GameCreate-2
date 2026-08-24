@@ -29,6 +29,9 @@ public:
 	//操作可能フラグ切り替え
 	void SetIsInputEnabled(bool flg) { m_isInputEnabled = flg; }
 
+	// 落下死チェック
+	bool GetIsFall()const { return m_isFall; }
+
 private:
 
 	void Init()override;
@@ -62,8 +65,10 @@ private:
 
 	//壁いろいろ
 	JPH::Vec3 m_lastWallNormal = JPH::Vec3::sZero();
-	int m_wallContactTimer = 0; // 壁接触フラグ（チャタリング防止）
-
+	float m_wallContactTimer = 0.0f; // int から float に変更（単位：秒）
+	float m_wallHitCoolTime = 0.0f; // 壁ヒット直後の安全タイマー
+	bool  m_needPushOut = false;// ★追加：押し出しフラグ
+	
 	//モデル
 	std::shared_ptr<KdModelWork> m_model;
 
@@ -75,4 +80,7 @@ private:
 
 	//操作可能フラグ
 	bool m_isInputEnabled = false;
+
+	// 落下死フラグ
+	bool m_isFall = false;
 };

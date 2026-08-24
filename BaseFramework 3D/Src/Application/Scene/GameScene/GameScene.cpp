@@ -156,6 +156,39 @@ void GameScene::UpdatePlaying()
 		//移行
 		m_currentSceneState = SceneState::GameOver;
 	}
+	// プレイヤーの落下もゲームオーバー
+	else
+	{
+		//プレイヤーの操作ストップ
+		if (!CHARAMGR.GetPlayer().expired())
+		{
+			std::shared_ptr<Player> player = CHARAMGR.GetPlayer().lock();
+
+			// プレイヤーのY座標が一定値より下なら
+			if (player->GetIsFall())
+			{
+				STAGEMGR.SetGameResult(CalcResult(false));
+
+				//ステージ終了演出召喚
+				if (!m_wpUI.expired())
+				{
+					m_wpUI.lock()->SpawnStageFinishText(false);
+				}
+
+				//仮置きタイマーセット
+				m_countdownTimer = GameSceneConsts::CountDownOnFail;
+
+				//ゲーム速度ダウン
+				SCENEMGR.SetGameSpeed(0.1f);
+
+				//プレイヤーの操作ストップ
+				player->SetIsInputEnabled(false);
+
+				//移行
+				m_currentSceneState = SceneState::GameOver;
+			}
+		}
+	}
 
 	//時間経過
 	m_stageTimer -= gameDt;
