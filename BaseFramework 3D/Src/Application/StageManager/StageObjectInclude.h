@@ -8,3 +8,6 @@
 
 //ピン
 #include "../GameObject/BowlingPin/NormalPin/NormalPin.h"
+
+//ゴール
+#include "../GameObject/Terrain/FinishArea/FinishArea.h"

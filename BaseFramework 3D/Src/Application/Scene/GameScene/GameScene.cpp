@@ -8,6 +8,7 @@
 #include "../../GameObject/Chara/CharaManager.h"
 #include "../../GameObject/UI/SceneUIObjects/Game/GameUIObjects.h"
 #include "../../FadeManager/FadeManager.h"
+#include "../../GameObject/Camera/CameraManager.h"
 
 void GameScene::Event()
 {
@@ -288,8 +289,11 @@ void GameScene::Init()
 	std::shared_ptr<Player> player = std::make_shared<Player>(Math::Vector3(0, 1.0f, 0), 0.1f);
 	
 	//取得用にセット
-	m_wpCamera = camera;
 	CHARAMGR.SetPlayer(player);
+
+	//マネージャーに追加
+	CAMERAMGR.SetGameCamera(camera);
+	CAMERAMGR.SetDefaultCamera(CameraType::Game);
 
 	//リンク
 	camera->SetTarget(player);

@@ -5,6 +5,7 @@
 
 #include "../../GameObject/Camera/StageViewCamera/StageViewCamera.h"
 #include "../../FadeManager/FadeManager.h"
+#include "../../GameObject/Camera/CameraManager.h"
 
 void ResultScene::Init()
 {
@@ -25,8 +26,11 @@ void ResultScene::Init()
 	}
 
 	//追加
-	m_wpCamera = camera;
 	AddObject(camera);
+
+	//マネージャーに追加
+	CAMERAMGR.SetGameCamera(camera);
+	CAMERAMGR.SetDefaultCamera(CameraType::Game);
 
 	//UI全般
 	std::shared_ptr<ResultUIObject> UIObj = std::make_shared<ResultUIObject>();

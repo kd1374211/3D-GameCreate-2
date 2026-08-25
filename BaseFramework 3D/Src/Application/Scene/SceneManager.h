@@ -45,9 +45,6 @@ public :
 		ChangeScene(m_currentSceneType);
 	}
 
-	//カメラ取得
-	std::weak_ptr<CameraBase> GetCamera();
-
 	//終了
 	void Release();
 

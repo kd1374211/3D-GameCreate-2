@@ -27,6 +27,10 @@ Ground::Ground(std::string modelPath, Math::Vector3 pos, Math::Quaternion rot)
 	// 情報設定
 	m_pos = pos;
 	m_rot = rot;
+
+	Math::Matrix trans = Math::Matrix::CreateTranslation(m_pos);
+	Math::Matrix rotat = Math::Matrix::CreateFromQuaternion(m_rot);
+	m_mWorld = rotat * trans;
 }
 
 void Ground::DrawLit()

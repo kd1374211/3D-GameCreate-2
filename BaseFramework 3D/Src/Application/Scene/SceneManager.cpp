@@ -87,11 +87,6 @@ void SceneManager::AddObject(const std::shared_ptr<KdGameObject>& _obj)
 	m_currentScene->AddObject(_obj);
 }
 
-std::weak_ptr<CameraBase> SceneManager::GetCamera()
-{
-	return m_currentScene->GetCamera();
-}
-
 void SceneManager::Release()
 {
 	//シーン破壊

@@ -3,6 +3,7 @@
 #include "../../GameObject/UI/SceneUIObjects/Title/TitleUIObjects.h"
 #include "../../StageManager/StageManager.h"
 #include "../../GameObject/Camera/StageViewCamera/StageViewCamera.h"
+#include "../../GameObject/Camera/CameraManager.h"
 
 void TitleScene::Event()
 {
@@ -44,6 +45,10 @@ void TitleScene::Init()
 	camera->Init();
 	camera->SetViewDistance(20.0f);
 
+	//マネージャー
+	CAMERAMGR.SetGameCamera(camera);
+	CAMERAMGR.SetDefaultCamera(CameraType::Game);
+
 	//さっき生成した地形をターゲットに
 	if (!STAGEMGR.GetTerrain().expired())
 	{
@@ -51,7 +56,6 @@ void TitleScene::Init()
 	}
 
 	//追加
-	m_wpCamera = camera;
 	AddObject(camera);
 
 	//UI全般

@@ -151,6 +151,40 @@ void PhysicsComponent::Init(float radius, PhysicsInitData initData)
 	SetDamping(initData.linearDamping, initData.angularDamping);
 }
 
+void PhysicsComponent::Init(const Math::Vector3& a_halfExtents, const PhysicsInitData& a_initData)
+{
+	JPH::Vec3 halfExtents(a_halfExtents.x, a_halfExtents.y, a_halfExtents.z);
+	JPH::BoxShapeSettings boxSettings(halfExtents);
+
+	JPH::ShapeSettings::ShapeResult result = boxSettings.Create();
+	if (result.HasError()) return;
+
+	JPH::ShapeRefC shape = result.Get();
+
+	JPH::BodyCreationSettings bodySettings(
+		shape,
+		JPH::RVec3(a_initData.pos.x, a_initData.pos.y, a_initData.pos.z),
+		JPH::Quat(a_initData.rot.x, a_initData.rot.y, a_initData.rot.z, a_initData.rot.w),
+		a_initData.isStatic ? JPH::EMotionType::Static : a_initData.motionType,
+		a_initData.layer
+	);
+
+	bodySettings.mFriction = a_initData.friction;
+	bodySettings.mRestitution = a_initData.restitution;
+	bodySettings.mLinearDamping = a_initData.linearDamping;
+	bodySettings.mAngularDamping = a_initData.angularDamping;
+	bodySettings.mUserData = a_initData.userData;
+
+	// ★ 構造体からそのまま設定する
+	bodySettings.mIsSensor = a_initData.isSensor;
+
+	JPH::BodyInterface& bodyInterface = PHYSICSMGR.GetSystem().GetBodyInterface();
+	m_bodyID = bodyInterface.CreateAndAddBody(
+		bodySettings,
+		a_initData.isStatic ? JPH::EActivation::DontActivate : JPH::EActivation::Activate
+	);
+}
+
 void PhysicsComponent::SetFriction(float friction)
 {
 	auto& bodyInterface = PHYSICSMGR.GetBodyInterface();

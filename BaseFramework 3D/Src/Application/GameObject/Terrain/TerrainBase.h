@@ -8,7 +8,7 @@ public:
 	virtual ~TerrainBase()override {}
 
 	void Update()override;
-	void DrawLit()override;
+	virtual void DrawLit()override;
 
 	//セッター
 	void SetPos(const Math::Vector3& a_pos) { m_pos = a_pos; }

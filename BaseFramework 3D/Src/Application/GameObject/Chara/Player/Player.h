@@ -32,6 +32,9 @@ public:
 	// 落下死チェック
 	bool GetIsFall()const { return m_isFall; }
 
+	// クリア
+	void Finish() { m_isFinish = true; }
+
 private:
 
 	void Init()override;
@@ -83,4 +86,7 @@ private:
 
 	// 落下死フラグ
 	bool m_isFall = false;
+
+	// クリアフラグ
+	bool m_isFinish = false;
 };

@@ -157,6 +157,12 @@
     <Filter Include="Src\Application\FadeManager">
       <UniqueIdentifier>{f78b039e-913d-40ff-945f-de3c2dbeff14}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\GameObject\Terrain\FinishArea">
+      <UniqueIdentifier>{49912c77-120c-452a-b8d9-ddfa0b607f65}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\GameObject\Camera\PointTargetCamera">
+      <UniqueIdentifier>{27017a5a-89a0-454c-855f-4b8a95646228}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -1506,6 +1512,15 @@
     <ClInclude Include="Src\Application\FadeManager\FadeManager.h">
       <Filter>Src\Application\FadeManager</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\Terrain\FinishArea\FinishArea.h">
+      <Filter>Src\Application\GameObject\Terrain\FinishArea</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\Camera\PointTargetCamera\PointTargetCamera.h">
+      <Filter>Src\Application\GameObject\Camera\PointTargetCamera</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\Camera\CameraManager.h">
+      <Filter>Src\Application\GameObject\Camera</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -2176,6 +2191,15 @@
     </ClCompile>
     <ClCompile Include="Src\Application\FadeManager\FadeManager.cpp">
       <Filter>Src\Application\FadeManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\Terrain\FinishArea\FinishArea.cpp">
+      <Filter>Src\Application\GameObject\Terrain\FinishArea</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\Camera\PointTargetCamera\PointTargetCamera.cpp">
+      <Filter>Src\Application\GameObject\Camera\PointTargetCamera</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\Camera\CameraManager.cpp">
+      <Filter>Src\Application\GameObject\Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -31,9 +31,6 @@ public :
 		m_objList.push_back(_obj);
 	}
 
-	//カメラ取得
-	std::weak_ptr<CameraBase> GetCamera() { return m_wpCamera; }
-
 	virtual void Init();
 
 protected :
@@ -43,7 +40,4 @@ protected :
 
 	// 全オブジェクトのアドレスをリストで管理
 	std::list<std::shared_ptr<KdGameObject>> m_objList;
-
-	//カメラ
-	std::weak_ptr<CameraBase> m_wpCamera;
 };

@@ -42,6 +42,16 @@ void GameContactListener::OnContactAdded(const JPH::Body& inBody1, const JPH::Bo
 		}
 	}
 
+	// Finish & Player
+	if (layer1 == Layers::FINISHAREA && layer2 == Layers::PLAYER)
+	{
+		Player* player = reinterpret_cast<Player*>(body2->GetUserData());
+		if (player)
+		{
+			player->Finish();
+		}
+	}
+
 	// Player & Pin
 	if (layer1 == Layers::PLAYER && layer2 == Layers::PIN_STATIC)
 	{

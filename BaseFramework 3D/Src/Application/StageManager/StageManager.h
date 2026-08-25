@@ -101,9 +101,6 @@ public:
 	//選択時アウトライン追加
 	void DrawSelectedObjectOutline();
 
-	// ImGuiやBuildStageから呼ばれるターゲット設定関数
-	void ApplyCameraTarget();
-
 	//ピン追加時
 	void OnPinSpawn()
 	{

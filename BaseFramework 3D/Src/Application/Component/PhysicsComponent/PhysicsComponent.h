@@ -11,6 +11,7 @@ struct PhysicsInitData {
 	JPH::EMotionQuality motionQuality = JPH::EMotionQuality::Discrete;	//モーションクオリティ
 	JPH::ObjectLayer layer = Layers::NUM_LAYERS;	//レイヤー
 	bool isStatic = false;					//静的かどうか
+	bool isSensor = false;					//センサーのみかどうか（当たり判定があるか）
 
 	//物理
 	float mass = 1.0f;							//質量
@@ -34,6 +35,7 @@ public:
 	//新Init
 	bool Init(const std::string& path, PhysicsInitData initData);
 	void Init(float radius, PhysicsInitData initData);
+	void Init(const Math::Vector3& a_halfExtents, const PhysicsInitData& a_initData);
 
 	//ステータスの設定s
 	void SetFriction(float friction);		//摩擦力

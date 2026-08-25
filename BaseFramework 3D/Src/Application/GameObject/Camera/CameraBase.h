@@ -47,6 +47,13 @@ public:
 		m_wpHitObjectList.push_back(object);
 	}
 
+	//追加8/25
+	//これに設定
+	void SetIsDefault(bool flg) { m_isDefault = flg; }
+
+	//ターゲット取得
+	std::weak_ptr<KdGameObject> GetTarget()const { return m_wpTarget; }
+
 protected:
 	// カメラ回転用角度
 	Math::Vector3								m_DegAng		= Math::Vector3::Zero;
@@ -60,4 +67,7 @@ protected:
 
 	// カメラ回転用マウス座標の差分
 	POINT										m_FixMousePos{};
+
+	//有効状態か
+	bool m_isDefault = false;
 };

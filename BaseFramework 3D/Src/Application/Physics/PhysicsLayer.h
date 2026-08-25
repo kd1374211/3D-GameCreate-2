@@ -5,10 +5,11 @@ namespace Layers
 {
 	// オブジェクトレイヤー（細かな分類）
 	static constexpr JPH::ObjectLayer TERRAIN = 0;
-	static constexpr JPH::ObjectLayer PLAYER = 1;
-	static constexpr JPH::ObjectLayer PIN_STATIC = 2;
-	static constexpr JPH::ObjectLayer PIN_MOVING = 3;
-	static constexpr JPH::ObjectLayer NUM_LAYERS = 4;
+	static constexpr JPH::ObjectLayer FINISHAREA = 1;
+	static constexpr JPH::ObjectLayer PLAYER = 2;
+	static constexpr JPH::ObjectLayer PIN_STATIC = 3;
+	static constexpr JPH::ObjectLayer PIN_MOVING = 4;
+	static constexpr JPH::ObjectLayer NUM_LAYERS = 5;
 
 	// ブロードフェーズレイヤー（大雑把な分類）
 	static constexpr JPH::BroadPhaseLayer BP_NON_MOVING(0);
@@ -27,6 +28,8 @@ public:
 		{
 		case Layers::TERRAIN:
 			return inObject2 == Layers::PLAYER||inObject2 == Layers::PIN_STATIC||inObject2 == Layers::PIN_MOVING; // 地形は動くものと当たる
+		case Layers::FINISHAREA:
+			return inObject2 == Layers::PLAYER;
 		case Layers::PLAYER:
 			return true; // プレイヤーはそのまま
 		case Layers::PIN_STATIC:
@@ -48,6 +51,7 @@ public:
 	{
 		// マッピングの登録
 		mObjectToBroadPhase[Layers::TERRAIN] = Layers::BP_NON_MOVING;
+		mObjectToBroadPhase[Layers::FINISHAREA] = Layers::BP_NON_MOVING;
 		mObjectToBroadPhase[Layers::PLAYER] = Layers::BP_MOVING;
 		mObjectToBroadPhase[Layers::PIN_STATIC] = Layers::BP_MOVING;
 		mObjectToBroadPhase[Layers::PIN_MOVING] = Layers::BP_MOVING;
@@ -89,6 +93,7 @@ public:
 		switch (inLayer1)
 		{
 		case Layers::TERRAIN:
+		case Layers::FINISHAREA:
 			return inLayer2 == Layers::BP_MOVING; // 動かないグループは、動くグループとだけ衝突する
 		case Layers::PLAYER:
 		case Layers::PIN_STATIC:

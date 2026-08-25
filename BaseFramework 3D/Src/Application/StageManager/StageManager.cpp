@@ -151,43 +151,6 @@ void StageManager::DrawSelectedObjectOutline()
 	}
 }
 
-void StageManager::ApplyCameraTarget()
-{
-	auto wpCamera = SCENEMGR.GetCamera();
-	if (wpCamera.expired()) return;
-	auto spCamera = wpCamera.lock();
-
-	if (IsEditMode())
-	{
-		// 地形(Ground)が [0] にある場合は +1 オフセット
-		size_t targetIdx = static_cast<size_t>(m_selectedIndex) + 1;
-
-		if (m_selectedIndex >= 0 && targetIdx < m_wpStageObject.size())
-		{
-			if (!m_wpStageObject[targetIdx].expired())
-			{
-				// 新しく生成された実体のポインタをカメラにセット
-				spCamera->SetTarget(m_wpStageObject[targetIdx].lock());
-				return;
-			}
-		}
-		spCamera->SetTarget(nullptr);
-	}
-	else
-	{
-		// プレイモード中：プレイヤーをセット
-		auto wpPlayer = CHARAMGR.GetPlayer();
-		if (!wpPlayer.expired())
-		{
-			spCamera->SetTarget(wpPlayer.lock());
-		}
-		else
-		{
-			spCamera->SetTarget(nullptr);
-		}
-	}
-}
-
 void StageManager::Init()
 {
 	m_debugWireFrame = std::make_unique<KdDebugWireFrame>();
@@ -232,6 +195,13 @@ void StageManager::BuildStage(StageBuildMode mode)
 		{
 			// ピンの生成
 			obj = std::make_shared<NormalPin>(objData.m_position, objData.m_rotation);
+
+			isValidType = true;
+		}
+		else if (objData.m_type == "Goal")
+		{
+			// ピンの生成
+			obj = std::make_shared<FinishArea>(objData.m_position, objData.m_rotation, objData.m_scale);
 
 			isValidType = true;
 		}
