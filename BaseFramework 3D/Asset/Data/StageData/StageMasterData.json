@@ -6,9 +6,13 @@
 		"thumbnail": "Asset/Textures/StageThumbnail/Stage01.png",
 		"timeLimit": 35.0,
 		"fallOutLine": -7.5,
+		"totalPinCount": 10,
 		"1StarText": "ステージクリア",
 		"2StarText": "ピンを５本以上倒してクリア",
-		"3StarText": "ピンをすべて倒してクリア"
+		"3StarText": "ピンをすべて倒してクリア",
+		"pinFallen1Star": 0,
+		"pinFallen2Star": 5,
+		"pinFallen3Star": 10
 	},
 	{
 		"stageNo": 2,
@@ -17,8 +21,12 @@
 		"thumbnail": "Asset/Textures/StageThumbnail/Stage02.png",
 		"timeLimit": 35.0,
 		"fallOutLine": -7.5,
+		"totalPinCount": 10,
 		"1StarText": "ステージクリア",
 		"2StarText": "ピンを５本以上倒してクリア",
-		"3StarText": "ピンをすべて倒してクリア"
+		"3StarText": "ピンをすべて倒してクリア",
+		"pinFallen1Star": 0,
+		"pinFallen2Star": 5,
+		"pinFallen3Star": 10
 	}
 ]

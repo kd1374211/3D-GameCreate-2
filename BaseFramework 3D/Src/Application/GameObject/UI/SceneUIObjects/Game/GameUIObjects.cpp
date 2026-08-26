@@ -102,6 +102,9 @@ void GameUIObjects::DrawSprite()
 	text += std::to_string(totalPins);
 	KdShaderManager::Instance().m_spriteShader.DrawFont(FontTypeConst::Game_TimerAndPin, Math::Vector2(GameUIConsts::PinTextPosX, GameUIConsts::TimerPinPosY), &kBlackColor, text.c_str(), TextAlign::Right);
 
+	// 操作ガイド
+	KdShaderManager::Instance().m_spriteShader.DrawFont(FontTypeConst::Game_KeyGuide, GameUIConsts::KeyGuideTextPos, &kBlackColor, "[←/→] 方向転換", TextAlign::Left);
+
 	//ステージ終了演出
 	if (m_isStageFinishTextDraw)
 	{

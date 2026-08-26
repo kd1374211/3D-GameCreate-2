@@ -36,12 +36,16 @@ struct StageInfo
 	std::string m_stageThumbPath;	//サムネイル画像パス
 	float m_timeLimit;				//制限時間
 	float m_fallOutLine;			//落下死境界
+	int m_totalPinCount;			//ピン数
 	std::string m_starTexts[StageManagerConsts::StarCountMax];		//星条件テキスト
+	int m_starPinNeed[StageManagerConsts::StarCountMax];			//星必要ピン数
 };
 
 struct StageSaveData
 {
 	int m_stageNo = 0;				//ステージ番号
+	bool m_isClear = false;			//クリアしているか
+	int m_bestPinFallen = 0;		//最大ピン数
 };
 
 //リザルト
@@ -70,7 +74,7 @@ public:
 	void SetGameResult(GameResult result)
 	{
 		m_lastGameResult = result;
-		m_lastStarCount = CalculateCurrentStageStarCount(m_lastGameResult.m_fallenPinCnt);
+		m_lastStarCount = CalculateCurrentStageStarCount(m_lastGameResult.m_fallenPinCnt, result.m_isCleared);
 	}
 
 	// ステージデータの保存・読み込み
@@ -134,10 +138,16 @@ public:
 	const StageInfo* GetStageInfo(int stageNo) const;
 	const StageInfo* GetStageInfo() const;
 
+	// ステージ番号からセーブ情報を取得（存在しない場合は nullptr）
+	const StageSaveData* GetUserSave(int stageNo) const;
+	const StageSaveData* GetUserSave() const;
+	// セーブデータ更新用（現在のステージしか呼ばないので引数無し）
+	StageSaveData* WorkUserSave();
+
 	// 指定したステージのピン撃破数から獲得星数（1〜3）を計算して返す
-	int CalculateStarCount(int stageNo, int pinFallen) const;
+	int CalculateStarCount(int stageNo, int pinFallen, bool isClear) const;
 	// 現在の選択ステージに対する星数計算（引数を減らしたい場合）
-	int CalculateCurrentStageStarCount(int pinFallen) const;
+	int CalculateCurrentStageStarCount(int pinFallen, bool isClear) const;
 
 	// リザルト画面で取得用
 	GameResult GetLastGameResult() const { return m_lastGameResult; }
@@ -146,6 +156,9 @@ public:
 	//ステージ数ゲッター（仮置き）
 	int GetMaxStageNo()const { return static_cast<int>(m_stageTable.size()); }
 	int GetMinStageNo()const { return 1; }
+
+	// データセーブ
+	bool SaveUserData();
 
 private:
 

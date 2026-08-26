@@ -64,6 +64,7 @@ bool StageManager::SaveStage(const std::string& filePath)
 	if (!outFile.is_open()) return false;
 
 	outFile << rootJson.dump(4);
+	outFile.close();
 	return true;
 }
 
@@ -242,7 +243,33 @@ const StageInfo* StageManager::GetStageInfo() const
 	return GetStageInfo(SCENEMGR.GetStageNo());
 }
 
-int StageManager::CalculateStarCount(int stageNo, int pinFallen) const
+const StageSaveData* StageManager::GetUserSave(int stageNo) const
+{
+	auto it = m_stageSave.find(stageNo);
+	if (it != m_stageSave.end())
+	{
+		return &(it->second);
+	}
+	return nullptr;
+}
+
+const StageSaveData* StageManager::GetUserSave() const
+{
+	//現在のステージ番号を見る
+	return GetUserSave(SCENEMGR.GetStageNo());
+}
+
+StageSaveData* StageManager::WorkUserSave()
+{
+	auto it = m_stageSave.find(SCENEMGR.GetStageNo());
+	if (it != m_stageSave.end())
+	{
+		return &(it->second);
+	}
+	return nullptr;
+}
+
+int StageManager::CalculateStarCount(int stageNo, int pinFallen, bool isClear) const
 {
 	// マスタデータが存在しない、または無効なステージ番号の場合は最小の★1を返す
 	auto it = m_stageTable.find(stageNo);
@@ -254,14 +281,51 @@ int StageManager::CalculateStarCount(int stageNo, int pinFallen) const
 	const auto& info = it->second;
 
 	// ここで評価の計算
+	int starCount = 0;
 
-	return 1; // クリアした時点で★1は確定
+	// クリアしていないなら0確定
+	if (isClear)
+	{
+		for (int i = 0; i < StageManagerConsts::StarCountMax; i++)
+		{
+			if (pinFallen >= info.m_starPinNeed[i])
+			{
+				starCount++;
+			}
+			else break;
+		}
+	}
+
+	return starCount; // 計算した星数
 }
 
-int StageManager::CalculateCurrentStageStarCount(int pinFallen) const
+int StageManager::CalculateCurrentStageStarCount(int pinFallen, bool isClear) const
 {
 	// 現在選択されているステージ番号（m_currentStageNo）を使って計算
-	return CalculateStarCount(SCENEMGR.GetStageNo(), pinFallen);
+	return CalculateStarCount(SCENEMGR.GetStageNo(), pinFallen, isClear);
+}
+
+bool StageManager::SaveUserData()
+{
+	nlohmann::json rootJson = nlohmann::json::array();
+	
+	// 3. 配置オブジェクト一覧
+	for (const auto& obj : m_stageSave)
+	{
+		nlohmann::json jObj;
+		jObj["stageNo"] = obj.second.m_stageNo;
+		jObj["isClear"] = obj.second.m_isClear;
+		jObj["bestPinsFallen"] = obj.second.m_bestPinFallen;
+
+		rootJson.push_back(jObj);
+	}
+
+	std::ofstream outFile("Asset/Data/StageData/StageSaveData.json");
+	if (!outFile.is_open()) return false;
+
+	outFile << rootJson.dump(4);
+	outFile.close();
+	return true;
 }
 
 bool StageManager::LoadStageMasterData()
@@ -302,9 +366,13 @@ bool StageManager::LoadStageMasterData()
 		info.m_stageThumbPath = item.value("thumbnail", "Asset/Textures/System/WhiteNoise.png");
 		info.m_timeLimit = item.value("timeLimit", 10.0f);
 		info.m_fallOutLine = item.value("fallOutLine", -10.0f);
+		info.m_totalPinCount = item.value("totalPinCount", 1);
 		info.m_starTexts[0] = Utf8ToMultiByte(item.value("1StarText", "エラー"));
 		info.m_starTexts[1] = Utf8ToMultiByte(item.value("2StarText", "エラー"));
 		info.m_starTexts[2] = Utf8ToMultiByte(item.value("3StarText", "エラー"));
+		info.m_starPinNeed[0] = item.value("pinFallen1Star", 0);
+		info.m_starPinNeed[1] = item.value("pinFallen2Star", 0);
+		info.m_starPinNeed[2] = item.value("pinFallen3Star", 0);
 
 		// stageNo をキーとしてマップに格納
 		if (info.m_stageNo > 0)
@@ -349,6 +417,8 @@ bool StageManager::LoadStageSaveData()
 
 		// .value("キー名", デフォルト値) を使うことで、キーが存在しなくても安全に取得可能
 		data.m_stageNo = item.value("stageNo", 0);
+		data.m_isClear = item.value("isClear", false);
+		data.m_bestPinFallen = item.value("bestPinsFallen", 0);
 		
 		// stageNo をキーとしてマップに格納
 		if (data.m_stageNo > 0)

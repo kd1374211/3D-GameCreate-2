@@ -107,7 +107,7 @@ void ResultUIObject::DrawSprite()
 	}
 
 	//リザルト下
-	text = "スペースキーで戻る";
+	text = "[SPACE] 戻る";
 	color = Math::Color(1.0f, 1.0f, 1.0f, m_resultButtomTextAlpha);
 	KdShaderManager::Instance().m_spriteShader.DrawFont(FontTypeConst::Result_Buttom, ResultUIConsts::ResultEndTextPos, &color, text.c_str(), TextAlign::Center);
 

@@ -37,6 +37,9 @@ struct GameUIConsts
 	static constexpr float WindowExpandSpeed_StageFinish = 10.0f;
 	static constexpr Math::Vector2 WindowSize = Math::Vector2(640.0f, 120.0f);
 	static constexpr float WindowAlpha = 0.95f;
+
+	// 操作ガイド
+	static constexpr Math::Vector2 KeyGuideTextPos = Math::Vector2(-635.0f, -330.0f);
 };
 
 class GameUIObjects :public KdGameObject

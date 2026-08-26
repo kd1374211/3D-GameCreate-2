@@ -23,12 +23,15 @@ struct FontTypeConst
 	//StageSelect	
 	static constexpr int StageSelect_StageListName = 1;
 	static constexpr int StageSelect_StageName = 3;
+	static constexpr int StageSelect_Cleared = 2;
 	static constexpr int StageSelect_KeyGuide = 2;
+	static constexpr int StageSelect_PinCount = 2;
 
 	// Game
 	static constexpr int Game_CountDown = 7;
 	static constexpr int Game_TimerAndPin = 6;
 	static constexpr int Game_StageFinish = 8;
+	static constexpr int Game_KeyGuide = 3;
 
 	//Result
 	static constexpr int Result_ResultTop = 5;

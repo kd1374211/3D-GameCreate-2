@@ -1,10 +1,12 @@
 [
-	{
-		"stageNo": 1
-
-	},
-	{
-		"stageNo": 2
-		
-	}
+    {
+        "bestPinsFallen": 10,
+        "isClear": true,
+        "stageNo": 1
+    },
+    {
+        "bestPinsFallen": 0,
+        "isClear": false,
+        "stageNo": 2
+    }
 ]

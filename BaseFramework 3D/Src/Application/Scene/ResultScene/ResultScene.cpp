@@ -41,6 +41,44 @@ void ResultScene::Init()
 
 	//フェードイン
 	FADEMGR.StartFadeIn();
+
+	//さっきのリザルトとセーブデータのリザルトを比べて更新してよいなら更新
+	auto saveData = STAGEMGR.WorkUserSave();
+	auto resultData = STAGEMGR.GetLastGameResult();
+	
+	// セーブデータが存在している
+	// ステージをクリアしている
+	if (saveData != nullptr && resultData.m_isCleared)
+	{
+		// データが変わったか
+		bool isSaveUpdated = false;
+
+		// 新規クリア確認
+		if (!saveData->m_isClear)
+		{
+			//			false					 true
+			saveData->m_isClear = resultData.m_isCleared;
+
+			// 更新した
+			isSaveUpdated = true;
+		}
+
+		// 最大ピン数更新
+		if (saveData->m_bestPinFallen < resultData.m_fallenPinCnt)
+		{
+			// 更新
+			saveData->m_bestPinFallen = resultData.m_fallenPinCnt;
+
+			// した
+			isSaveUpdated = true;
+		}
+
+		// 更新していたらセーブ読み込み
+		if (isSaveUpdated)
+		{
+			STAGEMGR.SaveUserData();
+		}
+	}
 }
 
 void ResultScene::Event()

@@ -49,6 +49,7 @@ void StageSelectUIObject::DrawSprite()
 {
 	//情報取得
 	const auto* stageInfo = STAGEMGR.GetStageInfo(m_selectStageNo);
+	const auto* stageSave = STAGEMGR.GetUserSave(m_selectStageNo);
 
 	//黒背景
 	KdShaderManager::Instance().m_spriteShader.DrawBox(0, 0, 1280, 720, &kBlackColor, true);
@@ -90,8 +91,38 @@ void StageSelectUIObject::DrawSprite()
 	//ステージ名
 	KdShaderManager::Instance().m_spriteShader.DrawFont(FontTypeConst::StageSelect_StageName, UILayoutConfig::StageNamePos, &kWhiteColor, stageInfo->m_stageName.c_str(), TextAlign::Center);
 
+	//クリアしているか
+	if (stageSave->m_isClear)
+	{
+		KdShaderManager::Instance().m_spriteShader.DrawFont(FontTypeConst::StageSelect_Cleared, UILayoutConfig::ClearedTextPos, &kGreenColor, "Cleared!", TextAlign::Center);
+	}
+
+	// 星数
+	int starCount = STAGEMGR.CalculateStarCount(m_selectStageNo, stageSave->m_bestPinFallen, stageSave->m_isClear);
+	Math::Vector2 starTexBaseSize = Math::Vector2(m_starTex->GetWidth() / 2.0f, m_starTex->GetHeight());
+	for (int i = 0; i < StageManagerConsts::StarCountMax; i++)
+	{
+		// X座標
+		float drawPosX = UILayoutConfig::StarListBasePosX + i * UILayoutConfig::StarPosDiffX;
+
+		// i(+1)番目の星が取れたか
+		bool isStarGet = i < starCount;
+
+		//星アイコン
+		Math::Rectangle rec = Math::Rectangle((long)(starTexBaseSize.x * (int)(isStarGet ? 0 : 1)), 0, (long)starTexBaseSize.x, (long)starTexBaseSize.y);
+		KdShaderManager::Instance().m_spriteShader.DrawTex(m_starTex, drawPosX, UILayoutConfig::StarListPosY, starTexBaseSize.x, starTexBaseSize.y, &rec);
+	}
+
+	// ピン
+	// アイコン
+	KdShaderManager::Instance().m_spriteShader.DrawTex(m_pinTex, UILayoutConfig::PinIconPos.x, UILayoutConfig::PinIconPos.y);
+
+	// テキスト
+	std::string text = std::to_string(stageSave->m_bestPinFallen) + " / " + std::to_string(stageInfo->m_totalPinCount);
+	KdShaderManager::Instance().m_spriteShader.DrawFont(FontTypeConst::StageSelect_PinCount, UILayoutConfig::PinCountTextPos, &kWhiteColor, text.c_str(), TextAlign::Right);
+
 	// 操作キーヘルプ
-	std::string keyHelpText = "[▲/▼] 選択   [SPACE] 決定";
+	std::string keyHelpText = "[↑/↓] 選択   [SPACE] 決定";
 
 	KdShaderManager::Instance().m_spriteShader.DrawFont(
 		FontTypeConst::StageSelect_KeyGuide,
@@ -118,6 +149,13 @@ void StageSelectUIObject::Init()
 
 	m_stageThumbTex = std::make_shared<KdTexture>();
 	ChangeThumbTex();
+
+	m_starTex = std::make_shared<KdTexture>();
+	// 仮
+	m_starTex->Load("Asset/Textures/UI/SceneUI/Result/ResultStars.png");
+
+	m_pinTex = std::make_shared<KdTexture>();
+	m_pinTex->Load("Asset/Textures/UI/SceneUI/PinIcon.png");
 }
 
 void StageSelectUIObject::ChangeThumbTex()
