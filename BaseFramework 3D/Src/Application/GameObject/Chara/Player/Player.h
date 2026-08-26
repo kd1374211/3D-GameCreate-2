@@ -34,6 +34,7 @@ public:
 
 	// クリア
 	void Finish() { m_isFinish = true; }
+	bool GetIsFinish()const { return m_isFinish; }
 
 private:
 

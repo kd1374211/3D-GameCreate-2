@@ -341,6 +341,83 @@ void KdStandardShader::DrawPolygon(const KdPolygon& rPolygon, const Math::Matrix
 	}
 }
 
+void KdStandardShader::DrawWrapPolygon(const KdPolygon& rPolygon, const Math::Matrix& mWorld,
+	const Math::Color& colRate, const Math::Vector3& emissive)
+{
+	if (!rPolygon.IsEnable()) { return; }
+
+	// ポリゴン描画用の頂点取得
+	auto& vertices = rPolygon.GetVertices();
+
+	// 頂点数が3より少なければポリゴンが形成できないので描画不能
+	if (vertices.size() < 3) { return; }
+
+	// オブジェクト単位の定数バッファで変更があった場合のみ情報転送
+	if (m_dirtyCBObj)
+	{
+		m_cb0_Obj.Write();
+	}
+
+	// 3Dワールド行列転送
+	m_cb1_Mesh.Work().mW = mWorld;
+	m_cb1_Mesh.Write();
+
+	// マテリアルの転送
+	if (rPolygon.GetMaterial())
+	{
+		WriteMaterial(*rPolygon.GetMaterial(), colRate, emissive);
+	}
+	else
+	{
+		WriteMaterial(KdMaterial(), colRate, emissive);
+	}
+
+	KdShaderManager::Instance().ChangeRasterizerState(KdRasterizerState::CullNone);
+
+	// サンプラーステートの変更:ポリゴンの描画なので、テクスチャの末端が繰り返されると不自然な描画になるため変更が必要
+	if (KdShaderManager::Instance().IsPixelArtStyle())
+	{
+		KdShaderManager::Instance().ChangeSamplerState(KdSamplerState::Point_Wrap);
+	}
+	else
+	{
+		KdShaderManager::Instance().ChangeSamplerState(KdSamplerState::Anisotropic_Wrap);
+	}
+
+	// 描画パイプラインのチェック
+	ID3D11VertexShader* pNowVS = nullptr;
+	KdDirect3D::Instance().WorkDevContext()->VSGetShader(&pNowVS, nullptr, nullptr);
+	bool isLitShader = m_VS_Lit == pNowVS;
+	KdSafeRelease(pNowVS);
+
+	// 陰影ありのシェーダーで2Dオブジェクトを描画する時
+	if (isLitShader && rPolygon.Is2DObject())
+	{
+		std::vector<KdPolygon::Vertex> _2DVertices = vertices;
+
+		// ポリゴンの法線を光に向ける処理：どの方向に向いていても光の影響を正面からに受けるように変換
+		ConvertNormalsFor2D(_2DVertices, mWorld);
+
+		// 2DObject用に変換した頂点配列を描画
+		KdDirect3D::Instance().DrawVertices(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP, (signed)_2DVertices.size(), &_2DVertices[0], sizeof(KdPolygon::Vertex));
+	}
+	else
+	{
+		// 頂点配列を描画
+		KdDirect3D::Instance().DrawVertices(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP, (signed)vertices.size(), &vertices[0], sizeof(KdPolygon::Vertex));
+	}
+
+	KdShaderManager::Instance().UndoSamplerState();
+
+	KdShaderManager::Instance().UndoRasterizerState();
+
+	// 定数に変更があった場合は自動的に初期状態に戻す
+	if (m_dirtyCBObj)
+	{
+		ResetCBObject();
+	}
+}
+
 void KdStandardShader::DrawVertices(const std::vector<KdPolygon::Vertex>& vertices, const Math::Matrix& mWorld,
 	const Math::Color& colRate)
 {

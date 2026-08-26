@@ -17,6 +17,32 @@ namespace Layers
 	static constexpr JPH::uint BP_NUM_LAYERS = 2;
 };
 
+// -----------------------------------------------------------------
+// 汎用レイヤーフィルター定義（Jolt 用）
+// -----------------------------------------------------------------
+
+/// @brief 歩行・接地判定用（TERRAIN や 将来の動く床のみを通す）
+class GroundObjectFilter : public JPH::ObjectLayerFilter
+{
+public:
+	virtual bool ShouldCollide(JPH::ObjectLayer inLayer) const override
+	{
+		// 地形判定に含めたいレイヤーを追加・管理する
+		return inLayer == Layers::TERRAIN;
+		// 将来例: || inLayer == Layers::MOVING_FLOOR;
+	}
+};
+
+/// @brief 物理・ギミック用（センサーや不可視判定を除外したいレイキャスト用）
+class SolidOnlyObjectFilter : public JPH::ObjectLayerFilter
+{
+public:
+	virtual bool ShouldCollide(JPH::ObjectLayer inLayer) const override
+	{
+		return inLayer != Layers::FINISHAREA;
+	}
+};
+
 // --- ② オブジェクトレイヤー同士の衝突判定フィルター ---
 // 「プレイヤー同士は当たるか？」「床と床は当たるか？」などを判定します。
 class ObjectLayerPairFilterImpl : public JPH::ObjectLayerPairFilter

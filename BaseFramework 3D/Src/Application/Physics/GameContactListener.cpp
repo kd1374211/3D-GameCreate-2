@@ -104,4 +104,14 @@ void GameContactListener::OnContactPersisted(const JPH::Body& inBody1, const JPH
 			}
 		}
 	}
+
+	// Finish & Player
+	if (layer1 == Layers::FINISHAREA && layer2 == Layers::PLAYER)
+	{
+		Player* player = reinterpret_cast<Player*>(body2->GetUserData());
+		if (player)
+		{
+			player->Finish();
+		}
+	}
 }

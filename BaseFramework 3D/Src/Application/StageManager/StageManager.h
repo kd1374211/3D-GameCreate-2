@@ -39,6 +39,11 @@ struct StageInfo
 	std::string m_starTexts[StageManagerConsts::StarCountMax];		//星条件テキスト
 };
 
+struct StageSaveData
+{
+	int m_stageNo = 0;				//ステージ番号
+};
+
 //リザルト
 struct GameResult
 {
@@ -151,6 +156,9 @@ private:
 	//マスターデータ読み込み
 	bool LoadStageMasterData();
 
+	//セーブデータ読み込み
+	bool LoadStageSaveData();
+
 	void Release();
 
 	//ピン数リセット
@@ -197,6 +205,9 @@ private:
 
 	// stageNo をキーにしたマスタデータ保持用マップ
 	std::unordered_map<int, StageInfo> m_stageTable;
+
+	// stageNo をキーにしたセーブデータ保持用マップ
+	std::unordered_map<int, StageSaveData> m_stageSave;
 
 	// リザルト用データ
 	GameResult m_lastGameResult = {};

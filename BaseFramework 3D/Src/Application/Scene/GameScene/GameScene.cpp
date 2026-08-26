@@ -101,7 +101,7 @@ void GameScene::UpdatePlaying()
 	float gameDt = SCENEMGR.GetDeltaGameTime();
 
 	//ピンが全て倒れたらクリア移行
-	if (STAGEMGR.IsAllPinsFallen())
+	if (!CHARAMGR.GetPlayer().expired() && CHARAMGR.GetPlayer().lock()->GetIsFinish())
 	{
 		//リザルトをセット
 		STAGEMGR.SetGameResult(CalcResult(true));

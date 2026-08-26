@@ -173,6 +173,10 @@ public:
 	// 任意の頂点群からなるポリゴン描画
 	void DrawPolygon(const KdPolygon& poly, const Math::Matrix& mWorld = Math::Matrix::Identity,
 		const Math::Color& colRate = kWhiteColor, const Math::Vector3& emissive = Math::Vector3::Zero);
+	// 追加8/26
+	// ポリゴンループ
+	void DrawWrapPolygon(const KdPolygon& poly, const Math::Matrix& mWorld = Math::Matrix::Identity,
+		const Math::Color& colRate = kWhiteColor, const Math::Vector3& emissive = Math::Vector3::Zero);
 
 	// 任意の頂点群からなるポリゴンライン描画
 	void DrawVertices(const std::vector<KdPolygon::Vertex>& vertices, const Math::Matrix& mWorld = Math::Matrix::Identity,

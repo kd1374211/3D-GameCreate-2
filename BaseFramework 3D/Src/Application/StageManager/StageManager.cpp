@@ -159,6 +159,11 @@ void StageManager::Init()
 	{
 		//ロード失敗時の処理があるなら書く
 	}
+
+	if (!LoadStageSaveData())
+	{
+		//ロード失敗時の処理があるなら書く
+	}
 }
 
 void StageManager::BuildStage(StageBuildMode mode)
@@ -305,6 +310,50 @@ bool StageManager::LoadStageMasterData()
 		if (info.m_stageNo > 0)
 		{
 			m_stageTable[info.m_stageNo] = info;
+		}
+	}
+
+	return true;
+}
+
+bool StageManager::LoadStageSaveData()
+{
+	// パスはクラス内部に直書きで保持
+	const std::string masterJsonPath = "Asset/Data/StageData/StageSaveData.json";
+
+	std::ifstream file(masterJsonPath);
+	if (!file.is_open())
+	{
+		return false; // ファイルが開けない場合
+	}
+
+	nlohmann::json rootJson;
+	try
+	{
+		file >> rootJson;
+	}
+	catch (...)
+	{
+		file.close();
+		return false; // JSONの構文エラー等
+	}
+	file.close();
+
+	// 既存データをクリア
+	m_stageSave.clear();
+
+	// 配列要素を1つずつ走査して構造体に格納
+	for (const auto& item : rootJson)
+	{
+		StageSaveData data;
+
+		// .value("キー名", デフォルト値) を使うことで、キーが存在しなくても安全に取得可能
+		data.m_stageNo = item.value("stageNo", 0);
+		
+		// stageNo をキーとしてマップに格納
+		if (data.m_stageNo > 0)
+		{
+			m_stageSave[data.m_stageNo] = data;
 		}
 	}
 

@@ -2,60 +2,41 @@
 #include "../../Physics/PhysicsManager.h"
 #include "../../../Framework/Direct3D/KdGLTFLoader.h"
 
+// 1. モデル版 Init
 bool PhysicsComponent::Init(const std::string& path, PhysicsInitData initData)
 {
 	m_isStatic = initData.isStatic;
 	auto& bodyInterface = PHYSICSMGR.GetBodyInterface();
 
-	//モデル読み込み
 	std::shared_ptr<KdGLTFModel> spModel = KdLoadGLTFModel(path);
-	if (!spModel) {
-		return false; // ロード失敗
-	}
+	if (!spModel) return false;
 
 	std::vector<Math::Vector3> allVertices;
 	std::vector<unsigned int>  allIndices;
 
-	// 2. モデル内の全ノードから頂点・インデックスを抽出
 	for (const auto& node : spModel->Nodes) {
 		if (!node.IsMesh) continue;
-
 		const auto& mesh = node.Mesh;
 		unsigned int vertexOffset = static_cast<unsigned int>(allVertices.size());
 
-		// 頂点座標の読み込み
 		for (const auto& vertex : mesh.Vertices) {
-			// ※ KdMeshVertex 内の位置座標メンバ名（Pos や Position 等）を指定
-			Math::Vector3 pos = vertex.Pos;
-
-			// 必要に応じてノードのワールド行列で座標変換
-			// pos = Math::Vector3::Transform(pos, node.WorldTransform);
-
-			allVertices.push_back(pos);
+			allVertices.push_back(vertex.Pos);
 		}
-
-		// 面（インデックス）の読み込み
 		for (const auto& face : mesh.Faces) {
-			// ※ KdMeshFace のインデックス保持用メンバに合わせて調整してください
 			allIndices.push_back(vertexOffset + face.Idx[0]);
 			allIndices.push_back(vertexOffset + face.Idx[1]);
 			allIndices.push_back(vertexOffset + face.Idx[2]);
 		}
 	}
 
-	//無かったらリターン
-	if (allVertices.empty() || allIndices.empty()) {
-		return false;
-	}
+	if (allVertices.empty() || allIndices.empty()) return false;
 
-	// 1. 頂点リストの作成（x,y,z の分解ループが不要になり超シンプル！）
 	JPH::VertexList jphVertices;
 	jphVertices.reserve(allVertices.size());
 	for (const auto& v : allVertices) {
 		jphVertices.push_back(JPH::Float3(v.x, v.y, v.z));
 	}
 
-	// 2. インデックスリストの作成
 	JPH::IndexedTriangleList jphTriangles;
 	jphTriangles.reserve(allIndices.size() / 3);
 	for (size_t i = 0; i < allIndices.size(); i += 3) {
@@ -63,125 +44,113 @@ bool PhysicsComponent::Init(const std::string& path, PhysicsInitData initData)
 	}
 
 	JPH::ShapeRefC finalShape;
-
-	//生成する形状の種分け
 	if (m_isStatic)
 	{
-		// 【静的オブジェクト】三角形メッシュ（MeshShape）として作成
 		JPH::MeshShapeSettings meshSettings(jphVertices, jphTriangles);
 		finalShape = meshSettings.Create().Get();
 	}
 	else
 	{
-		// 凸包（ConvexHull）用に JPH::Vec3 の vector を用意！
 		std::vector<JPH::Vec3> convexVertices;
-		convexVertices.reserve(allVertices.size()); // ※お手元のモデルの頂点配列を指定
-
+		convexVertices.reserve(allVertices.size());
 		for (const auto& v : allVertices) {
-			// あなたのモデルの頂点座標（x, y, z）を JPH::Vec3 に変換
 			convexVertices.push_back(JPH::Vec3(v.x, v.y, v.z));
 		}
-		// 【動的オブジェクト】頂点群から「凸包（ConvexHull）」を自動計算して作成！
 		JPH::ConvexHullShapeSettings convexSettings(convexVertices.data(), static_cast<int>(convexVertices.size()));
 		finalShape = convexSettings.Create().Get();
 	}
 
-	// 3. Body を作成して登録
 	JPH::BodyCreationSettings creationSettings(
 		finalShape,
-		JPH::Vec3(initData.pos.x, initData.pos.y, initData.pos.z),
+		JPH::RVec3(initData.pos.x, initData.pos.y, initData.pos.z),
 		JPH::Quat(initData.rot.x, initData.rot.y, initData.rot.z, initData.rot.w),
 		initData.motionType,
 		initData.layer
 	);
 
 	creationSettings.mOverrideMassProperties = JPH::EOverrideMassProperties::CalculateInertia;
-	creationSettings.mMassPropertiesOverride.mMass = initData.mass; 
+	creationSettings.mMassPropertiesOverride.mMass = initData.mass;
 	creationSettings.mMotionQuality = initData.motionQuality;
 	creationSettings.mUserData = initData.userData;
+	creationSettings.mIsSensor = initData.isSensor;
+	creationSettings.mFriction = initData.friction;
+	creationSettings.mRestitution = initData.restitution;
+	creationSettings.mLinearDamping = initData.linearDamping;
+	creationSettings.mAngularDamping = initData.angularDamping;
 
-	// 3. Joltワールドに登録してIDを保存
-	m_bodyID = bodyInterface.CreateAndAddBody(creationSettings, JPH::EActivation::Activate);
-
-	// 4. 物理パラメータの設定
-	SetFriction(initData.friction);
-	SetRestitution(initData.restitution);
-	SetDamping(initData.linearDamping, initData.angularDamping);
+	m_bodyID = bodyInterface.CreateAndAddBody(
+		creationSettings,
+		initData.isStatic ? JPH::EActivation::DontActivate : JPH::EActivation::Activate
+	);
 
 	return true;
 }
 
+// 2. 球体版 Init
 void PhysicsComponent::Init(float radius, PhysicsInitData initData)
 {
 	m_isStatic = initData.isStatic;
 	auto& bodyInterface = PHYSICSMGR.GetBodyInterface();
 
-	// 1. コライダー（球体）の作成
 	JPH::SphereShapeSettings sphereSettings(radius);
-
-	JPH::Shape::ShapeResult shapeResult = sphereSettings.Create();
-	JPH::Ref<JPH::Shape> ballShape = shapeResult.Get();
-
-	// 2. 設定オブジェクトの構築
-	JPH::Vec3 initPos(initData.pos.x, initData.pos.y, initData.pos.z);
-	JPH::EMotionType motionType = initData.motionType;
-
-	// ※レイヤーの定義（MOVING等）はお使いの設定に合わせてください
-	JPH::ObjectLayer layer = initData.layer;
+	JPH::ShapeRefC ballShape = sphereSettings.Create().Get();
 
 	JPH::BodyCreationSettings creationSettings(
 		ballShape,
-		initPos,
+		JPH::RVec3(initData.pos.x, initData.pos.y, initData.pos.z),
 		JPH::Quat(initData.rot.x, initData.rot.y, initData.rot.z, initData.rot.w),
-		motionType,
-		layer
+		initData.motionType,
+		initData.layer
 	);
 
 	creationSettings.mOverrideMassProperties = JPH::EOverrideMassProperties::CalculateInertia;
 	creationSettings.mMassPropertiesOverride.mMass = initData.mass;
 	creationSettings.mMotionQuality = initData.motionQuality;
 	creationSettings.mUserData = initData.userData;
+	creationSettings.mIsSensor = initData.isSensor;
+	creationSettings.mFriction = initData.friction;
+	creationSettings.mRestitution = initData.restitution;
+	creationSettings.mLinearDamping = initData.linearDamping;
+	creationSettings.mAngularDamping = initData.angularDamping;
 
-	// 3. Joltワールドに登録してIDを保存
-	m_bodyID = bodyInterface.CreateAndAddBody(creationSettings, JPH::EActivation::Activate);
-
-	// 4. 物理パラメータの設定
-	SetFriction(initData.friction);
-	SetRestitution(initData.restitution);
-	SetDamping(initData.linearDamping, initData.angularDamping);
+	m_bodyID = bodyInterface.CreateAndAddBody(
+		creationSettings,
+		initData.isStatic ? JPH::EActivation::DontActivate : JPH::EActivation::Activate
+	);
 }
 
-void PhysicsComponent::Init(const Math::Vector3& a_halfExtents, const PhysicsInitData& a_initData)
+// 3. 箱型 Init（修正済み）
+void PhysicsComponent::Init(const Math::Vector3& halfExtents, const PhysicsInitData& initData)
 {
-	JPH::Vec3 halfExtents(a_halfExtents.x, a_halfExtents.y, a_halfExtents.z);
-	JPH::BoxShapeSettings boxSettings(halfExtents);
+	m_isStatic = initData.isStatic;
 
-	JPH::ShapeSettings::ShapeResult result = boxSettings.Create();
-	if (result.HasError()) return;
-
-	JPH::ShapeRefC shape = result.Get();
+	JPH::BoxShapeSettings boxSettings(JPH::Vec3(halfExtents.x, halfExtents.y, halfExtents.z));
+	JPH::ShapeRefC shape = boxSettings.Create().Get();
 
 	JPH::BodyCreationSettings bodySettings(
 		shape,
-		JPH::RVec3(a_initData.pos.x, a_initData.pos.y, a_initData.pos.z),
-		JPH::Quat(a_initData.rot.x, a_initData.rot.y, a_initData.rot.z, a_initData.rot.w),
-		a_initData.isStatic ? JPH::EMotionType::Static : a_initData.motionType,
-		a_initData.layer
+		JPH::RVec3(initData.pos.x, initData.pos.y, initData.pos.z),
+		JPH::Quat(initData.rot.x, initData.rot.y, initData.rot.z, initData.rot.w),
+		initData.motionType,
+		initData.layer
 	);
 
-	bodySettings.mFriction = a_initData.friction;
-	bodySettings.mRestitution = a_initData.restitution;
-	bodySettings.mLinearDamping = a_initData.linearDamping;
-	bodySettings.mAngularDamping = a_initData.angularDamping;
-	bodySettings.mUserData = a_initData.userData;
+	bodySettings.mOverrideMassProperties = JPH::EOverrideMassProperties::CalculateInertia;
+	bodySettings.mMassPropertiesOverride.mMass = initData.mass;
+	bodySettings.mMotionQuality = initData.motionQuality;
+	bodySettings.mFriction = initData.friction;
+	bodySettings.mRestitution = initData.restitution;
+	bodySettings.mLinearDamping = initData.linearDamping;
+	bodySettings.mAngularDamping = initData.angularDamping;
+	bodySettings.mUserData = initData.userData;
+	bodySettings.mIsSensor = initData.isSensor; // ★正しく反映されるよう修正
 
-	// ★ 構造体からそのまま設定する
-	bodySettings.mIsSensor = a_initData.isSensor;
+	JPH::BodyInterface& bodyInterface = PHYSICSMGR.GetBodyInterface();
 
-	JPH::BodyInterface& bodyInterface = PHYSICSMGR.GetSystem().GetBodyInterface();
+	// ★設定済みの bodySettings をそのまま渡す
 	m_bodyID = bodyInterface.CreateAndAddBody(
 		bodySettings,
-		a_initData.isStatic ? JPH::EActivation::DontActivate : JPH::EActivation::Activate
+		initData.isStatic ? JPH::EActivation::DontActivate : JPH::EActivation::Activate
 	);
 }
 

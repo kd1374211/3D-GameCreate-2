@@ -120,27 +120,32 @@ void Player::Update()
 	JPH::RRayCast ray{ ballPos, JPH::Vec3(0.0f, -rayLength, 0.0f) };
 	JPH::RayCastResult hit;
 
-	// 自分自身を除外するフィルター
-	JPH::IgnoreSingleBodyFilter bodyFilter(m_cPhysics->GetBodyID());
-
+	// 地形以外を除外するフィルター
+	GroundObjectFilter groundFilter;
 	bool rawGrounded = false;
 	JPH::Vec3 groundNormal(0.0f, 1.0f, 0.0f);
 
-	if (PHYSICSMGR.GetSystem().GetNarrowPhaseQuery().CastRay(ray, hit, {}, {}, bodyFilter))
+	if (PHYSICSMGR.GetSystem().GetNarrowPhaseQuery().CastRay(ray, hit, {}, groundFilter, {}))
 	{
 		float hitDistance = hit.mFraction * rayLength;
 
 		if (hitDistance <= m_radius + 0.03f)
 		{
-			rawGrounded = true;
+			JPH::Vec3 tempNormal(0.0f, 1.0f, 0.0f);
 
-			// スコープを作って lock の寿命をここで終わらせる
 			{
 				JPH::BodyLockRead lock(PHYSICSMGR.GetSystem().GetBodyLockInterface(), hit.mBodyID);
 				if (lock.Succeeded()) {
 					const JPH::Body& body = lock.GetBody();
-					groundNormal = body.GetWorldSpaceSurfaceNormal(hit.mSubShapeID2, ray.GetPointOnRay(hit.mFraction)).Normalized();
+					tempNormal = body.GetWorldSpaceSurfaceNormal(hit.mSubShapeID2, ray.GetPointOnRay(hit.mFraction)).Normalized();
 				}
+			}
+
+			// ★【追加】法線のY成分が0.707f（約45度）以上の平らな面のみ地面と認める
+			if (tempNormal.GetY() >= 0.707f)
+			{
+				rawGrounded = true;
+				groundNormal = tempNormal;
 			}
 		}
 	}
