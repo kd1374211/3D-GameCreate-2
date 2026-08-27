@@ -211,19 +211,14 @@ void GameScene::UpdatePlaying()
 	}
 
 	// デバッグ用超加速
-	static bool isTurboKey = false;
+	static bool isTurbo = false;
 	if (GetAsyncKeyState(VK_RETURN) & 0x8000)
 	{
-		SCENEMGR.SetGameSpeed(20.0f);
-		isTurboKey = true;
+		isTurbo = true;
 	}
 	else
 	{
-		if (isTurboKey)
-		{
-			SCENEMGR.SetGameSpeed(1.0f);
-		}
-		isTurboKey = false;
+		isTurbo = false;
 	}
 
 	// デバッグ用時間停止
@@ -241,7 +236,7 @@ void GameScene::UpdatePlaying()
 	if (isTimeStop)return;
 
 	//時間経過
-	m_stageTimer -= gameDt;
+	m_stageTimer -= gameDt * (isTurbo ? 40.0f : 1.0f);
 	//UIタイマーに適応
 	if (!m_wpUI.expired())
 	{

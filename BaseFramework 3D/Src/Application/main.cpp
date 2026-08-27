@@ -152,7 +152,7 @@ bool Application::Init(int w, int h)
 	//===================================================================
 	// ウィンドウ作成
 	//===================================================================
-	if (m_window.Create(w, h, "Bowlder Bowling", "Window") == false) {
+	if (m_window.Create(w, h, "Boulder Bowling", "Window") == false) {
 		MessageBoxA(nullptr, "ウィンドウ作成に失敗", "エラー", MB_OK);
 		return false;
 	}
@@ -338,7 +338,7 @@ void Application::Execute()
 
 		m_fpsController.Update();
 
-		std::string titleBar = "Bowlder Bowling FPS:" + std::to_string(m_fpsController.m_nowfps);
+		std::string titleBar = "Boulder Bowling FPS:" + std::to_string(m_fpsController.m_nowfps);
 
 		SetWindowTextA(m_window.GetWndHandle(), titleBar.c_str());
 	}
