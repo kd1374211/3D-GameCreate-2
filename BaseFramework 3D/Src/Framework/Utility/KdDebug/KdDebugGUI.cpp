@@ -8,6 +8,7 @@
 #include "../../../Application/GameObject/Chara/CharaManager.h"
 #include "../../../Application/GameObject/Camera/PointTargetCamera/PointTargetCamera.h"
 #include "../../../Application/GameObject/Camera/CameraManager.h"
+#include "../../../Application/Physics/PhysicsLayer.h"
 
 KdDebugGUI::KdDebugGUI()
 {}
@@ -297,9 +298,10 @@ void KdDebugGUI::GuiProcess()
 					JPH::RRayCast rayCast;
 					rayCast.mOrigin = JPH::RVec3(rayPos.x, rayPos.y, rayPos.z);
 					rayCast.mDirection = JPH::Vec3(rayDir.x, rayDir.y, rayDir.z) * range; // 飛ばす長さ
+					GroundObjectFilter groundFilter;
 
 					JPH::RayCastResult hit;
-					bool hasHit = PHYSICSMGR.GetSystem().GetNarrowPhaseQuery().CastRay(rayCast, hit);
+					bool hasHit = PHYSICSMGR.GetSystem().GetNarrowPhaseQuery().CastRay(rayCast, hit, {}, groundFilter);
 
 					if (hasHit)
 					{

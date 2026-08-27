@@ -191,6 +191,33 @@ void GameScene::UpdatePlaying()
 		}
 	}
 
+	//移行済ならこの先飛ばす
+	if (m_currentSceneState != SceneState::Playing)return;
+
+	// デバッグ用加速
+	if (GetAsyncKeyState(VK_SHIFT) & 0x8000)
+	{
+		SCENEMGR.SetGameSpeed(2.0f);
+	}
+	else
+	{
+		SCENEMGR.SetGameSpeed(1.0f);
+	}
+
+	// デバッグ用時間停止
+	static bool isTimeStopKey = false;
+	static bool isTimeStop = false;
+	if (GetAsyncKeyState('R') & 0x8000)
+	{
+		if (!isTimeStopKey)
+		{
+			isTimeStop = !isTimeStop;
+		}
+		isTimeStopKey = true;
+	}
+	else isTimeStopKey = false;
+	if (isTimeStop)return;
+
 	//時間経過
 	m_stageTimer -= gameDt;
 	//UIタイマーに適応

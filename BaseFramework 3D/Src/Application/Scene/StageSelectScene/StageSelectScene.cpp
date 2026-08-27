@@ -56,4 +56,19 @@ void StageSelectScene::Event()
 		isSpacePressed = true;
 	}
 	else isSpacePressed = false;
+
+	//仮置きタイトル戻り
+	static bool isShiftPressed = true;
+	if (GetAsyncKeyState(VK_LSHIFT) & 0x8000)
+	{
+		if (!isShiftPressed)
+		{
+			SceneManager::Instance().SetNextScene
+			(
+				SceneManager::SceneType::Title
+			);
+		}
+		isShiftPressed = true;
+	}
+	else isShiftPressed = false;
 }

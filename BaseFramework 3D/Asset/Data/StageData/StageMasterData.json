@@ -4,7 +4,7 @@
 		"stageListName": "ステージ１",
 		"stageName": "ステージ１ : ステージ名",
 		"thumbnail": "Asset/Textures/StageThumbnail/Stage01.png",
-		"timeLimit": 35.0,
+		"timeLimit": 45.0,
 		"fallOutLine": -7.5,
 		"totalPinCount": 10,
 		"1StarText": "ステージクリア",
