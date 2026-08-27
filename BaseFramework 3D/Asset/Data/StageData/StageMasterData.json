@@ -6,13 +6,13 @@
 		"thumbnail": "Asset/Textures/StageThumbnail/Stage01.png",
 		"timeLimit": 45.0,
 		"fallOutLine": -7.5,
-		"totalPinCount": 10,
+		"totalPinCount": 47,
 		"1StarText": "ステージクリア",
-		"2StarText": "ピンを５本以上倒してクリア",
-		"3StarText": "ピンをすべて倒してクリア",
+		"2StarText": "ピンを２０本以上倒してクリア",
+		"3StarText": "ピンを４０本以上倒してクリア",
 		"pinFallen1Star": 0,
-		"pinFallen2Star": 5,
-		"pinFallen3Star": 10
+		"pinFallen2Star": 20,
+		"pinFallen3Star": 40
 	},
 	{
 		"stageNo": 2,

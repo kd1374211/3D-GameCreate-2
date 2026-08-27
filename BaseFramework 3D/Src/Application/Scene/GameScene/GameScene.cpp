@@ -195,13 +195,19 @@ void GameScene::UpdatePlaying()
 	if (m_currentSceneState != SceneState::Playing)return;
 
 	// デバッグ用加速
+	static bool isShiftKey = false;
 	if (GetAsyncKeyState(VK_SHIFT) & 0x8000)
 	{
 		SCENEMGR.SetGameSpeed(2.0f);
+		isShiftKey = true;
 	}
 	else
 	{
-		SCENEMGR.SetGameSpeed(1.0f);
+		if(isShiftKey)
+		{
+			SCENEMGR.SetGameSpeed(1.0f);
+		}
+		isShiftKey = false;
 	}
 
 	// デバッグ用時間停止
