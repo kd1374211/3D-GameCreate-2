@@ -210,6 +210,22 @@ void GameScene::UpdatePlaying()
 		isShiftKey = false;
 	}
 
+	// デバッグ用超加速
+	static bool isTurboKey = false;
+	if (GetAsyncKeyState(VK_RETURN) & 0x8000)
+	{
+		SCENEMGR.SetGameSpeed(20.0f);
+		isTurboKey = true;
+	}
+	else
+	{
+		if (isTurboKey)
+		{
+			SCENEMGR.SetGameSpeed(1.0f);
+		}
+		isTurboKey = false;
+	}
+
 	// デバッグ用時間停止
 	static bool isTimeStopKey = false;
 	static bool isTimeStop = false;
