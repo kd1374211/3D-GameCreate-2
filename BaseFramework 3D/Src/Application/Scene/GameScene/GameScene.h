@@ -4,6 +4,7 @@
 
 struct GameResult;
 class GameUIObjects;
+class PinHandler;
 
 //シーン状況
 enum class SceneState
@@ -67,4 +68,7 @@ private:
 
 	//フェードイン終了確認
 	bool m_isFadeInEnd = false;
+
+	// ピン制御用
+	std::shared_ptr<PinHandler> m_cPinHandler = nullptr;
 };

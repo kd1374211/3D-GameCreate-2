@@ -18,6 +18,13 @@ public:
 	//プレイヤーに当たられたとき
 	void OnHitByPlayer(JPH::Vec3 playerVelocity);
 
+	// 使用・不使用切り替え
+	void Activate() { m_isActive = true; }
+	void Deactivate() { m_isActive = false; }
+
+	// 使用状態チェック
+	bool GetIsActive()const { return m_isActive; }
+
 protected:
 
 	virtual void Init()override;
@@ -37,5 +44,8 @@ protected:
 	//座標
 	Math::Vector3 m_pos = Math::Vector3::Zero;
 	Math::Quaternion m_rot = Math::Quaternion::Identity;
+
+	// 使用状態か
+	bool m_isActive = false;
 
 };

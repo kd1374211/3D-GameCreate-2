@@ -2,6 +2,7 @@
 #include "../Scene/SceneManager.h"
 #include "../GameObject/Chara/CharaManager.h"
 #include "../GameObject/Camera/CameraBase.h"
+#include "../Component/PinHandler/PinHandler.h"
 
 void StageManager::ResetStage()
 {

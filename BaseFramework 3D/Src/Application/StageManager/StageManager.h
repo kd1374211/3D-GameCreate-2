@@ -57,6 +57,8 @@ struct GameResult
 	int m_totalPinCnt; //全体のピン数
 };
 
+class PinHandler;
+
 class StageManager
 {
 public:
@@ -160,6 +162,9 @@ public:
 	// データセーブ
 	bool SaveUserData();
 
+	// ピンハンドラー登録
+	void RegistPinHandler(std::shared_ptr<PinHandler> handler) { m_wpPinHandler = handler; }
+
 private:
 
 	//いつもの
@@ -225,6 +230,9 @@ private:
 	// リザルト用データ
 	GameResult m_lastGameResult = {};
 	int   m_lastStarCount = 0;
+
+	// ピンハンドラーweak
+	std::weak_ptr<PinHandler> m_wpPinHandler;
 
 public:
 

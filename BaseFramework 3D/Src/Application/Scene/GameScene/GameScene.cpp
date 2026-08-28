@@ -9,6 +9,7 @@
 #include "../../GameObject/UI/SceneUIObjects/Game/GameUIObjects.h"
 #include "../../FadeManager/FadeManager.h"
 #include "../../GameObject/Camera/CameraManager.h"
+#include "../../Component/PinHandler/PinHandler.h"
 
 void GameScene::Event()
 {
@@ -317,6 +318,11 @@ GameResult GameScene::CalcResult(bool isClear) const
 
 void GameScene::Init()
 {
+	// ピンハンドラー生成
+	m_cPinHandler = std::make_shared<PinHandler>();
+
+	// ステージマネージャーにハンドラー設定
+
 	//ステージ番号
 	int stageNumber = SCENEMGR.GetStageNo();
 
