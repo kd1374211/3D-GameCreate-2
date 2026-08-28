@@ -1,6 +1,15 @@
 ﻿#pragma once
 #include "StageObjectInclude.h"
 
+// ステージのレーンごとの情報
+struct StageLaneData
+{
+	std::string m_skyPath;			// 天球パス
+	std::string m_terrainPath;		// 地形パス
+	std::vector<StageObjectData> m_stageGimmickData;	// ピン以外のオブジェクト
+	std::vector<StageObjectData> m_stagePinData;		// ピン一覧
+};
+
 // 配置オブジェクト情報（ピン・障害物・ギミックなど）
 struct StageObjectData
 {
@@ -25,6 +34,8 @@ enum class StageBuildMode
 
 struct StageManagerConsts
 {
+	static constexpr int PinCount = 10;			//ピン数
+	static constexpr int LaneCount = 10;			//レーン数
 	static constexpr int StarCountMax = 3;		//最大星数
 };
 
@@ -58,6 +69,7 @@ struct GameResult
 };
 
 class PinHandler;
+enum class PinType;
 
 class StageManager
 {
@@ -86,17 +98,17 @@ public:
 
 	// ゲッター(操作用)
 	std::string& GetTerrainPath() { return m_terrainPath; }
-	std::vector<StageObjectData>& GetStageObjects() { return m_stageObjects; }
+	std::vector<StageObjectData>& GetStageObjects() { return m_stageGimmicks; }
 
 	//ゲッター（カメラ用）
 	std::weak_ptr<KdGameObject>& GetTerrain() { return m_wpTerrain; }
 
-	void AddStageObject(const StageObjectData& objectData) { m_stageObjects.push_back(objectData); }
+	void AddStageObject(const StageObjectData& objectData) { m_stageGimmicks.push_back(objectData); }
 	void RemoveStageObject(size_t index)
 	{
-		if (index < m_stageObjects.size())
+		if (index < m_stageGimmicks.size())
 		{
-			m_stageObjects.erase(m_stageObjects.begin() + index);
+			m_stageGimmicks.erase(m_stageGimmicks.begin() + index);
 		}
 	}
 
@@ -165,6 +177,9 @@ public:
 	// ピンハンドラー登録
 	void RegistPinHandler(std::shared_ptr<PinHandler> handler) { m_wpPinHandler = handler; }
 
+	// ハンドラーにプールを作成
+	void CreatePinPool();
+
 private:
 
 	//いつもの
@@ -196,6 +211,9 @@ private:
 		return std::string(path);
 	}
 
+	// ピンタイプテキストからタイプタグに変換
+	PinType ConvertStringToPinType(std::string str);
+
 	// UTF-8 の std::string を Shift-JIS (ANSI) の std::string に変換する関数
 	std::string Utf8ToMultiByte(const std::string& utf8Str);
 
@@ -207,9 +225,13 @@ private:
 	//地形データ管理
 	std::string m_terrainPath; //地形データのパス
 	std::string m_skySpherePath; //天球のパス
-
 	//オブジェクトデータ管理
-	std::vector<StageObjectData> m_stageObjects;
+	std::vector<StageObjectData> m_stageGimmicks;
+	std::vector<StageObjectData> m_stagePins;
+	//ここのデータはあとで配列に置き換わる
+
+	// ↑の置き換え後
+	StageLaneData m_stageLaneDatas[StageManagerConsts::LaneCount];
 
 	StageMode m_mode = StageMode::Play; // 初期状態はエディットモード
 	int m_selectedIndex = -1; // 選択中のオブジェクトインデックス（-1は未選択）

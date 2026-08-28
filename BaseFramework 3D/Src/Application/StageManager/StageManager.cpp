@@ -35,21 +35,20 @@ void StageManager::ResetStage()
 bool StageManager::SaveStage(const std::string& filePath)
 {
 	nlohmann::json rootJson;
-	rootJson["stage_name"] = "CustomStage";
 
 	// 1. 地形情報
 	rootJson["terrain"] = {
-	{ "model_path", m_terrainPath }
+		{ "model_path", m_terrainPath }
 	};
 
 	// 2. 天球情報
 	rootJson["sky"] = {
-	{ "model_path", m_skySpherePath }
+		{ "model_path", m_skySpherePath }
 	};
 
-	// 3. 配置オブジェクト一覧
+	// 3. 一般配置オブジェクト一覧
 	nlohmann::json objList = nlohmann::json::array();
-	for (const auto& obj : m_stageObjects)
+	for (const auto& obj : m_stageGimmicks)
 	{
 		nlohmann::json jObj;
 		jObj["type"] = obj.m_type;
@@ -61,11 +60,28 @@ bool StageManager::SaveStage(const std::string& filePath)
 	}
 	rootJson["objects"] = objList;
 
+	// 4. ピン配置情報一覧
+	nlohmann::json pinList = nlohmann::json::array();
+	for (const auto& pin : m_stagePins)
+	{
+		nlohmann::json jPin;
+		jPin["type"] = pin.m_type;
+		jPin["position"] = { pin.m_position.x, pin.m_position.y, pin.m_position.z };
+		jPin["rotation"] = { pin.m_rotation.x, pin.m_rotation.y, pin.m_rotation.z, pin.m_rotation.w };
+		jPin["scale"] = { pin.m_scale.x,    pin.m_scale.y,    pin.m_scale.z };
+
+		pinList.push_back(jPin);
+	}
+	rootJson["pins"] = pinList;
+
+	// ファイルへの書き出し
 	std::ofstream outFile(filePath);
 	if (!outFile.is_open()) return false;
 
+	// インデント4
 	outFile << rootJson.dump(4);
 	outFile.close();
+
 	return true;
 }
 
@@ -82,30 +98,29 @@ bool StageManager::LoadStage(const std::string& filePath)
 	nlohmann::json rootJson;
 	inFile >> rootJson;
 
-	//リセット
-	m_stageObjects.clear();
-	
+	// リセット
+	m_stageGimmicks.clear();
+	m_stagePins.clear(); // ピン配置データもリセット
+
 	// 1. 地形情報の読み込み
-	// Load 時
 	if (rootJson.contains("terrain"))
 	{
-		m_terrainPath = rootJson["terrain"].value("model_path", "Asset/Models/Terrain/Stage01/TestGround.gltf");
+		m_terrainPath = rootJson["terrain"].value("model_path", "Asset/Models/Terrain/Stage01/Stage01.gltf");
 	}
 
-	// 2. 地形情報の読み込み
-	// Load 時
+	// 2. 天球情報の読み込み
 	if (rootJson.contains("sky"))
 	{
 		m_skySpherePath = rootJson["sky"].value("model_path", "Asset/Models/Sky/SkySphere/SkySphere.gltf");
 	}
 
-	// 3. 配置オブジェクトの読み込み
+	// 3. 一般配置オブジェクトの読み込み（FinishAreaなど）
 	if (rootJson.contains("objects") && rootJson["objects"].is_array())
 	{
 		for (const auto& jObj : rootJson["objects"])
 		{
 			StageObjectData data;
-			data.m_type = jObj.value("type", "Pin");
+			data.m_type = jObj.value("type", "Error");
 
 			if (jObj.contains("position")) {
 				data.m_position = { jObj["position"][0], jObj["position"][1], jObj["position"][2] };
@@ -117,7 +132,30 @@ bool StageManager::LoadStage(const std::string& filePath)
 				data.m_scale = { jObj["scale"][0], jObj["scale"][1], jObj["scale"][2] };
 			}
 
-			m_stageObjects.push_back(data);
+			m_stageGimmicks.push_back(data);
+		}
+	}
+
+	// 4. ピン配置情報の読み込み（新規追加！）
+	if (rootJson.contains("pins") && rootJson["pins"].is_array())
+	{
+		for (const auto& jPin : rootJson["pins"])
+		{
+			StageObjectData pinData;
+
+			pinData.m_type = jPin.value("type", "Error");
+
+			if (jPin.contains("position")) {
+				pinData.m_position = { jPin["position"][0], jPin["position"][1], jPin["position"][2] };
+			}
+			if (jPin.contains("rotation")) {
+				pinData.m_rotation = { jPin["rotation"][0], jPin["rotation"][1], jPin["rotation"][2], jPin["rotation"][3] };
+			}
+			if (jPin.contains("scale")) {
+				pinData.m_scale = { jPin["scale"][0], jPin["scale"][1], jPin["scale"][2] };
+			}
+
+			m_stagePins.push_back(pinData);
 		}
 	}
 
@@ -191,7 +229,7 @@ void StageManager::BuildStage(StageBuildMode mode)
 	if (mode == StageBuildMode::Background)return;
 
 	// 読み込んだデータをもとにオブジェクト生成
-	for (const auto& objData : m_stageObjects)
+	for (const auto& objData : m_stageGimmicks)
 	{
 		std::shared_ptr<KdGameObject> obj;
 
@@ -329,6 +367,46 @@ bool StageManager::SaveUserData()
 	return true;
 }
 
+void StageManager::CreatePinPool()
+{
+	// ハンドラーがないならリターン
+	if (m_wpPinHandler.expired())return;
+
+	// ピン種ごとの「最大必要数」を記録するマップ
+	std::unordered_map<PinType, size_t> maxRequiredCounts;
+
+	// 各レーンを見てピンごとに最大値を計算
+	for (const auto& data : m_stageLaneDatas)
+	{
+		// このレーン内でのピン種ごとの個数を一時カウント
+		std::unordered_map<PinType, size_t> currentLaneCounts;
+
+		// このレーンにあるピンを見てデータを追加
+		for (const auto& pins : data.m_stagePinData)
+		{
+			PinType type = ConvertStringToPinType(pins.m_type);
+
+			if (type != PinType::Error)
+			{
+				currentLaneCounts[type]++;
+			}
+		}
+
+		// これまでの最大数と比較して多ければ更新
+		for (const auto& [type, count] : currentLaneCounts)
+		{
+			maxRequiredCounts[type] = (std::max)(maxRequiredCounts[type], count);
+		}
+	}
+
+	// 計算した数をベースにハンドラーの作成処理を呼ぶ
+	auto pinHandler = m_wpPinHandler.lock();
+	for (const auto& [type, count] : maxRequiredCounts)
+	{
+		pinHandler->CreatePinPool(type, count);
+	}
+}
+
 bool StageManager::LoadStageMasterData()
 {
 	// パスはクラス内部に直書きで保持
@@ -433,6 +511,15 @@ bool StageManager::LoadStageSaveData()
 
 void StageManager::Release()
 {}
+
+PinType StageManager::ConvertStringToPinType(std::string str)
+{
+	// 各種
+	if (str == "NormalPin")return PinType::NormalPin;
+
+	// 失敗
+	return PinType::Error;
+}
 
 std::string StageManager::Utf8ToMultiByte(const std::string & utf8Str)
 {

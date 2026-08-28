@@ -5,7 +5,8 @@ class PinBase;
 enum class PinType
 {
 	NormalPin,
-	Number
+	Number,
+	Error = 999
 };
 
 class PinHandler
