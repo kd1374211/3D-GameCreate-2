@@ -42,6 +42,7 @@ public:
 	void SetRestitution(float restitution);		//反発力
 	void SetDamping(float linearDamp, float angularDamp);		//抵抗
 	void SetPosition(const JPH::RVec3& pos);	//座標
+	void SetRotation(const JPH::Quat& rotation);//回転
 
 	// 力を加える（転がす）
 	void AddImpulse(const JPH::Vec3& inForce);
@@ -56,12 +57,17 @@ public:
 	void SetLinearVelocity(const JPH::Vec3& newVec);
 	void SetAngularVelocity(const JPH::Vec3& newVec);
 
+	// アクティベート・デアクティベート
+	void ActivateBody();
+	void DeactivateBody();
+
 	// Joltの物理座標を、ゲーム側の座標変数に同期させる
-	void Sync(Math::Vector3& outPos);
+	void Sync(Math::Vector3& outPos, Math::Quaternion& outRot);
 
 	//ゲッター達
 	float GetMass()const;
 	JPH::Vec3 GetPos()const;
+	JPH::Quat GetRotation()const;
 	JPH::Vec3 GetDirection()const;
 	const JPH::BodyID& GetBodyID()const { return m_bodyID; }
 

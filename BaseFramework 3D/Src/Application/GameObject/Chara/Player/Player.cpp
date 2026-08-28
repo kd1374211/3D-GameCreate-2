@@ -294,11 +294,10 @@ void Player::Update()
 
 void Player::PostUpdate()
 {
-	float dt = Application::Instance().GetDeltaTime(); // デルタタイム
-
 	// 1. 物理座標の同期（Joltから最新座標を反映）
 	Math::Vector3 lastPos = m_pos;
-	m_cPhysics->Sync(m_pos);
+	Math::Quaternion q = Math::Quaternion::Identity;
+	m_cPhysics->Sync(m_pos, q);
 
 	// 2. 最新座標を取得
 	JPH::RVec3 ballPos = m_cPhysics->GetPos();

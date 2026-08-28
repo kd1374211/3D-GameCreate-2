@@ -208,6 +208,19 @@ void PhysicsComponent::SetPosition(const JPH::RVec3& pos)
 	);
 }
 
+void PhysicsComponent::SetRotation(const JPH::Quat& rotation)
+{
+	if (m_bodyID.IsInvalid()) return;
+
+	// Jolt Physics の BodyInterface を取得して回転を書き換える
+	// (EActivation::Activate を渡すことで、休止状態の物理ボディも起こす)
+	PHYSICSMGR.GetSystem().GetBodyInterface().SetRotation(
+		m_bodyID,
+		rotation,
+		JPH::EActivation::Activate
+	);
+}
+
 void PhysicsComponent::AddImpulse(const JPH::Vec3& inForce)
 {
 	auto& bodyInterface = PHYSICSMGR.GetBodyInterface();
@@ -275,7 +288,23 @@ void PhysicsComponent::SetAngularVelocity(const JPH::Vec3& newVec)
 	bodyInterface.SetAngularVelocity(m_bodyID, newVec);
 }
 
-void PhysicsComponent::Sync(Math::Vector3& outPos)
+void PhysicsComponent::ActivateBody()
+{
+	auto& bodyInterface = PHYSICSMGR.GetBodyInterface();
+
+	// 活性化
+	bodyInterface.ActivateBody(m_bodyID);
+}
+
+void PhysicsComponent::DeactivateBody()
+{
+	auto& bodyInterface = PHYSICSMGR.GetBodyInterface();
+
+	// 非活性化
+	bodyInterface.DeactivateBody(m_bodyID);
+}
+
+void PhysicsComponent::Sync(Math::Vector3& outPos, Math::Quaternion& outRot)
 {
 	if (m_isStatic) return; // 静的なものは同期不要
 
@@ -289,7 +318,7 @@ void PhysicsComponent::Sync(Math::Vector3& outPos)
 
 		// 呼び出し元の変数（座標）に格納
 		outPos = Math::Vector3(pos.GetX(), pos.GetY(), pos.GetZ());
-		// outRot = Math::Quaternion(rot.GetX(), rot.GetY(), rot.GetZ(), rot.GetW());
+		outRot = Math::Quaternion(rot.GetX(), rot.GetY(), rot.GetZ(), rot.GetW());
 	}
 }
 
@@ -316,6 +345,13 @@ JPH::Vec3 PhysicsComponent::GetPos() const
 	auto& bodyInterface = PHYSICSMGR.GetBodyInterface();
 
 	return bodyInterface.GetPosition(m_bodyID);
+}
+
+JPH::Quat PhysicsComponent::GetRotation() const
+{
+	auto& bodyInterface = PHYSICSMGR.GetBodyInterface();
+
+	return bodyInterface.GetRotation(m_bodyID);
 }
 
 JPH::Vec3 PhysicsComponent::GetDirection() const

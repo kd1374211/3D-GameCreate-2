@@ -99,18 +99,11 @@ void PinBase::PostUpdate()
 	if (!m_cPhysics || m_cPhysics->GetBodyID().IsInvalid()) return;
 
 	//同期
-	m_cPhysics->Sync(m_pos);
-
-	// 1. Jolt Physics から現在の最新の位置（Position）と回転（Rotation）を取得
-	JPH::BodyInterface& bodyInterface = PHYSICSMGR.GetSystem().GetBodyInterface();
-
-	//変換
-	JPH::Quat rotation = bodyInterface.GetRotation(m_cPhysics->GetBodyID());
-	Math::Quaternion rot(rotation.GetX(), rotation.GetY(), rotation.GetZ(), rotation.GetW());
+	m_cPhysics->Sync(m_pos, m_rot);
 
 	// Matrix更新
 	Math::Matrix trans = Math::Matrix::CreateTranslation(m_pos);
-	Math::Matrix rotMat = Math::Matrix::CreateFromQuaternion(rot);
+	Math::Matrix rotMat = Math::Matrix::CreateFromQuaternion(m_rot);
 	m_mWorld = rotMat * trans; // ワールド行列を更新
 }
 

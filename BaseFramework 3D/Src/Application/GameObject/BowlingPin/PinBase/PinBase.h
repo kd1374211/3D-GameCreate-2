@@ -36,5 +36,6 @@ protected:
 
 	//座標
 	Math::Vector3 m_pos = Math::Vector3::Zero;
+	Math::Quaternion m_rot = Math::Quaternion::Identity;
 
 };
