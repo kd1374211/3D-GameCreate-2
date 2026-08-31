@@ -166,6 +166,12 @@
     <Filter Include="Src\Application\GameObject\Chara\BowlingBall">
       <UniqueIdentifier>{b47b76bb-ee7e-412c-9b62-b32ebe8bb14b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\Component\PinHandler">
+      <UniqueIdentifier>{aae98fef-c810-448b-a458-0acdd5b0be6b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\ScoreManager">
+      <UniqueIdentifier>{d787c421-f619-4bc1-a50a-d72ef13de8ba}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -1527,6 +1533,12 @@
     <ClInclude Include="Src\Application\GameObject\Chara\BowlingBall\BowlingBall.h">
       <Filter>Src\Application\GameObject\Chara\BowlingBall</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\Component\PinHandler\PinHandler.h">
+      <Filter>Src\Application\Component\PinHandler</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\ScoreManager\ScoreManager.h">
+      <Filter>Src\Application\ScoreManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -2209,6 +2221,12 @@
     </ClCompile>
     <ClCompile Include="Src\Application\GameObject\Chara\BowlingBall\BowlingBall.cpp">
       <Filter>Src\Application\GameObject\Chara\BowlingBall</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Component\PinHandler\PinHandler.cpp">
+      <Filter>Src\Application\Component\PinHandler</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\ScoreManager\ScoreManager.cpp">
+      <Filter>Src\Application\ScoreManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
