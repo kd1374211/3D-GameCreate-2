@@ -1,6 +1,6 @@
 ﻿#include "NormalPin.h"
 
-NormalPin::NormalPin()
+NormalPin::NormalPin(Math::Vector3 startPos, Math::Quaternion startRot)
 {
 	//本体
 	PinBase::Init();
@@ -14,8 +14,8 @@ NormalPin::NormalPin()
 
 	//物理Initに投げるパラメータ設定
 	PhysicsInitData initData = {};
-	initData.pos = Math::Vector3::Zero;
-	initData.rot = Math::Quaternion::Identity;
+	initData.pos = startPos;
+	initData.rot = startRot;
 	initData.motionType = JPH::EMotionType::Dynamic;
 	initData.isStatic = false;
 	initData.layer = Layers::PIN_STATIC;

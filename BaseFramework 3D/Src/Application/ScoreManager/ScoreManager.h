@@ -93,7 +93,7 @@ private:
 	struct FrameData
 	{
 		// 投球関連
-		size_t m_recordID[BowlingSystemConsts::MaxThrowCount];						// ピン数を記録しているvectorの番号
+		size_t m_recordID[BowlingSystemConsts::MaxThrowCount]{};						// ピン数を記録しているvectorの番号
 		FrameMark m_mark = FrameMark::None;											// このフレームのマーク
 		size_t m_lastThrowID = ScoreManagerConsts::EmptyDataID;
 

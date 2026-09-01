@@ -4,6 +4,9 @@
 
 void PinBase::Update()
 {
+	// 非活性状態ならリターン
+	if (!m_isActive) return;
+
 	if (STAGEMGR.IsEditMode())
 	{
 		// エディット中は物理ボディの位置を動かさず、
@@ -23,7 +26,6 @@ void PinBase::Update()
 	{
 		m_isHitPending = false;
 		m_isRagdoll = true;
-		m_destroyTimer = 10.0f; // 消去タイマー開始
 
 		JPH::BodyID bodyID = m_cPhysics->GetBodyID();
 		JPH::BodyInterface& bodyInterface = PHYSICSMGR.GetSystem().GetBodyInterface();
@@ -82,19 +84,13 @@ void PinBase::Update()
 		// 未接触時：倒れないように回転速度をゼロクリア
 		m_cPhysics->SetAngularVelocity(JPH::Vec3::sZero());
 	}
-	else
-	{
-		// 吹き飛び後：消去タイマー減算
-		m_destroyTimer -= gameDt;
-		if (m_destroyTimer <= 0.0f)
-		{
-			m_isExpired = true;
-		}
-	}
 }
 
 void PinBase::PostUpdate()
 {
+	// 非活性状態ならリターン
+	if (!m_isActive) return;
+
 	// 物理コンポーネントおよび BodyID の生存確認
 	if (!m_cPhysics || m_cPhysics->GetBodyID().IsInvalid()) return;
 
@@ -109,11 +105,17 @@ void PinBase::PostUpdate()
 
 void PinBase::DrawLit()
 {
+	// 非活性状態ならリターン
+	if (!m_isActive) return;
+
 	KdShaderManager::Instance().m_StandardShader.DrawModel(*m_model, m_mWorld);
 }
 
 void PinBase::GenerateDepthMapFromLight()
 {
+	// 非活性状態ならリターン
+	if (!m_isActive) return;
+
 	KdShaderManager::Instance().m_StandardShader.DrawModel(*m_model, m_mWorld);
 }
 
@@ -129,8 +131,82 @@ void PinBase::OnHitByPlayer(JPH::Vec3 playerVelocity)
 	STAGEMGR.OnPinFallen();
 }
 
+void PinBase::Activate()
+{
+	m_isActive = true;
+	m_cPhysics->ActivateBody();
+}
+
+void PinBase::Deactivate()
+{
+	m_isActive = false;
+	m_cPhysics->DeactivateBody();
+}
+
+void PinBase::Reset()
+{
+	// 物理コンポーネントのリセット
+	if (m_cPhysics)
+	{
+		m_cPhysics->SetLinearVelocity(JPH::Vec3::sZero());
+		m_cPhysics->SetAngularVelocity(JPH::Vec3::sZero());
+	}
+	// 状態のリセット
+	m_isRagdoll = false;
+	m_isHitPending = false;
+	m_pendingVelocity = JPH::Vec3::sZero();
+	m_isFallen = false;
+}
+
+void PinBase::Spawn(Math::Vector3 pos, Math::Quaternion rot, int index)
+{
+	// もし活性化状態ならリターン
+	if (m_isActive)return;
+
+	// 1.位置と回転の設定
+	SetPos(pos);
+	SetRot(rot);
+
+	// 2.リセット
+	Reset();
+
+	// 3.使用状態を活性化にする
+	Activate();
+
+	// 4.ピンに管理番号を付与
+	m_pinIndex = index;
+}
+
+void PinBase::Despawn()
+{
+	// もし非活性状態ならリターン
+	if (!m_isActive)return;
+
+	// 1.念のためリセット
+	Reset();
+
+	// 2.使用状態を非活性にする
+	Deactivate();
+
+	// 3.ピンの管理番号を無効値に
+	m_pinIndex = -1;
+}
+
+void PinBase::SetPos(const Math::Vector3 pos)
+{
+	m_cPhysics->SetPosition(JPH::Vec3(pos.x, pos.y, pos.z));
+}
+
+void PinBase::SetRot(const Math::Quaternion rot)
+{
+	m_cPhysics->SetRotation(JPH::Quat(rot.x, rot.y, rot.z, rot.w));
+}
+
 void PinBase::Init()
 {
 	//ピン数追加
 	STAGEMGR.OnPinSpawn();
+
+	// 最初は非活性
+	Deactivate();
 }

@@ -322,6 +322,7 @@ void GameScene::Init()
 	m_cPinHandler = std::make_shared<PinHandler>();
 
 	// ステージマネージャーにハンドラー設定
+	STAGEMGR.RegistPinHandler(m_cPinHandler);
 
 	//ステージ番号
 	int stageNumber = SCENEMGR.GetStageNo();

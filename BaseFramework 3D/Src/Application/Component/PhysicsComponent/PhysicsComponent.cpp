@@ -204,7 +204,7 @@ void PhysicsComponent::SetPosition(const JPH::RVec3& pos)
 	PHYSICSMGR.GetSystem().GetBodyInterface().SetPosition(
 		m_bodyID,
 		pos,
-		JPH::EActivation::Activate
+		JPH::EActivation::DontActivate
 	);
 }
 
@@ -217,7 +217,7 @@ void PhysicsComponent::SetRotation(const JPH::Quat& rotation)
 	PHYSICSMGR.GetSystem().GetBodyInterface().SetRotation(
 		m_bodyID,
 		rotation,
-		JPH::EActivation::Activate
+		JPH::EActivation::DontActivate
 	);
 }
 

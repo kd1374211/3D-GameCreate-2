@@ -644,6 +644,7 @@
     <ClInclude Include="..\Library\tinygltf\tiny_gltf.h" />
     <ClInclude Include="Src\Application\Component\PhysicsComponent\PhysicsComponent.h" />
     <ClInclude Include="Src\Application\Component\PinHandler\PinHandler.h" />
+    <ClInclude Include="Src\Application\Const\BowlingSystemConst.h" />
     <ClInclude Include="Src\Application\FadeManager\FadeManager.h" />
     <ClInclude Include="Src\Application\GameObject\BowlingPin\NormalPin\NormalPin.h" />
     <ClInclude Include="Src\Application\GameObject\BowlingPin\PinBase\PinBase.h" />

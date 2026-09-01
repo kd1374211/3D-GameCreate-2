@@ -172,6 +172,9 @@
     <Filter Include="Src\Application\ScoreManager">
       <UniqueIdentifier>{d787c421-f619-4bc1-a50a-d72ef13de8ba}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\Const">
+      <UniqueIdentifier>{0802fd90-3c76-4964-b77a-f2490f8bff03}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -1538,6 +1541,9 @@
     </ClInclude>
     <ClInclude Include="Src\Application\ScoreManager\ScoreManager.h">
       <Filter>Src\Application\ScoreManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Const\BowlingSystemConst.h">
+      <Filter>Src\Application\Const</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

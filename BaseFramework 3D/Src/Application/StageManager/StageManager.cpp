@@ -3,6 +3,7 @@
 #include "../GameObject/Chara/CharaManager.h"
 #include "../GameObject/Camera/CameraBase.h"
 #include "../Component/PinHandler/PinHandler.h"
+#include "../Const/PinTypes.h"
 
 void StageManager::ResetStage()
 {
@@ -395,7 +396,10 @@ void StageManager::CreatePinPool()
 		// これまでの最大数と比較して多ければ更新
 		for (const auto& [type, count] : currentLaneCounts)
 		{
-			maxRequiredCounts[type] = (std::max)(maxRequiredCounts[type], count);
+			if (count > maxRequiredCounts[type])
+			{
+				maxRequiredCounts[type] = count;
+			}
 		}
 	}
 
@@ -511,15 +515,6 @@ bool StageManager::LoadStageSaveData()
 
 void StageManager::Release()
 {}
-
-PinType StageManager::ConvertStringToPinType(std::string str)
-{
-	// 各種
-	if (str == "NormalPin")return PinType::NormalPin;
-
-	// 失敗
-	return PinType::Error;
-}
 
 std::string StageManager::Utf8ToMultiByte(const std::string & utf8Str)
 {

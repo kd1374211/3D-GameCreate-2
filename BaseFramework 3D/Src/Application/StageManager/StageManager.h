@@ -1,15 +1,6 @@
 ﻿#pragma once
 #include "StageObjectInclude.h"
 
-// ステージのレーンごとの情報
-struct StageLaneData
-{
-	std::string m_skyPath;			// 天球パス
-	std::string m_terrainPath;		// 地形パス
-	std::vector<StageObjectData> m_stageGimmickData;	// ピン以外のオブジェクト
-	std::vector<StageObjectData> m_stagePinData;		// ピン一覧
-};
-
 // 配置オブジェクト情報（ピン・障害物・ギミックなど）
 struct StageObjectData
 {
@@ -17,6 +8,15 @@ struct StageObjectData
 	Math::Vector3 m_position = { 0.0f, 0.0f, 0.0f };
 	Math::Quaternion m_rotation = { 0.0f, 0.0f, 0.0f, 1.0f };
 	Math::Vector3 m_scale = { 1.0f, 1.0f, 1.0f };
+};
+
+// ステージのレーンごとの情報
+struct StageLaneData
+{
+	std::string m_skyPath;			// 天球パス
+	std::string m_terrainPath;		// 地形パス
+	std::vector<StageObjectData> m_stageGimmickData;	// ピン以外のオブジェクト
+	std::vector<StageObjectData> m_stagePinData;		// ピン一覧
 };
 
 enum class StageMode
@@ -210,9 +210,6 @@ private:
 		
 		return std::string(path);
 	}
-
-	// ピンタイプテキストからタイプタグに変換
-	PinType ConvertStringToPinType(std::string str);
 
 	// UTF-8 の std::string を Shift-JIS (ANSI) の std::string に変換する関数
 	std::string Utf8ToMultiByte(const std::string& utf8Str);
