@@ -10,6 +10,8 @@
 #include "../../FadeManager/FadeManager.h"
 #include "../../GameObject/Camera/CameraManager.h"
 #include "../../Component/PinHandler/PinHandler.h"
+#include "../../Component/ScoreHandler/ScoreHandler.h"
+#include "../../UserSave/UserSaveManager.h"
 
 void GameScene::Event()
 {
@@ -29,10 +31,6 @@ void GameScene::Event()
 		UpdateGameClear();
 		break;
 	}
-
-	//ピン残数確認(DEBUG)
-	KdDebugGUI::Instance().AddLog("Total Pin :%d\n", STAGEMGR.GetTotalPinCount());
-	KdDebugGUI::Instance().AddLog("Remaining Pin :%d\n", STAGEMGR.GetRemainingPinCount());
 }
 
 void GameScene::UpdateCountDown()
@@ -309,15 +307,14 @@ GameResult GameScene::CalcResult(bool isClear) const
 	result.m_isCleared = isClear;
 	result.m_stageTimer = m_stageTimer;
 
-	//ここSTAGEMGR側でやるのもあり
-	result.m_fallenPinCnt = STAGEMGR.GetTotalPinCount() - STAGEMGR.GetRemainingPinCount();
-	result.m_totalPinCnt = STAGEMGR.GetTotalPinCount();
-
 	return result;
 }
 
 void GameScene::Init()
 {
+	// スコアハンドラー生成
+	m_cScoreHandler = std::make_shared<ScoreHandler>();
+
 	// ピンハンドラー生成
 	m_cPinHandler = std::make_shared<PinHandler>();
 

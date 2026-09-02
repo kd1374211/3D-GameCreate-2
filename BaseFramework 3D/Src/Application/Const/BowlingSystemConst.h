@@ -7,6 +7,7 @@ struct BowlingSystemConsts
 
 	// フレーム数
 	static constexpr int FrameCount = 10;
+	static constexpr int StartFrame = 1;
 
 	// 投球数
 	static constexpr int MaxThrowCount = 3;

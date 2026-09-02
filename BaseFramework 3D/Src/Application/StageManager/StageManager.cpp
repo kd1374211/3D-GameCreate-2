@@ -3,7 +3,6 @@
 #include "../GameObject/Chara/CharaManager.h"
 #include "../GameObject/Camera/CameraBase.h"
 #include "../Component/PinHandler/PinHandler.h"
-#include "../Const/PinTypes.h"
 
 void StageManager::ResetStage()
 {
@@ -20,70 +19,68 @@ void StageManager::ResetStage()
 	}
 
 	//オブジェクトリセット
-	for (auto& obj : m_wpStageObject)
+	for (auto& obj : m_wpStageGimmicks)
 	{
 		if (obj.expired())continue;
 
 		//削除
 		obj.lock()->SetExpire();
 	}
-	m_wpStageObject.clear();
-
-	//ピン数リセット
-	ResetPinCount();
+	m_wpStageGimmicks.clear();
 }
 
 bool StageManager::SaveStage(const std::string& filePath)
 {
-	nlohmann::json rootJson;
+	//nlohmann::json rootJson;
 
-	// 1. 地形情報
-	rootJson["terrain"] = {
-		{ "model_path", m_terrainPath }
-	};
+	//// 1. 地形情報
+	//rootJson["terrain"] = {
+	//	{ "model_path", m_terrainPath }
+	//};
 
-	// 2. 天球情報
-	rootJson["sky"] = {
-		{ "model_path", m_skySpherePath }
-	};
+	//// 2. 天球情報
+	//rootJson["sky"] = {
+	//	{ "model_path", m_skySpherePath }
+	//};
 
-	// 3. 一般配置オブジェクト一覧
-	nlohmann::json objList = nlohmann::json::array();
-	for (const auto& obj : m_stageGimmicks)
-	{
-		nlohmann::json jObj;
-		jObj["type"] = obj.m_type;
-		jObj["position"] = { obj.m_position.x, obj.m_position.y, obj.m_position.z };
-		jObj["rotation"] = { obj.m_rotation.x, obj.m_rotation.y, obj.m_rotation.z, obj.m_rotation.w };
-		jObj["scale"] = { obj.m_scale.x,    obj.m_scale.y,    obj.m_scale.z };
+	//// 3. 一般配置オブジェクト一覧
+	//nlohmann::json objList = nlohmann::json::array();
+	//for (const auto& obj : m_stageGimmicks)
+	//{
+	//	nlohmann::json jObj;
+	//	jObj["type"] = obj.m_type;
+	//	jObj["position"] = { obj.m_position.x, obj.m_position.y, obj.m_position.z };
+	//	jObj["rotation"] = { obj.m_rotation.x, obj.m_rotation.y, obj.m_rotation.z, obj.m_rotation.w };
+	//	jObj["scale"] = { obj.m_scale.x,    obj.m_scale.y,    obj.m_scale.z };
 
-		objList.push_back(jObj);
-	}
-	rootJson["objects"] = objList;
+	//	objList.push_back(jObj);
+	//}
+	//rootJson["objects"] = objList;
 
-	// 4. ピン配置情報一覧
-	nlohmann::json pinList = nlohmann::json::array();
-	for (const auto& pin : m_stagePins)
-	{
-		nlohmann::json jPin;
-		jPin["type"] = pin.m_type;
-		jPin["position"] = { pin.m_position.x, pin.m_position.y, pin.m_position.z };
-		jPin["rotation"] = { pin.m_rotation.x, pin.m_rotation.y, pin.m_rotation.z, pin.m_rotation.w };
-		jPin["scale"] = { pin.m_scale.x,    pin.m_scale.y,    pin.m_scale.z };
+	//// 4. ピン配置情報一覧
+	//nlohmann::json pinList = nlohmann::json::array();
+	//for (const auto& pin : m_stagePins)
+	//{
+	//	nlohmann::json jPin;
+	//	jPin["type"] = pin.m_type;
+	//	jPin["position"] = { pin.m_position.x, pin.m_position.y, pin.m_position.z };
+	//	jPin["rotation"] = { pin.m_rotation.x, pin.m_rotation.y, pin.m_rotation.z, pin.m_rotation.w };
+	//	jPin["scale"] = { pin.m_scale.x,    pin.m_scale.y,    pin.m_scale.z };
 
-		pinList.push_back(jPin);
-	}
-	rootJson["pins"] = pinList;
+	//	pinList.push_back(jPin);
+	//}
+	//rootJson["pins"] = pinList;
 
-	// ファイルへの書き出し
-	std::ofstream outFile(filePath);
-	if (!outFile.is_open()) return false;
+	//// ファイルへの書き出し
+	//std::ofstream outFile(filePath);
+	//if (!outFile.is_open()) return false;
 
-	// インデント4
-	outFile << rootJson.dump(4);
-	outFile.close();
+	//// インデント4
+	//outFile << rootJson.dump(4);
+	//outFile.close();
 
-	return true;
+	//return true;
+	return false;
 }
 
 bool StageManager::LoadStage(int stageNo)
@@ -100,63 +97,74 @@ bool StageManager::LoadStage(const std::string& filePath)
 	inFile >> rootJson;
 
 	// リセット
-	m_stageGimmicks.clear();
-	m_stagePins.clear(); // ピン配置データもリセット
+	m_stageOverallData.m_skyPath = "";
+	m_stageOverallData.m_stageLaneData.clear();
 
-	// 1. 地形情報の読み込み
-	if (rootJson.contains("terrain"))
+	// 1.ステージ全体の天球を読み込む
+	if (rootJson.contains("skyPath"))
 	{
-		m_terrainPath = rootJson["terrain"].value("model_path", "Asset/Models/Terrain/Stage01/Stage01.gltf");
+		m_stageOverallData.m_skyPath = rootJson.value("skyPath", "Asset/Models/Sky/SkySphere/SkySphere.gltf");
 	}
 
-	// 2. 天球情報の読み込み
-	if (rootJson.contains("sky"))
+	// 2.各フレームのデータを見る
+	if (rootJson.contains("frames"))
 	{
-		m_skySpherePath = rootJson["sky"].value("model_path", "Asset/Models/Sky/SkySphere/SkySphere.gltf");
-	}
-
-	// 3. 一般配置オブジェクトの読み込み（FinishAreaなど）
-	if (rootJson.contains("objects") && rootJson["objects"].is_array())
-	{
-		for (const auto& jObj : rootJson["objects"])
+		StageLaneData laneData;
+		LaneGimmickData gimmickData;
+		LanePinData pinData;
+		for (const auto& frame : rootJson["frames"])
 		{
-			StageObjectData data;
-			data.m_type = jObj.value("type", "Error");
+			// 情報クリア
+			laneData = {};
+			pinData = {};
 
-			if (jObj.contains("position")) {
-				data.m_position = { jObj["position"][0], jObj["position"][1], jObj["position"][2] };
-			}
-			if (jObj.contains("rotation")) {
-				data.m_rotation = { jObj["rotation"][0], jObj["rotation"][1], jObj["rotation"][2], jObj["rotation"][3] };
-			}
-			if (jObj.contains("scale")) {
-				data.m_scale = { jObj["scale"][0], jObj["scale"][1], jObj["scale"][2] };
-			}
+			// 2-1.レーン番号を取得
+			laneData.m_frameNumber = frame.value("frameNumber", -1);
 
-			m_stageGimmicks.push_back(data);
-		}
-	}
+			// 2-2.地形パスを取得
+			laneData.m_terrainPath = frame.value("terrainPath", "Asset/Models/Terrain/Stage01/Stage01.gltf");
 
-	// 4. ピン配置情報の読み込み（新規追加！）
-	if (rootJson.contains("pins") && rootJson["pins"].is_array())
-	{
-		for (const auto& jPin : rootJson["pins"])
-		{
-			StageObjectData pinData;
+			// 2-3.ギミックを取得
+			if (frame.contains("gimmicks"))
+			{
+				for (const auto& gimmick : frame["gimmicks"])
+				{
+					// 情報クリア
+					gimmickData = {};
 
-			pinData.m_type = jPin.value("type", "Error");
+					// 各情報を取得
+					gimmickData.m_type = gimmick.value("type", "Goal");
+					gimmickData.m_data.m_position = ParseVector3(gimmick, "position", { 0.0f, 0.0f, 0.0f });
+					gimmickData.m_data.m_rotation = ParseQuaternion(gimmick, "rotation", { 0.0f, 0.0f, 0.0f, 1.0f });
+					gimmickData.m_data.m_scale = ParseVector3(gimmick, "scale", { 1.0f, 1.0f, 1.0f });
 
-			if (jPin.contains("position")) {
-				pinData.m_position = { jPin["position"][0], jPin["position"][1], jPin["position"][2] };
-			}
-			if (jPin.contains("rotation")) {
-				pinData.m_rotation = { jPin["rotation"][0], jPin["rotation"][1], jPin["rotation"][2], jPin["rotation"][3] };
-			}
-			if (jPin.contains("scale")) {
-				pinData.m_scale = { jPin["scale"][0], jPin["scale"][1], jPin["scale"][2] };
+					// レーンデータに追加
+					laneData.m_laneGimmickData.push_back(gimmickData);
+				}
 			}
 
-			m_stagePins.push_back(pinData);
+			// 2-4.ピンを取得
+			if (frame.contains("pins"))
+			{
+				for (const auto& pin : frame["pins"])
+				{
+					// 情報クリア
+					pinData = {};
+
+					// 各情報を取得
+					pinData.m_index = pin.value("index", -1);
+					pinData.m_type = ConvertStringToPinType(pin.value("type", "error"));
+					pinData.m_data.m_position = ParseVector3(pin, "position", { 0.0f, 0.0f, 0.0f });
+					pinData.m_data.m_rotation = ParseQuaternion(pin, "rotation", { 0.0f, 0.0f, 0.0f, 1.0f });
+					pinData.m_data.m_scale = ParseVector3(pin, "scale", { 1.0f, 1.0f, 1.0f });
+
+					// レーンデータに追加
+					laneData.m_lanePinData.push_back(pinData);
+				}
+			}
+
+			// 2-5.全体データに追加
+			m_stageOverallData.m_stageLaneData.push_back(laneData);
 		}
 	}
 
@@ -176,12 +184,12 @@ void StageManager::DrawSelectedObjectOutline()
 	if (!IsEditMode() || m_selectedIndex < 0) return;
 
 	//DEBUG
-	KdDebugGUI::Instance().AddLog("obj: %d\n", m_wpStageObject.size());
+	KdDebugGUI::Instance().AddLog("obj: %d\n", m_wpStageGimmicks.size());
 
 	size_t targetIdx = static_cast<size_t>(m_selectedIndex);
-	if (targetIdx < m_wpStageObject.size() && !m_wpStageObject[targetIdx].expired())
+	if (targetIdx < m_wpStageGimmicks.size() && !m_wpStageGimmicks[targetIdx].expired())
 	{
-		auto spObj = m_wpStageObject[targetIdx].lock();
+		auto spObj = m_wpStageGimmicks[targetIdx].lock();
 
 		// オブジェクトの現在位置を取得
 		Math::Vector3 pos = spObj->GetPos();
@@ -200,71 +208,66 @@ void StageManager::Init()
 	{
 		//ロード失敗時の処理があるなら書く
 	}
-
-	if (!LoadStageSaveData())
-	{
-		//ロード失敗時の処理があるなら書く
-	}
 }
 
-void StageManager::BuildStage(StageBuildMode mode)
+void StageManager::BuildStage(int laneNumber, StageBuildMode mode)
 {
+	// 一応レーン番号確認
+	if (laneNumber > BowlingSystemConsts::FrameCount)return;
+	if (laneNumber < BowlingSystemConsts::StartFrame)return;
+
+	// ベクター上の番号
+	int vectorLaneNum = laneNumber + StageManagerConsts::LaneIndexOffset;
+	// レーンデータ
+	const StageLaneData& laneData = m_stageOverallData.m_stageLaneData[vectorLaneNum];
+
 	//リセット
 	ResetStage();
 
-	//地形生成
-	std::shared_ptr<Ground> ground = std::make_shared<Ground>(m_terrainPath, Math::Vector3::Zero, Math::Quaternion::Identity);
-	// ゲームシーンの管理リストに追加
-	SCENEMGR.AddObject(ground);
-	//後で消せるようにリスト持ち
-	m_wpTerrain = ground;
-
-	//天球生成
-	std::shared_ptr<SkySphere> sky = std::make_shared<SkySphere>(m_skySpherePath);
+	// 天球生成
+	std::shared_ptr<SkySphere> sky = std::make_shared<SkySphere>(m_stageOverallData.m_skyPath);
 	// ゲームシーンの管理リストに追加
 	SCENEMGR.AddObject(sky);
-	//後で消せるようにリスト持ち
+	// 後で消せるようにリスト持ち
 	m_wpSkySphere = sky;
 
-	//背景モードはこれ以降をロードしない
-	if (mode == StageBuildMode::Background)return;
+	// 地形生成
+	std::shared_ptr<Ground> ground = std::make_shared<Ground>(laneData.m_terrainPath, Math::Vector3::Zero, Math::Quaternion::Identity);
+	// ゲームシーンの管理リストに追加
+	SCENEMGR.AddObject(ground);
+	// 後で消せるようにリスト持ち
+	m_wpTerrain = ground;
 
-	// 読み込んだデータをもとにオブジェクト生成
-	for (const auto& objData : m_stageGimmicks)
+	// ギミック生成
+	for (const auto& gimmickData : laneData.m_laneGimmickData)
 	{
-		std::shared_ptr<KdGameObject> obj;
-
-		//タイプ名有効フラグ
+		// ギミック生成
+		std::shared_ptr<KdGameObject> gimmickObj;
+		// 有効タイプ確認
 		bool isValidType = false;
 
-		if (objData.m_type == "NormalPin")
+		// ゴール地点
+		if (gimmickData.m_type == "Goal")
 		{
-			// ピンの生成
-			obj = std::make_shared<NormalPin>(objData.m_position, objData.m_rotation);
-
-			isValidType = true;
-		}
-		else if (objData.m_type == "Goal")
-		{
-			// ピンの生成
-			obj = std::make_shared<FinishArea>(objData.m_position, objData.m_rotation, objData.m_scale);
-
+			gimmickObj = std::make_shared<FinishArea>(gimmickData.m_data.m_position, gimmickData.m_data.m_rotation, gimmickData.m_data.m_scale);
 			isValidType = true;
 		}
 
-		// タイプ名チェック
+		// 有効ならゲームシーンに追加
 		if (isValidType)
 		{
 			// ゲームシーンの管理リストに追加
-			SCENEMGR.AddObject(obj);
-
-			//後で消せるようにリスト持ち
-			m_wpStageObject.push_back(obj);
+			SCENEMGR.AddObject(gimmickObj);
+			// 後で消せるようにリスト持ち
+			m_wpStageGimmicks.push_back(gimmickObj);
 		}
 	}
 
-	// ★ リビルド完了後、新しい実体のポインタをカメラに再設定する
-	//ApplyCameraTarget();
+	// ピン生成（ハンドラー）
+	if (!m_wpPinHandler.expired())
+	{
+		m_wpPinHandler.lock()->SpawnPinsForThisFrame(laneData.m_lanePinData);
+	}
 }
 
 const StageInfo* StageManager::GetStageInfo(int stageNo) const
@@ -283,89 +286,40 @@ const StageInfo* StageManager::GetStageInfo() const
 	return GetStageInfo(SCENEMGR.GetStageNo());
 }
 
-const StageSaveData* StageManager::GetUserSave(int stageNo) const
-{
-	auto it = m_stageSave.find(stageNo);
-	if (it != m_stageSave.end())
-	{
-		return &(it->second);
-	}
-	return nullptr;
-}
-
-const StageSaveData* StageManager::GetUserSave() const
-{
-	//現在のステージ番号を見る
-	return GetUserSave(SCENEMGR.GetStageNo());
-}
-
-StageSaveData* StageManager::WorkUserSave()
-{
-	auto it = m_stageSave.find(SCENEMGR.GetStageNo());
-	if (it != m_stageSave.end())
-	{
-		return &(it->second);
-	}
-	return nullptr;
-}
-
 int StageManager::CalculateStarCount(int stageNo, int pinFallen, bool isClear) const
 {
-	// マスタデータが存在しない、または無効なステージ番号の場合は最小の★1を返す
-	auto it = m_stageTable.find(stageNo);
-	if (it == m_stageTable.end())
-	{
-		return 1;
-	}
+	//// マスタデータが存在しない、または無効なステージ番号の場合は最小の★1を返す
+	//auto it = m_stageTable.find(stageNo);
+	//if (it == m_stageTable.end())
+	//{
+	//	return 1;
+	//}
 
-	const auto& info = it->second;
+	//const auto& info = it->second;
 
-	// ここで評価の計算
-	int starCount = 0;
+	//// ここで評価の計算
+	//int starCount = 0;
 
-	// クリアしていないなら0確定
-	if (isClear)
-	{
-		for (int i = 0; i < StageManagerConsts::StarCountMax; i++)
-		{
-			if (pinFallen >= info.m_starPinNeed[i])
-			{
-				starCount++;
-			}
-			else break;
-		}
-	}
+	//// クリアしていないなら0確定
+	//if (isClear)
+	//{
+	//	for (int i = 0; i < StageManagerConsts::StarCountMax; i++)
+	//	{
+	//		if (pinFallen >= info.m_starPinNeed[i])
+	//		{
+	//			starCount++;
+	//		}
+	//		else break;
+	//	}
+	//}
 
-	return starCount; // 計算した星数
+	//return starCount; // 計算した星数
 }
 
 int StageManager::CalculateCurrentStageStarCount(int pinFallen, bool isClear) const
 {
 	// 現在選択されているステージ番号（m_currentStageNo）を使って計算
 	return CalculateStarCount(SCENEMGR.GetStageNo(), pinFallen, isClear);
-}
-
-bool StageManager::SaveUserData()
-{
-	nlohmann::json rootJson = nlohmann::json::array();
-	
-	// 3. 配置オブジェクト一覧
-	for (const auto& obj : m_stageSave)
-	{
-		nlohmann::json jObj;
-		jObj["stageNo"] = obj.second.m_stageNo;
-		jObj["isClear"] = obj.second.m_isClear;
-		jObj["bestPinsFallen"] = obj.second.m_bestPinFallen;
-
-		rootJson.push_back(jObj);
-	}
-
-	std::ofstream outFile("Asset/Data/StageData/StageSaveData.json");
-	if (!outFile.is_open()) return false;
-
-	outFile << rootJson.dump(4);
-	outFile.close();
-	return true;
 }
 
 void StageManager::CreatePinPool()
@@ -377,15 +331,15 @@ void StageManager::CreatePinPool()
 	std::unordered_map<PinType, size_t> maxRequiredCounts;
 
 	// 各レーンを見てピンごとに最大値を計算
-	for (const auto& data : m_stageLaneDatas)
+	for (const auto& data : m_stageOverallData.m_stageLaneData)
 	{
 		// このレーン内でのピン種ごとの個数を一時カウント
 		std::unordered_map<PinType, size_t> currentLaneCounts;
 
 		// このレーンにあるピンを見てデータを追加
-		for (const auto& pins : data.m_stagePinData)
+		for (const auto& pins : data.m_lanePinData)
 		{
-			PinType type = ConvertStringToPinType(pins.m_type);
+			PinType type = pins.m_type;
 
 			if (type != PinType::Error)
 			{
@@ -461,52 +415,6 @@ bool StageManager::LoadStageMasterData()
 		if (info.m_stageNo > 0)
 		{
 			m_stageTable[info.m_stageNo] = info;
-		}
-	}
-
-	return true;
-}
-
-bool StageManager::LoadStageSaveData()
-{
-	// パスはクラス内部に直書きで保持
-	const std::string masterJsonPath = "Asset/Data/StageData/StageSaveData.json";
-
-	std::ifstream file(masterJsonPath);
-	if (!file.is_open())
-	{
-		return false; // ファイルが開けない場合
-	}
-
-	nlohmann::json rootJson;
-	try
-	{
-		file >> rootJson;
-	}
-	catch (...)
-	{
-		file.close();
-		return false; // JSONの構文エラー等
-	}
-	file.close();
-
-	// 既存データをクリア
-	m_stageSave.clear();
-
-	// 配列要素を1つずつ走査して構造体に格納
-	for (const auto& item : rootJson)
-	{
-		StageSaveData data;
-
-		// .value("キー名", デフォルト値) を使うことで、キーが存在しなくても安全に取得可能
-		data.m_stageNo = item.value("stageNo", 0);
-		data.m_isClear = item.value("isClear", false);
-		data.m_bestPinFallen = item.value("bestPinsFallen", 0);
-		
-		// stageNo をキーとしてマップに格納
-		if (data.m_stageNo > 0)
-		{
-			m_stageSave[data.m_stageNo] = data;
 		}
 	}
 

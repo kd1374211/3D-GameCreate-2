@@ -1,22 +1,45 @@
 ﻿#pragma once
 #include "StageObjectInclude.h"
+#include "../Const/BowlingSystemConst.h"
+#include "../Const/PinTypes.h"
 
-// 配置オブジェクト情報（ピン・障害物・ギミックなど）
-struct StageObjectData
+// 配置オブジェクト情報（座標・回転・スケール）
+struct LaneObjectData
 {
-	std::string m_type = "NormalPin";                            // "Pin", "Obstacle", "Bumper" など
 	Math::Vector3 m_position = { 0.0f, 0.0f, 0.0f };
 	Math::Quaternion m_rotation = { 0.0f, 0.0f, 0.0f, 1.0f };
 	Math::Vector3 m_scale = { 1.0f, 1.0f, 1.0f };
 };
 
+// ピン以外のステージオブジェクト
+struct LaneGimmickData
+{
+	std::string m_type = "Goal";		// "Goal" など
+	LaneObjectData m_data;				// 配置情報
+};
+
+// ピンは↑と追加でIndexも持つ
+struct LanePinData
+{
+	int m_index = -1;						// ピンのインデックス
+	PinType m_type = PinType::Error;		// ピンの種類
+	LaneObjectData m_data;					// ピンの配置情報
+};
+
 // ステージのレーンごとの情報
 struct StageLaneData
 {
-	std::string m_skyPath;			// 天球パス
+	int m_frameNumber;		// レーン番号
 	std::string m_terrainPath;		// 地形パス
-	std::vector<StageObjectData> m_stageGimmickData;	// ピン以外のオブジェクト
-	std::vector<StageObjectData> m_stagePinData;		// ピン一覧
+	std::vector<LaneGimmickData> m_laneGimmickData;	// ピン以外のオブジェクト
+	std::vector<LanePinData> m_lanePinData;		// ピン一覧
+};
+
+// ステージ全体の情報
+struct StageOverallData
+{
+	std::string m_skyPath;			// 天球パス
+	std::vector<StageLaneData> m_stageLaneData;	// 各レーンの情報
 };
 
 enum class StageMode
@@ -34,8 +57,6 @@ enum class StageBuildMode
 
 struct StageManagerConsts
 {
-	static constexpr int PinCount = 10;			//ピン数
-	static constexpr int LaneCount = 10;			//レーン数
 	static constexpr int StarCountMax = 3;		//最大星数
 };
 
@@ -52,22 +73,6 @@ struct StageInfo
 	int m_starPinNeed[StageManagerConsts::StarCountMax];			//星必要ピン数
 };
 
-struct StageSaveData
-{
-	int m_stageNo = 0;				//ステージ番号
-	bool m_isClear = false;			//クリアしているか
-	int m_bestPinFallen = 0;		//最大ピン数
-};
-
-//リザルト
-struct GameResult
-{
-	float m_stageTimer;	//残り時間
-	bool m_isCleared;	//クリアフラグ
-	int m_fallenPinCnt; //倒したピン数
-	int m_totalPinCnt; //全体のピン数
-};
-
 class PinHandler;
 enum class PinType;
 
@@ -79,17 +84,11 @@ public:
 	void Init();
 
 	//地形生成
-	void BuildStage(StageBuildMode mode = StageBuildMode::Full);
+	//void BuildStage(StageBuildMode mode = StageBuildMode::Full);
+	void BuildStage(int laneNumber = BowlingSystemConsts::StartFrame, StageBuildMode mode = StageBuildMode::Full);
 
 	//リセット
 	void ResetStage();
-
-	// ゲームクリア時に呼び出して結果を保存
-	void SetGameResult(GameResult result)
-	{
-		m_lastGameResult = result;
-		m_lastStarCount = CalculateCurrentStageStarCount(m_lastGameResult.m_fallenPinCnt, result.m_isCleared);
-	}
 
 	// ステージデータの保存・読み込み
 	bool SaveStage(const std::string& filePath);
@@ -97,20 +96,20 @@ public:
 	bool LoadStage(const std::string& filePath);
 
 	// ゲッター(操作用)
-	std::string& GetTerrainPath() { return m_terrainPath; }
-	std::vector<StageObjectData>& GetStageObjects() { return m_stageGimmicks; }
+	//std::string& GetTerrainPath() { return ; }
+	//std::vector<LaneObjectData>& GetStageObjects() { return m_stageGimmicks; }
 
 	//ゲッター（カメラ用）
-	std::weak_ptr<KdGameObject>& GetTerrain() { return m_wpTerrain; }
+	//std::weak_ptr<KdGameObject>& GetTerrain() { return m_wpTerrain; }
 
-	void AddStageObject(const StageObjectData& objectData) { m_stageGimmicks.push_back(objectData); }
-	void RemoveStageObject(size_t index)
-	{
-		if (index < m_stageGimmicks.size())
-		{
-			m_stageGimmicks.erase(m_stageGimmicks.begin() + index);
-		}
-	}
+	//void AddStageObject(const LaneObjectData& objectData) { m_stageGimmicks.push_back(objectData); }
+	//void RemoveStageObject(size_t index)
+	//{
+	//	if (index < m_stageGimmicks.size())
+	//	{
+	//		m_stageGimmicks.erase(m_stageGimmicks.begin() + index);
+	//	}
+	//}
 
 	// モード切り替え関連
 	void SetMode(StageMode mode);
@@ -124,39 +123,9 @@ public:
 	//選択時アウトライン追加
 	void DrawSelectedObjectOutline();
 
-	//ピン追加時
-	void OnPinSpawn()
-	{
-		m_totalPinCount++;
-		m_remainingPinCount++;
-	}
-
-	//ピンが倒れる時
-	void OnPinFallen()
-	{
-		m_remainingPinCount--;
-	}
-
-	//全部のピンが倒れたかの確認
-	bool IsAllPinsFallen() const
-	{
-		//ピン総数 >= 1かつピン残数 == 0
-		return (m_totalPinCount > 0 && m_remainingPinCount == 0);
-	}
-
-	//ピン数ゲッター(DEBUG)
-	int GetTotalPinCount()const { return m_totalPinCount; }
-	int GetRemainingPinCount()const { return m_remainingPinCount; }
-
 	// ステージ番号からマスタ情報を取得（存在しない場合は nullptr）
 	const StageInfo* GetStageInfo(int stageNo) const;
 	const StageInfo* GetStageInfo() const;
-
-	// ステージ番号からセーブ情報を取得（存在しない場合は nullptr）
-	const StageSaveData* GetUserSave(int stageNo) const;
-	const StageSaveData* GetUserSave() const;
-	// セーブデータ更新用（現在のステージしか呼ばないので引数無し）
-	StageSaveData* WorkUserSave();
 
 	// 指定したステージのピン撃破数から獲得星数（1〜3）を計算して返す
 	int CalculateStarCount(int stageNo, int pinFallen, bool isClear) const;
@@ -164,15 +133,12 @@ public:
 	int CalculateCurrentStageStarCount(int pinFallen, bool isClear) const;
 
 	// リザルト画面で取得用
-	GameResult GetLastGameResult() const { return m_lastGameResult; }
-	int GetLastGameStarCount()const { return m_lastStarCount; }
+	//GameResult GetLastGameResult() const { return m_lastGameResult; }
+	//int GetLastGameStarCount()const { return m_lastStarCount; }
 
 	//ステージ数ゲッター（仮置き）
 	int GetMaxStageNo()const { return static_cast<int>(m_stageTable.size()); }
 	int GetMinStageNo()const { return 1; }
-
-	// データセーブ
-	bool SaveUserData();
 
 	// ピンハンドラー登録
 	void RegistPinHandler(std::shared_ptr<PinHandler> handler) { m_wpPinHandler = handler; }
@@ -182,6 +148,12 @@ public:
 
 private:
 
+	// このクラス内の定数
+	struct StageManagerConsts
+	{
+		static constexpr int LaneIndexOffset = -1;		// 引数のレーン番号とvectorの位置差
+	};
+
 	//いつもの
 	StageManager() {}
 	~StageManager() { Release(); }
@@ -189,17 +161,7 @@ private:
 	//マスターデータ読み込み
 	bool LoadStageMasterData();
 
-	//セーブデータ読み込み
-	bool LoadStageSaveData();
-
 	void Release();
-
-	//ピン数リセット
-	void ResetPinCount()
-	{
-		m_totalPinCount = 0;
-		m_remainingPinCount = 0;
-	}
 
 	//ステージパス生成
 	std::string GetStagePath(int stageNo)
@@ -211,24 +173,36 @@ private:
 		return std::string(path);
 	}
 
+	// Jsonの要素確認をして変換するヘルパー(Vector3)
+	Math::Vector3 ParseVector3(const nlohmann::json& j, const std::string& key, const Math::Vector3& defaultValue)
+	{
+		if (j.contains(key) && j[key].is_array() && j[key].size() >= 3)
+		{
+			return { j[key][0].get<float>(), j[key][1].get<float>(), j[key][2].get<float>() };
+		}
+		return defaultValue;
+	}
+
+	// Jsonの要素確認をして変換するヘルパー(Quarternion)
+	Math::Quaternion ParseQuaternion(const nlohmann::json& j, const std::string& key, const Math::Quaternion& defaultValue)
+	{
+		if (j.contains(key) && j[key].is_array() && j[key].size() >= 4)
+		{
+			return { j[key][0].get<float>(), j[key][1].get<float>(), j[key][2].get<float>(), j[key][3].get<float>() };
+		}
+		return defaultValue;
+	}
+
 	// UTF-8 の std::string を Shift-JIS (ANSI) の std::string に変換する関数
 	std::string Utf8ToMultiByte(const std::string& utf8Str);
 
 	//オブジェクトのリスト管理
 	std::weak_ptr<KdGameObject> m_wpSkySphere;
 	std::weak_ptr<KdGameObject> m_wpTerrain;
-	std::vector<std::weak_ptr<KdGameObject>> m_wpStageObject;
-
-	//地形データ管理
-	std::string m_terrainPath; //地形データのパス
-	std::string m_skySpherePath; //天球のパス
-	//オブジェクトデータ管理
-	std::vector<StageObjectData> m_stageGimmicks;
-	std::vector<StageObjectData> m_stagePins;
-	//ここのデータはあとで配列に置き換わる
+	std::vector<std::weak_ptr<KdGameObject>> m_wpStageGimmicks;
 
 	// ↑の置き換え後
-	StageLaneData m_stageLaneDatas[StageManagerConsts::LaneCount];
+	StageOverallData m_stageOverallData;
 
 	StageMode m_mode = StageMode::Play; // 初期状態はエディットモード
 	int m_selectedIndex = -1; // 選択中のオブジェクトインデックス（-1は未選択）
@@ -236,19 +210,12 @@ private:
 	//デバッグ用
 	std::unique_ptr<KdDebugWireFrame> m_debugWireFrame;
 
-	//ピン数（クリア目標）
-	int m_totalPinCount = 0;
-	int m_remainingPinCount = 0;
-
 	// stageNo をキーにしたマスタデータ保持用マップ
 	std::unordered_map<int, StageInfo> m_stageTable;
 
-	// stageNo をキーにしたセーブデータ保持用マップ
-	std::unordered_map<int, StageSaveData> m_stageSave;
-
 	// リザルト用データ
-	GameResult m_lastGameResult = {};
-	int   m_lastStarCount = 0;
+	//GameResult m_lastGameResult = {};
+	//int   m_lastStarCount = 0;
 
 	// ピンハンドラーweak
 	std::weak_ptr<PinHandler> m_wpPinHandler;

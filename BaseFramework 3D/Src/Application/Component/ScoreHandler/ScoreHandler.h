@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "../Const/BowlingSystemConst.h"
+#include "../../Const/BowlingSystemConst.h"
 
 enum class NextActions
 {
@@ -10,9 +10,12 @@ enum class NextActions
 	GameEnd
 };
 
-class ScoreManager
+class ScoreHandler
 {
 public:
+
+	ScoreHandler() {}
+	~ScoreHandler() {}
 
 	void Init();
 
@@ -65,7 +68,7 @@ private:
 	}
 
 	// このクラス内の定数
-	struct ScoreManagerConsts
+	struct ScoreHandlerConsts
 	{
 		// 呼び方
 		static constexpr int FirstThrow = 0;	//1投目（ストライク）
@@ -95,7 +98,7 @@ private:
 		// 投球関連
 		size_t m_recordID[BowlingSystemConsts::MaxThrowCount]{};						// ピン数を記録しているvectorの番号
 		FrameMark m_mark = FrameMark::None;											// このフレームのマーク
-		size_t m_lastThrowID = ScoreManagerConsts::EmptyDataID;
+		size_t m_lastThrowID = ScoreHandlerConsts::EmptyDataID;
 
 		// スコア関連
 		int m_frameTotalScore = 0;									// このフレームまでの合計点数
@@ -117,17 +120,8 @@ private:
 	// 次のアクション
 	NextActions m_nextAction = NextActions::None;
 
-	ScoreManager() {}
-	~ScoreManager() {}
-
 public:
-
-	static ScoreManager& Instance()
-	{
-		static ScoreManager instance;
-		return instance;
-	}
 
 };
 
-#define SCOREMGR ScoreManager::Instance()
+#define SCOREMGR ScoreHandler::Instance()

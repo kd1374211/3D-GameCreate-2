@@ -5,6 +5,7 @@
 struct GameResult;
 class GameUIObjects;
 class PinHandler;
+class ScoreHandler;
 
 //シーン状況
 enum class SceneState
@@ -71,4 +72,7 @@ private:
 
 	// ピン制御用
 	std::shared_ptr<PinHandler> m_cPinHandler = nullptr;
+
+	// スコア管理・投球管理・フレーム管理
+	std::shared_ptr<ScoreHandler> m_cScoreHandler = nullptr;
 };

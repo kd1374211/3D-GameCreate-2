@@ -1,7 +1,8 @@
 ﻿#pragma once
+#include "../../Const/PinTypes.h"
 
 class PinBase;
-struct StageObjectData;
+struct LanePinData;
 
 class PinHandler
 {
@@ -17,13 +18,13 @@ public:
 	void DespawnAllPins();
 
 	// このフレームのピンを召喚
-	void SpawnPinsForThisFrame(const std::vector<StageObjectData>& pinsToSpawn);
+	void SpawnPinsForThisFrame(const std::vector<LanePinData>& pinsToSpawn);
 
 	// 倒れたピン数を取得
 	int GetFallenPinCount();
 
 	// 残ったピンを再配置＆倒れたピンをリストから除外
-	void CheckAndResetRemainingPins(const std::vector<StageObjectData>& pinsToSpawn);
+	void CheckAndResetRemainingPins(const std::vector<LanePinData>& pinsToSpawn);
 
 private:
 

@@ -1,23 +1,23 @@
-﻿#include "ScoreManager.h"
+﻿#include "ScoreHandler.h"
 
-void ScoreManager::Init()
+void ScoreHandler::Init()
 {
 	Reset();
 }
 
-void ScoreManager::Reset()
+void ScoreHandler::Reset()
 {
 	// フレームデータ初期化
 	for (size_t frameCnt = 0; frameCnt < BowlingSystemConsts::FrameCount; frameCnt++)
 	{
 		for (size_t throwCnt = 0; throwCnt < BowlingSystemConsts::MaxThrowCount; throwCnt++)
 		{
-			m_frameData[frameCnt].m_recordID[throwCnt] = ScoreManagerConsts::EmptyDataID;
+			m_frameData[frameCnt].m_recordID[throwCnt] = ScoreHandlerConsts::EmptyDataID;
 		}
 		m_frameData[frameCnt].m_mark = FrameMark::None;
 		m_frameData[frameCnt].m_frameTotalScore = 0;
 		m_frameData[frameCnt].m_isCalcEnd = false;
-		m_frameData[frameCnt].m_lastThrowID = ScoreManagerConsts::EmptyDataID;
+		m_frameData[frameCnt].m_lastThrowID = ScoreHandlerConsts::EmptyDataID;
 	}
 
 	// 投球記録削除
@@ -35,7 +35,7 @@ void ScoreManager::Reset()
 	m_nextAction = NextActions::None;
 }
 
-void ScoreManager::RecordThrow(int fallenPins)
+void ScoreHandler::RecordThrow(int fallenPins)
 {
 	FrameData* frameData = &m_frameData[m_currentFrame];
 	
@@ -52,7 +52,7 @@ void ScoreManager::RecordThrow(int fallenPins)
 	m_currentPinFallen += fallenPins;
 
 	// 2. マークの判定
-	if (m_currentThrow == ScoreManagerConsts::FirstThrow)
+	if (m_currentThrow == ScoreHandlerConsts::FirstThrow)
 	{
 		// 1投目で10本倒したら無条件でストライク
 		if (fallenPins >= BowlingSystemConsts::PinCount)
@@ -60,7 +60,7 @@ void ScoreManager::RecordThrow(int fallenPins)
 			frameData->m_mark = FrameMark::Strike;
 		}
 	}
-	else if (m_currentThrow == ScoreManagerConsts::SecondThrow)
+	else if (m_currentThrow == ScoreHandlerConsts::SecondThrow)
 	{
 		// 2投目は「1投目でストライクを取っていない」かつ「2投目までの合計が10本」ならスペア
 		if (frameData->m_mark != FrameMark::Strike &&
@@ -77,7 +77,7 @@ void ScoreManager::RecordThrow(int fallenPins)
 	UpdateScore();
 }
 
-void ScoreManager::UpdateScore()
+void ScoreHandler::UpdateScore()
 {
 	// 終了したフレームまで
 	for (size_t checkFrame = 0; checkFrame < m_currentFrame; checkFrame++)
@@ -111,13 +111,13 @@ void ScoreManager::UpdateScore()
 			for (size_t checkThrow = 0; checkThrow < BowlingSystemConsts::MaxThrowCount; checkThrow++)
 			{
 				// もしIDが-1の場合これより後は投げていないので飛ばす
-				if (currentData.m_recordID[checkThrow] == ScoreManagerConsts::EmptyDataID)break;
+				if (currentData.m_recordID[checkThrow] == ScoreHandlerConsts::EmptyDataID)break;
 
 				totalScore += m_throwRecord[currentData.m_recordID[checkThrow]];
 			}
 
 			// これが最後のフレームなら計算終了
-			if (checkFrame == ScoreManagerConsts::LastFrame)
+			if (checkFrame == ScoreHandlerConsts::LastFrame)
 			{
 				currentData.m_frameTotalScore = totalScore;
 				currentData.m_isCalcEnd = true;
@@ -135,10 +135,10 @@ void ScoreManager::UpdateScore()
 			// ストライクなら２つ先までのデータを確認する
 			case FrameMark::Strike:
 				// データが足りない場合はリターン
-				if (baseID + ScoreManagerConsts::NextScoreAdd_Strike > currentThrowRecSize)return;
+				if (baseID + ScoreHandlerConsts::NextScoreAdd_Strike > currentThrowRecSize)return;
 
 				// データ取得
-				for (size_t check = 0; check < ScoreManagerConsts::NextScoreAdd_Strike; check++)
+				for (size_t check = 0; check < ScoreHandlerConsts::NextScoreAdd_Strike; check++)
 				{
 					checkID++;
 					totalScore += m_throwRecord[checkID];
@@ -148,10 +148,10 @@ void ScoreManager::UpdateScore()
 				// スペアなら次のデータを確認する
 			case FrameMark::Spare:
 				// データが足りない場合はリターン
-				if (baseID + ScoreManagerConsts::NextScoreAdd_Spare > currentThrowRecSize)return;
+				if (baseID + ScoreHandlerConsts::NextScoreAdd_Spare > currentThrowRecSize)return;
 
 				// データ取得
-				for (size_t check = 0; check < ScoreManagerConsts::NextScoreAdd_Spare; check++)
+				for (size_t check = 0; check < ScoreHandlerConsts::NextScoreAdd_Spare; check++)
 				{
 					checkID++;
 					totalScore += m_throwRecord[checkID];
@@ -170,14 +170,14 @@ void ScoreManager::UpdateScore()
 	}
 }
 
-void ScoreManager::CheckNextAction()
+void ScoreHandler::CheckNextAction()
 {
 	// ストライクorスペア確認
 	// かつ現在がボーナスでないとき
 	if (m_frameData[m_currentFrame].m_mark != FrameMark::None && !m_isBonusThrow)
 	{
 		// 最終フレームならボーナス投球
-		if (m_currentFrame == ScoreManagerConsts::LastFrame)
+		if (m_currentFrame == ScoreHandlerConsts::LastFrame)
 		{
 			BonusThrow();
 			m_isBonusThrow = true;
@@ -194,13 +194,13 @@ void ScoreManager::CheckNextAction()
 		switch (m_currentThrow)
 		{
 			// 1投目は次の投球に進む
-		case ScoreManagerConsts::FirstThrow:
+		case ScoreHandlerConsts::FirstThrow:
 			NextThrow();
 			break;
 			// 2投目はボーナスかを確認する
-		case ScoreManagerConsts::SecondThrow:
+		case ScoreHandlerConsts::SecondThrow:
 			// 最終フレームかどうかを確認
-			if (m_currentFrame == ScoreManagerConsts::LastFrame)
+			if (m_currentFrame == ScoreHandlerConsts::LastFrame)
 			{
 				// 最終フレームならボーナス確認
 				if (m_isBonusThrow)
@@ -219,7 +219,7 @@ void ScoreManager::CheckNextAction()
 			}
 			break;
 			// 3投目はゲーム終了確定
-		case ScoreManagerConsts::BonusThrow:
+		case ScoreHandlerConsts::BonusThrow:
 			GameEnd();
 			break;
 		}

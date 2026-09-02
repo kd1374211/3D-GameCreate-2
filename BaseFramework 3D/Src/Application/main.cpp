@@ -6,6 +6,7 @@
 #include "GameObject/Chara/CharaManager.h"
 #include "FadeManager/FadeManager.h"
 #include "GameObject/Camera/CameraManager.h"
+#include "UserSave/UserSaveManager.h"
 
 // ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// /////
 // エントリーポイント
@@ -233,6 +234,7 @@ bool Application::Init(int w, int h)
 	STAGEMGR.Init();
 	FADEMGR.Init();
 	CAMERAMGR.Init();
+	SAVEMGR.Init();
 	srand(timeGetTime());
 
 	return true;

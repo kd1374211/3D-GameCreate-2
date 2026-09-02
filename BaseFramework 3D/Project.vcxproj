@@ -644,7 +644,9 @@
     <ClInclude Include="..\Library\tinygltf\tiny_gltf.h" />
     <ClInclude Include="Src\Application\Component\PhysicsComponent\PhysicsComponent.h" />
     <ClInclude Include="Src\Application\Component\PinHandler\PinHandler.h" />
+    <ClInclude Include="Src\Application\Component\ScoreHandler\ScoreHandler.h" />
     <ClInclude Include="Src\Application\Const\BowlingSystemConst.h" />
+    <ClInclude Include="Src\Application\Const\PinTypes.h" />
     <ClInclude Include="Src\Application\FadeManager\FadeManager.h" />
     <ClInclude Include="Src\Application\GameObject\BowlingPin\NormalPin\NormalPin.h" />
     <ClInclude Include="Src\Application\GameObject\BowlingPin\PinBase\PinBase.h" />
@@ -675,9 +677,9 @@
     <ClInclude Include="Src\Application\Scene\SceneManager.h" />
     <ClInclude Include="Src\Application\Scene\StageSelectScene\StageSelectScene.h" />
     <ClInclude Include="Src\Application\Scene\TitleScene\TitleScene.h" />
-    <ClInclude Include="Src\Application\ScoreManager\ScoreManager.h" />
     <ClInclude Include="Src\Application\StageManager\StageManager.h" />
     <ClInclude Include="Src\Application\StageManager\StageObjectInclude.h" />
+    <ClInclude Include="Src\Application\UserSave\UserSaveManager.h" />
     <ClInclude Include="Src\Framework\Direct3D\KdMaterial.h" />
     <ClInclude Include="Src\Framework\Direct3D\Polygon\KdPolygon.h" />
     <ClInclude Include="Src\Framework\Direct3D\Polygon\KdSquarePolygon.h" />
@@ -881,6 +883,7 @@
     <ClCompile Include="..\Library\JoltPhysics\Jolt\TriangleSplitter\TriangleSplitterMean.cpp" />
     <ClCompile Include="Src\Application\Component\PhysicsComponent\PhysicsComponent.cpp" />
     <ClCompile Include="Src\Application\Component\PinHandler\PinHandler.cpp" />
+    <ClCompile Include="Src\Application\Component\ScoreHandler\ScoreHandler.cpp" />
     <ClCompile Include="Src\Application\FadeManager\FadeManager.cpp" />
     <ClCompile Include="Src\Application\GameObject\BowlingPin\NormalPin\NormalPin.cpp" />
     <ClCompile Include="Src\Application\GameObject\BowlingPin\PinBase\PinBase.cpp" />
@@ -910,8 +913,8 @@
     <ClCompile Include="Src\Application\Scene\SceneManager.cpp" />
     <ClCompile Include="Src\Application\Scene\StageSelectScene\StageSelectScene.cpp" />
     <ClCompile Include="Src\Application\Scene\TitleScene\TitleScene.cpp" />
-    <ClCompile Include="Src\Application\ScoreManager\ScoreManager.cpp" />
     <ClCompile Include="Src\Application\StageManager\StageManager.cpp" />
+    <ClCompile Include="Src\Application\UserSave\UserSaveManager.cpp" />
     <ClCompile Include="Src\Framework\Direct3D\KdMaterial.cpp">
       <SubType>
       </SubType>

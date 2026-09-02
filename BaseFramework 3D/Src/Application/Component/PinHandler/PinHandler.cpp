@@ -2,7 +2,6 @@
 #include "../../Scene/SceneManager.h"
 #include "../../StageManager/StageManager.h"
 #include "../../GameObject/BowlingPin/NormalPin/NormalPin.h"
-#include "../../Const/PinTypes.h"
 
 void PinHandler::CreatePinPool(PinType type, size_t amount)
 {
@@ -46,18 +45,14 @@ void PinHandler::DespawnAllPins()
 	m_activePins.clear();
 }
 
-void PinHandler::SpawnPinsForThisFrame(const std::vector<StageObjectData>& pinsToSpawn)
+void PinHandler::SpawnPinsForThisFrame(const std::vector<LanePinData>& pinsToSpawn)
 {
 	DespawnAllPins(); // まず全てのピンを非活性化
 
 	// 今回のフレームで必要なピンを召喚
-	int index = 0;	// 召喚するピンの管理番号
 	for (const auto& pinData : pinsToSpawn)
 	{
-		SpawnPin(ConvertStringToPinType(pinData.m_type), pinData.m_position, index);
-
-		// 管理番号++
-		index++;
+		SpawnPin(pinData.m_type, pinData.m_data.m_position, pinData.m_index);
 	}
 }
 
@@ -86,7 +81,7 @@ int PinHandler::GetFallenPinCount()
 	return fallenPinCnt;
 }
 
-void PinHandler::CheckAndResetRemainingPins(const std::vector<StageObjectData>& pinsToSpawn)
+void PinHandler::CheckAndResetRemainingPins(const std::vector<LanePinData>& pinsToSpawn)
 {
 	// ピンリストを回って倒れていないピンの番号を取得
 	std::vector<int> remainingPinIndex;
@@ -113,7 +108,7 @@ void PinHandler::CheckAndResetRemainingPins(const std::vector<StageObjectData>& 
 		const auto& pinData = pinsToSpawn[index];
 
 		// 取得したピンを生成
-		SpawnPin(ConvertStringToPinType(pinData.m_type), pinData.m_position, index);
+		SpawnPin(pinData.m_type, pinData.m_data.m_position, pinData.m_index);
 	}
 }
 
