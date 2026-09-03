@@ -12,7 +12,7 @@ void ResultScene::Init()
 	//背景ステージ読み込み
 	STAGEMGR.LoadStage(SCENEMGR.GetStageNo());
 	//背景モードで生成
-	STAGEMGR.BuildStage(StageBuildMode::Background);
+	STAGEMGR.BuildStage(1, StageBuildMode::Background);
 
 	//ステージ確認カメラ
 	std::shared_ptr<StageViewCamera> camera = std::make_shared<StageViewCamera>();
@@ -43,42 +43,42 @@ void ResultScene::Init()
 	FADEMGR.StartFadeIn();
 
 	//さっきのリザルトとセーブデータのリザルトを比べて更新してよいなら更新
-	auto saveData = STAGEMGR.WorkUserSave();
-	auto resultData = STAGEMGR.GetLastGameResult();
+	//auto saveData = STAGEMGR.WorkUserSave();
+	//auto resultData = STAGEMGR.GetLastGameResult();
 	
 	// セーブデータが存在している
 	// ステージをクリアしている
-	if (saveData != nullptr && resultData.m_isCleared)
-	{
-		// データが変わったか
-		bool isSaveUpdated = false;
+	//if (saveData != nullptr && resultData.m_isCleared)
+	//{
+	//	// データが変わったか
+	//	bool isSaveUpdated = false;
 
-		// 新規クリア確認
-		if (!saveData->m_isClear)
-		{
-			//			false					 true
-			saveData->m_isClear = resultData.m_isCleared;
+	//	// 新規クリア確認
+	//	if (!saveData->m_isClear)
+	//	{
+	//		//			false					 true
+	//		saveData->m_isClear = resultData.m_isCleared;
 
-			// 更新した
-			isSaveUpdated = true;
-		}
+	//		// 更新した
+	//		isSaveUpdated = true;
+	//	}
 
-		// 最大ピン数更新
-		if (saveData->m_bestPinFallen < resultData.m_fallenPinCnt)
-		{
-			// 更新
-			saveData->m_bestPinFallen = resultData.m_fallenPinCnt;
+	//	// 最大ピン数更新
+	//	if (saveData->m_bestPinFallen < resultData.m_fallenPinCnt)
+	//	{
+	//		// 更新
+	//		saveData->m_bestPinFallen = resultData.m_fallenPinCnt;
 
-			// した
-			isSaveUpdated = true;
-		}
+	//		// した
+	//		isSaveUpdated = true;
+	//	}
 
-		// 更新していたらセーブ読み込み
-		if (isSaveUpdated)
-		{
-			STAGEMGR.SaveUserData();
-		}
-	}
+	//	// 更新していたらセーブ読み込み
+	//	if (isSaveUpdated)
+	//	{
+	//		STAGEMGR.SaveUserData();
+	//	}
+	//}
 }
 
 void ResultScene::Event()

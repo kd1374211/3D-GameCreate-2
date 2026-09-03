@@ -32,30 +32,30 @@ void GameContactListener::OnContactAdded(const JPH::Body& inBody1, const JPH::Bo
 	auto* gameObj1 = reinterpret_cast<KdGameObject*>(body1->GetUserData());
 	auto* gameObj2 = reinterpret_cast<KdGameObject*>(body2->GetUserData());
 
-	// Terrain & Player
-	if (layer1 == Layers::TERRAIN && layer2 == Layers::PLAYER)
-	{
-		// ★ Y成分の絶対値が一定以下（＝水平に近い＝壁）の場合のみ通知
-		if (std::abs(normal.GetY()) < 0.3f)
-		{
-			if (auto player = dynamic_cast<Player*>(gameObj2))
-			{
-				player->OnHitWall(normal);
-			}
-		}
-	}
+	//// Terrain & Player
+	//if (layer1 == Layers::TERRAIN && layer2 == Layers::BOWLINGBALL)
+	//{
+	//	// ★ Y成分の絶対値が一定以下（＝水平に近い＝壁）の場合のみ通知
+	//	if (std::abs(normal.GetY()) < 0.3f)
+	//	{
+	//		if (auto player = dynamic_cast<Player*>(gameObj2))
+	//		{
+	//			player->OnHitWall(normal);
+	//		}
+	//	}
+	//}
 
-	// Finish & Player
-	if (layer1 == Layers::FINISHAREA && layer2 == Layers::PLAYER)
-	{
-		if (auto player = dynamic_cast<Player*>(gameObj2))
-		{
-			player->Finish();
-		}
-	}
+	//// Finish & Player
+	//if (layer1 == Layers::FINISHAREA && layer2 == Layers::BOWLINGBALL)
+	//{
+	//	if (auto player = dynamic_cast<Player*>(gameObj2))
+	//	{
+	//		player->Finish();
+	//	}
+	//}
 
 	// Player & Pin
-	if (layer1 == Layers::PLAYER && layer2 == Layers::PIN_STATIC)
+	if (layer1 == Layers::BOWLINGBALL && layer2 == Layers::PIN_STATIC)
 	{
 		// UserData から ピンオブジェクトのポインタを復元
 		if (auto* pin = dynamic_cast<PinBase*>(gameObj2))
@@ -94,26 +94,26 @@ void GameContactListener::OnContactPersisted(const JPH::Body& inBody1, const JPH
 	auto* gameObj1 = reinterpret_cast<KdGameObject*>(body1->GetUserData());
 	auto* gameObj2 = reinterpret_cast<KdGameObject*>(body2->GetUserData());
 
-	// Terrain & Player
-	if (layer1 == Layers::TERRAIN && layer2 == Layers::PLAYER)
-	{
-		// ★ Y成分の絶対値が一定以下（＝水平に近い＝壁）の場合のみ通知
-		// std::abs(normal.GetY()) < 0.5f で約45度以上の急傾斜・壁を判別
-		if (std::abs(normal.GetY()) < 0.5f)
-		{
-			if (auto player = dynamic_cast<Player*>(gameObj2))
-			{
-				player->OnHitWall(normal);
-			}
-		}
-	}
+	//// Terrain & Player
+	//if (layer1 == Layers::TERRAIN && layer2 == Layers::BOWLINGBALL)
+	//{
+	//	// ★ Y成分の絶対値が一定以下（＝水平に近い＝壁）の場合のみ通知
+	//	// std::abs(normal.GetY()) < 0.5f で約45度以上の急傾斜・壁を判別
+	//	if (std::abs(normal.GetY()) < 0.5f)
+	//	{
+	//		if (auto player = dynamic_cast<Player*>(gameObj2))
+	//		{
+	//			player->OnHitWall(normal);
+	//		}
+	//	}
+	//}
 
-	// Finish & Player
-	if (layer1 == Layers::FINISHAREA && layer2 == Layers::PLAYER)
-	{
-		if (auto player = dynamic_cast<Player*>(gameObj2))
-		{
-			player->Finish();
-		}
-	}
+	//// Finish & Player
+	//if (layer1 == Layers::FINISHAREA && layer2 == Layers::BOWLINGBALL)
+	//{
+	//	if (auto player = dynamic_cast<Player*>(gameObj2))
+	//	{
+	//		player->Finish();
+	//	}
+	//}
 }

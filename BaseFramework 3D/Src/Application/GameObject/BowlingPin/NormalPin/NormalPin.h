@@ -9,4 +9,12 @@ public:
 	~NormalPin()override {}
 
 private:
+
+	// このクラスの定数
+	struct NormalPinConsts
+	{
+		// 重さ
+		static constexpr float PinMass = 1.6f;
+	};
+
 };

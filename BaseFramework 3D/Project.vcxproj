@@ -642,6 +642,7 @@
     <ClInclude Include="..\Library\tinygltf\stb_image.h" />
     <ClInclude Include="..\Library\tinygltf\stb_image_write.h" />
     <ClInclude Include="..\Library\tinygltf\tiny_gltf.h" />
+    <ClInclude Include="Src\Application\Component\CharaHandler\CharaHandler.h" />
     <ClInclude Include="Src\Application\Component\PhysicsComponent\PhysicsComponent.h" />
     <ClInclude Include="Src\Application\Component\PinHandler\PinHandler.h" />
     <ClInclude Include="Src\Application\Component\ScoreHandler\ScoreHandler.h" />
@@ -657,7 +658,6 @@
     <ClInclude Include="Src\Application\GameObject\Camera\StageViewCamera\StageViewCamera.h" />
     <ClInclude Include="Src\Application\GameObject\Camera\TPSCamera\TPSCamera.h" />
     <ClInclude Include="Src\Application\GameObject\Chara\BowlingBall\BowlingBall.h" />
-    <ClInclude Include="Src\Application\GameObject\Chara\CharaManager.h" />
     <ClInclude Include="Src\Application\GameObject\Chara\Player\Player.h" />
     <ClInclude Include="Src\Application\GameObject\SkySphere\SkySphere.h" />
     <ClInclude Include="Src\Application\GameObject\Terrain\FinishArea\FinishArea.h" />
@@ -881,6 +881,7 @@
     <ClCompile Include="..\Library\JoltPhysics\Jolt\TriangleSplitter\TriangleSplitter.cpp" />
     <ClCompile Include="..\Library\JoltPhysics\Jolt\TriangleSplitter\TriangleSplitterBinning.cpp" />
     <ClCompile Include="..\Library\JoltPhysics\Jolt\TriangleSplitter\TriangleSplitterMean.cpp" />
+    <ClCompile Include="Src\Application\Component\CharaHandler\CharaHandler.cpp" />
     <ClCompile Include="Src\Application\Component\PhysicsComponent\PhysicsComponent.cpp" />
     <ClCompile Include="Src\Application\Component\PinHandler\PinHandler.cpp" />
     <ClCompile Include="Src\Application\Component\ScoreHandler\ScoreHandler.cpp" />
@@ -894,7 +895,6 @@
     <ClCompile Include="Src\Application\GameObject\Camera\StageViewCamera\StageViewCamera.cpp" />
     <ClCompile Include="Src\Application\GameObject\Camera\TPSCamera\TPSCamera.cpp" />
     <ClCompile Include="Src\Application\GameObject\Chara\BowlingBall\BowlingBall.cpp" />
-    <ClCompile Include="Src\Application\GameObject\Chara\CharaManager.cpp" />
     <ClCompile Include="Src\Application\GameObject\Chara\Player\Player.cpp" />
     <ClCompile Include="Src\Application\GameObject\SkySphere\SkySphere.cpp" />
     <ClCompile Include="Src\Application\GameObject\Terrain\FinishArea\FinishArea.cpp" />

@@ -121,14 +121,11 @@ void PinBase::GenerateDepthMapFromLight()
 
 void PinBase::OnHitByPlayer(JPH::Vec3 playerVelocity)
 {
-	if (m_isRagdoll || m_isHitPending) return;
+	//if (m_isRagdoll || m_isHitPending) return;
 
-	// OnContactAdded 内では直接 BodyInterface をいじらず、フラグと速度だけメモして抜ける
-	m_isHitPending = true;
-	m_pendingVelocity = playerVelocity;
-
-	//ピンが倒れたという情報を送る
-	STAGEMGR.OnPinFallen();
+	//// OnContactAdded 内では直接 BodyInterface をいじらず、フラグと速度だけメモして抜ける
+	//m_isHitPending = true;
+	//m_pendingVelocity = playerVelocity;
 }
 
 void PinBase::Activate()
@@ -152,7 +149,7 @@ void PinBase::Reset()
 		m_cPhysics->SetAngularVelocity(JPH::Vec3::sZero());
 	}
 	// 状態のリセット
-	m_isRagdoll = false;
+	m_isRagdoll = true;
 	m_isHitPending = false;
 	m_pendingVelocity = JPH::Vec3::sZero();
 	m_isFallen = false;
@@ -204,9 +201,6 @@ void PinBase::SetRot(const Math::Quaternion rot)
 
 void PinBase::Init()
 {
-	//ピン数追加
-	STAGEMGR.OnPinSpawn();
-
 	// 最初は非活性
 	Deactivate();
 }

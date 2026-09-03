@@ -8,17 +8,24 @@ public:
 	BowlingBall();
 	~BowlingBall()override {}
 
-	void Init(const Math::Vector3& a_startPos, float a_radius);
+	void Init(float a_radius);
 	void Update()override;
 	void PostUpdate()override;
 	void DrawLit()override;
 	void GenerateDepthMapFromLight()override;
 
 	// 投げ
-	void Throw(const JPH::Vec3& startPos, const JPH::Vec3& direction, float power);
+	void Throw(const Math::Vector3& startPos, const Math::Vector3& direction, float power);
 
 	// リセット
 	void Reset();
+
+	// 停止・落下確認用
+	bool IsRolling() const { return m_isRolling; }
+	bool IsFall() const { return m_isFall; }
+
+	// 位置・回転セット
+	void Respawn(const Math::Vector3& pos, const Math::Quaternion& rot);
 
 private:
 
@@ -28,7 +35,17 @@ private:
 		// 停止確認関連
 		static constexpr float StopCheckBorder = 0.01f;
 		static constexpr float RollEndTime = 1.5f;
+		
+		// 発射速度
+		static constexpr float ThrowPowerMulti = 7.0f;
+
+		// 重さ
+		static constexpr float BallMass = 7.0f;
 	};
+
+	// 活性化・非活性化
+	void ActivateBody();
+	void DeactivateBody();
 
 	// 停止確認
 	void CheckIsStop();
@@ -41,9 +58,6 @@ private:
 	//回転
 	Math::Quaternion m_rot;
 
-	//半径
-	float m_radius = 0.0f;
-
 	// 連続停止時間
 	float m_stopTimer = 0.0f;
 
@@ -55,4 +69,7 @@ private:
 
 	// 物理コンポーネント
 	std::shared_ptr<PhysicsComponent> m_cPhysics;
+
+	// 物理が有効か
+	bool m_isActive = false;
 };

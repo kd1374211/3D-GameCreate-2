@@ -1,6 +1,6 @@
 ﻿#include "StageManager.h"
 #include "../Scene/SceneManager.h"
-#include "../GameObject/Chara/CharaManager.h"
+#include "../Component/CharaHandler/CharaHandler.h"
 #include "../GameObject/Camera/CameraBase.h"
 #include "../Component/PinHandler/PinHandler.h"
 
@@ -112,19 +112,33 @@ bool StageManager::LoadStage(const std::string& filePath)
 		StageLaneData laneData;
 		LaneGimmickData gimmickData;
 		LanePinData pinData;
+		PlayerPlacementData playerData;
 		for (const auto& frame : rootJson["frames"])
 		{
 			// 情報クリア
 			laneData = {};
-			pinData = {};
-
+			playerData = {};
+			
 			// 2-1.レーン番号を取得
 			laneData.m_frameNumber = frame.value("frameNumber", -1);
 
 			// 2-2.地形パスを取得
 			laneData.m_terrainPath = frame.value("terrainPath", "Asset/Models/Terrain/Stage01/Stage01.gltf");
 
-			// 2-3.ギミックを取得
+			// 2-3.プレイヤーを取得
+			if (frame.contains("player"))
+			{
+				const auto& player = frame["player"];
+
+				// 各情報を取得
+				playerData.m_pos = ParseVector3(player, "position", {0.0f, 0.0f, 0.0f});
+				playerData.m_rot = ParseQuaternion(player, "rotation", { 0.0f, 0.0f, 0.0f,1.0f });
+
+				// レーンデータに設定
+				laneData.m_playerData = playerData;
+			}
+				
+			// 2-4.ギミックを取得
 			if (frame.contains("gimmicks"))
 			{
 				for (const auto& gimmick : frame["gimmicks"])
@@ -143,7 +157,7 @@ bool StageManager::LoadStage(const std::string& filePath)
 				}
 			}
 
-			// 2-4.ピンを取得
+			// 2-5.ピンを取得
 			if (frame.contains("pins"))
 			{
 				for (const auto& pin : frame["pins"])
@@ -163,7 +177,7 @@ bool StageManager::LoadStage(const std::string& filePath)
 				}
 			}
 
-			// 2-5.全体データに追加
+			// 2-6.全体データに追加
 			m_stageOverallData.m_stageLaneData.push_back(laneData);
 		}
 	}
@@ -216,10 +230,8 @@ void StageManager::BuildStage(int laneNumber, StageBuildMode mode)
 	if (laneNumber > BowlingSystemConsts::FrameCount)return;
 	if (laneNumber < BowlingSystemConsts::StartFrame)return;
 
-	// ベクター上の番号
-	int vectorLaneNum = laneNumber + StageManagerConsts::LaneIndexOffset;
 	// レーンデータ
-	const StageLaneData& laneData = m_stageOverallData.m_stageLaneData[vectorLaneNum];
+	const StageLaneData& laneData = m_stageOverallData.m_stageLaneData[laneNumber];
 
 	//リセット
 	ResetStage();
@@ -268,6 +280,34 @@ void StageManager::BuildStage(int laneNumber, StageBuildMode mode)
 	{
 		m_wpPinHandler.lock()->SpawnPinsForThisFrame(laneData.m_lanePinData);
 	}
+
+	// プレイヤー配置(未実装)
+	if (!m_wpCharaHandler.expired())
+	{
+		m_wpCharaHandler.lock()->StartNextThrow(laneData.m_playerData.m_pos, laneData.m_playerData.m_rot);
+	}
+}
+
+void StageManager::RespawnStage(int laneNumber)
+{
+	// 一応レーン番号確認
+	if (laneNumber > BowlingSystemConsts::FrameCount)return;
+	if (laneNumber < BowlingSystemConsts::StartFrame)return;
+
+	// レーンデータ
+	const StageLaneData& laneData = m_stageOverallData.m_stageLaneData[laneNumber];
+
+	// ピンの再配置
+	if (auto spPinHandler = m_wpPinHandler.lock())
+	{
+		spPinHandler->CheckAndResetRemainingPins(laneData.m_lanePinData);
+	}
+
+	// プレイヤー再配置(未実装)
+	if (!m_wpCharaHandler.expired())
+	{
+		m_wpCharaHandler.lock()->StartNextThrow(laneData.m_playerData.m_pos, laneData.m_playerData.m_rot);
+	}
 }
 
 const StageInfo* StageManager::GetStageInfo(int stageNo) const
@@ -314,12 +354,14 @@ int StageManager::CalculateStarCount(int stageNo, int pinFallen, bool isClear) c
 	//}
 
 	//return starCount; // 計算した星数
+	return 1;
 }
 
 int StageManager::CalculateCurrentStageStarCount(int pinFallen, bool isClear) const
 {
 	// 現在選択されているステージ番号（m_currentStageNo）を使って計算
-	return CalculateStarCount(SCENEMGR.GetStageNo(), pinFallen, isClear);
+	//return CalculateStarCount(SCENEMGR.GetStageNo(), pinFallen, isClear);
+	return 1;
 }
 
 void StageManager::CreatePinPool()

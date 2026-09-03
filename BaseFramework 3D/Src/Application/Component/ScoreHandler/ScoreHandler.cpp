@@ -77,6 +77,18 @@ void ScoreHandler::RecordThrow(int fallenPins)
 	UpdateScore();
 }
 
+void ScoreHandler::AddDebugScoreLog() const
+{
+	for (const auto& frameData : m_frameData)
+	{
+		// 計算が終わっていないものはスキップ
+		if (!frameData.m_isCalcEnd) continue;
+
+		// ここまでの点数をログに出力
+		KdDebugGUI::Instance().AddLog("Frame Total Score: %d\n", frameData.m_frameTotalScore);
+	}
+}
+
 void ScoreHandler::UpdateScore()
 {
 	// 終了したフレームまで
@@ -117,7 +129,7 @@ void ScoreHandler::UpdateScore()
 			}
 
 			// これが最後のフレームなら計算終了
-			if (checkFrame == ScoreHandlerConsts::LastFrame)
+			if (checkFrame == BowlingSystemConsts::LastFrame)
 			{
 				currentData.m_frameTotalScore = totalScore;
 				currentData.m_isCalcEnd = true;
@@ -177,7 +189,7 @@ void ScoreHandler::CheckNextAction()
 	if (m_frameData[m_currentFrame].m_mark != FrameMark::None && !m_isBonusThrow)
 	{
 		// 最終フレームならボーナス投球
-		if (m_currentFrame == ScoreHandlerConsts::LastFrame)
+		if (m_currentFrame == BowlingSystemConsts::LastFrame)
 		{
 			BonusThrow();
 			m_isBonusThrow = true;
@@ -200,7 +212,7 @@ void ScoreHandler::CheckNextAction()
 			// 2投目はボーナスかを確認する
 		case ScoreHandlerConsts::SecondThrow:
 			// 最終フレームかどうかを確認
-			if (m_currentFrame == ScoreHandlerConsts::LastFrame)
+			if (m_currentFrame == BowlingSystemConsts::LastFrame)
 			{
 				// 最終フレームならボーナス確認
 				if (m_isBonusThrow)

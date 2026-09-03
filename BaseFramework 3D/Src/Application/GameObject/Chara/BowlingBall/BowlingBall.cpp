@@ -5,31 +5,31 @@
 
 BowlingBall::BowlingBall()
 {
+	//モデル
+	m_model = std::make_shared<KdModelWork>();
+	m_model->SetModelData("Asset/Models/Chara/PlayerBall/bowling_ball.gltf");
 }
 
-void BowlingBall::Init(const Math::Vector3& a_startPos, float a_radius)
+void BowlingBall::Init(float a_radius)
 {
 	//物理Initに投げるパラメータ設定
 	PhysicsInitData initData = {};
-	initData.pos = a_startPos;
+	initData.pos = Math::Vector3::Zero;
 	initData.rot = Math::Quaternion::Identity;
 	initData.motionType = JPH::EMotionType::Dynamic;
 	initData.motionQuality = JPH::EMotionQuality::LinearCast;
 	initData.isStatic = false;
-	initData.layer = Layers::PLAYER;
-	initData.mass = 10000.0f;
-	initData.friction = 0.0f;
-	initData.restitution = 0.0f;
-	initData.linearDamping = 0.0f;
-	initData.angularDamping = 0.0f;
+	initData.layer = Layers::BOWLINGBALL;
+	initData.mass = BowlingBallConsts::BallMass;
+	initData.friction = 0.15f;
+	initData.restitution = 0.15f;
+	initData.linearDamping = 0.01f;
+	initData.angularDamping = 0.02f;
 	initData.userData = reinterpret_cast<JPH::uint64>(this);	//自分自身のポインタを登録
 
 	//物理Init
 	m_cPhysics = std::make_shared<PhysicsComponent>();
 	m_cPhysics->Init(a_radius, initData);
-
-	//半径保存
-	m_radius = a_radius;
 }
 
 void BowlingBall::Update()
@@ -61,6 +61,10 @@ void BowlingBall::PostUpdate()
 
 	// 3. ワールド行列の合成（旋回 → 移動)
 	m_mWorld = rotat * trans;
+
+	// デバッグ
+	KdDebugGUI::Instance().AddLog("BallPos : %.2f,%.2f,%.2f\n", m_pos.x, m_pos.y, m_pos.z);
+	KdDebugGUI::Instance().AddLog("isRolling : %d\nisFall : %d\n", m_isRolling, m_isFall);
 }
 
 void BowlingBall::DrawLit()
@@ -73,7 +77,7 @@ void BowlingBall::GenerateDepthMapFromLight()
 	KdShaderManager::Instance().m_StandardShader.DrawModel(*m_model, m_mWorld);
 }
 
-void BowlingBall::Throw(const JPH::Vec3& startPos, const JPH::Vec3& direction, float power)
+void BowlingBall::Throw(const Math::Vector3& startPos, const Math::Vector3& direction, float power)
 {
 	if (m_isRolling) return;
 
@@ -81,24 +85,70 @@ void BowlingBall::Throw(const JPH::Vec3& startPos, const JPH::Vec3& direction, f
 	m_isFall = false;
 	m_stopTimer = 0.0f;
 
-	// 1. 速度・角速度のリセット（前回の残像速度を消す）
-	m_cPhysics->SetLinearVelocity(JPH::Vec3::sZero());
-	m_cPhysics->SetAngularVelocity(JPH::Vec3::sZero());
+	// 1.物理を一度止める
+	DeactivateBody();
 
-	// 2. プレイヤーから受け取った投球位置へ移動 & 回転をリセット
-	m_cPhysics->SetPosition(startPos);
+	// 2. プレイヤーから受け取った投球位置へ移動
+	m_cPhysics->SetPosition(JPH::Vec3(startPos.x, startPos.y, startPos.z));
 	m_cPhysics->SetRotation(JPH::Quat::sIdentity());
 
 	// 3. 物理ボディをアクティブ化（描画フラグ等があればそれもON）
-	m_cPhysics->ActivateBody();
+	ActivateBody();
 
 	// 4. 指定された方向と強さでインパルス（初速）を与える
-	JPH::Vec3 impulse = direction.Normalized() * power;
+	JPH::Vec3 impulse = JPH::Vec3(direction.x, direction.y, direction.z).Normalized() * power * BowlingBallConsts::ThrowPowerMulti * BowlingBallConsts::BallMass;
 	m_cPhysics->AddImpulse(impulse);
 }
 
 void BowlingBall::Reset()
-{}
+{
+	// 物理コンポーネントのリセット
+	if (m_cPhysics)
+	{
+		m_cPhysics->SetLinearVelocity(JPH::Vec3::sZero());
+		m_cPhysics->SetAngularVelocity(JPH::Vec3::sZero());
+	}
+	// 状態のリセット
+	m_isRolling = false;
+	m_isFall = false;
+	m_stopTimer = 0.0f;
+}
+
+void BowlingBall::Respawn(const Math::Vector3& pos, const Math::Quaternion& rot)
+{
+	// テスト
+	Math::Vector3 testPos = pos + Math::Vector3(0, 0.2f, 0);
+
+	// 状態のリセット
+	Reset();
+
+	// 物理ボディを一旦非活性化してから座標と回転を設定
+	DeactivateBody();
+
+	m_cPhysics->SetPosition(JPH::Vec3(pos.x, pos.y, pos.z));
+	m_cPhysics->SetRotation(JPH::Quat(rot.x, rot.y, rot.z, rot.w));
+
+	// 物理ボディを再度活性化
+	ActivateBody();
+}
+
+void BowlingBall::ActivateBody()
+{
+	// 有効ならリターン
+	if(m_isActive) return;
+
+	m_cPhysics->ActivateBody();
+	m_isActive = true;
+}
+
+void BowlingBall::DeactivateBody()
+{
+	// 無効ならリターン
+	if (!m_isActive) return;
+
+	m_cPhysics->DeactivateBody();
+	m_isActive = false;
+}
 
 void BowlingBall::CheckIsStop()
 {

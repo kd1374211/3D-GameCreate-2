@@ -3,7 +3,6 @@
 #include "Scene/SceneManager.h"
 #include "Physics/PhysicsManager.h"
 #include "StageManager/StageManager.h"
-#include "GameObject/Chara/CharaManager.h"
 #include "FadeManager/FadeManager.h"
 #include "GameObject/Camera/CameraManager.h"
 #include "UserSave/UserSaveManager.h"
@@ -230,7 +229,6 @@ bool Application::Init(int w, int h)
 	//===================================================================
 	// 例えばカーソルを消したい場合
 	ShowCursor(false);
-	CHARAMGR.Init();
 	STAGEMGR.Init();
 	FADEMGR.Init();
 	CAMERAMGR.Init();

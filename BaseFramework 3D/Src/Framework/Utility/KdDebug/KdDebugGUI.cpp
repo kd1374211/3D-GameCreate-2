@@ -5,7 +5,7 @@
 //エディター関連
 #include "../../../Application/StageManager/StageManager.h"
 #include "../../../Application/Scene/SceneManager.h"
-#include "../../../Application/GameObject/Chara/CharaManager.h"
+#include "../../../Application/Component/CharaHandler/CharaHandler.h"
 #include "../../../Application/GameObject/Camera/PointTargetCamera/PointTargetCamera.h"
 #include "../../../Application/GameObject/Camera/CameraManager.h"
 #include "../../../Application/Physics/PhysicsLayer.h"
@@ -153,174 +153,174 @@ void KdDebugGUI::GuiProcess()
 		}
 		
 
-		if (ImGui::Begin("Stage Editor"))
-		{
-			// 選択インデックス（関数全体で共通の1つだけ定義）
-			static int selectedIndex = -1;
+		//if (ImGui::Begin("Stage Editor"))
+		//{
+		//	// 選択インデックス（関数全体で共通の1つだけ定義）
+		//	static int selectedIndex = -1;
 
-			// --- 1. ファイル保存 / 読み込み ---
-			static char stageName[128] = "Stage01";
-			ImGui::InputText("StageName", stageName, sizeof(stageName));
+		//	// --- 1. ファイル保存 / 読み込み ---
+		//	static char stageName[128] = "Stage01";
+		//	ImGui::InputText("StageName", stageName, sizeof(stageName));
 
-			std::string filePath = "Asset/Data/StageData/" + std::string(stageName) + ".json";
+		//	std::string filePath = "Asset/Data/StageData/" + std::string(stageName) + ".json";
 
-			if (ImGui::Button("Save Stage"))
-			{
-				STAGEMGR.SaveStage(filePath);
-			}
-			ImGui::SameLine();
-			if (ImGui::Button("Load Stage"))
-			{
-				STAGEMGR.LoadStage(filePath);
-				selectedIndex = -1; // ロードした際は選択状態をリセット
-			}
+		//	if (ImGui::Button("Save Stage"))
+		//	{
+		//		STAGEMGR.SaveStage(filePath);
+		//	}
+		//	ImGui::SameLine();
+		//	if (ImGui::Button("Load Stage"))
+		//	{
+		//		STAGEMGR.LoadStage(filePath);
+		//		selectedIndex = -1; // ロードした際は選択状態をリセット
+		//	}
 
-			ImGui::Separator();
+		//	ImGui::Separator();
 
-			// --- 2. 地形（Terrain）パラメータの編集 ---
-			if (ImGui::TreeNode("Terrain Settings"))
-			{
-				auto& terrainPath = STAGEMGR.GetTerrainPath();
+		//	// --- 2. 地形（Terrain）パラメータの編集 ---
+		//	if (ImGui::TreeNode("Terrain Settings"))
+		//	{
+		//		auto& terrainPath = STAGEMGR.GetTerrainPath();
 
-				char pathBuf[256];
-				strcpy_s(pathBuf, terrainPath.c_str());
-				if (ImGui::InputText("Model Path", pathBuf, sizeof(pathBuf)))
-				{
-					terrainPath = pathBuf;
-				}
+		//		char pathBuf[256];
+		//		strcpy_s(pathBuf, terrainPath.c_str());
+		//		if (ImGui::InputText("Model Path", pathBuf, sizeof(pathBuf)))
+		//		{
+		//			terrainPath = pathBuf;
+		//		}
 
-				if (ImGui::Button("Rebuild Stage"))
-				{
-					STAGEMGR.BuildStage();
-				}
-				ImGui::TreePop();
-			}
+		//		if (ImGui::Button("Rebuild Stage"))
+		//		{
+		//			STAGEMGR.BuildStage();
+		//		}
+		//		ImGui::TreePop();
+		//	}
 
-			ImGui::Separator();
+		//	ImGui::Separator();
 
-			// --- 3. 配置オブジェクト（Objects）の編集 ---
-			auto& stageObjects = STAGEMGR.GetStageObjects();
+		//	// --- 3. 配置オブジェクト（Objects）の編集 ---
+		//	auto& stageObjects = STAGEMGR.GetStageObjects();
 
-			ImGui::Text("Placed Objects (%d)", static_cast<int>(stageObjects.size()));
+		//	ImGui::Text("Placed Objects (%d)", static_cast<int>(stageObjects.size()));
 
-			if (ImGui::Button("+ Add NormalPin"))
-			{
-				StageObjectData newPin;
-				newPin.m_type = "NormalPin";
-				newPin.m_position = { 0.0f, 0.0f, 0.0f };
-				newPin.m_rotation = { 0.0f, 0.0f, 0.0f, 1.0f };
-				newPin.m_scale = { 1.0f, 1.0f, 1.0f };
+		//	if (ImGui::Button("+ Add NormalPin"))
+		//	{
+		//		StageObjectData newPin;
+		//		newPin.m_type = "NormalPin";
+		//		newPin.m_position = { 0.0f, 0.0f, 0.0f };
+		//		newPin.m_rotation = { 0.0f, 0.0f, 0.0f, 1.0f };
+		//		newPin.m_scale = { 1.0f, 1.0f, 1.0f };
 
-				STAGEMGR.AddStageObject(newPin);
-				selectedIndex = static_cast<int>(stageObjects.size()) - 1;
+		//		STAGEMGR.AddStageObject(newPin);
+		//		selectedIndex = static_cast<int>(stageObjects.size()) - 1;
 
-				STAGEMGR.BuildStage();
-			}
-			if (ImGui::Button("+ Add Goal"))
-			{
-				StageObjectData newGoal;
-				newGoal.m_type = "Goal";
-				newGoal.m_position = { 0.0f, 3.0f, 0.0f };
-				newGoal.m_rotation = { 0.0f, 0.0f, 0.0f, 1.0f };
-				newGoal.m_scale = { 1.0f, 1.0f, 1.0f };
+		//		STAGEMGR.BuildStage();
+		//	}
+		//	if (ImGui::Button("+ Add Goal"))
+		//	{
+		//		StageObjectData newGoal;
+		//		newGoal.m_type = "Goal";
+		//		newGoal.m_position = { 0.0f, 3.0f, 0.0f };
+		//		newGoal.m_rotation = { 0.0f, 0.0f, 0.0f, 1.0f };
+		//		newGoal.m_scale = { 1.0f, 1.0f, 1.0f };
 
-				STAGEMGR.AddStageObject(newGoal);
-				selectedIndex = static_cast<int>(stageObjects.size()) - 1;
+		//		STAGEMGR.AddStageObject(newGoal);
+		//		selectedIndex = static_cast<int>(stageObjects.size()) - 1;
 
-				STAGEMGR.BuildStage();
-			}
+		//		STAGEMGR.BuildStage();
+		//	}
 
-			// 一覧リスト部分
-			ImGui::BeginChild("ObjectList", ImVec2(0, 150), true);
-			for (int i = 0; i < stageObjects.size(); ++i)
-			{
-				std::string label = "[" + std::to_string(i) + "] " + stageObjects[i].m_type;
-				bool isSelected = (selectedIndex == i);
+		//	// 一覧リスト部分
+		//	ImGui::BeginChild("ObjectList", ImVec2(0, 150), true);
+		//	for (int i = 0; i < stageObjects.size(); ++i)
+		//	{
+		//		std::string label = "[" + std::to_string(i) + "] " + stageObjects[i].m_type;
+		//		bool isSelected = (selectedIndex == i);
 
-				if (ImGui::Selectable(label.c_str(), isSelected))
-				{
-					selectedIndex = i;
-				}
-			}
-			ImGui::EndChild();
+		//		if (ImGui::Selectable(label.c_str(), isSelected))
+		//		{
+		//			selectedIndex = i;
+		//		}
+		//	}
+		//	ImGui::EndChild();
 
-			// 選択アイテムの範囲チェック（削除等でオーバーした場合の安全対策）
-			if (selectedIndex >= static_cast<int>(stageObjects.size()))
-			{
-				selectedIndex = static_cast<int>(stageObjects.size()) - 1;
-			}
+		//	// 選択アイテムの範囲チェック（削除等でオーバーした場合の安全対策）
+		//	if (selectedIndex >= static_cast<int>(stageObjects.size()))
+		//	{
+		//		selectedIndex = static_cast<int>(stageObjects.size()) - 1;
+		//	}
 
-			// 選択アイテムのパラメータ編集
-			if (selectedIndex >= 0 && selectedIndex < static_cast<int>(stageObjects.size()))
-			{
-				ImGui::Separator();
-				auto& obj = stageObjects[selectedIndex];
+		//	// 選択アイテムのパラメータ編集
+		//	if (selectedIndex >= 0 && selectedIndex < static_cast<int>(stageObjects.size()))
+		//	{
+		//		ImGui::Separator();
+		//		auto& obj = stageObjects[selectedIndex];
 
-				bool isChanged = false;
-				isChanged |= ImGui::DragFloat3("Position", &obj.m_position.x, 0.05f);
-				//isChanged |= ImGui::DragFloat4("Rotation (Quat)", &obj.m_rotation.x, 0.01f);
-				isChanged |= ImGui::DragFloat3("Scale", &obj.m_scale.x, 0.05f);
+		//		bool isChanged = false;
+		//		isChanged |= ImGui::DragFloat3("Position", &obj.m_position.x, 0.05f);
+		//		//isChanged |= ImGui::DragFloat4("Rotation (Quat)", &obj.m_rotation.x, 0.01f);
+		//		isChanged |= ImGui::DragFloat3("Scale", &obj.m_scale.x, 0.05f);
 
-				if (isChanged)
-				{
-					STAGEMGR.BuildStage();
-				}
+		//		if (isChanged)
+		//		{
+		//			STAGEMGR.BuildStage();
+		//		}
 
-				if (ImGui::Button("Delete Selected"))
-				{
-					STAGEMGR.RemoveStageObject(selectedIndex);
-					selectedIndex = -1;
+		//		if (ImGui::Button("Delete Selected"))
+		//		{
+		//			STAGEMGR.RemoveStageObject(selectedIndex);
+		//			selectedIndex = -1;
 
-					STAGEMGR.BuildStage();
-				}
-			}	
+		//			STAGEMGR.BuildStage();
+		//		}
+		//	}	
 
-			//クリックで現在選択中のオブジェクトをカーソル位置に飛ばす
-			if (GetAsyncKeyState(VK_RBUTTON) & 0x8000)
-			{
-				// マウス座標(2D)を3D座標へ変換
-				if (camera)
-				{
-					// 手順①
-					// マウス座標を取得
-					POINT _mousePos;
-					GetCursorPos(&_mousePos);
-					ScreenToClient(Application::Instance().GetWindowHandle(), &_mousePos);
+		//	//クリックで現在選択中のオブジェクトをカーソル位置に飛ばす
+		//	if (GetAsyncKeyState(VK_RBUTTON) & 0x8000)
+		//	{
+		//		// マウス座標(2D)を3D座標へ変換
+		//		if (camera)
+		//		{
+		//			// 手順①
+		//			// マウス座標を取得
+		//			POINT _mousePos;
+		//			GetCursorPos(&_mousePos);
+		//			ScreenToClient(Application::Instance().GetWindowHandle(), &_mousePos);
 
-					// 手順②
-					// マウスの2D座標を3D座標へ変換する
-					Math::Vector3	rayPos = camera->GetCurrentViewPoint();
-					Math::Vector3	rayDir = Math::Vector3::Zero;
-					float			range = 2000.f;
-					camera->WorkCamera()->GenerateRayInfoFromClientPos(_mousePos, rayPos, rayDir, range);
+		//			// 手順②
+		//			// マウスの2D座標を3D座標へ変換する
+		//			Math::Vector3	rayPos = camera->GetCurrentViewPoint();
+		//			Math::Vector3	rayDir = Math::Vector3::Zero;
+		//			float			range = 2000.f;
+		//			camera->WorkCamera()->GenerateRayInfoFromClientPos(_mousePos, rayPos, rayDir, range);
 
-					// Jolt Physics への RayCast
-					JPH::RRayCast rayCast;
-					rayCast.mOrigin = JPH::RVec3(rayPos.x, rayPos.y, rayPos.z);
-					rayCast.mDirection = JPH::Vec3(rayDir.x, rayDir.y, rayDir.z) * range; // 飛ばす長さ
-					GroundObjectFilter groundFilter;
+		//			// Jolt Physics への RayCast
+		//			JPH::RRayCast rayCast;
+		//			rayCast.mOrigin = JPH::RVec3(rayPos.x, rayPos.y, rayPos.z);
+		//			rayCast.mDirection = JPH::Vec3(rayDir.x, rayDir.y, rayDir.z) * range; // 飛ばす長さ
+		//			GroundObjectFilter groundFilter;
 
-					JPH::RayCastResult hit;
-					bool hasHit = PHYSICSMGR.GetSystem().GetNarrowPhaseQuery().CastRay(rayCast, hit, {}, groundFilter);
+		//			JPH::RayCastResult hit;
+		//			bool hasHit = PHYSICSMGR.GetSystem().GetNarrowPhaseQuery().CastRay(rayCast, hit, {}, groundFilter);
 
-					if (hasHit)
-					{
-						// ★レイが何かに当たった！その「衝突点の3D座標」を取得
-						JPH::RVec3 hitPos = rayCast.GetPointOnRay(hit.mFraction);
-						Math::Vector3 hitVec3Pos = Math::Vector3(hitPos.GetX(), hitPos.GetY(), hitPos.GetZ());
+		//			if (hasHit)
+		//			{
+		//				// ★レイが何かに当たった！その「衝突点の3D座標」を取得
+		//				JPH::RVec3 hitPos = rayCast.GetPointOnRay(hit.mFraction);
+		//				Math::Vector3 hitVec3Pos = Math::Vector3(hitPos.GetX(), hitPos.GetY(), hitPos.GetZ());
 
-						//現在選択中のオブジェクトの位置をそこに動かす
-						auto& obj = stageObjects[selectedIndex];
-						obj.m_position = hitVec3Pos;
-						STAGEMGR.BuildStage();
-					}
-				}
-			}
-			// 最後に StageManager にインデックスを渡す
-			STAGEMGR.SetSelectedIndex(selectedIndex);
-			AddLog("Selected Index: %d", selectedIndex);
-		}
-		ImGui::End();
+		//				//現在選択中のオブジェクトの位置をそこに動かす
+		//				auto& obj = stageObjects[selectedIndex];
+		//				obj.m_position = hitVec3Pos;
+		//				STAGEMGR.BuildStage();
+		//			}
+		//		}
+		//	}
+		//	// 最後に StageManager にインデックスを渡す
+		//	STAGEMGR.SetSelectedIndex(selectedIndex);
+		//	AddLog("Selected Index: %d", selectedIndex);
+		//}
+		//ImGui::End();
 	}
 
 	// デバッグウィンドウ(日本語を表示したい場合はこう書く)

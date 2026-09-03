@@ -67,75 +67,75 @@ void GameUIObjects::Update()
 void GameUIObjects::DrawSprite()
 {
 	//流れテキスト
-	if (m_movingTexts.m_isActive)
-	{
-		Math::Vector2 drawPos = Math::Vector2(m_movingTexts.m_posX, GameUIConsts::MovingTextPosY);
-		KdShaderManager::Instance().m_spriteShader.DrawFont(FontTypeConst::Game_CountDown, drawPos, &m_movingTexts.m_color, m_movingTexts.m_text.c_str(),TextAlign::Center);
-	}
+	//if (m_movingTexts.m_isActive)
+	//{
+	//	Math::Vector2 drawPos = Math::Vector2(m_movingTexts.m_posX, GameUIConsts::MovingTextPosY);
+	//	KdShaderManager::Instance().m_spriteShader.DrawFont(FontTypeConst::Game_CountDown, drawPos, &m_movingTexts.m_color, m_movingTexts.m_text.c_str(),TextAlign::Center);
+	//}
 
-	// 時間アイコン
-	KdShaderManager::Instance().m_spriteShader.DrawTex(m_clockTex, GameUIConsts::ClockIconPosX, GameUIConsts::TimerPinPosY);
+	//// 時間アイコン
+	//KdShaderManager::Instance().m_spriteShader.DrawTex(m_clockTex, GameUIConsts::ClockIconPosX, GameUIConsts::TimerPinPosY);
 
-	// 時間描画
-	// 仮に99は超えないようにする
-	int drawTime = std::clamp(m_time, 0, 99);
-	std::string text = std::to_string(drawTime);
-	KdShaderManager::Instance().m_spriteShader.DrawFont(FontTypeConst::Game_TimerAndPin, Math::Vector2(GameUIConsts::TimeNumberTextPosX, GameUIConsts::TimerPinPosY), &kBlackColor, text.c_str(), TextAlign::Right);
+	//// 時間描画
+	//// 仮に99は超えないようにする
+	//int drawTime = std::clamp(m_time, 0, 99);
+	//std::string text = std::to_string(drawTime);
+	//KdShaderManager::Instance().m_spriteShader.DrawFont(FontTypeConst::Game_TimerAndPin, Math::Vector2(GameUIConsts::TimeNumberTextPosX, GameUIConsts::TimerPinPosY), &kBlackColor, text.c_str(), TextAlign::Right);
 
-	// ピンアイコン
-	KdShaderManager::Instance().m_spriteShader.DrawTex(m_pinTex, GameUIConsts::PinIconPosX, GameUIConsts::TimerPinPosY);
+	//// ピンアイコン
+	//KdShaderManager::Instance().m_spriteShader.DrawTex(m_pinTex, GameUIConsts::PinIconPosX, GameUIConsts::TimerPinPosY);
 
-	// ピン数表示
-	text = "";
-	// 倒した数・トータルそれぞれもし１桁なら空白追加
-	int fallenPins = STAGEMGR.GetTotalPinCount() - STAGEMGR.GetRemainingPinCount();
-	int totalPins = STAGEMGR.GetTotalPinCount();
-	if (fallenPins < 10)
-	{
-		text += " ";
-	}
-	text += std::to_string(fallenPins) + "/";
-	if (totalPins < 10)
-	{
-		text += " ";
-	}
-	text += std::to_string(totalPins);
-	KdShaderManager::Instance().m_spriteShader.DrawFont(FontTypeConst::Game_TimerAndPin, Math::Vector2(GameUIConsts::PinTextPosX, GameUIConsts::TimerPinPosY), &kBlackColor, text.c_str(), TextAlign::Right);
+	//// ピン数表示
+	//text = "";
+	//// 倒した数・トータルそれぞれもし１桁なら空白追加
+	//int fallenPins = STAGEMGR.GetTotalPinCount() - STAGEMGR.GetRemainingPinCount();
+	//int totalPins = STAGEMGR.GetTotalPinCount();
+	//if (fallenPins < 10)
+	//{
+	//	text += " ";
+	//}
+	//text += std::to_string(fallenPins) + "/";
+	//if (totalPins < 10)
+	//{
+	//	text += " ";
+	//}
+	//text += std::to_string(totalPins);
+	//KdShaderManager::Instance().m_spriteShader.DrawFont(FontTypeConst::Game_TimerAndPin, Math::Vector2(GameUIConsts::PinTextPosX, GameUIConsts::TimerPinPosY), &kBlackColor, text.c_str(), TextAlign::Right);
 
-	// 操作ガイド
-	KdShaderManager::Instance().m_spriteShader.DrawFont(FontTypeConst::Game_KeyGuide, GameUIConsts::KeyGuideTextPos, &kBlackColor, "[←/→] 方向転換", TextAlign::Left);
+	//// 操作ガイド
+	//KdShaderManager::Instance().m_spriteShader.DrawFont(FontTypeConst::Game_KeyGuide, GameUIConsts::KeyGuideTextPos, &kBlackColor, "[←/→] 方向転換", TextAlign::Left);
 
-	//ステージ終了演出
-	if (m_isStageFinishTextDraw)
-	{
-		std::shared_ptr<KdTexture> tmpTex = std::make_shared<KdTexture>();
+	////ステージ終了演出
+	//if (m_isStageFinishTextDraw)
+	//{
+	//	std::shared_ptr<KdTexture> tmpTex = std::make_shared<KdTexture>();
 
-		//レンダー作成
-		Math::Vector2 renderBase = Math::Vector2(1280.0f, 720.0f);
-		tmpTex->CreateRenderTarget(renderBase.x, renderBase.y);
+	//	//レンダー作成
+	//	Math::Vector2 renderBase = Math::Vector2(1280.0f, 720.0f);
+	//	tmpTex->CreateRenderTarget(renderBase.x, renderBase.y);
 
-		//黒塗り
-		KdDirect3D::Instance().WorkDevContext()->ClearRenderTargetView(tmpTex->WorkRTView(), Math::Color(0, 0, 0, 0));
+	//	//黒塗り
+	//	KdDirect3D::Instance().WorkDevContext()->ClearRenderTargetView(tmpTex->WorkRTView(), Math::Color(0, 0, 0, 0));
 
-		//ターゲット設定
-		KdDirect3D::Instance().WorkDevContext()->OMSetRenderTargets(1, tmpTex->WorkRTViewAddress(), tmpTex->WorkDSView());
+	//	//ターゲット設定
+	//	KdDirect3D::Instance().WorkDevContext()->OMSetRenderTargets(1, tmpTex->WorkRTViewAddress(), tmpTex->WorkDSView());
 
-		// 背景黒塗り
-		Math::Color color = Math::Color(0, 0, 0, GameUIConsts::WindowAlpha);
-		KdShaderManager::Instance().m_spriteShader.DrawBox(0, 0, GameUIConsts::WindowSize.x, GameUIConsts::WindowSize.y, &color, true);
+	//	// 背景黒塗り
+	//	Math::Color color = Math::Color(0, 0, 0, GameUIConsts::WindowAlpha);
+	//	KdShaderManager::Instance().m_spriteShader.DrawBox(0, 0, GameUIConsts::WindowSize.x, GameUIConsts::WindowSize.y, &color, true);
 
-		// ここにクリアテキスト描画
-		color = m_isStageClear ? kGreenColor : kRedColor;
-		std::string text = m_isStageClear ? "STAGE  CLEAR!!" : "STAGE  FAILED...";
-		KdShaderManager::Instance().m_spriteShader.DrawFont(FontTypeConst::Game_StageFinish, Math::Vector2::Zero, &color, text.c_str(), TextAlign::Center);
+	//	// ここにクリアテキスト描画
+	//	color = m_isStageClear ? kGreenColor : kRedColor;
+	//	std::string text = m_isStageClear ? "STAGE  CLEAR!!" : "STAGE  FAILED...";
+	//	KdShaderManager::Instance().m_spriteShader.DrawFont(FontTypeConst::Game_StageFinish, Math::Vector2::Zero, &color, text.c_str(), TextAlign::Center);
 
-		//ターゲット戻す
-		KdDirect3D::Instance().WorkDevContext()->OMSetRenderTargets(1, KdDirect3D::Instance().WorkBackBuffer()->WorkRTViewAddress(), KdDirect3D::Instance().WorkZBuffer()->WorkDSView());
+	//	//ターゲット戻す
+	//	KdDirect3D::Instance().WorkDevContext()->OMSetRenderTargets(1, KdDirect3D::Instance().WorkBackBuffer()->WorkRTViewAddress(), KdDirect3D::Instance().WorkZBuffer()->WorkDSView());
 
-		//tmpTexをサイズ変えて描画
-		float drawSizeY = renderBase.y * m_windowSize_stageFinish;
-		KdShaderManager::Instance().m_spriteShader.DrawTex(tmpTex, 0, 0, renderBase.x, drawSizeY);
-	}
+	//	//tmpTexをサイズ変えて描画
+	//	float drawSizeY = renderBase.y * m_windowSize_stageFinish;
+	//	KdShaderManager::Instance().m_spriteShader.DrawTex(tmpTex, 0, 0, renderBase.x, drawSizeY);
+	//}
 }
 
 void GameUIObjects::SpawnMovingText(std::string text, Math::Color color)

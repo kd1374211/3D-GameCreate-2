@@ -28,6 +28,15 @@ public:
 	// 次何かを取得
 	NextActions GetNextAction()const { return m_nextAction; }
 
+	// 現在のフレーム数を取得
+	int GetCurrentFrame()const { return m_currentFrame; }
+
+	// 現在の投球数を取得
+	int GetCurrentThrow()const { return m_currentThrow; }
+
+	// デバッグ用・各フレームごとの得点を取得
+	void AddDebugScoreLog()const;
+
 private:
 
 	// 得点計算の更新
@@ -74,7 +83,6 @@ private:
 		static constexpr int FirstThrow = 0;	//1投目（ストライク）
 		static constexpr int SecondThrow = 1;	//2投目（スペア）
 		static constexpr int BonusThrow = 2;	//3投目（ボーナス）
-		static constexpr int LastFrame = 9;	//10フレーム目（最後）
 
 		// データ
 		static constexpr int EmptyDataID = -1;		// 投げてないデータに入れる値

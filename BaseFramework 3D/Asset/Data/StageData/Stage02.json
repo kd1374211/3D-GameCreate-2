@@ -4,6 +4,10 @@
 		{
 			"frameNumber": 1,
 			"terrainPath": "Asset/Models/Terrain/Stage02/Stage02.gltf",
+			"player": {
+				"position": [ 0.0, 0.0, 0.0 ],
+				"rotation": [ 0.0, 0.0, 0.0, 1.0 ]
+			},
 			"gimmicks": [
 				{
 					"type": "Goal",
@@ -15,70 +19,70 @@
 			"pins": [
 				{
 					"index": 0,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 4.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 1,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 6.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 2,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 8.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 3,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 10.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 4,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 12.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 5,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 14.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 6,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 16.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 7,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 18.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 8,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 20.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 9,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 22.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
@@ -88,6 +92,10 @@
 		{
 			"frameNumber": 2,
 			"terrainPath": "Asset/Models/Terrain/Stage02/Stage02.gltf",
+			"player": {
+				"position": [ 0.0, 0.0, 0.0 ],
+				"rotation": [ 0.0, 0.0, 0.0, 1.0 ]
+			},
 			"gimmicks": [
 				{
 					"type": "Goal",
@@ -99,70 +107,70 @@
 			"pins": [
 				{
 					"index": 0,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 4.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 1,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 6.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 2,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 8.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 3,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 10.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 4,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 12.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 5,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 14.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 6,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 16.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 7,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 18.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 8,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 20.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 9,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 22.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
@@ -172,6 +180,10 @@
 		{
 			"frameNumber": 3,
 			"terrainPath": "Asset/Models/Terrain/Stage02/Stage02.gltf",
+			"player": {
+				"position": [ 0.0, 0.0, 0.0 ],
+				"rotation": [ 0.0, 0.0, 0.0, 1.0 ]
+			},
 			"gimmicks": [
 				{
 					"type": "Goal",
@@ -183,70 +195,70 @@
 			"pins": [
 				{
 					"index": 0,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 4.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 1,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 6.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 2,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 8.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 3,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 10.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 4,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 12.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 5,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 14.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 6,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 16.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 7,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 18.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 8,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 20.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 9,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 22.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
@@ -256,6 +268,10 @@
 		{
 			"frameNumber": 4,
 			"terrainPath": "Asset/Models/Terrain/Stage02/Stage02.gltf",
+			"player": {
+				"position": [ 0.0, 0.0, 0.0 ],
+				"rotation": [ 0.0, 0.0, 0.0, 1.0 ]
+			},
 			"gimmicks": [
 				{
 					"type": "Goal",
@@ -267,70 +283,70 @@
 			"pins": [
 				{
 					"index": 0,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 4.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 1,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 6.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 2,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 8.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 3,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 10.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 4,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 12.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 5,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 14.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 6,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 16.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 7,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 18.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 8,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 20.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 9,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 22.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
@@ -340,6 +356,10 @@
 		{
 			"frameNumber": 5,
 			"terrainPath": "Asset/Models/Terrain/Stage02/Stage02.gltf",
+			"player": {
+				"position": [ 0.0, 0.0, 0.0 ],
+				"rotation": [ 0.0, 0.0, 0.0, 1.0 ]
+			},
 			"gimmicks": [
 				{
 					"type": "Goal",
@@ -351,70 +371,70 @@
 			"pins": [
 				{
 					"index": 0,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 4.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 1,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 6.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 2,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 8.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 3,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 10.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 4,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 12.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 5,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 14.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 6,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 16.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 7,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 18.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 8,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 20.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 9,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 22.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
@@ -424,6 +444,10 @@
 		{
 			"frameNumber": 6,
 			"terrainPath": "Asset/Models/Terrain/Stage02/Stage02.gltf",
+			"player": {
+				"position": [ 0.0, 0.0, 0.0 ],
+				"rotation": [ 0.0, 0.0, 0.0, 1.0 ]
+			},
 			"gimmicks": [
 				{
 					"type": "Goal",
@@ -435,70 +459,70 @@
 			"pins": [
 				{
 					"index": 0,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 4.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 1,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 6.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 2,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 8.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 3,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 10.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 4,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 12.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 5,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 14.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 6,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 16.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 7,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 18.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 8,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 20.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 9,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 22.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
@@ -508,6 +532,10 @@
 		{
 			"frameNumber": 7,
 			"terrainPath": "Asset/Models/Terrain/Stage02/Stage02.gltf",
+			"player": {
+				"position": [ 0.0, 0.0, 0.0 ],
+				"rotation": [ 0.0, 0.0, 0.0, 1.0 ]
+			},
 			"gimmicks": [
 				{
 					"type": "Goal",
@@ -519,70 +547,70 @@
 			"pins": [
 				{
 					"index": 0,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 4.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 1,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 6.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 2,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 8.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 3,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 10.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 4,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 12.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 5,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 14.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 6,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 16.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 7,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 18.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 8,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 20.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 9,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 22.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
@@ -592,6 +620,10 @@
 		{
 			"frameNumber": 8,
 			"terrainPath": "Asset/Models/Terrain/Stage02/Stage02.gltf",
+			"player": {
+				"position": [ 0.0, 0.0, 0.0 ],
+				"rotation": [ 0.0, 0.0, 0.0, 1.0 ]
+			},
 			"gimmicks": [
 				{
 					"type": "Goal",
@@ -603,70 +635,70 @@
 			"pins": [
 				{
 					"index": 0,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 4.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 1,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 6.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 2,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 8.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 3,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 10.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 4,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 12.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 5,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 14.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 6,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 16.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 7,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 18.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 8,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 20.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 9,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 22.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
@@ -676,6 +708,10 @@
 		{
 			"frameNumber": 9,
 			"terrainPath": "Asset/Models/Terrain/Stage02/Stage02.gltf",
+			"player": {
+				"position": [ 0.0, 0.0, 0.0 ],
+				"rotation": [ 0.0, 0.0, 0.0, 1.0 ]
+			},
 			"gimmicks": [
 				{
 					"type": "Goal",
@@ -687,70 +723,70 @@
 			"pins": [
 				{
 					"index": 0,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 4.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 1,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 6.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 2,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 8.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 3,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 10.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 4,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 12.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 5,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 14.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 6,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 16.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 7,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 18.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 8,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 20.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 9,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 22.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
@@ -760,6 +796,10 @@
 		{
 			"frameNumber": 10,
 			"terrainPath": "Asset/Models/Terrain/Stage02/Stage02.gltf",
+			"player": {
+				"position": [ 0.0, 0.0, 0.0 ],
+				"rotation": [ 0.0, 0.0, 0.0, 1.0 ]
+			},
 			"gimmicks": [
 				{
 					"type": "Goal",
@@ -771,70 +811,70 @@
 			"pins": [
 				{
 					"index": 0,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 4.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 1,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 6.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 2,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 8.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 3,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 10.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 4,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 12.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 5,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 14.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 6,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 16.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 7,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 18.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 8,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 20.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]
 				},
 				{
 					"index": 9,
-					"type": "NormalPin",
+					"type": "Normal",
 					"position": [ 0.0, 0.0, 22.0 ],
 					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
 					"scale": [ 1.0, 1.0, 1.0 ]

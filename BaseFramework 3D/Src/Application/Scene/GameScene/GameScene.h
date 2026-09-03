@@ -6,14 +6,15 @@ struct GameResult;
 class GameUIObjects;
 class PinHandler;
 class ScoreHandler;
+class CharaHandler;
 
 //シーン状況
 enum class SceneState
 {
-	CountDown,
+	SetUp,
 	Playing,
-	GameOver,
-	GameClear
+	Clean,
+	End
 };
 
 // Game内の仮定義
@@ -43,11 +44,23 @@ private:
 
 	void Event() override;
 
+	// レーンの準備
+	void SetUpLane();
+
 	//各ステートの更新
-	void UpdateCountDown();
-	void UpdatePlaying();
-	void UpdateGameOver();
-	void UpdateGameClear();
+	//void UpdateCountDown();
+	//void UpdatePlaying();
+	//void UpdateGameOver();
+	//void UpdateGameClear();
+
+	//各ステートの更新
+	void UpdateSetUp();
+	void UpdatePlaying2();
+	void UpdateClean();
+	void UpdateEnd();
+
+	// 投球終了処理
+	void EndRolling();
 
 	// リザルト計算
 	GameResult CalcResult(bool isClear)const;
@@ -65,7 +78,7 @@ private:
 	std::weak_ptr<GameUIObjects> m_wpUI;
 
 	// 現在のシーン状況
-	SceneState m_currentSceneState = SceneState::CountDown;
+	SceneState m_currentSceneState = SceneState::Playing;
 
 	//フェードイン終了確認
 	bool m_isFadeInEnd = false;
@@ -75,4 +88,7 @@ private:
 
 	// スコア管理・投球管理・フレーム管理
 	std::shared_ptr<ScoreHandler> m_cScoreHandler = nullptr;
+
+	// プレイヤー制御用
+	std::shared_ptr<CharaHandler> m_cCharaHandler = nullptr;
 };

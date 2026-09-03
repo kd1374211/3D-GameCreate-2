@@ -1,5 +1,6 @@
 ﻿#include "StageSelectUIObjects.h"
 #include "../../../../StageManager/StageManager.h"
+#include "../../../../UserSave/UserSaveManager.h"
 #include "../../../../Scene/SceneManager.h"
 
 void StageSelectUIObject::Update()
@@ -49,7 +50,7 @@ void StageSelectUIObject::DrawSprite()
 {
 	//情報取得
 	const auto* stageInfo = STAGEMGR.GetStageInfo(m_selectStageNo);
-	const auto* stageSave = STAGEMGR.GetUserSave(m_selectStageNo);
+	const auto* stageSave = SAVEMGR.GetUserSave(m_selectStageNo);
 
 	//黒背景
 	KdShaderManager::Instance().m_spriteShader.DrawBox(0, 0, 1280, 720, &kBlackColor, true);
@@ -98,20 +99,20 @@ void StageSelectUIObject::DrawSprite()
 	}
 
 	// 星数
-	int starCount = STAGEMGR.CalculateStarCount(m_selectStageNo, stageSave->m_bestPinFallen, stageSave->m_isClear);
-	Math::Vector2 starTexBaseSize = Math::Vector2(m_starTex->GetWidth() / 2.0f, m_starTex->GetHeight());
-	for (int i = 0; i < StageManagerConsts::StarCountMax; i++)
-	{
-		// X座標
-		float drawPosX = UILayoutConfig::StarListBasePosX + i * UILayoutConfig::StarPosDiffX;
+	//int starCount = STAGEMGR.CalculateStarCount(m_selectStageNo, stageSave->m_bestPinFallen, stageSave->m_isClear);
+	//Math::Vector2 starTexBaseSize = Math::Vector2(m_starTex->GetWidth() / 2.0f, m_starTex->GetHeight());
+	//for (int i = 0; i < StageManagerConsts::StarCountMax; i++)
+	//{
+	//	// X座標
+	//	float drawPosX = UILayoutConfig::StarListBasePosX + i * UILayoutConfig::StarPosDiffX;
 
-		// i(+1)番目の星が取れたか
-		bool isStarGet = i < starCount;
+	//	// i(+1)番目の星が取れたか
+	//	bool isStarGet = i < starCount;
 
-		//星アイコン
-		Math::Rectangle rec = Math::Rectangle((long)(starTexBaseSize.x * (int)(isStarGet ? 0 : 1)), 0, (long)starTexBaseSize.x, (long)starTexBaseSize.y);
-		KdShaderManager::Instance().m_spriteShader.DrawTex(m_starTex, drawPosX, UILayoutConfig::StarListPosY, starTexBaseSize.x, starTexBaseSize.y, &rec);
-	}
+	//	//星アイコン
+	//	Math::Rectangle rec = Math::Rectangle((long)(starTexBaseSize.x * (int)(isStarGet ? 0 : 1)), 0, (long)starTexBaseSize.x, (long)starTexBaseSize.y);
+	//	KdShaderManager::Instance().m_spriteShader.DrawTex(m_starTex, drawPosX, UILayoutConfig::StarListPosY, starTexBaseSize.x, starTexBaseSize.y, &rec);
+	//}
 
 	// ピン
 	// アイコン

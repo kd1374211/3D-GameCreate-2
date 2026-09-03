@@ -26,6 +26,9 @@ public:
 	// 残ったピンを再配置＆倒れたピンをリストから除外
 	void CheckAndResetRemainingPins(const std::vector<LanePinData>& pinsToSpawn);
 
+	// 全部のピンが倒れたかを確認
+	bool CheckIsAllPinsFallen()const;
+
 private:
 
 	// 特定の位置に特定のピンを召喚

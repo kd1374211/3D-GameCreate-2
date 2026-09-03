@@ -2,9 +2,6 @@
 
 NormalPin::NormalPin(Math::Vector3 startPos, Math::Quaternion startRot)
 {
-	//本体
-	PinBase::Init();
-
 	std::string path_hit = "Asset/Models/Pin/Hit/pin.gltf";
 	std::string path_draw = "Asset/Models/Pin/Draw/pin.gltf";
 	m_model = std::make_shared<KdModelWork>();
@@ -19,9 +16,9 @@ NormalPin::NormalPin(Math::Vector3 startPos, Math::Quaternion startRot)
 	initData.motionType = JPH::EMotionType::Dynamic;
 	initData.isStatic = false;
 	initData.layer = Layers::PIN_STATIC;
-	initData.mass = 10000.0f;
-	initData.friction = 0.2f;
-	initData.restitution = 0.0f;
+	initData.mass = NormalPinConsts::PinMass;
+	initData.friction = 0.25f;
+	initData.restitution = 0.5f;
 	initData.linearDamping = 1.0f;
 	initData.angularDamping	= 1.0f;
 	initData.userData = reinterpret_cast<JPH::uint64>(this);
@@ -30,4 +27,7 @@ NormalPin::NormalPin(Math::Vector3 startPos, Math::Quaternion startRot)
 	if (!m_cPhysics->Init(path_hit, initData)) {
 		// エラー処理
 	}
+
+	//本体
+	PinBase::Init();
 }

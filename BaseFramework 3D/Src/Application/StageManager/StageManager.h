@@ -26,6 +26,13 @@ struct LanePinData
 	LaneObjectData m_data;					// ピンの配置情報
 };
 
+// プレイヤーの配置個所と向き
+struct PlayerPlacementData
+{
+	Math::Vector3 m_pos = {};
+	Math::Quaternion m_rot = {};
+};
+
 // ステージのレーンごとの情報
 struct StageLaneData
 {
@@ -33,6 +40,7 @@ struct StageLaneData
 	std::string m_terrainPath;		// 地形パス
 	std::vector<LaneGimmickData> m_laneGimmickData;	// ピン以外のオブジェクト
 	std::vector<LanePinData> m_lanePinData;		// ピン一覧
+	PlayerPlacementData m_playerData;			// プレイヤーの位置
 };
 
 // ステージ全体の情報
@@ -55,6 +63,7 @@ enum class StageBuildMode
 	Background  // 背景用（地形＋天球のみ）
 };
 
+// このクラス内の定数
 struct StageManagerConsts
 {
 	static constexpr int StarCountMax = 3;		//最大星数
@@ -74,6 +83,7 @@ struct StageInfo
 };
 
 class PinHandler;
+class CharaHandler;
 enum class PinType;
 
 class StageManager
@@ -86,6 +96,8 @@ public:
 	//地形生成
 	//void BuildStage(StageBuildMode mode = StageBuildMode::Full);
 	void BuildStage(int laneNumber = BowlingSystemConsts::StartFrame, StageBuildMode mode = StageBuildMode::Full);
+	// 同じステージでピンなどを再配置
+	void RespawnStage(int laneNumber = BowlingSystemConsts::StartFrame);
 
 	//リセット
 	void ResetStage();
@@ -100,7 +112,7 @@ public:
 	//std::vector<LaneObjectData>& GetStageObjects() { return m_stageGimmicks; }
 
 	//ゲッター（カメラ用）
-	//std::weak_ptr<KdGameObject>& GetTerrain() { return m_wpTerrain; }
+	std::weak_ptr<KdGameObject>& GetTerrain() { return m_wpTerrain; }
 
 	//void AddStageObject(const LaneObjectData& objectData) { m_stageGimmicks.push_back(objectData); }
 	//void RemoveStageObject(size_t index)
@@ -142,17 +154,13 @@ public:
 
 	// ピンハンドラー登録
 	void RegistPinHandler(std::shared_ptr<PinHandler> handler) { m_wpPinHandler = handler; }
-
-	// ハンドラーにプールを作成
+	// ピンハンドラーにプールを作成
 	void CreatePinPool();
 
-private:
+	// キャラハンドラー登録
+	void RegistCharaHandler(std::shared_ptr<CharaHandler> handler) { m_wpCharaHandler = handler; }
 
-	// このクラス内の定数
-	struct StageManagerConsts
-	{
-		static constexpr int LaneIndexOffset = -1;		// 引数のレーン番号とvectorの位置差
-	};
+private:
 
 	//いつもの
 	StageManager() {}
@@ -219,6 +227,9 @@ private:
 
 	// ピンハンドラーweak
 	std::weak_ptr<PinHandler> m_wpPinHandler;
+
+	// キャラハンドラーweak
+	std::weak_ptr<CharaHandler> m_wpCharaHandler;
 
 public:
 

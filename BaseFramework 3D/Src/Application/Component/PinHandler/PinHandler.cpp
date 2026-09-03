@@ -112,6 +112,29 @@ void PinHandler::CheckAndResetRemainingPins(const std::vector<LanePinData>& pins
 	}
 }
 
+bool PinHandler::CheckIsAllPinsFallen() const
+{
+	// デバッグ
+	KdDebugGUI::Instance().AddLog("PinCount : %d\n", m_activePins.size());
+
+	// 現在のピンをめぐる
+	for (const auto& pin : m_activePins)
+	{
+		// shared_ptr に変換
+		if (auto spPin = pin.lock())
+		{
+			// 有効（アクティブ）で、かつ「まだ倒れていない（立っている）」ピンが見つかったら false
+			if (spPin->GetIsActive() && !spPin->GetIsFallen()) // ★ !（否定）が必要
+			{
+				return false;
+			}
+		}
+	}
+
+	// 見つからずにループを抜けたらtrue
+	return true;
+}
+
 void PinHandler::SpawnPin(PinType type, Math::Vector3 startPos, int pinIndex)
 {
 	std::shared_ptr<PinBase> pin = GetUnusedPin(type);
