@@ -54,17 +54,17 @@ void GameContactListener::OnContactAdded(const JPH::Body& inBody1, const JPH::Bo
 	//	}
 	//}
 
-	// Player & Pin
-	if (layer1 == Layers::BOWLINGBALL && layer2 == Layers::PIN_STATIC)
-	{
-		// UserData から ピンオブジェクトのポインタを復元
-		if (auto* pin = dynamic_cast<PinBase*>(gameObj2))
-		{
-			// プレイヤーの現在速度を取得してピンに通知！
-			JPH::Vec3 playerVel = body1->GetLinearVelocity();
-			pin->OnHitByPlayer(playerVel);
-		}
-	}
+	//// Player & Pin
+	//if (layer1 == Layers::BOWLINGBALL && layer2 == Layers::PIN_STATIC)
+	//{
+	//	// UserData から ピンオブジェクトのポインタを復元
+	//	if (auto* pin = dynamic_cast<PinBase*>(gameObj2))
+	//	{
+	//		// プレイヤーの現在速度を取得してピンに通知！
+	//		JPH::Vec3 playerVel = body1->GetLinearVelocity();
+	//		pin->OnHitByPlayer(playerVel);
+	//	}
+	//}
 }
 
 void GameContactListener::OnContactPersisted(const JPH::Body& inBody1, const JPH::Body& inBody2, const JPH::ContactManifold& inManifold, JPH::ContactSettings& ioSettings)

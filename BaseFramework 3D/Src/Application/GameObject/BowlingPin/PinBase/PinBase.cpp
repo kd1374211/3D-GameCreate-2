@@ -13,77 +13,6 @@ void PinBase::Update()
 		// STAGEMGR からもらった Position / Rotation をそのまま維持する
 		return;
 	}
-
-	// デルタタイム(ゲーム)
-	float gameDt = SCENEMGR.GetDeltaGameTime();
-
-	if (!m_cPhysics || m_cPhysics->GetBodyID().IsInvalid()) return;
-
-	// -------------------------------------------------------------
-	// A. 保留されていたヒット処理の遅延実行（安全なタイミング）
-	// -------------------------------------------------------------
-	if (m_isHitPending)
-	{
-		m_isHitPending = false;
-		m_isRagdoll = true;
-
-		JPH::BodyID bodyID = m_cPhysics->GetBodyID();
-		JPH::BodyInterface& bodyInterface = PHYSICSMGR.GetSystem().GetBodyInterface();
-
-		// 1. レイヤーを吹き飛び後（PIN_MOVING）に変更
-		bodyInterface.SetObjectLayer(bodyID, Layers::PIN_MOVING);
-
-		// ---------------------------------------------------------
-		// ★ 2. 質量の変更と慣性モーメント（回転）の解放
-		// （Update 内は物理ステップ外のため Safe に BodyLockWrite が使用可能）
-		// ---------------------------------------------------------
-		{
-			JPH::BodyLockWrite lock(PHYSICSMGR.GetSystem().GetBodyLockInterface(), bodyID);
-			if (lock.Succeeded())
-			{
-				JPH::Body& body = lock.GetBody();
-
-				float normalMass = 1.0f;
-
-				// 質量を1.0f（通常値）に変更
-				body.GetMotionProperties()->SetInverseMass(1.0f / normalMass);
-
-				// 慣性モーメント（回転のしやすさ）を再計算して回転を解放
-				JPH::MassProperties massProps;
-				if (body.GetShape())
-				{
-					massProps = body.GetShape()->GetMassProperties();
-				}
-				massProps.mMass = normalMass;
-
-				JPH::Mat44 invInertiaMat = massProps.mInertia.Inversed();
-				JPH::Vec3 invInertiaDiagonal(invInertiaMat(0, 0), invInertiaMat(1, 1), invInertiaMat(2, 2));
-
-				body.GetMotionProperties()->SetInverseInertia(
-					invInertiaDiagonal,
-					JPH::Quat::sIdentity()
-				);
-			}
-		}
-
-		// 3. 吹き飛び後の跳ね返り係数（Restitution）をセット（例: 0.4f）
-		m_cPhysics->SetRestitution(0.4f);
-
-		// 4. プレイヤーの速度をもとにピンを弾き飛ばす
-		JPH::Vec3 blowDir = m_pendingVelocity;
-		blowDir.SetY(std::max(blowDir.GetY(), 2.0f)); // 上向きに跳ね上げる
-
-		bodyInterface.AddImpulse(bodyID, blowDir * 2.0f);
-	}
-
-	// -------------------------------------------------------------
-	// B. 状態に応じた毎フレーム処理
-	// -------------------------------------------------------------
-	if (!m_isRagdoll)
-	{
-		// 未接触時：倒れないように回転速度をゼロクリア
-		m_cPhysics->SetAngularVelocity(JPH::Vec3::sZero());
-	}
 }
 
 void PinBase::PostUpdate()
@@ -119,15 +48,6 @@ void PinBase::GenerateDepthMapFromLight()
 	KdShaderManager::Instance().m_StandardShader.DrawModel(*m_model, m_mWorld);
 }
 
-void PinBase::OnHitByPlayer(JPH::Vec3 playerVelocity)
-{
-	//if (m_isRagdoll || m_isHitPending) return;
-
-	//// OnContactAdded 内では直接 BodyInterface をいじらず、フラグと速度だけメモして抜ける
-	//m_isHitPending = true;
-	//m_pendingVelocity = playerVelocity;
-}
-
 void PinBase::Activate()
 {
 	m_isActive = true;
@@ -149,9 +69,6 @@ void PinBase::Reset()
 		m_cPhysics->SetAngularVelocity(JPH::Vec3::sZero());
 	}
 	// 状態のリセット
-	m_isRagdoll = true;
-	m_isHitPending = false;
-	m_pendingVelocity = JPH::Vec3::sZero();
 	m_isFallen = false;
 }
 

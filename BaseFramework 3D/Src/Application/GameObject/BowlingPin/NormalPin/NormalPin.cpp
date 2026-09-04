@@ -15,7 +15,7 @@ NormalPin::NormalPin(Math::Vector3 startPos, Math::Quaternion startRot)
 	initData.rot = startRot;
 	initData.motionType = JPH::EMotionType::Dynamic;
 	initData.isStatic = false;
-	initData.layer = Layers::PIN_STATIC;
+	initData.layer = Layers::BOWLINGPIN;
 	initData.mass = NormalPinConsts::PinMass;
 	initData.friction = 0.25f;
 	initData.restitution = 0.5f;

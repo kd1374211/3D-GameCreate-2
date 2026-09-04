@@ -152,6 +152,69 @@ void KdDebugGUI::GuiProcess()
 			}
 		}
 		
+		if (ImGui::Begin("Stage Editor"))
+		{
+			// -----------------------------------------------------------------
+			// 1. ステージ番号、レーン番号を選択する機能 (トップ階層)
+			// -----------------------------------------------------------------
+			if (ImGui::CollapsingHeader("Stage & Lane Selection", ImGuiTreeNodeFlags_DefaultOpen))
+			{
+				ImGui::Button("[Dummy] Select Stage & Lane Number");
+			}
+
+			// -----------------------------------------------------------------
+			// 2. Save & Load 階層 (※new トップ階層)
+			// -----------------------------------------------------------------
+			if (ImGui::CollapsingHeader("Save & Load"))
+			{
+				ImGui::Button("[Dummy] Save / Load Stage File");
+			}
+
+			// -----------------------------------------------------------------
+			// 3. StageEdit 階層 (※new トップ階層)
+			// -----------------------------------------------------------------
+			if (ImGui::CollapsingHeader("StageEdit", ImGuiTreeNodeFlags_DefaultOpen))
+			{
+				// 3-1. Sky Asset Settings (StageEdit 下)
+				if (ImGui::TreeNode("Sky Asset Settings"))
+				{
+					ImGui::Button("[Dummy] Set Sky Model Path");
+					ImGui::TreePop();
+				}
+
+				// 3-2. Lane Placement Settings (※1) (StageEdit 下)
+				if (ImGui::TreeNode("Lane Placement Settings (※1)"))
+				{
+					// --- ※1 内のサブツリー ---
+					if (ImGui::TreeNode("Lane Terrain Asset Path"))
+					{
+						ImGui::Button("[Dummy] Set Lane Terrain Path");
+						ImGui::TreePop();
+					}
+
+					if (ImGui::TreeNode("Gimmick Management"))
+					{
+						ImGui::Button("[Dummy] Add Gimmick & View Gimmick List");
+						ImGui::TreePop();
+					}
+
+					if (ImGui::TreeNode("Pin List (10 Pins)"))
+					{
+						ImGui::Button("[Dummy] View & Edit 10 Pins List");
+						ImGui::TreePop();
+					}
+
+					if (ImGui::TreeNode("Player Transform Settings"))
+					{
+						ImGui::Button("[Dummy] Edit Player Position & Rotation");
+						ImGui::TreePop();
+					}
+
+					ImGui::TreePop(); // Lane Placement Settings (※1) の TreePop
+				}
+			}
+		}
+		ImGui::End();
 
 		//if (ImGui::Begin("Stage Editor"))
 		//{

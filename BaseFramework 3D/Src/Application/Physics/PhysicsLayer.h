@@ -7,9 +7,8 @@ namespace Layers
 	static constexpr JPH::ObjectLayer TERRAIN = 0;
 	static constexpr JPH::ObjectLayer FINISHAREA = 1;
 	static constexpr JPH::ObjectLayer BOWLINGBALL = 2;
-	static constexpr JPH::ObjectLayer PIN_STATIC = 3;
-	static constexpr JPH::ObjectLayer PIN_MOVING = 4;
-	static constexpr JPH::ObjectLayer NUM_LAYERS = 5;
+	static constexpr JPH::ObjectLayer BOWLINGPIN = 3;
+	static constexpr JPH::ObjectLayer NUM_LAYERS = 4;
 
 	// ブロードフェーズレイヤー（大雑把な分類）
 	static constexpr JPH::BroadPhaseLayer BP_NON_MOVING(0);
@@ -53,15 +52,13 @@ public:
 		switch (inObject1)
 		{
 		case Layers::TERRAIN:
-			return inObject2 == Layers::BOWLINGBALL||inObject2 == Layers::PIN_STATIC||inObject2 == Layers::PIN_MOVING; // 地形は動くものと当たる
+			return inObject2 == Layers::BOWLINGBALL||inObject2 == Layers::BOWLINGPIN; // 地形は動くものと当たる
 		case Layers::FINISHAREA:
 			return inObject2 == Layers::BOWLINGBALL;
 		case Layers::BOWLINGBALL:
 			return true; // プレイヤーはそのまま
-		case Layers::PIN_STATIC:
-			return inObject2 == Layers::BOWLINGBALL||inObject2 == Layers::TERRAIN; // 静止ピンはプレイヤー/地形と当たる
-		case Layers::PIN_MOVING:
-			return true; // 動くピンは全てと当たる
+		case Layers::BOWLINGPIN:
+			return inObject2 != Layers::FINISHAREA;
 		default:
 			return false;
 		}
@@ -79,8 +76,7 @@ public:
 		mObjectToBroadPhase[Layers::TERRAIN] = Layers::BP_NON_MOVING;
 		mObjectToBroadPhase[Layers::FINISHAREA] = Layers::BP_NON_MOVING;
 		mObjectToBroadPhase[Layers::BOWLINGBALL] = Layers::BP_MOVING;
-		mObjectToBroadPhase[Layers::PIN_STATIC] = Layers::BP_MOVING;
-		mObjectToBroadPhase[Layers::PIN_MOVING] = Layers::BP_MOVING;
+		mObjectToBroadPhase[Layers::BOWLINGPIN] = Layers::BP_MOVING;
 	}
 
 	virtual JPH::uint GetNumBroadPhaseLayers() const override
@@ -122,8 +118,7 @@ public:
 		case Layers::FINISHAREA:
 			return inLayer2 == Layers::BP_MOVING; // 動かないグループは、動くグループとだけ衝突する
 		case Layers::BOWLINGBALL:
-		case Layers::PIN_STATIC:
-		case Layers::PIN_MOVING:
+		case Layers::BOWLINGPIN:
 			return true; // 動くグループは、何とでも衝突する
 		default:
 			return false;

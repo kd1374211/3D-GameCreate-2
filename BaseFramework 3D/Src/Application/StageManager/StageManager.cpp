@@ -31,56 +31,62 @@ void StageManager::ResetStage()
 
 bool StageManager::SaveStage(const std::string& filePath)
 {
-	//nlohmann::json rootJson;
+	nlohmann::json rootJson;
 
-	//// 1. 地形情報
-	//rootJson["terrain"] = {
-	//	{ "model_path", m_terrainPath }
-	//};
+	// 1. 天球パス
+	rootJson["skyPath"] = m_stageOverallData.m_skyPath;
 
-	//// 2. 天球情報
-	//rootJson["sky"] = {
-	//	{ "model_path", m_skySpherePath }
-	//};
+	// 2. フレーム（レーン）配列
+	nlohmann::json framesArray = nlohmann::json::array();
 
-	//// 3. 一般配置オブジェクト一覧
-	//nlohmann::json objList = nlohmann::json::array();
-	//for (const auto& obj : m_stageGimmicks)
-	//{
-	//	nlohmann::json jObj;
-	//	jObj["type"] = obj.m_type;
-	//	jObj["position"] = { obj.m_position.x, obj.m_position.y, obj.m_position.z };
-	//	jObj["rotation"] = { obj.m_rotation.x, obj.m_rotation.y, obj.m_rotation.z, obj.m_rotation.w };
-	//	jObj["scale"] = { obj.m_scale.x,    obj.m_scale.y,    obj.m_scale.z };
+	for (const auto& lane : m_stageOverallData.m_stageLaneData)
+	{
+		nlohmann::json frameJson;
+		frameJson["frameNumber"] = lane.m_frameNumber;
+		frameJson["terrainPath"] = lane.m_terrainPath;
 
-	//	objList.push_back(jObj);
-	//}
-	//rootJson["objects"] = objList;
+		// プレイヤー (player)
+		frameJson["player"]["position"] = { lane.m_playerData.m_pos.x, lane.m_playerData.m_pos.y, lane.m_playerData.m_pos.z };
+		frameJson["player"]["rotation"] = { lane.m_playerData.m_rot.x, lane.m_playerData.m_rot.y, lane.m_playerData.m_rot.z, lane.m_playerData.m_rot.w };
 
-	//// 4. ピン配置情報一覧
-	//nlohmann::json pinList = nlohmann::json::array();
-	//for (const auto& pin : m_stagePins)
-	//{
-	//	nlohmann::json jPin;
-	//	jPin["type"] = pin.m_type;
-	//	jPin["position"] = { pin.m_position.x, pin.m_position.y, pin.m_position.z };
-	//	jPin["rotation"] = { pin.m_rotation.x, pin.m_rotation.y, pin.m_rotation.z, pin.m_rotation.w };
-	//	jPin["scale"] = { pin.m_scale.x,    pin.m_scale.y,    pin.m_scale.z };
+		// ギミック一覧 (gimmicks)
+		nlohmann::json gimmickArray = nlohmann::json::array();
+		for (const auto& gimmick : lane.m_laneGimmickData)
+		{
+			nlohmann::json gJson;
+			gJson["type"] = gimmick.m_type;
+			gJson["position"] = { gimmick.m_data.m_position.x, gimmick.m_data.m_position.y, gimmick.m_data.m_position.z };
+			gJson["rotation"] = { gimmick.m_data.m_rotation.x, gimmick.m_data.m_rotation.y, gimmick.m_data.m_rotation.z, gimmick.m_data.m_rotation.w };
+			gJson["scale"] = { gimmick.m_data.m_scale.x, gimmick.m_data.m_scale.y, gimmick.m_data.m_scale.z };
+			gimmickArray.push_back(gJson);
+		}
+		frameJson["gimmicks"] = gimmickArray;
 
-	//	pinList.push_back(jPin);
-	//}
-	//rootJson["pins"] = pinList;
+		// ピン一覧 (pins)
+		nlohmann::json pinArray = nlohmann::json::array();
+		for (const auto& pin : lane.m_lanePinData)
+		{
+			nlohmann::json pinJson;
+			pinJson["index"] = pin.m_index;
+			pinJson["type"] = ConvertPinTypeToString(pin.m_type); // 例: "Normal" 等の文字列変換
+			pinJson["position"] = { pin.m_data.m_position.x, pin.m_data.m_position.y, pin.m_data.m_position.z };
+			pinJson["rotation"] = { pin.m_data.m_rotation.x, pin.m_data.m_rotation.y, pin.m_data.m_rotation.z, pin.m_data.m_rotation.w };
+			pinJson["scale"] = { pin.m_data.m_scale.x, pin.m_data.m_scale.y, pin.m_data.m_scale.z };
+			pinArray.push_back(pinJson);
+		}
+		frameJson["pins"] = pinArray;
 
-	//// ファイルへの書き出し
-	//std::ofstream outFile(filePath);
-	//if (!outFile.is_open()) return false;
+		framesArray.push_back(frameJson);
+	}
 
-	//// インデント4
-	//outFile << rootJson.dump(4);
-	//outFile.close();
+	rootJson["frames"] = framesArray;
 
-	//return true;
-	return false;
+	// ファイルへ書き出し
+	std::ofstream file(filePath);
+	if (!file.is_open()) return false;
+
+	file << rootJson.dump(4);
+	return true;
 }
 
 bool StageManager::LoadStage(int stageNo)

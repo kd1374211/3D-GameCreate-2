@@ -23,8 +23,8 @@ void BowlingBall::Init(float a_radius)
 	initData.mass = BowlingBallConsts::BallMass;
 	initData.friction = 0.15f;
 	initData.restitution = 0.15f;
-	initData.linearDamping = 0.01f;
-	initData.angularDamping = 0.02f;
+	initData.linearDamping = 0.1f;
+	initData.angularDamping = 0.1f;
 	initData.userData = reinterpret_cast<JPH::uint64>(this);	//自分自身のポインタを登録
 
 	//物理Init
