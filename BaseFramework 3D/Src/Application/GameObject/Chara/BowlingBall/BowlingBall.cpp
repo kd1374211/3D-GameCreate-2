@@ -6,8 +6,8 @@
 BowlingBall::BowlingBall()
 {
 	//モデル
-	m_model = std::make_shared<KdModelWork>();
-	m_model->SetModelData("Asset/Models/Chara/PlayerBall/bowling_ball.gltf");
+	m_model = std::make_shared<KdModelData>();
+	m_model->Load("Asset/Models/Chara/PlayerBall/bowling_ball.gltf");
 }
 
 void BowlingBall::Init(float a_radius)

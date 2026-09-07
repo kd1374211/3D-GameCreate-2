@@ -46,8 +46,8 @@ bool StageManager::SaveStage(const std::string& filePath)
 		frameJson["terrainPath"] = lane.m_terrainPath;
 
 		// プレイヤー (player)
-		frameJson["player"]["position"] = { lane.m_playerData.m_pos.x, lane.m_playerData.m_pos.y, lane.m_playerData.m_pos.z };
-		frameJson["player"]["rotation"] = { lane.m_playerData.m_rot.x, lane.m_playerData.m_rot.y, lane.m_playerData.m_rot.z, lane.m_playerData.m_rot.w };
+		frameJson["player"]["position"] = { lane.m_playerData.m_position.x, lane.m_playerData.m_position.y, lane.m_playerData.m_position.z };
+		frameJson["player"]["rotation"] = { lane.m_playerData.m_rotation.x, lane.m_playerData.m_rotation.y, lane.m_playerData.m_rotation.z, lane.m_playerData.m_rotation.w };
 
 		// ギミック一覧 (gimmicks)
 		nlohmann::json gimmickArray = nlohmann::json::array();
@@ -137,8 +137,8 @@ bool StageManager::LoadStage(const std::string& filePath)
 				const auto& player = frame["player"];
 
 				// 各情報を取得
-				playerData.m_pos = ParseVector3(player, "position", {0.0f, 0.0f, 0.0f});
-				playerData.m_rot = ParseQuaternion(player, "rotation", { 0.0f, 0.0f, 0.0f,1.0f });
+				playerData.m_position = ParseVector3(player, "position", {0.0f, 0.0f, 0.0f});
+				playerData.m_rotation = ParseQuaternion(player, "rotation", { 0.0f, 0.0f, 0.0f,1.0f });
 
 				// レーンデータに設定
 				laneData.m_playerData = playerData;
@@ -196,28 +196,6 @@ void StageManager::SetMode(StageMode mode)
 	m_mode = mode;
 
 	BuildStage();
-}
-
-void StageManager::DrawSelectedObjectOutline()
-{
-	// エディットモード中かつ有効なインデックスが選択されている場合のみ
-	if (!IsEditMode() || m_selectedIndex < 0) return;
-
-	//DEBUG
-	KdDebugGUI::Instance().AddLog("obj: %d\n", m_wpStageGimmicks.size());
-
-	size_t targetIdx = static_cast<size_t>(m_selectedIndex);
-	if (targetIdx < m_wpStageGimmicks.size() && !m_wpStageGimmicks[targetIdx].expired())
-	{
-		auto spObj = m_wpStageGimmicks[targetIdx].lock();
-
-		// オブジェクトの現在位置を取得
-		Math::Vector3 pos = spObj->GetPos();
-
-		// オブジェクト位置にワイヤーフレームを描画
-		m_debugWireFrame->AddDebugSphere(pos, 1.5f, kBlueColor);
-		m_debugWireFrame->Draw();
-	}
 }
 
 void StageManager::Init()
@@ -287,10 +265,10 @@ void StageManager::BuildStage(int laneNumber, StageBuildMode mode)
 		m_wpPinHandler.lock()->SpawnPinsForThisFrame(laneData.m_lanePinData);
 	}
 
-	// プレイヤー配置(未実装)
+	// プレイヤー配置
 	if (!m_wpCharaHandler.expired())
 	{
-		m_wpCharaHandler.lock()->StartNextThrow(laneData.m_playerData.m_pos, laneData.m_playerData.m_rot);
+		m_wpCharaHandler.lock()->StartNextThrow(laneData.m_playerData.m_position, laneData.m_playerData.m_rotation);
 	}
 }
 
@@ -309,11 +287,21 @@ void StageManager::RespawnStage(int laneNumber)
 		spPinHandler->CheckAndResetRemainingPins(laneData.m_lanePinData);
 	}
 
-	// プレイヤー再配置(未実装)
+	// プレイヤー再配置
 	if (!m_wpCharaHandler.expired())
 	{
-		m_wpCharaHandler.lock()->StartNextThrow(laneData.m_playerData.m_pos, laneData.m_playerData.m_rot);
+		m_wpCharaHandler.lock()->StartNextThrow(laneData.m_playerData.m_position, laneData.m_playerData.m_rotation);
 	}
+}
+
+void StageManager::DrawDebugOutline()
+{
+	// エディットモード中かつ有効なインデックスが選択されている場合のみ
+	if (!IsEditMode() || !m_isDebugSphereDraw) return;
+
+	// オブジェクト位置にワイヤーフレームを描画
+	m_debugWireFrame->AddDebugSphere(m_debugSpherePos, 1.5f, kBlueColor);
+	m_debugWireFrame->Draw();
 }
 
 const StageInfo* StageManager::GetStageInfo(int stageNo) const

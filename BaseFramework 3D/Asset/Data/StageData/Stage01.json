@@ -1,885 +1,2405 @@
 {
-	"skyPath": "Asset/Models/Sky/SkySphere/SkySphere.gltf",
-	"frames": [
-		{
-			"frameNumber": 1,
-			"terrainPath": "Asset/Models/Terrain/Stage02/Stage02.gltf",
-			"player": {
-				"position": [ 0.0, 0.0, 0.0 ],
-				"rotation": [ 0.0, 0.0, 0.0, 1.0 ]
-			},
-			"gimmicks": [
-				{
-					"type": "Goal",
-					"position": [ 0.0, 0.0, 50.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 2.0, 1.0, 2.0 ]
-				}
-			],
-			"pins": [
-				{
-					"index": 0,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 4.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 1,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 6.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 2,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 8.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 3,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 10.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 4,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 12.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 5,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 14.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 6,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 16.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 7,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 18.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 8,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 20.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 9,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 22.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				}
-			]
-		},
-		{
-			"frameNumber": 2,
-			"terrainPath": "Asset/Models/Terrain/Stage02/Stage02.gltf",
-			"player": {
-				"position": [ 0.0, 0.0, 0.0 ],
-				"rotation": [ 0.0, 0.0, 0.0, 1.0 ]
-			},
-			"gimmicks": [
-				{
-					"type": "Goal",
-					"position": [ 0.0, 0.0, 50.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 2.0, 1.0, 2.0 ]
-				}
-			],
-			"pins": [
-				{
-					"index": 0,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 4.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 1,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 6.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 2,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 8.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 3,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 10.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 4,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 12.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 5,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 14.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 6,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 16.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 7,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 18.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 8,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 20.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 9,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 22.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				}
-			]
-		},
-		{
-			"frameNumber": 3,
-			"terrainPath": "Asset/Models/Terrain/Stage02/Stage02.gltf",
-			"player": {
-				"position": [ 0.0, 0.0, 0.0 ],
-				"rotation": [ 0.0, 0.0, 0.0, 1.0 ]
-			},
-			"gimmicks": [
-				{
-					"type": "Goal",
-					"position": [ 0.0, 0.0, 50.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 2.0, 1.0, 2.0 ]
-				}
-			],
-			"pins": [
-				{
-					"index": 0,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 4.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 1,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 6.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 2,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 8.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 3,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 10.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 4,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 12.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 5,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 14.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 6,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 16.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 7,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 18.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 8,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 20.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 9,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 22.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				}
-			]
-		},
-		{
-			"frameNumber": 4,
-			"terrainPath": "Asset/Models/Terrain/Stage02/Stage02.gltf",
-			"player": {
-				"position": [ 0.0, 0.0, 0.0 ],
-				"rotation": [ 0.0, 0.0, 0.0, 1.0 ]
-			},
-			"gimmicks": [
-				{
-					"type": "Goal",
-					"position": [ 0.0, 0.0, 50.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 2.0, 1.0, 2.0 ]
-				}
-			],
-			"pins": [
-				{
-					"index": 0,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 4.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 1,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 6.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 2,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 8.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 3,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 10.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 4,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 12.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 5,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 14.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 6,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 16.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 7,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 18.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 8,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 20.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 9,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 22.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				}
-			]
-		},
-		{
-			"frameNumber": 5,
-			"terrainPath": "Asset/Models/Terrain/Stage02/Stage02.gltf",
-			"player": {
-				"position": [ 0.0, 0.0, 0.0 ],
-				"rotation": [ 0.0, 0.0, 0.0, 1.0 ]
-			},
-			"gimmicks": [
-				{
-					"type": "Goal",
-					"position": [ 0.0, 0.0, 50.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 2.0, 1.0, 2.0 ]
-				}
-			],
-			"pins": [
-				{
-					"index": 0,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 4.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 1,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 6.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 2,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 8.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 3,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 10.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 4,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 12.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 5,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 14.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 6,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 16.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 7,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 18.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 8,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 20.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 9,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 22.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				}
-			]
-		},
-		{
-			"frameNumber": 6,
-			"terrainPath": "Asset/Models/Terrain/Stage02/Stage02.gltf",
-			"player": {
-				"position": [ 0.0, 0.0, 0.0 ],
-				"rotation": [ 0.0, 0.0, 0.0, 1.0 ]
-			},
-			"gimmicks": [
-				{
-					"type": "Goal",
-					"position": [ 0.0, 0.0, 50.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 2.0, 1.0, 2.0 ]
-				}
-			],
-			"pins": [
-				{
-					"index": 0,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 4.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 1,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 6.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 2,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 8.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 3,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 10.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 4,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 12.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 5,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 14.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 6,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 16.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 7,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 18.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 8,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 20.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 9,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 22.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				}
-			]
-		},
-		{
-			"frameNumber": 7,
-			"terrainPath": "Asset/Models/Terrain/Stage02/Stage02.gltf",
-			"player": {
-				"position": [ 0.0, 0.0, 0.0 ],
-				"rotation": [ 0.0, 0.0, 0.0, 1.0 ]
-			},
-			"gimmicks": [
-				{
-					"type": "Goal",
-					"position": [ 0.0, 0.0, 50.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 2.0, 1.0, 2.0 ]
-				}
-			],
-			"pins": [
-				{
-					"index": 0,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 4.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 1,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 6.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 2,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 8.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 3,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 10.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 4,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 12.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 5,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 14.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 6,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 16.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 7,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 18.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 8,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 20.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 9,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 22.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				}
-			]
-		},
-		{
-			"frameNumber": 8,
-			"terrainPath": "Asset/Models/Terrain/Stage02/Stage02.gltf",
-			"player": {
-				"position": [ 0.0, 0.0, 0.0 ],
-				"rotation": [ 0.0, 0.0, 0.0, 1.0 ]
-			},
-			"gimmicks": [
-				{
-					"type": "Goal",
-					"position": [ 0.0, 0.0, 50.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 2.0, 1.0, 2.0 ]
-				}
-			],
-			"pins": [
-				{
-					"index": 0,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 4.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 1,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 6.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 2,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 8.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 3,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 10.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 4,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 12.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 5,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 14.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 6,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 16.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 7,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 18.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 8,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 20.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 9,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 22.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				}
-			]
-		},
-		{
-			"frameNumber": 9,
-			"terrainPath": "Asset/Models/Terrain/Stage02/Stage02.gltf",
-			"player": {
-				"position": [ 0.0, 0.0, 0.0 ],
-				"rotation": [ 0.0, 0.0, 0.0, 1.0 ]
-			},
-			"gimmicks": [
-				{
-					"type": "Goal",
-					"position": [ 0.0, 0.0, 50.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 2.0, 1.0, 2.0 ]
-				}
-			],
-			"pins": [
-				{
-					"index": 0,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 4.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 1,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 6.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 2,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 8.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 3,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 10.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 4,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 12.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 5,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 14.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 6,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 16.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 7,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 18.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 8,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 20.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 9,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 22.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				}
-			]
-		},
-		{
-			"frameNumber": 10,
-			"terrainPath": "Asset/Models/Terrain/Stage02/Stage02.gltf",
-			"player": {
-				"position": [ 0.0, 0.0, 0.0 ],
-				"rotation": [ 0.0, 0.0, 0.0, 1.0 ]
-			},
-			"gimmicks": [
-				{
-					"type": "Goal",
-					"position": [ 0.0, 0.0, 50.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 2.0, 1.0, 2.0 ]
-				}
-			],
-			"pins": [
-				{
-					"index": 0,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 4.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 1,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 6.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 2,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 8.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 3,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 10.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 4,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 12.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 5,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 14.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 6,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 16.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 7,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 18.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 8,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 20.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				},
-				{
-					"index": 9,
-					"type": "Normal",
-					"position": [ 0.0, 0.0, 22.0 ],
-					"rotation": [ 0.0, 0.0, 0.0, 1.0 ],
-					"scale": [ 1.0, 1.0, 1.0 ]
-				}
-			]
-		}
-	]
+    "frames": [
+        {
+            "frameNumber": 1,
+            "gimmicks": [
+                {
+                    "position": [
+                        0.0,
+                        -0.20000000298023224,
+                        9.25
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        0.5,
+                        0.25,
+                        0.5
+                    ],
+                    "type": "Goal"
+                }
+            ],
+            "pins": [
+                {
+                    "index": 0,
+                    "position": [
+                        0.0,
+                        0.0,
+                        7.75
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 1,
+                    "position": [
+                        -0.14000000059604645,
+                        0.0,
+                        8.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 2,
+                    "position": [
+                        0.14000000059604645,
+                        0.0,
+                        8.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 3,
+                    "position": [
+                        -0.2800000011920929,
+                        0.0,
+                        8.25
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 4,
+                    "position": [
+                        0.0,
+                        0.0,
+                        8.25
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 5,
+                    "position": [
+                        0.2800000011920929,
+                        0.0,
+                        8.25
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 6,
+                    "position": [
+                        -0.41999998688697815,
+                        0.0,
+                        8.5
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 7,
+                    "position": [
+                        -0.14000000059604645,
+                        0.0,
+                        8.5
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 8,
+                    "position": [
+                        0.14000000059604645,
+                        0.0,
+                        8.5
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 9,
+                    "position": [
+                        0.41999998688697815,
+                        0.0,
+                        8.5
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                }
+            ],
+            "player": {
+                "position": [
+                    0.0,
+                    0.10000000149011612,
+                    -9.399999618530273
+                ],
+                "rotation": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ]
+            },
+            "terrainPath": "Asset/Models/Terrain/Stage01/Stage01.gltf"
+        },
+        {
+            "frameNumber": 2,
+            "gimmicks": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        50.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        2.0,
+                        1.0,
+                        2.0
+                    ],
+                    "type": "Goal"
+                }
+            ],
+            "pins": [
+                {
+                    "index": 0,
+                    "position": [
+                        0.0,
+                        0.0,
+                        4.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 1,
+                    "position": [
+                        0.0,
+                        0.0,
+                        6.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 2,
+                    "position": [
+                        0.0,
+                        0.0,
+                        8.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 3,
+                    "position": [
+                        0.0,
+                        0.0,
+                        10.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 4,
+                    "position": [
+                        0.0,
+                        0.0,
+                        12.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 5,
+                    "position": [
+                        0.0,
+                        0.0,
+                        14.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 6,
+                    "position": [
+                        0.0,
+                        0.0,
+                        16.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 7,
+                    "position": [
+                        0.0,
+                        0.0,
+                        18.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 8,
+                    "position": [
+                        0.0,
+                        0.0,
+                        20.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 9,
+                    "position": [
+                        0.0,
+                        0.0,
+                        22.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                }
+            ],
+            "player": {
+                "position": [
+                    0.0,
+                    0.10000000149011612,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ]
+            },
+            "terrainPath": "Asset/Models/Terrain/Stage02/Stage02.gltf"
+        },
+        {
+            "frameNumber": 3,
+            "gimmicks": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        50.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        2.0,
+                        1.0,
+                        2.0
+                    ],
+                    "type": "Goal"
+                }
+            ],
+            "pins": [
+                {
+                    "index": 0,
+                    "position": [
+                        0.0,
+                        0.0,
+                        4.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 1,
+                    "position": [
+                        0.0,
+                        0.0,
+                        6.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 2,
+                    "position": [
+                        0.0,
+                        0.0,
+                        8.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 3,
+                    "position": [
+                        0.0,
+                        0.0,
+                        10.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 4,
+                    "position": [
+                        0.0,
+                        0.0,
+                        12.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 5,
+                    "position": [
+                        0.0,
+                        0.0,
+                        14.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 6,
+                    "position": [
+                        0.0,
+                        0.0,
+                        16.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 7,
+                    "position": [
+                        0.0,
+                        0.0,
+                        18.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 8,
+                    "position": [
+                        0.0,
+                        0.0,
+                        20.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 9,
+                    "position": [
+                        0.0,
+                        0.0,
+                        22.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                }
+            ],
+            "player": {
+                "position": [
+                    0.0,
+                    0.10000000149011612,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ]
+            },
+            "terrainPath": "Asset/Models/Terrain/Stage02/Stage02.gltf"
+        },
+        {
+            "frameNumber": 4,
+            "gimmicks": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        50.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        2.0,
+                        1.0,
+                        2.0
+                    ],
+                    "type": "Goal"
+                }
+            ],
+            "pins": [
+                {
+                    "index": 0,
+                    "position": [
+                        0.0,
+                        0.0,
+                        4.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 1,
+                    "position": [
+                        0.0,
+                        0.0,
+                        6.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 2,
+                    "position": [
+                        0.0,
+                        0.0,
+                        8.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 3,
+                    "position": [
+                        0.0,
+                        0.0,
+                        10.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 4,
+                    "position": [
+                        0.0,
+                        0.0,
+                        12.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 5,
+                    "position": [
+                        0.0,
+                        0.0,
+                        14.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 6,
+                    "position": [
+                        0.0,
+                        0.0,
+                        16.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 7,
+                    "position": [
+                        0.0,
+                        0.0,
+                        18.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 8,
+                    "position": [
+                        0.0,
+                        0.0,
+                        20.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 9,
+                    "position": [
+                        0.0,
+                        0.0,
+                        22.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                }
+            ],
+            "player": {
+                "position": [
+                    0.0,
+                    0.10000000149011612,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ]
+            },
+            "terrainPath": "Asset/Models/Terrain/Stage02/Stage02.gltf"
+        },
+        {
+            "frameNumber": 5,
+            "gimmicks": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        50.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        2.0,
+                        1.0,
+                        2.0
+                    ],
+                    "type": "Goal"
+                }
+            ],
+            "pins": [
+                {
+                    "index": 0,
+                    "position": [
+                        0.0,
+                        0.0,
+                        4.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 1,
+                    "position": [
+                        0.0,
+                        0.0,
+                        6.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 2,
+                    "position": [
+                        0.0,
+                        0.0,
+                        8.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 3,
+                    "position": [
+                        0.0,
+                        0.0,
+                        10.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 4,
+                    "position": [
+                        0.0,
+                        0.0,
+                        12.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 5,
+                    "position": [
+                        0.0,
+                        0.0,
+                        14.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 6,
+                    "position": [
+                        0.0,
+                        0.0,
+                        16.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 7,
+                    "position": [
+                        0.0,
+                        0.0,
+                        18.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 8,
+                    "position": [
+                        0.0,
+                        0.0,
+                        20.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 9,
+                    "position": [
+                        0.0,
+                        0.0,
+                        22.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                }
+            ],
+            "player": {
+                "position": [
+                    0.0,
+                    0.10000000149011612,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ]
+            },
+            "terrainPath": "Asset/Models/Terrain/Stage02/Stage02.gltf"
+        },
+        {
+            "frameNumber": 6,
+            "gimmicks": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        50.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        2.0,
+                        1.0,
+                        2.0
+                    ],
+                    "type": "Goal"
+                }
+            ],
+            "pins": [
+                {
+                    "index": 0,
+                    "position": [
+                        0.0,
+                        0.0,
+                        4.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 1,
+                    "position": [
+                        0.0,
+                        0.0,
+                        6.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 2,
+                    "position": [
+                        0.0,
+                        0.0,
+                        8.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 3,
+                    "position": [
+                        0.0,
+                        0.0,
+                        10.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 4,
+                    "position": [
+                        0.0,
+                        0.0,
+                        12.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 5,
+                    "position": [
+                        0.0,
+                        0.0,
+                        14.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 6,
+                    "position": [
+                        0.0,
+                        0.0,
+                        16.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 7,
+                    "position": [
+                        0.0,
+                        0.0,
+                        18.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 8,
+                    "position": [
+                        0.0,
+                        0.0,
+                        20.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 9,
+                    "position": [
+                        0.0,
+                        0.0,
+                        22.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                }
+            ],
+            "player": {
+                "position": [
+                    0.0,
+                    0.10000000149011612,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ]
+            },
+            "terrainPath": "Asset/Models/Terrain/Stage02/Stage02.gltf"
+        },
+        {
+            "frameNumber": 7,
+            "gimmicks": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        50.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        2.0,
+                        1.0,
+                        2.0
+                    ],
+                    "type": "Goal"
+                }
+            ],
+            "pins": [
+                {
+                    "index": 0,
+                    "position": [
+                        0.0,
+                        0.0,
+                        4.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 1,
+                    "position": [
+                        0.0,
+                        0.0,
+                        6.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 2,
+                    "position": [
+                        0.0,
+                        0.0,
+                        8.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 3,
+                    "position": [
+                        0.0,
+                        0.0,
+                        10.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 4,
+                    "position": [
+                        0.0,
+                        0.0,
+                        12.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 5,
+                    "position": [
+                        0.0,
+                        0.0,
+                        14.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 6,
+                    "position": [
+                        0.0,
+                        0.0,
+                        16.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 7,
+                    "position": [
+                        0.0,
+                        0.0,
+                        18.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 8,
+                    "position": [
+                        0.0,
+                        0.0,
+                        20.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 9,
+                    "position": [
+                        0.0,
+                        0.0,
+                        22.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                }
+            ],
+            "player": {
+                "position": [
+                    0.0,
+                    0.10000000149011612,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ]
+            },
+            "terrainPath": "Asset/Models/Terrain/Stage02/Stage02.gltf"
+        },
+        {
+            "frameNumber": 8,
+            "gimmicks": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        50.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        2.0,
+                        1.0,
+                        2.0
+                    ],
+                    "type": "Goal"
+                }
+            ],
+            "pins": [
+                {
+                    "index": 0,
+                    "position": [
+                        0.0,
+                        0.0,
+                        4.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 1,
+                    "position": [
+                        0.0,
+                        0.0,
+                        6.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 2,
+                    "position": [
+                        0.0,
+                        0.0,
+                        8.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 3,
+                    "position": [
+                        0.0,
+                        0.0,
+                        10.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 4,
+                    "position": [
+                        0.0,
+                        0.0,
+                        12.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 5,
+                    "position": [
+                        0.0,
+                        0.0,
+                        14.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 6,
+                    "position": [
+                        0.0,
+                        0.0,
+                        16.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 7,
+                    "position": [
+                        0.0,
+                        0.0,
+                        18.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 8,
+                    "position": [
+                        0.0,
+                        0.0,
+                        20.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 9,
+                    "position": [
+                        0.0,
+                        0.0,
+                        22.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                }
+            ],
+            "player": {
+                "position": [
+                    0.0,
+                    0.10000000149011612,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ]
+            },
+            "terrainPath": "Asset/Models/Terrain/Stage02/Stage02.gltf"
+        },
+        {
+            "frameNumber": 9,
+            "gimmicks": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        50.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        2.0,
+                        1.0,
+                        2.0
+                    ],
+                    "type": "Goal"
+                }
+            ],
+            "pins": [
+                {
+                    "index": 0,
+                    "position": [
+                        0.0,
+                        0.0,
+                        4.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 1,
+                    "position": [
+                        0.0,
+                        0.0,
+                        6.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 2,
+                    "position": [
+                        0.0,
+                        0.0,
+                        8.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 3,
+                    "position": [
+                        0.0,
+                        0.0,
+                        10.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 4,
+                    "position": [
+                        0.0,
+                        0.0,
+                        12.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 5,
+                    "position": [
+                        0.0,
+                        0.0,
+                        14.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 6,
+                    "position": [
+                        0.0,
+                        0.0,
+                        16.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 7,
+                    "position": [
+                        0.0,
+                        0.0,
+                        18.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 8,
+                    "position": [
+                        0.0,
+                        0.0,
+                        20.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 9,
+                    "position": [
+                        0.0,
+                        0.0,
+                        22.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                }
+            ],
+            "player": {
+                "position": [
+                    0.0,
+                    0.10000000149011612,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ]
+            },
+            "terrainPath": "Asset/Models/Terrain/Stage02/Stage02.gltf"
+        },
+        {
+            "frameNumber": 10,
+            "gimmicks": [
+                {
+                    "position": [
+                        0.0,
+                        0.0,
+                        50.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        2.0,
+                        1.0,
+                        2.0
+                    ],
+                    "type": "Goal"
+                }
+            ],
+            "pins": [
+                {
+                    "index": 0,
+                    "position": [
+                        0.0,
+                        0.0,
+                        4.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 1,
+                    "position": [
+                        0.0,
+                        0.0,
+                        6.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 2,
+                    "position": [
+                        0.0,
+                        0.0,
+                        8.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 3,
+                    "position": [
+                        0.0,
+                        0.0,
+                        10.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 4,
+                    "position": [
+                        0.0,
+                        0.0,
+                        12.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 5,
+                    "position": [
+                        0.0,
+                        0.0,
+                        14.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 6,
+                    "position": [
+                        0.0,
+                        0.0,
+                        16.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 7,
+                    "position": [
+                        0.0,
+                        0.0,
+                        18.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 8,
+                    "position": [
+                        0.0,
+                        0.0,
+                        20.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                },
+                {
+                    "index": 9,
+                    "position": [
+                        0.0,
+                        0.0,
+                        22.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "Normal"
+                }
+            ],
+            "player": {
+                "position": [
+                    0.0,
+                    0.10000000149011612,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ]
+            },
+            "terrainPath": "Asset/Models/Terrain/Stage02/Stage02.gltf"
+        }
+    ],
+    "skyPath": "Asset/Models/Sky/SkySphere/SkySphere.gltf"
 }

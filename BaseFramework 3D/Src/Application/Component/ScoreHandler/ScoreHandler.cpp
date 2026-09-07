@@ -22,6 +22,7 @@ void ScoreHandler::Reset()
 
 	// 投球記録削除
 	m_throwRecord.clear();
+	m_lastThrowRecID = ScoreHandlerConsts::EmptyDataID;
 
 	// 投球数とフレーム番号初期化
 	m_currentFrame = 0;
@@ -48,6 +49,8 @@ void ScoreHandler::RecordThrow(int fallenPins)
 	frameData->m_recordID[m_currentThrow] = ID;
 	// このフレーム最後のIDを更新
 	frameData->m_lastThrowID = ID;
+	// 全体の最後のIDを更新
+	m_lastThrowRecID = ID;
 
 	m_currentPinFallen += fallenPins;
 
@@ -136,8 +139,7 @@ void ScoreHandler::UpdateScore()
 				return;
 			}
 
-			// 現在の投球データのサイズを取得
-			size_t currentThrowRecSize = m_throwRecord.size();
+			// スタート地点のIDを取得
 			size_t baseID = currentData.m_lastThrowID;
 			size_t checkID = baseID;
 
@@ -147,7 +149,7 @@ void ScoreHandler::UpdateScore()
 			// ストライクなら２つ先までのデータを確認する
 			case FrameMark::Strike:
 				// データが足りない場合はリターン
-				if (baseID + ScoreHandlerConsts::NextScoreAdd_Strike > currentThrowRecSize)return;
+				if (baseID + ScoreHandlerConsts::NextScoreAdd_Strike > m_lastThrowRecID)return;
 
 				// データ取得
 				for (size_t check = 0; check < ScoreHandlerConsts::NextScoreAdd_Strike; check++)
@@ -160,7 +162,7 @@ void ScoreHandler::UpdateScore()
 				// スペアなら次のデータを確認する
 			case FrameMark::Spare:
 				// データが足りない場合はリターン
-				if (baseID + ScoreHandlerConsts::NextScoreAdd_Spare > currentThrowRecSize)return;
+				if (baseID + ScoreHandlerConsts::NextScoreAdd_Spare > m_lastThrowRecID)return;
 
 				// データ取得
 				for (size_t check = 0; check < ScoreHandlerConsts::NextScoreAdd_Spare; check++)

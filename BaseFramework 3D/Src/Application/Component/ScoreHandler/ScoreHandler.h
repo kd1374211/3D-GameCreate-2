@@ -116,6 +116,7 @@ private:
 
 	// 投球記録
 	std::vector<int> m_throwRecord;
+	int m_lastThrowRecID = ScoreHandlerConsts::EmptyDataID;
 
 	// 現在のフレーム
 	int m_currentFrame = 0;

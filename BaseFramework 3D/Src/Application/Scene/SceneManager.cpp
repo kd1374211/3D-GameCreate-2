@@ -60,7 +60,7 @@ void SceneManager::Draw()
 {
 	m_currentScene->Draw();
 
-	STAGEMGR.DrawSelectedObjectOutline();
+	STAGEMGR.DrawDebugOutline();
 }
 
 void SceneManager::DrawSprite()

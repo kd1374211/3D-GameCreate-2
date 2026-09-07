@@ -3,8 +3,8 @@
 
 Ground::Ground(std::string modelPath, Math::Vector3 pos, Math::Quaternion rot)
 {
-	m_model = std::make_shared<KdModelWork>();
-	m_model->SetModelData(modelPath);
+	m_model = std::make_shared<KdModelData>();
+	m_model->Load(modelPath);
 
 	m_cPhysics = std::make_shared<PhysicsComponent>();
 

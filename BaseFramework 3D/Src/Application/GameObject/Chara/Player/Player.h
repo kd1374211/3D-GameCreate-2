@@ -103,7 +103,11 @@ private:
 	float m_facingAngle = 0.0f;
 
 	//モデル
-	std::shared_ptr<KdModelWork> m_model;
+	std::shared_ptr<KdModelWork> m_model = nullptr;
+
+	// 強さと方向の矢印
+	std::shared_ptr<KdModelData> m_arrowModel = nullptr;
+	Math::Matrix m_arrowMat;
 
 	//位置
 	Math::Vector3 m_pos;

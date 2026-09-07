@@ -51,7 +51,7 @@ private:
 	void CheckIsStop();
 
 	//モデル
-	std::shared_ptr<KdModelWork> m_model;
+	std::shared_ptr<KdModelData> m_model;
 
 	//位置
 	Math::Vector3 m_pos;

@@ -97,6 +97,15 @@ void Player::PostUpdate()
 	// ※ご使用の環境の行列乗算順序に合わせて「*」の順序を調整してください
 	m_mWorld = matYaw * matTrans;
 
+	// 矢印配置テスト
+	Math::Matrix arrowLocalPos = Math::Matrix::CreateTranslation(0, 0, 0.25f);
+	Math::Matrix arrowScale = Math::Matrix::CreateScale(Math::Vector3(0.25f, m_throwPower * 0.75f, 0.25f));
+	Math::Matrix arrowRotX = Math::Matrix::CreateRotationX(DirectX::XMConvertToRadians(90.0f));
+	
+	//
+	Math::Matrix arrowLocalMat = arrowScale * arrowRotX * arrowLocalPos;
+	m_arrowMat = arrowLocalMat * matYaw * matTrans;
+
 	//GUI
 	KdDebugGUI::Instance().AddLog("Pos : %.2f,%.2f,%.2f\n", m_pos.x, m_pos.y, m_pos.z);
 	KdDebugGUI::Instance().AddLog("Facing Angle : %.2f\n", m_facingAngle);
@@ -105,7 +114,11 @@ void Player::PostUpdate()
 
 void Player::DrawLit()
 {
+	// 操作不可ならリターン
+	if (!m_isInputEnabled)return;
+
 	//KdShaderManager::Instance().m_StandardShader.DrawModel(*m_model, m_mWorld);
+	KdShaderManager::Instance().m_StandardShader.DrawModel(*m_arrowModel, m_arrowMat);
 }
 
 void Player::GenerateDepthMapFromLight()
@@ -138,6 +151,10 @@ void Player::Init()
 	//モデル
 	m_model = std::make_shared<KdModelWork>();
 	m_model->SetModelData("Asset/Models/Chara/PlayerBall/bowling_ball.gltf");
+
+	// 矢印
+	m_arrowModel = std::make_shared<KdModelData>();
+	m_arrowModel->Load("Asset/Models/PowerArrow/PowerArrow.gltf");
 
 	//デバッグ
 	m_pDebugWire = std::make_unique<KdDebugWireFrame>();

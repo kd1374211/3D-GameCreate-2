@@ -2,8 +2,8 @@
 
 SkySphere::SkySphere(std::string modelPath)
 {
-	m_model = std::make_shared<KdModelWork>();
-	m_model->SetModelData(modelPath);
+	m_model = std::make_shared<KdModelData>();
+	m_model->Load(modelPath);
 
 	//固定配置
 	Math::Matrix trans = Math::Matrix::CreateTranslation(Math::Vector3::Zero);

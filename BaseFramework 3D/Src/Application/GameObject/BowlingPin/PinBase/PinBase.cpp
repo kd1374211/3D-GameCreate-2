@@ -13,6 +13,9 @@ void PinBase::Update()
 		// STAGEMGR からもらった Position / Rotation をそのまま維持する
 		return;
 	}
+
+	// 倒れチェック
+	m_isFallen = CheckIsFallen();
 }
 
 void PinBase::PostUpdate()
@@ -25,6 +28,12 @@ void PinBase::PostUpdate()
 
 	//同期
 	m_cPhysics->Sync(m_pos, m_rot);
+
+	// 落下チェック
+	if (m_pos.y < STAGEMGR.GetStageInfo()->m_fallOutLine)
+	{
+		m_isFallen = true;
+	}
 
 	// Matrix更新
 	Math::Matrix trans = Math::Matrix::CreateTranslation(m_pos);
@@ -51,7 +60,7 @@ void PinBase::GenerateDepthMapFromLight()
 void PinBase::Activate()
 {
 	m_isActive = true;
-	m_cPhysics->ActivateBody();
+	//m_cPhysics->ActivateBody();
 }
 
 void PinBase::Deactivate()
@@ -108,11 +117,19 @@ void PinBase::Despawn()
 
 void PinBase::SetPos(const Math::Vector3 pos)
 {
+	// ゲーム内の変数を変更
+	m_pos = pos;
+
+	// Joltに反映
 	m_cPhysics->SetPosition(JPH::Vec3(pos.x, pos.y, pos.z));
 }
 
 void PinBase::SetRot(const Math::Quaternion rot)
 {
+	// ゲーム内の変数を変更
+	m_rot = rot;
+
+	// Joltに反映
 	m_cPhysics->SetRotation(JPH::Quat(rot.x, rot.y, rot.z, rot.w));
 }
 
@@ -120,4 +137,34 @@ void PinBase::Init()
 {
 	// 最初は非活性
 	Deactivate();
+}
+
+bool PinBase::CheckIsFallen()
+{
+	// 既に倒れていると判定済みなら更新しない（必要に応じて）
+	if (m_isFallen) return true;
+
+	// 非アクティブ（画面上に存在しない等）なら判定しない
+	if (!m_isActive) return false;
+
+	// 1. ピンの現在の回転（Quaternion）からワールドでの「上方向ベクトル」を取得
+	// ※お使いの Math クラス（DirectXMath等）に合わせてベクトル変換を行ってください
+	Math::Vector3 pinUp = Math::Vector3::Transform(Math::Vector3(0.0f, 1.0f, 0.0f), m_rot);
+	pinUp.Normalize();
+
+	// ワールドの垂直上方向
+	Math::Vector3 worldUp(0.0f, 1.0f, 0.0f);
+
+	// 2. ピンの上方向とワールドの上方向の内積を計算
+	float dot = pinUp.Dot(worldUp);
+
+	// 3. 傾き角度が約45度以上（cos(45°) ≒ 0.707）傾いたら倒れたと判定
+	const float fallenThreshold = 0.707f;
+
+	if (dot < fallenThreshold)
+	{
+		m_isFallen = true;
+	}
+
+	return m_isFallen;
 }

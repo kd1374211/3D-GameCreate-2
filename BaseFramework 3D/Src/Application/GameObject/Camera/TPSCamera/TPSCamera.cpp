@@ -6,10 +6,10 @@ void TPSCamera::Init()
 	CameraBase::Init();
 
 	// 注視点
-	m_mLocalPos = Math::Matrix::CreateTranslation(0, 1.05f, -4.5f);
+	m_mLocalPos = Math::Matrix::CreateTranslation(0, 0.4f, -2.3f);
 	
 	// 見下ろし
-	m_mLocalRot = Math::Matrix::CreateRotationX(DirectX::XMConvertToRadians(40.0f));
+	m_mLocalRot = Math::Matrix::CreateRotationX(DirectX::XMConvertToRadians(30.0f));
 }
 
 void TPSCamera::PostUpdate()

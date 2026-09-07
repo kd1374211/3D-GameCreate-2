@@ -29,8 +29,8 @@ struct LanePinData
 // プレイヤーの配置個所と向き
 struct PlayerPlacementData
 {
-	Math::Vector3 m_pos = {};
-	Math::Quaternion m_rot = {};
+	Math::Vector3 m_position = {};
+	Math::Quaternion m_rotation = {};
 };
 
 // ステージのレーンごとの情報
@@ -128,12 +128,14 @@ public:
 	StageMode GetMode() const { return m_mode; }
 	bool IsEditMode() const { return m_mode == StageMode::Edit; }
 
-	// 選択インデックスの管理
-	void SetSelectedIndex(int index) { m_selectedIndex = index; }
-	int GetSelectedIndex() const { return m_selectedIndex; }
+	// アウトラインの位置を設定
+	void SetDebugOutlinePos(bool isSelect, const Math::Vector3& pos) { 
+		m_debugSpherePos = pos;
+		m_isDebugSphereDraw = isSelect;
+	}
 
-	//選択時アウトライン追加
-	void DrawSelectedObjectOutline();
+	// 選択時アウトライン追加
+	void DrawDebugOutline();
 
 	// ステージ番号からマスタ情報を取得（存在しない場合は nullptr）
 	const StageInfo* GetStageInfo(int stageNo) const;
@@ -159,6 +161,9 @@ public:
 
 	// キャラハンドラー登録
 	void RegistCharaHandler(std::shared_ptr<CharaHandler> handler) { m_wpCharaHandler = handler; }
+
+	// エディター用
+	StageOverallData& WorkStageData() { return m_stageOverallData; }
 
 private:
 
@@ -209,11 +214,12 @@ private:
 	std::weak_ptr<KdGameObject> m_wpTerrain;
 	std::vector<std::weak_ptr<KdGameObject>> m_wpStageGimmicks;
 
-	// ↑の置き換え後
+	// ステージデータ
 	StageOverallData m_stageOverallData;
 
 	StageMode m_mode = StageMode::Play; // 初期状態はエディットモード
-	int m_selectedIndex = -1; // 選択中のオブジェクトインデックス（-1は未選択）
+	Math::Vector3 m_debugSpherePos = Math::Vector3::Zero;
+	bool m_isDebugSphereDraw = false;
 
 	//デバッグ用
 	std::unique_ptr<KdDebugWireFrame> m_debugWireFrame;

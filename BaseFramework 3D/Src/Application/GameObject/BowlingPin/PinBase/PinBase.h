@@ -45,10 +45,13 @@ protected:
 
 	virtual void Init()override;
 
+	// 倒れたかを確認
+	bool CheckIsFallen();
+
 	//物理コンポーネント
 	std::shared_ptr<PhysicsComponent> m_cPhysics;
 
-	std::shared_ptr<KdModelWork> m_model;
+	std::shared_ptr<KdModelData> m_model;
 
 	//座標
 	Math::Vector3 m_pos = Math::Vector3::Zero;
