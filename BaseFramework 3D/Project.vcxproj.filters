@@ -97,9 +97,6 @@
     <Filter Include="Src\Application\GameObject\Chara">
       <UniqueIdentifier>{24a8cfb5-65b6-402a-bd0e-b1dd068ccc63}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Src\Application\GameObject\Chara\Player">
-      <UniqueIdentifier>{e11e679e-4750-46e6-ab20-b07c7254af4f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Src\Application\Physics">
       <UniqueIdentifier>{1fac62c2-1657-48ae-b7b2-99fc9948513f}</UniqueIdentifier>
     </Filter>
@@ -371,9 +368,6 @@
     </ClInclude>
     <ClInclude Include="Src\Application\GameObject\Terrain\Ground\Ground.h">
       <Filter>Src\Application\GameObject\Terrain\Ground</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Application\GameObject\Chara\Player\Player.h">
-      <Filter>Src\Application\GameObject\Chara\Player</Filter>
     </ClInclude>
     <ClInclude Include="Src\Application\Physics\PhysicsLayer.h">
       <Filter>Src\Application\Physics</Filter>
@@ -1717,9 +1711,6 @@
     </ClCompile>
     <ClCompile Include="Src\Application\GameObject\Terrain\Ground\Ground.cpp">
       <Filter>Src\Application\GameObject\Terrain\Ground</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Application\GameObject\Chara\Player\Player.cpp">
-      <Filter>Src\Application\GameObject\Chara\Player</Filter>
     </ClCompile>
     <ClCompile Include="Src\Application\Physics\PhysicsManager.cpp">
       <Filter>Src\Application\Physics</Filter>

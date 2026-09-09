@@ -4,7 +4,6 @@
 
 #include "../../StageManager/StageManager.h"
 #include "../../GameObject/Camera/TPSCamera/TPSCamera.h"
-#include "../../GameObject/Chara/Player/Player.h"
 #include "../../GameObject/Chara/BowlingBall/BowlingBall.h"
 #include "../../Component/CharaHandler/CharaHandler.h"
 #include "../../GameObject/UI/SceneUIObjects/Game/GameUIObjects.h"
@@ -255,7 +254,13 @@ void GameScene::SetUpLane()
 
 void GameScene::UpdateSetUp()
 {
+	// ビルドレーン
 	SetUpLane();
+
+	// フラグリセット
+	m_isRollEndWaiting = false;
+
+	// ステート移行
 	m_currentSceneState = SceneState::Playing;
 }
 
@@ -271,7 +276,7 @@ void GameScene::UpdatePlaying2()
 			EndRolling();
 			// ステート更新
 			m_currentSceneState = SceneState::Clean;
-			
+
 			// 長押し対策
 			isSkipKey = true;
 
@@ -281,48 +286,75 @@ void GameScene::UpdatePlaying2()
 	}
 	else isSkipKey = false;
 
-	// 全ピンが倒れたかの確認
-	if (m_cPinHandler->CheckIsAllPinsFallen())
+	// ゲーム内時間
+	float gameDt = SCENEMGR.GetDeltaGameTime();
+
+	// カウントダウン終了後EndRolling移行
+	if (m_isRollEndWaiting)
 	{
-		// 投球終了処理
-		EndRolling();
-		// ステート更新
-		m_currentSceneState = SceneState::Clean;
-
-		// リターン
-		return;
+		m_countdownTimer -= gameDt;
+		if (m_countdownTimer < 0.0f)
+		{
+			// 投球終了処理
+			EndRolling();
+			// ステート更新
+			m_currentSceneState = SceneState::Clean;
+			// リターン
+			return;
+		}
 	}
-
-	// ステート更新
-	m_cCharaHandler->CheckRollingState();
-
-	// ステート取得
-	switch (m_cCharaHandler->GetRollingState())
+	else
 	{
-	case RollingState::NotRolling:
-		break;
-	case RollingState::Rolling:
-		break;
-	case RollingState::Stopped:
-		// 投球終了処理
-		EndRolling();
-		// ステート更新
-		m_currentSceneState = SceneState::Clean;
-		break;
-	case RollingState::Fallen:
-		// 投球終了処理
-		EndRolling();
-		// ステート更新
-		m_currentSceneState = SceneState::Clean;
-		break;
-	}
+		// 全ピンが倒れたかの確認
+		if (m_cPinHandler->CheckIsAllPinsFallen())
+		{
+			// 投球終了待ちフラグ
+			m_isRollEndWaiting = true;
 
-	// デバッグ
-	KdDebugGUI::Instance().AddLog("RollingState : %d\n",static_cast<int>(m_cCharaHandler->GetRollingState()));
+			// カウントダウン設定
+			m_countdownTimer = GameSceneConsts::CountDownOnRollEnd;
+		}
+
+		// ステート更新
+		m_cCharaHandler->CheckRollingState();
+
+		// ステート取得
+		switch (m_cCharaHandler->GetRollingState())
+		{
+		case RollingState::NotRolling:
+			break;
+		case RollingState::Rolling:
+			break;
+		case RollingState::RollEnd:
+			// 原因を確認
+			switch (m_cCharaHandler->GetPlayerBall()->GetRollEndReason())
+			{
+			case RollEndReason::Stop: // 停止
+				m_countdownTimer = GameSceneConsts::CountDownOnRollEnd_Stopped;
+				break;
+			case RollEndReason::Fall: // 落下
+			case RollEndReason::Finish: // ゴール
+				m_countdownTimer = GameSceneConsts::CountDownOnRollEnd;
+				break;
+			default:	// エラー
+				m_countdownTimer = 0.0f;
+				break;
+			}
+			// 投球終了フラグ
+			m_isRollEndWaiting = true;
+			break;
+		}
+
+		// デバッグ
+		KdDebugGUI::Instance().AddLog("RollingState : %d\n", static_cast<int>(m_cCharaHandler->GetRollingState()));
+	}
 }
 
 void GameScene::UpdateClean()
 {
+	// フラグリセット
+	m_isRollEndWaiting = false;
+
 	// 現在は次への確認だけ
 	switch (m_cScoreHandler->GetNextAction())
 	{
@@ -447,15 +479,6 @@ void GameScene::EndRolling()
 //	KdDebugGUI::Instance().AddLog("CountDown : %.2f\n", m_countdownTimer);
 //}
 
-GameResult GameScene::CalcResult(bool isClear) const
-{
-	GameResult result = {};
-	result.m_isCleared = isClear;
-	result.m_stageTimer = m_stageTimer;
-
-	return result;
-}
-
 void GameScene::Init()
 {
 	// スコアハンドラー生成
@@ -496,7 +519,7 @@ void GameScene::Init()
 	CAMERAMGR.SetDefaultCamera(CameraType::Game);
 
 	//リンク
-	camera->SetTarget(m_cCharaHandler->GetPlayer());
+	camera->SetTarget(m_cCharaHandler->GetPlayerBall());
 	
 	//追加
 	AddObject(camera);
@@ -507,16 +530,11 @@ void GameScene::Init()
 	AddObject(UIObj);
 
 	//時間制限取得
-	m_stageTimer = STAGEMGR.GetStageInfo(stageNumber)->m_timeLimit;
-	UIObj->SetTimer(m_stageTimer);
+	//m_stageTimer = STAGEMGR.GetStageInfo(stageNumber)->m_timeLimit;
+	//UIObj->SetTimer(m_stageTimer);
 
 	//フェードイン
 	FADEMGR.StartFadeIn();
-
-	for (int i = 0; i < GameSceneConsts::MovingTextCount; i++)
-	{
-		m_isMovingTextSpawned[i] = false;
-	}
 
 	//一応ゲームスピードリセット	
 	SCENEMGR.SetGameSpeed(1.0f);

@@ -1,40 +1,31 @@
 ﻿#include "CharaHandler.h"
 #include "../../Scene/SceneManager.h"
-#include "../../GameObject/Chara/Player/Player.h"
 #include "../../GameObject/Chara/BowlingBall/BowlingBall.h"
 #include "../../GameObject/Camera/CameraBase.h"
 #include "../../GameObject/Camera/CameraManager.h"
 
 void CharaHandler::Init()
 {
-	InitPlayerAndBall();
+	InitPlayerBall();
 }
 
 void CharaHandler::StartNextThrow(const Math::Vector3& pos, const Math::Quaternion& rot)
 {
-	// プレイヤー・ボールリスポーン
-	SetPlayerPosAndRot(pos, rot);
+	// ボールリスポーン
+	RespawnPlayerBall(pos, rot);
 
 	// 投球状態リセット
 	m_rollingState = RollingState::NotRolling;
 }
 
-void CharaHandler::ResetPlayerAndBall()
+void CharaHandler::ResetPlayerBall()
 {
-	m_bowlingBall->Reset();
+	m_playerBall->Reset();
 }
 
-void CharaHandler::SetPlayerPosAndRot(const Math::Vector3& pos, const Math::Quaternion& rot)
+void CharaHandler::RespawnPlayerBall(const Math::Vector3& pos, const Math::Quaternion& rot)
 {
-	// 再召喚
-	m_player->Respawn(pos, rot);
-	// カメラのターゲットを戻す
-	if (const auto& cam = CAMERAMGR.GetGameCamera().lock())
-	{
-		cam->SetTarget(m_player);
-	}
-
-	m_bowlingBall->Respawn(pos, rot);
+	m_playerBall->Respawn(pos, rot);
 }
 
 void CharaHandler::CheckRollingState()
@@ -45,7 +36,7 @@ void CharaHandler::CheckRollingState()
 	// 開始前
 	case RollingState::NotRolling:
 		// 投げ始めたかを確認する
-		if (m_bowlingBall->IsRolling())
+		if (m_playerBall->IsRolling())
 		{
 			// ステート変更
 			m_rollingState = RollingState::Rolling;
@@ -54,37 +45,19 @@ void CharaHandler::CheckRollingState()
 	// 開始後
 	case RollingState::Rolling:
 		// 投げ終わりを確認
-		if (!m_bowlingBall->IsRolling())
+		if (!m_playerBall->IsRolling())
 		{
-			// 原因を確認
-			if (m_bowlingBall->IsFall())
-			{
-				// ステート変更
-				m_rollingState = RollingState::Fallen;
-			}
-			else
-			{
-				// ステート変更
-				m_rollingState = RollingState::Stopped;
-			}
+			// ステート変更
+			m_rollingState = RollingState::RollEnd;
 		}
 		break;
 	}
 }
 
-void CharaHandler::InitPlayerAndBall()
+void CharaHandler::InitPlayerBall()
 {
-	// プレイヤー召喚
-	m_player = std::make_shared<Player>();
-	m_player->Init();
-	SCENEMGR.AddObject(m_player);
-
 	// ボール召喚
-	m_bowlingBall = std::make_shared<BowlingBall>();
-	m_bowlingBall->Init(0.1f);
-	SCENEMGR.AddObject(m_bowlingBall);
-	
-	// プレイヤーにボール登録
-	m_player->SetBowlingBall(m_bowlingBall);
-	//SetPlayerPosAndRot(Math::Vector3(0, 0.5f, 0), Math::Quaternion::Identity);
+	m_playerBall = std::make_shared<BowlingBall>();
+	m_playerBall->Init(0.1f);
+	SCENEMGR.AddObject(m_playerBall);
 }

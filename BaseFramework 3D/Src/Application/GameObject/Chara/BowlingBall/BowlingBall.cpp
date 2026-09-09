@@ -2,12 +2,18 @@
 #include "../../../Physics/PhysicsManager.h"
 #include "../../../Scene/SceneManager.h"
 #include "../../../StageManager/StageManager.h"
+#include "../../Camera/CameraManager.h"
+#include "../../Camera/CameraBase.h"
 
 BowlingBall::BowlingBall()
 {
 	//モデル
 	m_model = std::make_shared<KdModelData>();
 	m_model->Load("Asset/Models/Chara/PlayerBall/bowling_ball.gltf");
+
+	// 矢印
+	m_arrowModel = std::make_shared<KdModelData>();
+	m_arrowModel->Load("Asset/Models/PowerArrow/PowerArrow.gltf");
 }
 
 void BowlingBall::Init(float a_radius)
@@ -34,11 +40,82 @@ void BowlingBall::Init(float a_radius)
 
 void BowlingBall::Update()
 {
-	// 転がり中じゃないならリターン
-	if (!m_isRolling)return;
+	// エディットモード中はプレイヤーの移動・操作・物理を停止
+	if (STAGEMGR.IsEditMode())
+	{
+		return;
+	}
 
-	// 停止チェック
-	CheckIsStop();
+	// 転がっていないとき
+	if (!m_isRolling)
+	{
+		//移動不可ならリターン
+		if (!m_canRoll)return;
+
+		// ゲームタイム
+		float gameDt = SCENEMGR.GetDeltaGameTime();
+
+		// 操作関連
+		if (m_isInputEnabled)
+		{
+			// 投げる方向決め
+			if (GetAsyncKeyState(VK_LEFT) & 0x8000)
+			{
+				// 左回転
+				m_facingAngle -= BowlingBallConsts::TurnSpeed * gameDt;
+			}
+			if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
+			{
+				// 右回転
+				m_facingAngle += BowlingBallConsts::TurnSpeed * gameDt;
+			}
+			// 補正
+			if (m_facingAngle >= 360.0f)m_facingAngle -= 360.0f;
+			else if (m_facingAngle <= 0.0f)m_facingAngle += 0.0f;
+
+			// 投げる強さ決め
+			if (GetAsyncKeyState(VK_UP) & 0x8000)
+			{
+				// 強く
+				m_throwPower += BowlingBallConsts::PowerChangeSpeed * gameDt;
+			}
+			if (GetAsyncKeyState(VK_DOWN) & 0x8000)
+			{
+				// 弱く
+				m_throwPower -= BowlingBallConsts::PowerChangeSpeed * gameDt;
+			}
+			// 補正
+			if (m_throwPower >= BowlingBallConsts::MaxPower)m_throwPower = BowlingBallConsts::MaxPower;
+			else if (m_throwPower <= BowlingBallConsts::MinPower)m_throwPower = BowlingBallConsts::MinPower;
+
+			// 投げ
+			if (GetAsyncKeyState(VK_SPACE) & 0x8000)
+			{
+				// 投げ
+				Throw(m_pos, GetForwardVectorFromFacingAngle(m_facingAngle), m_throwPower);
+
+				// 投げたら操作不可に
+				m_isInputEnabled = false;
+			}
+		}
+	}
+	else
+	{
+		// 停止チェック
+		CheckIsStop();
+
+		// DEBUG
+		JPH::Vec3 linearV;
+		JPH::Vec3 angularV;
+		PHYSICSMGR.GetBodyInterface().GetLinearAndAngularVelocity(m_cPhysics->GetBodyID(), linearV, angularV);
+		KdDebugGUI::Instance().AddLog("Linear Velocity : %.2f,%.2f,%.2f\n", linearV.GetX(), linearV.GetY(), linearV.GetZ());
+		KdDebugGUI::Instance().AddLog("Angular Velocity : %.2f,%.2f,%.2f\n", angularV.GetX(), angularV.GetY(), angularV.GetZ());
+	}
+
+	//カメラに設定
+	if (m_wpCamera.expired())return;
+
+	m_wpCamera.lock()->SetRotationYMatrix(Math::Matrix::CreateRotationY(DirectX::XMConvertToRadians(m_facingAngle)));
 }
 
 void BowlingBall::PostUpdate()
@@ -49,8 +126,8 @@ void BowlingBall::PostUpdate()
 	// 落下チェック
 	if (m_pos.y < STAGEMGR.GetStageInfo()->m_fallOutLine)
 	{
-		m_isFall = true;
 		m_isRolling = false;
+		m_reason = RollEndReason::Fall;
 	}
 
 	// 1. 回転
@@ -62,14 +139,42 @@ void BowlingBall::PostUpdate()
 	// 3. ワールド行列の合成（旋回 → 移動)
 	m_mWorld = rotat * trans;
 
+	// 矢印配置テスト
+	Math::Matrix arrowLocalPos = Math::Matrix::CreateTranslation(0, 0, 0.25f);
+	Math::Matrix arrowScale = Math::Matrix::CreateScale(Math::Vector3(0.25f, m_throwPower * 0.75f, 0.25f));
+	Math::Matrix arrowRotX = Math::Matrix::CreateRotationX(DirectX::XMConvertToRadians(90.0f));
+
+
+	// 4. Math::Matrix を使って行列を作成
+	// ※度数法 -> 弧度法（ラジアン）変換 ( m_facingAngle * (π / 180.0f) )
+	float yawRad = m_facingAngle * static_cast<float>(M_PI / 180.0f);
+
+	// B. 進行方向への旋回（Y軸）
+	Math::Matrix matYaw = Math::Matrix::CreateRotationY(yawRad);
+
+	// C. 位置（Translation）
+	Math::Matrix matTrans = Math::Matrix::CreateTranslation(
+		m_pos
+	);
+
+	//
+	Math::Matrix arrowLocalMat = arrowScale * arrowRotX * arrowLocalPos;
+	m_arrowMat = arrowLocalMat * matYaw * matTrans;
+
 	// デバッグ
 	KdDebugGUI::Instance().AddLog("BallPos : %.2f,%.2f,%.2f\n", m_pos.x, m_pos.y, m_pos.z);
-	KdDebugGUI::Instance().AddLog("isRolling : %d\nisFall : %d\n", m_isRolling, m_isFall);
+	KdDebugGUI::Instance().AddLog("isRolling : %d\n", m_isRolling);
 }
 
 void BowlingBall::DrawLit()
 {
 	KdShaderManager::Instance().m_StandardShader.DrawModel(*m_model, m_mWorld);
+
+	// 操作不可ならリターン
+	if (!m_isInputEnabled)return;
+
+	// 矢印
+	KdShaderManager::Instance().m_StandardShader.DrawModel(*m_arrowModel, m_arrowMat);
 }
 
 void BowlingBall::GenerateDepthMapFromLight()
@@ -82,7 +187,7 @@ void BowlingBall::Throw(const Math::Vector3& startPos, const Math::Vector3& dire
 	if (m_isRolling) return;
 
 	m_isRolling = true;
-	m_isFall = false;
+	m_reason = RollEndReason::None;
 	m_stopTimer = 0.0f;
 
 	// 1.物理を一度止める
@@ -110,15 +215,15 @@ void BowlingBall::Reset()
 	}
 	// 状態のリセット
 	m_isRolling = false;
-	m_isFall = false;
+	m_canRoll = true;
+	m_isInputEnabled = true;
+	m_reason = RollEndReason::None;
 	m_stopTimer = 0.0f;
+	m_throwPower = BowlingBallConsts::StartPower;
 }
 
 void BowlingBall::Respawn(const Math::Vector3& pos, const Math::Quaternion& rot)
 {
-	// テスト
-	Math::Vector3 testPos = pos + Math::Vector3(0, 0.2f, 0);
-
 	// 状態のリセット
 	Reset();
 
@@ -130,6 +235,19 @@ void BowlingBall::Respawn(const Math::Vector3& pos, const Math::Quaternion& rot)
 
 	// 物理ボディを再度活性化
 	ActivateBody();
+
+	// ↓仮置き
+	// 位置と向きを設定
+	m_pos = pos;
+	m_facingAngle = GetFacingAngleFromQuaternion(rot);
+}
+
+void BowlingBall::HitFinishArea()
+{
+	if (!m_isRolling)return;
+
+	m_isRolling = false;
+	m_reason = RollEndReason::Finish;
 }
 
 void BowlingBall::ActivateBody()
@@ -168,6 +286,7 @@ void BowlingBall::CheckIsStop()
 		if (m_stopTimer > BowlingBallConsts::RollEndTime)
 		{
 			m_isRolling = false;
+			m_reason = RollEndReason::Stop;
 		}
 	}
 	else

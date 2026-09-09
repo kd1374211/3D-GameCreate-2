@@ -658,7 +658,6 @@
     <ClInclude Include="Src\Application\GameObject\Camera\StageViewCamera\StageViewCamera.h" />
     <ClInclude Include="Src\Application\GameObject\Camera\TPSCamera\TPSCamera.h" />
     <ClInclude Include="Src\Application\GameObject\Chara\BowlingBall\BowlingBall.h" />
-    <ClInclude Include="Src\Application\GameObject\Chara\Player\Player.h" />
     <ClInclude Include="Src\Application\GameObject\SkySphere\SkySphere.h" />
     <ClInclude Include="Src\Application\GameObject\Terrain\FinishArea\FinishArea.h" />
     <ClInclude Include="Src\Application\GameObject\Terrain\Ground\Ground.h" />
@@ -895,7 +894,6 @@
     <ClCompile Include="Src\Application\GameObject\Camera\StageViewCamera\StageViewCamera.cpp" />
     <ClCompile Include="Src\Application\GameObject\Camera\TPSCamera\TPSCamera.cpp" />
     <ClCompile Include="Src\Application\GameObject\Chara\BowlingBall\BowlingBall.cpp" />
-    <ClCompile Include="Src\Application\GameObject\Chara\Player\Player.cpp" />
     <ClCompile Include="Src\Application\GameObject\SkySphere\SkySphere.cpp" />
     <ClCompile Include="Src\Application\GameObject\Terrain\FinishArea\FinishArea.cpp" />
     <ClCompile Include="Src\Application\GameObject\Terrain\Ground\Ground.cpp" />

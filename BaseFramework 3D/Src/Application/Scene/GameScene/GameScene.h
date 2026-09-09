@@ -21,7 +21,8 @@ enum class SceneState
 struct GameSceneConsts
 {
 	// カウントダウン
-	static constexpr float CountDownOnReady = 3.5f;
+	static constexpr float CountDownOnRollEnd = 2.0f;
+	static constexpr float CountDownOnRollEnd_Stopped = 0.2f;
 	static constexpr float CountDownOnClear = 2.0f;
 	static constexpr float CountDownOnFail = 2.0f;
 
@@ -62,18 +63,12 @@ private:
 	// 投球終了処理
 	void EndRolling();
 
-	// リザルト計算
-	GameResult CalcResult(bool isClear)const;
-
 	// カウントダウン
-	float m_countdownTimer = GameSceneConsts::CountDownOnReady;
-	//流れる数字召喚フラグ
-	const std::string MovingTexts[GameSceneConsts::MovingTextCount] = { "3","2","1","GO!" };
-	bool m_isMovingTextSpawned[GameSceneConsts::MovingTextCount];
+	float m_countdownTimer;
 
-	// ステージ時間管理
-	float m_stageTimer = 0.0f;
-
+	// 投球終了確認フラグ
+	bool m_isRollEndWaiting = false;
+	
 	// ゲームUI
 	std::weak_ptr<GameUIObjects> m_wpUI;
 
