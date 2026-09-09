@@ -37,6 +37,11 @@ public:
 	// デバッグ用・各フレームごとの得点を取得
 	void AddDebugScoreLog()const;
 
+	// デバッグ用
+	std::string GetScore(int frameNo, int throwNo);
+	std::string GetTotalScore(int frameNo);
+	int GetTotalScoreInt(int frameNo);
+
 private:
 
 	// 得点計算の更新

@@ -16,7 +16,7 @@ Ground::Ground(std::string modelPath, Math::Vector3 pos, Math::Quaternion rot)
 	initData.isStatic = true;
 	initData.layer = Layers::TERRAIN;
 	initData.friction = 0.05f;
-	initData.restitution = 0.1f;
+	initData.restitution = 0.0f;
 	initData.userData = reinterpret_cast<JPH::uint64>(this);
 
 	// 🚀 ファイルパスを渡すだけで、ロードから Jolt への地形登録まで完結！

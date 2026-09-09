@@ -92,6 +92,61 @@ void ScoreHandler::AddDebugScoreLog() const
 	}
 }
 
+std::string ScoreHandler::GetScore(int frameNo, int throwNo)
+{
+	int ID = m_frameData[frameNo].m_recordID[throwNo];
+	FrameData data = m_frameData[frameNo];
+
+	// データが空ではない
+	if (ID != ScoreHandlerConsts::EmptyDataID)
+	{
+		// 投球番号確認
+		switch (throwNo)
+		{
+		case 0:
+			// ストライク確認
+			if (data.m_mark == FrameMark::Strike)
+			{
+				return "X";
+			}
+			else return std::to_string(m_throwRecord[ID]);
+		case 1:
+			// スペア確認
+			if (data.m_mark == FrameMark::Spare)
+			{
+				return "/";
+			}
+			else return std::to_string(m_throwRecord[ID]);
+		case 2:
+			return std::to_string(m_throwRecord[ID]);
+		}
+	}
+	// データが空なら-を返す
+	else return "-";
+}
+
+std::string ScoreHandler::GetTotalScore(int frameNo)
+{
+	// 計算済みなら計算結果
+	if (m_frameData[frameNo].m_isCalcEnd)
+	{
+		return std::to_string(m_frameData[frameNo].m_frameTotalScore);
+	}
+	// でなければ-
+	else return "-";
+}
+
+int ScoreHandler::GetTotalScoreInt(int frameNo)
+{
+	// 計算済みなら計算結果
+	if (m_frameData[frameNo].m_isCalcEnd)
+	{
+		return m_frameData[frameNo].m_frameTotalScore;
+	}
+	// でなければ-1
+	else return -1;
+}
+
 void ScoreHandler::UpdateScore()
 {
 	// 終了したフレームまで

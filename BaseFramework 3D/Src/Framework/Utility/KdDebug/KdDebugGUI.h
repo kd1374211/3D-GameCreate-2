@@ -109,6 +109,9 @@ struct ImGuiAppLog
 	}
 };
 
+// 追加9/8
+class ScoreHandler;
+
 class KdDebugGUI
 {
 public:
@@ -118,11 +121,20 @@ public:
 	void AddLog(const char* fmt, ...);
 	void ClearLog();
 	
+	// 追加9/8
+	// 仮スコア表示用
+	void RegistScoreHandler(std::shared_ptr<ScoreHandler> handler) { m_wpScoreHandler = handler; }
+
 private:
 	void GuiRelease();
 
 	// ImGui
 	std::unique_ptr<ImGuiAppLog> m_uqLog = nullptr;
+
+	// 追加9/8
+	// 仮スコア表示用
+	void DrawDebugScoreGUI();
+	std::weak_ptr<ScoreHandler> m_wpScoreHandler;
 
 //=====================================================
 // シングルトンパターン

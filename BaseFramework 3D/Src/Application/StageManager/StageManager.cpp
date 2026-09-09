@@ -294,6 +294,24 @@ void StageManager::RespawnStage(int laneNumber)
 	}
 }
 
+void StageManager::BonusStage(int laneNumber)
+{
+	// 全部なくなっているかをチェック
+	if (auto spPinHandler = m_wpPinHandler.lock())
+	{
+		// 全倒れ
+		if (spPinHandler->CheckIsAllPinsFallen())
+		{
+			BuildStage(laneNumber);
+		}
+		// 残りあり
+		else
+		{
+			RespawnStage(laneNumber);
+		}
+	}
+}
+
 void StageManager::DrawDebugOutline()
 {
 	// エディットモード中かつ有効なインデックスが選択されている場合のみ

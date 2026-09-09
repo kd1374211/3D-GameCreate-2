@@ -10,6 +10,7 @@
 #include "../../../Application/GameObject/Camera/CameraManager.h"
 #include "../../../Application/Physics/PhysicsLayer.h"
 #include "../../../Application/Physics/PhysicsManager.h"
+#include "../../../Application/Component/ScoreHandler/ScoreHandler.h"
 
 KdDebugGUI::KdDebugGUI()
 {}
@@ -58,6 +59,24 @@ void KdDebugGUI::GuiProcess()
 	//===========================================================
 	// 以下にImGui描画処理を記述
 	//===========================================================
+
+	// スコアボード
+	static bool isScoreGUI = false;
+	static bool isRKey = true;
+
+	if (GetAsyncKeyState('R') & 0x8000)
+	{
+		if (!isRKey)
+		{
+			isScoreGUI = !isScoreGUI;
+			isRKey = true;
+		}
+	}
+	else isRKey = false;
+
+	if (isScoreGUI)KdDebugGUI::Instance().DrawDebugScoreGUI();
+
+
 	static bool isEditWindow = false;
 	static bool isEditWindowKey = false;
 
@@ -289,6 +308,66 @@ void KdDebugGUI::GuiProcess()
 					// 内部インデックス(0〜9)をそのまま渡す
 					STAGEMGR.BuildStage(currentLaneNo);
 				}
+			}
+
+			// --- 仕切り ---
+			ImGui::Separator();
+
+			// --- C. コピーメニュー ---
+			if (ImGui::TreeNode("Copy Stage"))
+			{
+				// 値持ち
+				static int copyLaneNo = 0;
+
+				// --- レーン番号選択 (内部インデックス 0〜9 管理) ---
+				ImGui::Text("Lane Select (1 - 10):");
+
+				for (int lane = 0; lane < 10; ++lane)
+				{
+					// 0番目と5番目（UI上の1と6）以外は横に並べる
+					if (lane != 0 && lane != 5) ImGui::SameLine();
+
+					// ★ 表示テキストのみ +1（"1" 〜 "10"）
+					std::string laneLabel = std::to_string(lane + 1) + "##laneCP";
+					bool isSelected = (copyLaneNo == lane);
+
+					if (isSelected)
+					{
+						ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.6f, 0.2f, 1.0f));
+					}
+
+					if (ImGui::Button(laneLabel.c_str(), ImVec2(40, 0)))
+					{
+						copyLaneNo = lane;
+					}
+
+					if (isSelected)
+					{
+						ImGui::PopStyleColor();
+					}
+				}
+
+				// --- 仕切り ---
+				ImGui::Separator();
+
+				// --- コピーボタン ---
+				std::string text = "Copy Lane " + std::to_string(currentLaneNo + 1) + " to Lane " + std::to_string(copyLaneNo + 1);
+				if (ImGui::Button(text.c_str(), ImVec2(180, 30)))
+				{
+					// データ取得
+					auto& stageData = STAGEMGR.WorkStageData();
+
+					// コピペ
+					stageData.m_stageLaneData[copyLaneNo] = stageData.m_stageLaneData[currentLaneNo];
+
+					// セーブ
+					char filePath[64];
+					snprintf(filePath, sizeof(filePath), "Asset/Data/StageData/Stage%02d.json", currentStageNo);
+
+					STAGEMGR.SaveStage(filePath);
+				}
+
+				ImGui::TreePop();
 			}
 		}
 	
@@ -765,6 +844,165 @@ void KdDebugGUI::ClearLog()
 	if (!m_uqLog) return;
 
 	m_uqLog->Clear();
+}
+
+void KdDebugGUI::DrawDebugScoreGUI()
+{
+	// 弱参照からスマートポインタを取得
+	auto spScoreHandler = m_wpScoreHandler.lock();
+	if (!spScoreHandler) return;
+
+	// テーブルフラグ（SizingFixedSame で全列の個別設定を可能にする）
+	ImGuiTableFlags flags = ImGuiTableFlags_Borders
+		| ImGuiTableFlags_RowBg
+		| ImGuiTableFlags_SizingFixedFit;
+
+	ImGui::Begin("Score Board", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+
+	if (ImGui::BeginTable("BowlingScoreTable", 10, flags))
+	{
+		// -------------------------------------------------------------
+		// 0. 各列の幅を設定 (1〜9フレーム: 45px / 10フレーム: 65px)
+		// -------------------------------------------------------------
+		for (int i = 0; i < 9; ++i)
+		{
+			ImGui::TableSetupColumn(nullptr, ImGuiTableColumnFlags_WidthFixed, 45.0f);
+		}
+		ImGui::TableSetupColumn(nullptr, ImGuiTableColumnFlags_WidthFixed, 65.0f);
+
+		// ★ SetupColumn を反映するためにヘッダーコールを呼び出す
+		ImGui::TableHeadersRow(); // またはこの行を省略する場合は下記ヘッダー描画で自動適用されます
+
+		// -------------------------------------------------------------
+		// 1行目：フレーム番号（ヘッダー）
+		// -------------------------------------------------------------
+		ImGui::TableNextRow(ImGuiTableRowFlags_None, 24.0f); // 高さ 24px
+
+		for (size_t frameNo = BowlingSystemConsts::StartFrame; frameNo <= BowlingSystemConsts::LastFrame; frameNo++)
+		{
+			int drawFrame = static_cast<int>(frameNo + 1);
+
+			ImGui::TableSetColumnIndex(static_cast<int>(frameNo));
+
+			// テキストの中央寄せ表示
+			float colWidth = ImGui::GetColumnWidth();
+			float textWidth = ImGui::CalcTextSize(std::to_string(drawFrame).c_str()).x;
+			if (colWidth > textWidth)
+			{
+				ImGui::SetCursorPosX(ImGui::GetCursorPosX() + (colWidth - textWidth) * 0.5f);
+			}
+
+			ImGui::Text("%d", drawFrame);
+		}
+
+		// -------------------------------------------------------------
+		// 2行目：各投のスコア表示エリア（1〜9フレームは2投、10フレームは3投）
+		// -------------------------------------------------------------
+		// スコアデータの事前取得
+		std::string dummyScores[10][3] = {};
+		for (size_t frameNo = BowlingSystemConsts::StartFrame; frameNo <= BowlingSystemConsts::LastFrame; frameNo++)
+		{
+			for (size_t throwNo = 0; throwNo < BowlingSystemConsts::MaxThrowCount; throwNo++)
+			{
+				dummyScores[frameNo][throwNo] = spScoreHandler->GetScore(frameNo, throwNo);
+			}
+		}
+
+		ImGui::TableNextRow(ImGuiTableRowFlags_None, 28.0f); // 高さ 28px
+
+		// 子テーブル内の余白を小さくしてマス目に納める
+		ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(1.0f, 2.0f));
+
+		for (size_t frameNo = BowlingSystemConsts::StartFrame; frameNo <= BowlingSystemConsts::LastFrame; frameNo++)
+		{
+			ImGui::TableSetColumnIndex(static_cast<int>(frameNo));
+
+			// ID衝突防止（子テーブル識別用）
+			ImGui::PushID(static_cast<int>(frameNo));
+
+			// 1〜9フレーム（2投分表示）
+			if (frameNo < BowlingSystemConsts::LastFrame)
+			{
+				if (ImGui::BeginTable("SubTable_1_9", 2, ImGuiTableFlags_BordersInnerV))
+				{
+					// 左（1投目）を広め、右（2投目）を固定幅枠に設定
+					ImGui::TableSetupColumn(nullptr, ImGuiTableColumnFlags_WidthStretch, 1.0f);
+					ImGui::TableSetupColumn(nullptr, ImGuiTableColumnFlags_WidthFixed, 18.0f);
+
+					ImGui::TableNextRow();
+
+					for (int throwIdx = 0; throwIdx < 2; ++throwIdx)
+					{
+						ImGui::TableSetColumnIndex(throwIdx);
+						const char* pText = dummyScores[frameNo][throwIdx].c_str();
+
+						float colWidth = ImGui::GetColumnWidth();
+						float textWidth = ImGui::CalcTextSize(pText).x;
+						if (colWidth > textWidth)
+						{
+							ImGui::SetCursorPosX(ImGui::GetCursorPosX() + (colWidth - textWidth) * 0.5f);
+						}
+						ImGui::TextUnformatted(pText);
+					}
+
+					ImGui::EndTable();
+				}
+			}
+			// 10フレーム（3投分表示）
+			else
+			{
+				if (ImGui::BeginTable("SubTable_10", 3, ImGuiTableFlags_BordersInnerV))
+				{
+					ImGui::TableNextRow();
+
+					for (int throwIdx = 0; throwIdx < 3; ++throwIdx)
+					{
+						ImGui::TableSetColumnIndex(throwIdx);
+						const char* pText = dummyScores[frameNo][throwIdx].c_str();
+
+						float colWidth = ImGui::GetColumnWidth();
+						float textWidth = ImGui::CalcTextSize(pText).x;
+						if (colWidth > textWidth)
+						{
+							ImGui::SetCursorPosX(ImGui::GetCursorPosX() + (colWidth - textWidth) * 0.5f);
+						}
+						ImGui::TextUnformatted(pText);
+					}
+
+					ImGui::EndTable();
+				}
+			}
+
+			ImGui::PopID();
+		}
+
+		ImGui::PopStyleVar(); // CellPaddingを復元
+
+		// -------------------------------------------------------------
+		// 3行目：累計スコア表示エリア
+		// -------------------------------------------------------------
+		ImGui::TableNextRow(ImGuiTableRowFlags_None, 24.0f); // 高さ 24px
+
+		for (size_t frameNo = BowlingSystemConsts::StartFrame; frameNo <= BowlingSystemConsts::LastFrame; frameNo++)
+		{
+			std::string dummyTotals = spScoreHandler->GetTotalScore(frameNo);
+
+			ImGui::TableSetColumnIndex(static_cast<int>(frameNo));
+
+			float colWidth = ImGui::GetColumnWidth();
+			float textWidth = ImGui::CalcTextSize(dummyTotals.c_str()).x;
+			if (colWidth > textWidth)
+			{
+				ImGui::SetCursorPosX(ImGui::GetCursorPosX() + (colWidth - textWidth) * 0.5f);
+			}
+
+			ImGui::TextUnformatted(dummyTotals.c_str());
+		}
+
+		ImGui::EndTable();
+	}
+
+	ImGui::End();
 }
 
 void KdDebugGUI::GuiRelease()

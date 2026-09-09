@@ -98,6 +98,7 @@ public:
 	void BuildStage(int laneNumber = BowlingSystemConsts::StartFrame, StageBuildMode mode = StageBuildMode::Full);
 	// 同じステージでピンなどを再配置
 	void RespawnStage(int laneNumber = BowlingSystemConsts::StartFrame);
+	void BonusStage(int laneNumber = BowlingSystemConsts::StartFrame);
 
 	//リセット
 	void ResetStage();
@@ -165,6 +166,10 @@ public:
 	// エディター用
 	StageOverallData& WorkStageData() { return m_stageOverallData; }
 
+	// 仮置きスコア表示用
+	void SetTotalScore(int score) { m_score = score; }
+	int GetScore()const { return m_score; }
+
 private:
 
 	//いつもの
@@ -223,6 +228,7 @@ private:
 
 	//デバッグ用
 	std::unique_ptr<KdDebugWireFrame> m_debugWireFrame;
+	int m_score;
 
 	// stageNo をキーにしたマスタデータ保持用マップ
 	std::unordered_map<int, StageInfo> m_stageTable;

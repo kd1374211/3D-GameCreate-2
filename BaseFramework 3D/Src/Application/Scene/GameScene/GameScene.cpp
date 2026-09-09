@@ -261,6 +261,26 @@ void GameScene::UpdateSetUp()
 
 void GameScene::UpdatePlaying2()
 {
+	// デバッグ用
+	static bool isSkipKey = true;
+	if (GetAsyncKeyState('S') & 0x8000)
+	{
+		if (!isSkipKey)
+		{
+			// 投球終了処理
+			EndRolling();
+			// ステート更新
+			m_currentSceneState = SceneState::Clean;
+			
+			// 長押し対策
+			isSkipKey = true;
+
+			// リターン
+			return;
+		}
+	}
+	else isSkipKey = false;
+
 	// 全ピンが倒れたかの確認
 	if (m_cPinHandler->CheckIsAllPinsFallen())
 	{
@@ -317,7 +337,7 @@ void GameScene::UpdateClean()
 		break;
 	case NextActions::BonusThrow:
 		// 未定
-		STAGEMGR.RespawnStage(m_cScoreHandler->GetCurrentFrame());
+		STAGEMGR.BonusStage(m_cScoreHandler->GetCurrentFrame());
 		m_currentSceneState = SceneState::Playing;
 		break;
 	case NextActions::GameEnd:
@@ -333,6 +353,9 @@ void GameScene::UpdateEnd()
 	//リザルト移行
 	if (FADEMGR.IsFadeOutEnd())
 	{
+		// スコア仮転送用
+		STAGEMGR.SetTotalScore(m_cScoreHandler->GetTotalScoreInt(BowlingSystemConsts::LastFrame));
+
 		SceneManager::Instance().SetNextScene
 		(
 			SceneManager::SceneType::Result
@@ -497,4 +520,7 @@ void GameScene::Init()
 
 	//一応ゲームスピードリセット	
 	SCENEMGR.SetGameSpeed(1.0f);
+
+	// デバッグ用
+	KdDebugGUI::Instance().RegistScoreHandler(m_cScoreHandler);
 }

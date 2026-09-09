@@ -110,6 +110,7 @@ void Player::PostUpdate()
 	KdDebugGUI::Instance().AddLog("Pos : %.2f,%.2f,%.2f\n", m_pos.x, m_pos.y, m_pos.z);
 	KdDebugGUI::Instance().AddLog("Facing Angle : %.2f\n", m_facingAngle);
 	KdDebugGUI::Instance().AddLog("ThrowPower : %.2f\n", m_throwPower);
+
 }
 
 void Player::DrawLit()

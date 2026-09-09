@@ -113,4 +113,7 @@ void ResultScene::Event()
 		isSpacePressed = true;
 	}
 	else isSpacePressed = false;
+
+	// DEBUG
+	KdDebugGUI::Instance().AddLog("Total Score : %d\n", STAGEMGR.GetScore());
 }
