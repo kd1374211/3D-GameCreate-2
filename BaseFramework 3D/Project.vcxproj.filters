@@ -1551,6 +1551,12 @@
     <ClInclude Include="Src\Application\Component\CharaHandler\CharaHandler.h">
       <Filter>Src\Application\Component\CharaHandler</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\Const\WindowConsts.h">
+      <Filter>Src\Application\Const</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Const\DeviceAndKey.h">
+      <Filter>Src\Application\Const</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">

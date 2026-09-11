@@ -36,10 +36,14 @@ void ScoreHandler::Reset()
 	m_nextAction = NextActions::None;
 }
 
-void ScoreHandler::RecordThrow(int fallenPins)
+FrameMark ScoreHandler::RecordThrow(int fallenPins)
 {
+	// データ取得
 	FrameData* frameData = &m_frameData[m_currentFrame];
 	
+	// 戻り値用マーク
+	FrameMark mark = FrameMark::None;
+
 	// 1. ピン数の記録
 	// 記録登録前のサイズをIDとして取得
 	int ID = m_throwRecord.size();
@@ -61,6 +65,7 @@ void ScoreHandler::RecordThrow(int fallenPins)
 		if (fallenPins >= BowlingSystemConsts::PinCount)
 		{
 			frameData->m_mark = FrameMark::Strike;
+			mark = FrameMark::Strike;
 		}
 	}
 	else if (m_currentThrow == ScoreHandlerConsts::SecondThrow)
@@ -70,6 +75,7 @@ void ScoreHandler::RecordThrow(int fallenPins)
 			m_currentPinFallen >= BowlingSystemConsts::PinCount)
 		{
 			frameData->m_mark = FrameMark::Spare;
+			mark = FrameMark::Spare;
 		}
 	}
 
@@ -78,6 +84,9 @@ void ScoreHandler::RecordThrow(int fallenPins)
 
 	// 4. 得点計算の更新
 	UpdateScore();
+
+	// 5. この投球結果で得られたマークを返す
+	return mark;
 }
 
 void ScoreHandler::AddDebugScoreLog() const

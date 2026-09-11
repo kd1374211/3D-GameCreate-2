@@ -10,7 +10,7 @@ enum class RollEndReason
 	Finish
 };
 
-class CameraBase;
+class TPSCamera;
 
 class BowlingBall :public KdGameObject
 {
@@ -45,7 +45,7 @@ public:
 	void SetIsInputEnabled(bool flg) { m_isInputEnabled = flg; }
 
 	// カメラ設定
-	void SetCamera(const std::shared_ptr<CameraBase>& camera) { m_wpCamera = camera; }
+	void SetCamera(const std::shared_ptr<TPSCamera>& camera) { m_wpCamera = camera; }
 
 private:
 
@@ -57,19 +57,18 @@ private:
 		static constexpr float RollEndTime = 1.5f;
 		
 		// 発射速度
-		static constexpr float ThrowPowerMulti = 7.0f;
+		static constexpr float ThrowPowerMulti = 9.0f;
 
 		// 重さ
 		static constexpr float BallMass = 7.0f;
 
-		// 方向
-		static constexpr float TurnSpeed = 10.0f;		// 旋回速度
-
 		// 強さ
-		static constexpr float PowerChangeSpeed = 0.4f;	// 投げる強さを調整する速度
-		static constexpr float MinPower = 0.1f;			// 最低強さ
-		static constexpr float MaxPower = 1.0f;			// 最大強さ
-		static constexpr float StartPower = 0.7f;			// 基礎強さ
+		static constexpr float ThrowSpeedDiv = 1000.0f;
+		static constexpr float ThrowSpeedMax = 1.0f;
+		static constexpr float ThrowSpeedMin = 0.1f;
+
+		// 引っ張り発射
+		static constexpr float ShootMinSpeed = 0.1f;
 	};
 
 	// 活性化・非活性化
@@ -104,10 +103,11 @@ private:
 	// 物理が有効か
 	bool m_isActive = false;
 
+	// 追加9/10(TEST)
+	// 引っ張りハンティング用
+	bool m_isShootStart = false;
+	
 	//↓playerクラスから移行した
-
-	//向いている方向
-	float m_facingAngle = 0.0f;
 
 	// 強さと方向の矢印
 	std::shared_ptr<KdModelData> m_arrowModel = nullptr;
@@ -115,9 +115,6 @@ private:
 
 	//操作可能フラグ
 	bool m_isInputEnabled = false;
-
-	// 投げるパワー
-	float m_throwPower = BowlingBallConsts::StartPower;
 
 	// Quaternion から facingAngle（度数法: Deg）を求める
 	// 基準: Z+ 方向 (0, 0, 1) = 0度
@@ -164,5 +161,5 @@ private:
 	}
 
 	//カメラ用
-	std::weak_ptr<CameraBase> m_wpCamera;
+	std::weak_ptr<TPSCamera> m_wpCamera;
 };

@@ -40,7 +40,7 @@ void ResultScene::Init()
 	SCENEMGR.SetGameSpeed(1.0f);
 
 	//フェードイン
-	FADEMGR.StartFadeIn();
+	FADEMGR.StartFadeIn(&m_isFadeInEnd);
 
 	//さっきのリザルトとセーブデータのリザルトを比べて更新してよいなら更新
 	//auto saveData = STAGEMGR.WorkUserSave();
@@ -83,13 +83,7 @@ void ResultScene::Init()
 
 void ResultScene::Event()
 {
-	//フェードイン終了待ち
-	if (FADEMGR.IsFadeInEnd())
-	{
-		m_isFadeInEnd = true;
-	}
-
-	if (m_isFadeInEnd && FADEMGR.IsFadeOutEnd())
+	if (m_isSceneChangeReady)
 	{
 		SceneManager::Instance().SetNextScene
 		(
@@ -106,7 +100,7 @@ void ResultScene::Event()
 		{
 			if (m_isFadeInEnd)
 			{
-				FADEMGR.StartFadeOut();
+				FADEMGR.StartFadeOut(&m_isSceneChangeReady);
 			}
 		}
 

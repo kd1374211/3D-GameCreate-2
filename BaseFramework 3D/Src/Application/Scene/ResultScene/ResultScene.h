@@ -17,4 +17,7 @@ private:
 
 	//フェードイン終了フラグ
 	bool m_isFadeInEnd = false;
+
+	// シーン移行確認
+	bool m_isSceneChangeReady = false;
 };

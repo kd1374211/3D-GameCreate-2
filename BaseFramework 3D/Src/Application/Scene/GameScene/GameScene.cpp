@@ -18,14 +18,17 @@ void GameScene::Event()
 	//シーンステート分岐
 	switch (m_currentSceneState)
 	{
-	case SceneState::SetUp:
-		UpdateSetUp();
+	case SceneState::Waiting:
+		UpdateWaiting();
 		break;
 	case SceneState::Playing:
 		UpdatePlaying2();
 		break;
-	case SceneState::Clean:
-		UpdateClean();
+	case SceneState::CheckAndClean:
+		UpdateCheckAndClean();
+		break;
+	case SceneState::MiddleResult:
+		UpdateMiddleResult();
 		break;
 	case SceneState::End:
 		UpdateEnd();
@@ -41,227 +44,26 @@ void GameScene::SetUpLane()
 	//ステージ生成
 	STAGEMGR.BuildStage(m_cScoreHandler->GetCurrentFrame());
 }
-//
-//void GameScene::UpdateCountDown()
-//{
-//	//デルタタイム取得
-//	float dt = Application::Instance().GetDeltaTime();
-//
-//	//フェードイン終了待ち
-//	if (FADEMGR.IsFadeInEnd())
-//	{
-//		m_isFadeInEnd = true;
-//	}
-//
-//	//終了後
-//	if (m_isFadeInEnd)
-//	{
-//		//時間経過
-//		m_countdownTimer -= dt;
-//
-//		//流れるテキスト召喚
-//		for (int i = 0; i < GameSceneConsts::MovingTextCount; i++)
-//		{
-//			if (m_countdownTimer < GameSceneConsts::MovingTextsSpawn[i] && !m_isMovingTextSpawned[i])
-//			{
-//				//タイマー表示
-//				if (!m_wpUI.expired())
-//				{
-//					Math::Color color = i == GameSceneConsts::MovingTextColorGreen ? kGreenColor : kRedColor;
-//					m_wpUI.lock()->SpawnMovingText(MovingTexts[i], color);
-//				}
-//
-//				m_isMovingTextSpawned[i] = true;
-//			}
-//		}
-//
-//		//開始
-//		if (m_countdownTimer < 0.0f)
-//		{
-//			//Playingに切り替え
-//			m_currentSceneState = SceneState::Playing;
-//
-//			//プレイヤーの移動操作解禁
-//			if (!CHARAMGR.GetPlayer().expired())
-//			{
-//				std::shared_ptr<Player> player = CHARAMGR.GetPlayer().lock();
-//
-//				player->SetIsMovable(true);
-//				player->SetIsInputEnabled(true);
-//			}
-//
-//			//タイマー表示
-//			if (!m_wpUI.expired())
-//			{
-//				m_wpUI.lock()->SetIsDrawTimer(true);
-//			}
-//		}
-//
-//		//仮表示
-//		KdDebugGUI::Instance().AddLog("CountDown : %.2f\n", m_countdownTimer);
-//	}
-//}
-//
-//void GameScene::UpdatePlaying()
-//{
-//	//デルタタイム取得
-//	float dt = Application::Instance().GetDeltaTime();
-//	float gameDt = SCENEMGR.GetDeltaGameTime();
-//
-//	//ピンが全て倒れたらクリア移行
-//	if (!CHARAMGR.GetPlayer().expired() && CHARAMGR.GetPlayer().lock()->GetIsFinish())
-//	{
-//		//リザルトをセット
-//		//STAGEMGR.SetGameResult(CalcResult(true));
-//
-//		//ステージ終了演出召喚
-//		if (!m_wpUI.expired())
-//		{
-//			m_wpUI.lock()->SpawnStageFinishText(true);
-//		}
-//
-//		//仮置きタイマーセット
-//		m_countdownTimer = GameSceneConsts::CountDownOnClear;
-//
-//		//ゲーム速度ダウン
-//		SCENEMGR.SetGameSpeed(0.1f);
-//
-//		//プレイヤーの操作ストップ
-//		if (!CHARAMGR.GetPlayer().expired())
-//		{
-//			std::shared_ptr<Player> player = CHARAMGR.GetPlayer().lock();
-//
-//			player->SetIsInputEnabled(false);
-//		}
-//
-//		//移行
-//		m_currentSceneState = SceneState::GameClear;
-//	}
-//	// タイムアップでゲームオーバー
-//	else if (m_stageTimer < 0.0)
-//	{
-//		//STAGEMGR.SetGameResult(CalcResult(false));
-//
-//		//ステージ終了演出召喚
-//		if (!m_wpUI.expired())
-//		{
-//			m_wpUI.lock()->SpawnStageFinishText(false);
-//		}
-//
-//		//仮置きタイマーセット
-//		m_countdownTimer = GameSceneConsts::CountDownOnFail;
-//
-//		//ゲーム速度ダウン
-//		SCENEMGR.SetGameSpeed(0.1f);
-//
-//		//プレイヤーの操作ストップ
-//		if (!CHARAMGR.GetPlayer().expired())
-//		{
-//			std::shared_ptr<Player> player = CHARAMGR.GetPlayer().lock();
-//
-//			player->SetIsInputEnabled(false);
-//		}
-//
-//		//移行
-//		m_currentSceneState = SceneState::GameOver;
-//	}
-//	// プレイヤーの落下もゲームオーバー
-//	else
-//	{
-//		//プレイヤーの操作ストップ
-//		if (!CHARAMGR.GetPlayer().expired())
-//		{
-//			std::shared_ptr<Player> player = CHARAMGR.GetPlayer().lock();
-//
-//			// プレイヤーのY座標が一定値より下なら
-//			if (player->GetIsFall())
-//			{
-//				//STAGEMGR.SetGameResult(CalcResult(false));
-//
-//				//ステージ終了演出召喚
-//				if (!m_wpUI.expired())
-//				{
-//					m_wpUI.lock()->SpawnStageFinishText(false);
-//				}
-//
-//				//仮置きタイマーセット
-//				m_countdownTimer = GameSceneConsts::CountDownOnFail;
-//
-//				//ゲーム速度ダウン
-//				SCENEMGR.SetGameSpeed(0.1f);
-//
-//				//プレイヤーの操作ストップ
-//				player->SetIsInputEnabled(false);
-//
-//				//移行
-//				m_currentSceneState = SceneState::GameOver;
-//			}
-//		}
-//	}
-//
-//	//移行済ならこの先飛ばす
-//	if (m_currentSceneState != SceneState::Playing)return;
-//
-//	// デバッグ用加速
-//	static bool isShiftKey = false;
-//	if (GetAsyncKeyState(VK_SHIFT) & 0x8000)
-//	{
-//		SCENEMGR.SetGameSpeed(2.0f);
-//		isShiftKey = true;
-//	}
-//	else
-//	{
-//		if(isShiftKey)
-//		{
-//			SCENEMGR.SetGameSpeed(1.0f);
-//		}
-//		isShiftKey = false;
-//	}
-//
-//	// デバッグ用超加速
-//	static bool isTurbo = false;
-//	if (GetAsyncKeyState(VK_RETURN) & 0x8000)
-//	{
-//		isTurbo = true;
-//	}
-//	else
-//	{
-//		isTurbo = false;
-//	}
-//
-//	// デバッグ用時間停止
-//	static bool isTimeStopKey = false;
-//	static bool isTimeStop = false;
-//	if (GetAsyncKeyState('R') & 0x8000)
-//	{
-//		if (!isTimeStopKey)
-//		{
-//			isTimeStop = !isTimeStop;
-//		}
-//		isTimeStopKey = true;
-//	}
-//	else isTimeStopKey = false;
-//	if (isTimeStop)return;
-//
-//	//時間経過
-//	m_stageTimer -= gameDt * (isTurbo ? 40.0f : 1.0f);
-//	//UIタイマーに適応
-//	if (!m_wpUI.expired())
-//	{
-//		m_wpUI.lock()->SetTimer((int)std::ceil(m_stageTimer));
-//	}
-//}
 
-void GameScene::UpdateSetUp()
+void GameScene::Reset()
 {
-	// ビルドレーン
-	SetUpLane();
-
-	// フラグリセット
+	// 各フラグと値を初期化
+	m_isFadeInEnd = false;
+	m_isSceneChangeReady = false;
 	m_isRollEndWaiting = false;
+	m_isFrameChangeReady = false;
 
-	// ステート移行
-	m_currentSceneState = SceneState::Playing;
+	m_countdownTimer = 0.0f;
+	
+}
+
+void GameScene::UpdateWaiting()
+{
+	// フェードの終了を確認してPlayingに移行
+	if (m_isFadeInEnd)
+	{
+		m_currentSceneState = SceneState::Playing;
+	}
 }
 
 void GameScene::UpdatePlaying2()
@@ -275,7 +77,7 @@ void GameScene::UpdatePlaying2()
 			// 投球終了処理
 			EndRolling();
 			// ステート更新
-			m_currentSceneState = SceneState::Clean;
+			m_currentSceneState = SceneState::CheckAndClean;
 
 			// 長押し対策
 			isSkipKey = true;
@@ -298,7 +100,7 @@ void GameScene::UpdatePlaying2()
 			// 投球終了処理
 			EndRolling();
 			// ステート更新
-			m_currentSceneState = SceneState::Clean;
+			m_currentSceneState = SceneState::CheckAndClean;
 			// リターン
 			return;
 		}
@@ -350,40 +152,78 @@ void GameScene::UpdatePlaying2()
 	}
 }
 
-void GameScene::UpdateClean()
+void GameScene::UpdateCheckAndClean()
 {
-	// フラグリセット
-	m_isRollEndWaiting = false;
+	// リセット
+	Reset();
 
-	// 現在は次への確認だけ
-	switch (m_cScoreHandler->GetNextAction())
+	// UIのリザルトが消滅するまで待機
+	if (!m_wpUI.expired())
 	{
-	case NextActions::NextThrow:
-		// 同じレーンの再配置
-		STAGEMGR.RespawnStage(m_cScoreHandler->GetCurrentFrame());
-		m_currentSceneState = SceneState::Playing;
-		break;
-	case NextActions::NextFrame:
-		// 新しいレーンの準備
-		m_currentSceneState = SceneState::SetUp;
-		break;
-	case NextActions::BonusThrow:
-		// 未定
-		STAGEMGR.BonusStage(m_cScoreHandler->GetCurrentFrame());
-		m_currentSceneState = SceneState::Playing;
-		break;
-	case NextActions::GameEnd:
-		// リザルト移行準備
-		m_currentSceneState = SceneState::End;
-		m_countdownTimer = GameSceneConsts::CountDownOnClear;
-		break;
+		if (!m_wpUI.lock()->GetIsThrowRecordTextActive())
+		{
+			// 現在は次への確認だけ
+			switch (m_cScoreHandler->GetNextAction())
+			{
+			case NextActions::NextThrow:
+				// 同じレーンの再配置
+				STAGEMGR.RespawnStage(m_cScoreHandler->GetCurrentFrame());
+				m_currentSceneState = SceneState::Playing;
+				break;
+			case NextActions::NextFrame:
+				// 中間リザルト召喚
+				m_wpUI.lock()->SpawnMiddleResult();
+				// 中間リザルト確認に移行
+				m_currentSceneState = SceneState::MiddleResult;
+				break;
+			case NextActions::BonusThrow:
+				// 未定
+				STAGEMGR.BonusStage(m_cScoreHandler->GetCurrentFrame());
+				m_currentSceneState = SceneState::Playing;
+				break;
+			case NextActions::GameEnd:
+				// リザルト移行準備
+				m_currentSceneState = SceneState::End;
+				m_countdownTimer = GameSceneConsts::CountDownOnClear;
+				break;
+			}
+		}
+	}
+}
+
+void GameScene::UpdateMiddleResult()
+{
+	// フェードアウトが終了したら
+	if (m_isFrameChangeReady)
+	{
+		// フェードイン召喚
+		FADEMGR.StartFadeIn(&m_isFadeInEnd);
+
+		// 新しいレーンを生成
+		SetUpLane();
+
+		// 待機ステートに移行
+		m_currentSceneState = SceneState::Waiting;
+
+		// 撤退
+		return;
+	}
+
+	// 中間リザルト終了を確認してフェードアウト召喚
+	if (auto spUI = m_wpUI.lock())
+	{
+		// 終了したらフェードアウトを呼ぶ
+		if (!spUI->GetIsMiddleResultActive())
+		{
+			FADEMGR.StartFadeOut(&m_isFrameChangeReady);
+		}
 	}
 }
 
 void GameScene::UpdateEnd()
 {
 	//リザルト移行
-	if (FADEMGR.IsFadeOutEnd())
+	if (m_isSceneChangeReady)
 	{
 		// スコア仮転送用
 		STAGEMGR.SetTotalScore(m_cScoreHandler->GetTotalScoreInt(BowlingSystemConsts::LastFrame));
@@ -405,7 +245,7 @@ void GameScene::UpdateEnd()
 	//暗転
 	if (m_countdownTimer < 0.0f)
 	{
-		FADEMGR.StartFadeOut();
+		FADEMGR.StartFadeOut(&m_isSceneChangeReady);
 	}
 
 	//仮表示
@@ -417,67 +257,15 @@ void GameScene::EndRolling()
 	// 倒れたピン数を取得
 	int fallenPins = m_cPinHandler->GetFallenPinCount();
 
-	// スコア通知
-	m_cScoreHandler->RecordThrow(fallenPins);
+	// スコア通知＆マーク受け取り
+	FrameMark mark = m_cScoreHandler->RecordThrow(fallenPins);
+
+	// 受け取った情報をUIに渡しながらスポーン
+	if (!m_wpUI.expired())
+	{
+		m_wpUI.lock()->SpawnThrowResultText(fallenPins, mark);
+	}
 }
-//
-//void GameScene::UpdateGameOver()
-//{
-//	//リザルト移行
-//	if (FADEMGR.IsFadeOutEnd())
-//	{
-//		SceneManager::Instance().SetNextScene
-//		(
-//			SceneManager::SceneType::Result
-//		);
-//
-//		return;
-//	}
-//
-//	//デルタタイム取得
-//	float dt = Application::Instance().GetDeltaTime();
-//
-//	//時間経過
-//	m_countdownTimer -= dt;
-//
-//	//暗転
-//	if (m_countdownTimer < 0.0f)
-//	{
-//		FADEMGR.StartFadeOut();
-//	}
-//
-//	//仮表示
-//	KdDebugGUI::Instance().AddLog("CountDown : %.2f\n", m_countdownTimer);
-//}
-//
-//void GameScene::UpdateGameClear()
-//{
-//	//リザルト移行
-//	if (FADEMGR.IsFadeOutEnd())
-//	{
-//		SceneManager::Instance().SetNextScene
-//		(
-//			SceneManager::SceneType::Result
-//		);
-//
-//		return;
-//	}
-//
-//	//デルタタイム取得
-//	float dt = Application::Instance().GetDeltaTime();
-//
-//	//時間経過
-//	m_countdownTimer -= dt;
-//
-//	//暗転
-//	if (m_countdownTimer < 0.0f)
-//	{
-//		FADEMGR.StartFadeOut();
-//	}
-//
-//	//仮表示
-//	KdDebugGUI::Instance().AddLog("CountDown : %.2f\n", m_countdownTimer);
-//}
 
 void GameScene::Init()
 {
@@ -520,6 +308,7 @@ void GameScene::Init()
 
 	//リンク
 	camera->SetTarget(m_cCharaHandler->GetPlayerBall());
+	m_cCharaHandler->GetPlayerBall()->SetCamera(camera);
 	
 	//追加
 	AddObject(camera);
@@ -529,12 +318,8 @@ void GameScene::Init()
 	m_wpUI = UIObj;
 	AddObject(UIObj);
 
-	//時間制限取得
-	//m_stageTimer = STAGEMGR.GetStageInfo(stageNumber)->m_timeLimit;
-	//UIObj->SetTimer(m_stageTimer);
-
 	//フェードイン
-	FADEMGR.StartFadeIn();
+	FADEMGR.StartFadeIn(&m_isFadeInEnd);
 
 	//一応ゲームスピードリセット	
 	SCENEMGR.SetGameSpeed(1.0f);

@@ -23,8 +23,8 @@ public:
 	void DrawFade();	//最後に呼ぶ
 
 	//フェードイン・アウト
-	void StartFadeIn();
-	void StartFadeOut();
+	void StartFadeIn(bool* flg);
+	void StartFadeOut(bool* flg);
 
 	//外部からの確認用
 	bool IsFadeInEnd()const
@@ -55,6 +55,9 @@ private:
 
 	//このフレームで終了したか
 	bool m_fadeJustEnded = false;
+
+	// 終了時に遠隔でオンにするフラグ（召喚時に設定）
+	bool* m_remoteActiveFlg = nullptr;
 
 public:
 

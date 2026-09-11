@@ -22,8 +22,8 @@ public:
 	// スコアリセット
 	void Reset();
 
-	// 倒れたピンから現在の残りピン状況を推測し、ゲームの進行を制御する
-	void RecordThrow(int fallenPins);
+	// 倒れたピンから現在の残りピン状況を推測し、ゲームの進行を制御する(この投球の結果によるマークが戻り値)
+	FrameMark RecordThrow(int fallenPins);
 
 	// 次何かを取得
 	NextActions GetNextAction()const { return m_nextAction; }
@@ -95,14 +95,6 @@ private:
 		// スコア計算
 		static constexpr int NextScoreAdd_Strike = 2;		// ストライクを取った時いくつ先までの得点を加えるか
 		static constexpr int NextScoreAdd_Spare = 1;			// スペアを取った時いくつ先までの得点を加えるか
-	};
-
-	// フレームマーク
-	enum class FrameMark
-	{
-		Strike,
-		Spare,
-		None
 	};
 
 	// 各フレームのデータ

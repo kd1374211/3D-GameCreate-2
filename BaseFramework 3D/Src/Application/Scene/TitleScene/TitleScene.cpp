@@ -4,11 +4,12 @@
 #include "../../StageManager/StageManager.h"
 #include "../../GameObject/Camera/StageViewCamera/StageViewCamera.h"
 #include "../../GameObject/Camera/CameraManager.h"
+#include "../../Const/DeviceAndKey.h"
 
 void TitleScene::Event()
 {
-	//フェードアウト終了チェック
-	if (FADEMGR.IsFadeOutEnd())
+	//フェードアウト終了チェック(FADEMGRからオンにされる)
+	if (m_isSceneChangeReady)
 	{
 		SceneManager::Instance().SetNextScene
 		(
@@ -18,17 +19,11 @@ void TitleScene::Event()
 		return;
 	}
 
-	static bool isSpacePressed = true;
-	if (GetAsyncKeyState(VK_SPACE) & 0x8000)
+	if (KdInputManager::Instance().IsPress(GetKeyRegistName(VK_SPACE)))
 	{
-		if (!isSpacePressed)
-		{
-			//フェードアウト
-			FADEMGR.StartFadeOut();
-		}
-		isSpacePressed = true;
+		//フェードアウト
+		FADEMGR.StartFadeOut(&m_isSceneChangeReady);
 	}
-	else isSpacePressed = false;
 }
 
 void TitleScene::Init()

@@ -13,3 +13,11 @@ struct BowlingSystemConsts
 	// 投球数
 	static constexpr int MaxThrowCount = 3;
 };
+
+// フレームマーク
+enum class FrameMark
+{
+	Strike,
+	Spare,
+	None
+};

@@ -6,6 +6,7 @@
 #include "FadeManager/FadeManager.h"
 #include "GameObject/Camera/CameraManager.h"
 #include "UserSave/UserSaveManager.h"
+#include "Const/DeviceAndKey.h"
 
 // ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// /////
 // エントリーポイント
@@ -234,6 +235,11 @@ bool Application::Init(int w, int h)
 	CAMERAMGR.Init();
 	SAVEMGR.Init();
 	srand(timeGetTime());
+
+	// インプットコレクター
+	KdInputCollector* device = new KdInputCollector();
+	device->AddButton(GetKeyRegistName(VK_SPACE), new KdInputButtonForWindows(VK_SPACE));
+	KdInputManager::Instance().AddDevice(DeviceAndKeyConsts::DeviceRegistName, device);
 
 	return true;
 }

@@ -11,9 +11,10 @@ class CharaHandler;
 //シーン状況
 enum class SceneState
 {
-	SetUp,
+	Waiting,
 	Playing,
-	Clean,
+	CheckAndClean,
+	MiddleResult,
 	End
 };
 
@@ -48,6 +49,9 @@ private:
 	// レーンの準備
 	void SetUpLane();
 
+	// フラグのリセット
+	void Reset();
+
 	//各ステートの更新
 	//void UpdateCountDown();
 	//void UpdatePlaying();
@@ -55,16 +59,17 @@ private:
 	//void UpdateGameClear();
 
 	//各ステートの更新
-	void UpdateSetUp();
+	void UpdateWaiting();
 	void UpdatePlaying2();
-	void UpdateClean();
+	void UpdateCheckAndClean();
+	void UpdateMiddleResult();
 	void UpdateEnd();
 
 	// 投球終了処理
 	void EndRolling();
 
 	// カウントダウン
-	float m_countdownTimer;
+	float m_countdownTimer = 0.0f;
 
 	// 投球終了確認フラグ
 	bool m_isRollEndWaiting = false;
@@ -73,10 +78,16 @@ private:
 	std::weak_ptr<GameUIObjects> m_wpUI;
 
 	// 現在のシーン状況
-	SceneState m_currentSceneState = SceneState::Playing;
+	SceneState m_currentSceneState = SceneState::Waiting;
 
 	//フェードイン終了確認
 	bool m_isFadeInEnd = false;
+
+	// 次レーンの準備
+	bool m_isFrameChangeReady = false;
+
+	// シーン変更準備
+	bool m_isSceneChangeReady = false;
 
 	// ピン制御用
 	std::shared_ptr<PinHandler> m_cPinHandler = nullptr;

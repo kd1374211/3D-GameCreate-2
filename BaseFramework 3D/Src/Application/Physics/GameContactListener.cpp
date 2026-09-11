@@ -3,7 +3,6 @@
 
 //オブジェクトのインクルード
 #include "../GameObject/BowlingPin/PinBase/PinBase.h"
-#include "../GameObject/Chara/Player/Player.h"
 #include "../GameObject/Chara/BowlingBall/BowlingBall.h"
 
 void GameContactListener::OnContactAdded(const JPH::Body& inBody1, const JPH::Body& inBody2, const JPH::ContactManifold& inManifold, JPH::ContactSettings& ioSettings)

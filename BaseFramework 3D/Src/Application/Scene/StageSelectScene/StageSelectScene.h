@@ -22,4 +22,7 @@ private:
 
 	//フェードイン終了待ち
 	bool m_isFadeInEnd = false;
+
+	// 次シーンへの移行待ち
+	bool m_isSceneChangeReady = false;
 };

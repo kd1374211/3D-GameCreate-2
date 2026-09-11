@@ -1,46 +1,6 @@
 ﻿#pragma once
 
-//流れる文字（位置やサイズ固定）
-struct MovingText
-{
-	bool m_isActive;		//有効フラグ
-	float m_activeTime;		//有効時間
-	float m_posX;			//X座標
-	Math::Color m_color;	//色
-	std::string m_text = "";//テキスト
-};
-
-// GameUI内の仮定義
-struct GameUIConsts
-{
-	// 流れる文字
-	static constexpr float MovingTextStartX = -1020.0f;
-	static constexpr float MovingTextActiveSec = 0.9f;
-	static constexpr float MoveSpeedFast = 5000.0f;
-	static constexpr float MoveSpeedSlow = 80.0f;
-	static constexpr float SlowMoveStartSec = 0.2f;
-	static constexpr float SlowMoveEndSec = 0.7f;
-	static constexpr float MovingTextPosY = 0.0f;
-
-	//タイマーとピン共通
-	static constexpr float TimerPinPosY = 318.0f;
-
-	//タイマー
-	static constexpr float ClockIconPosX = -100.0f;
-	static constexpr float TimeNumberTextPosX = 50.0f;
-
-	//ピン数
-	static constexpr float PinIconPosX = 350.0f;
-	static constexpr float PinTextPosX = 630.0f;
-
-	//ステージ終了演出
-	static constexpr float WindowExpandSpeed_StageFinish = 10.0f;
-	static constexpr Math::Vector2 WindowSize = Math::Vector2(640.0f, 120.0f);
-	static constexpr float WindowAlpha = 0.95f;
-
-	// 操作ガイド
-	static constexpr Math::Vector2 KeyGuideTextPos = Math::Vector2(-635.0f, -330.0f);
-};
+enum class FrameMark;
 
 class GameUIObjects :public KdGameObject
 {
@@ -52,36 +12,69 @@ public:
 	void Update()override;
 	void DrawSprite()override;
 
-	//残り時間セット
-	void SetTimer(int time) { m_time = time; }
+	// 中間リザルトテキスト召喚
+	void SpawnMiddleResult();
 
-	// 流れる文字召喚（カウントダウン用）
-	void SpawnMovingText(std::string text, Math::Color color);
+	// 中間リザルト消滅確認
+	bool GetIsMiddleResultActive()const { return m_isMiddleResultActive; }
+
+	// 投球終了リザルト演出表示開始
+	void SpawnThrowResultText(int fallenPins, FrameMark mark);
+
+	// 投球終了テキストの消滅確認
+	bool GetIsThrowRecordTextActive()const { return m_isThrowResultTextActive; }
 
 	// ステージクリア・クリア失敗演出召喚(trueクリアfalse失敗)
 	void SpawnStageFinishText(bool isClear);
 
-	//時間描画
-	void SetIsDrawTimer(bool flg) { m_isTimerDraw = flg; }
-
 private:
 
-	void Init()override;
+	// GameUI内の仮定義
+	struct GameUIConsts
+	{
+		//ピン数
+		static constexpr float PinPosY = 318.0f;
+		static constexpr float PinIconPosX = 350.0f;
+		static constexpr float PinTextPosX = 630.0f;
 
-	//時計画像
-	std::shared_ptr<KdTexture> m_clockTex = nullptr;
+		// 投球リザルト演出
+		static constexpr Math::Vector2 ThrowResultTestPos = Math::Vector2(0.0f, 0.0f);	// テキスト出現位置
+		static constexpr float ThrowResultScaleExpandSpeed = 8.0f;						// テキスト拡大速度
+		static constexpr float ThrowResultTextMaxScale = 1.0f;							// 最大スケール
+		static constexpr float ThrowResultActiveEnd = 2.0f;								// テキスト表示時間
+
+		// 中間リザルト
+		static constexpr float MiddleResultPosX = 0.0f;
+		static constexpr float MiddleResultStartY = -500.0f;
+		static constexpr float MiddleResultEndY = 0.0f;
+		static constexpr float MiddleResultMoveSpeed = 1500.0f;
+
+		//ステージ終了演出
+		static constexpr float WindowExpandSpeed_StageFinish = 10.0f;
+		static constexpr Math::Vector2 WindowSize = Math::Vector2(640.0f, 120.0f);
+		static constexpr float WindowAlpha = 0.95f;
+
+		// 操作ガイド
+		static constexpr Math::Vector2 KeyGuideTextPos = Math::Vector2(-635.0f, -330.0f);
+	};
+
+	void Init()override;
 
 	//ピン画像
 	std::shared_ptr<KdTexture> m_pinTex = nullptr;
 
-	//タイマー描画フラグ
-	bool m_isTimerDraw = false;
+	// 投球リザルト演出用テキスト
+	bool m_isThrowResultTextActive = false;
+	float m_throwResultTextScale = 0.0f;
+	std::string m_throwRecordText = "";
+	Math::Color m_throwRecordColor = {};
+	float m_throwResultTextActiveTime = 0.0f;
 
-	//時間
-	int m_time;
-
-	//流れる文字
-	MovingText m_movingTexts;
+	// 中間リザルト用
+	bool m_isMiddleResultActive = false;
+	float m_middleResultPosY = GameUIConsts::MiddleResultStartY;
+	bool m_isMiddleResultUp = true;
+	bool m_isMiddleResultUpEnd = false;
 
 	//ステージ終了演出用
 	bool m_isStageFinishTextDraw = false;

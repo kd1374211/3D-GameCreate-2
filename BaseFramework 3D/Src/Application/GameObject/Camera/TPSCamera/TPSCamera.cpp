@@ -22,6 +22,20 @@ void TPSCamera::PostUpdate()
 		_targetMat = Math::Matrix::CreateTranslation(_spTarget->GetPos());
 	}
 
+	// カメラの回転
+	if (m_isCamLocked)
+	{
+		// ロック状態ならマウス位置補正だけ
+		ResetCursorPos();
+	}
+	else
+	{	
+		// ロック状態にないならカメラを回転させる
+		UpdateRotateByMouse();
+	}
+	m_mRotation = GetRotationMatrix();
+	m_mWorld = m_mLocalPos * m_mRotation * _targetMat;
+
 	m_mWorld = m_mLocalPos * m_mLocalRot * m_mRotation * _targetMat;
 
 	// ↓めり込み防止の為の座標補正計算↓

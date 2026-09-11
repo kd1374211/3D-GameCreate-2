@@ -3,7 +3,8 @@
 #include "../../../Scene/SceneManager.h"
 #include "../../../StageManager/StageManager.h"
 #include "../../Camera/CameraManager.h"
-#include "../../Camera/CameraBase.h"
+#include "../../Camera/TPSCamera/TPSCamera.h"
+#include "../../../Const/WindowConsts.h"
 
 BowlingBall::BowlingBall()
 {
@@ -58,44 +59,72 @@ void BowlingBall::Update()
 		// 操作関連
 		if (m_isInputEnabled)
 		{
-			// 投げる方向決め
-			if (GetAsyncKeyState(VK_LEFT) & 0x8000)
-			{
-				// 左回転
-				m_facingAngle -= BowlingBallConsts::TurnSpeed * gameDt;
-			}
-			if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
-			{
-				// 右回転
-				m_facingAngle += BowlingBallConsts::TurnSpeed * gameDt;
-			}
-			// 補正
-			if (m_facingAngle >= 360.0f)m_facingAngle -= 360.0f;
-			else if (m_facingAngle <= 0.0f)m_facingAngle += 0.0f;
+			POINT cursorPos;
+			// 現在のマウス位置を取得
+			GetCursorPos(&cursorPos);
+			Math::Vector2 fixedPos = GetFixedCursorPos(cursorPos);
 
-			// 投げる強さ決め
-			if (GetAsyncKeyState(VK_UP) & 0x8000)
-			{
-				// 強く
-				m_throwPower += BowlingBallConsts::PowerChangeSpeed * gameDt;
-			}
-			if (GetAsyncKeyState(VK_DOWN) & 0x8000)
-			{
-				// 弱く
-				m_throwPower -= BowlingBallConsts::PowerChangeSpeed * gameDt;
-			}
-			// 補正
-			if (m_throwPower >= BowlingBallConsts::MaxPower)m_throwPower = BowlingBallConsts::MaxPower;
-			else if (m_throwPower <= BowlingBallConsts::MinPower)m_throwPower = BowlingBallConsts::MinPower;
+			KdDebugGUI::Instance().AddLog("CursorPos : %.2f,%.2f\n", fixedPos.x, fixedPos.y);
 
-			// 投げ
-			if (GetAsyncKeyState(VK_SPACE) & 0x8000)
+			// 左クリックで準備
+			if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
 			{
-				// 投げ
-				Throw(m_pos, GetForwardVectorFromFacingAngle(m_facingAngle), m_throwPower);
+				// まだ押してなければ
+				if (!m_isShootStart)
+				{
+					// ショット開始フラグをオンに
+					m_isShootStart = true;
 
-				// 投げたら操作不可に
-				m_isInputEnabled = false;
+					// カメラの回転を固定
+					if (!m_wpCamera.expired())
+					{
+						m_wpCamera.lock()->SetIsCamLocked(true);
+					}
+				}
+			}
+			// 左クリックを離す
+			else
+			{
+				// もし押している状態だったら
+				if (m_isShootStart)
+				{
+					// 前回と今回の差を確認
+					float mouseMoveDist = fixedPos.y;
+
+					// ゲーム時間から1秒ごとの速度を確認
+					mouseMoveDist /= gameDt;
+
+					// 速度から発射速度を確定(最大値は制限)
+					float throwPower = std::min(mouseMoveDist / BowlingBallConsts::ThrowSpeedDiv, BowlingBallConsts::ThrowSpeedMax);
+
+					// 速度が一定値以上＆上向き
+					if (throwPower > BowlingBallConsts::ThrowSpeedMin)
+					{
+						// 角度取得
+						Math::Vector3 direction = Math::Vector3(0, 1, 0);
+						if (!m_wpCamera.expired())
+						{
+							direction = m_wpCamera.lock()->GetRotationYMatrix().Backward();
+						}
+
+						// 速度と角度をもとに投げる
+						Throw(m_pos, direction, throwPower);
+
+						// 操作不可に
+						m_isInputEnabled = false;
+					}
+					else
+					{
+						// カメラの回転を解放(投げキャンセル)
+						if (!m_wpCamera.expired())
+						{
+							m_wpCamera.lock()->SetIsCamLocked(false);
+						}
+					}
+					
+					// 投げ開始フラグを戻す
+					m_isShootStart = false;
+				}
 			}
 		}
 	}
@@ -113,9 +142,9 @@ void BowlingBall::Update()
 	}
 
 	//カメラに設定
-	if (m_wpCamera.expired())return;
+	//if (m_wpCamera.expired())return;
 
-	m_wpCamera.lock()->SetRotationYMatrix(Math::Matrix::CreateRotationY(DirectX::XMConvertToRadians(m_facingAngle)));
+	//m_wpCamera.lock()->SetRotationYMatrix(Math::Matrix::CreateRotationY(DirectX::XMConvertToRadians(m_facingAngle)));
 }
 
 void BowlingBall::PostUpdate()
@@ -140,26 +169,32 @@ void BowlingBall::PostUpdate()
 	m_mWorld = rotat * trans;
 
 	// 矢印配置テスト
-	Math::Matrix arrowLocalPos = Math::Matrix::CreateTranslation(0, 0, 0.25f);
-	Math::Matrix arrowScale = Math::Matrix::CreateScale(Math::Vector3(0.25f, m_throwPower * 0.75f, 0.25f));
-	Math::Matrix arrowRotX = Math::Matrix::CreateRotationX(DirectX::XMConvertToRadians(90.0f));
+	if (m_isShootStart && m_isInputEnabled) // 左クリックホールド中
+	{
+		Math::Matrix arrowLocalPos = Math::Matrix::CreateTranslation(0, 0, 0.25f);
+		Math::Matrix arrowScale = Math::Matrix::CreateScale(Math::Vector3(0.25f, 0.25f, 0.25f));
+		Math::Matrix arrowRotX = Math::Matrix::CreateRotationX(DirectX::XMConvertToRadians(90.0f));
 
+		// カメラからY回転を取得
+		Math::Matrix rotY;
+		if (!m_wpCamera.expired())
+		{
+			rotY = m_wpCamera.lock()->GetRotationYMatrix();
+		}
+		else
+		{
+			rotY = Math::Matrix::CreateRotationY(0);
+		}
 
-	// 4. Math::Matrix を使って行列を作成
-	// ※度数法 -> 弧度法（ラジアン）変換 ( m_facingAngle * (π / 180.0f) )
-	float yawRad = m_facingAngle * static_cast<float>(M_PI / 180.0f);
+		// C. 位置（Translation）
+		Math::Matrix matTrans = Math::Matrix::CreateTranslation(
+			m_pos
+		);
 
-	// B. 進行方向への旋回（Y軸）
-	Math::Matrix matYaw = Math::Matrix::CreateRotationY(yawRad);
-
-	// C. 位置（Translation）
-	Math::Matrix matTrans = Math::Matrix::CreateTranslation(
-		m_pos
-	);
-
-	//
-	Math::Matrix arrowLocalMat = arrowScale * arrowRotX * arrowLocalPos;
-	m_arrowMat = arrowLocalMat * matYaw * matTrans;
+		//
+		Math::Matrix arrowLocalMat = arrowScale * arrowRotX * arrowLocalPos;
+		m_arrowMat = arrowLocalMat * rotY * matTrans;
+	}
 
 	// デバッグ
 	KdDebugGUI::Instance().AddLog("BallPos : %.2f,%.2f,%.2f\n", m_pos.x, m_pos.y, m_pos.z);
@@ -170,11 +205,12 @@ void BowlingBall::DrawLit()
 {
 	KdShaderManager::Instance().m_StandardShader.DrawModel(*m_model, m_mWorld);
 
-	// 操作不可ならリターン
-	if (!m_isInputEnabled)return;
-
-	// 矢印
-	KdShaderManager::Instance().m_StandardShader.DrawModel(*m_arrowModel, m_arrowMat);
+	// 左クリックホールド中のみ
+	if (m_isShootStart && m_isInputEnabled)
+	{
+		// 矢印
+		KdShaderManager::Instance().m_StandardShader.DrawModel(*m_arrowModel, m_arrowMat);
+	}
 }
 
 void BowlingBall::GenerateDepthMapFromLight()
@@ -193,7 +229,7 @@ void BowlingBall::Throw(const Math::Vector3& startPos, const Math::Vector3& dire
 	// 1.物理を一度止める
 	DeactivateBody();
 
-	// 2. プレイヤーから受け取った投球位置へ移動
+	// 2. 受け取った投球位置へ移動
 	m_cPhysics->SetPosition(JPH::Vec3(startPos.x, startPos.y, startPos.z));
 	m_cPhysics->SetRotation(JPH::Quat::sIdentity());
 
@@ -219,7 +255,15 @@ void BowlingBall::Reset()
 	m_isInputEnabled = true;
 	m_reason = RollEndReason::None;
 	m_stopTimer = 0.0f;
-	m_throwPower = BowlingBallConsts::StartPower;
+
+	// マウス関連のリセット
+	m_isShootStart = false;
+
+	// カメラの回転を解放
+	if (!m_wpCamera.expired())
+	{
+		m_wpCamera.lock()->SetIsCamLocked(false);
+	}
 }
 
 void BowlingBall::Respawn(const Math::Vector3& pos, const Math::Quaternion& rot)
@@ -239,7 +283,10 @@ void BowlingBall::Respawn(const Math::Vector3& pos, const Math::Quaternion& rot)
 	// ↓仮置き
 	// 位置と向きを設定
 	m_pos = pos;
-	m_facingAngle = GetFacingAngleFromQuaternion(rot);
+	if (!m_wpCamera.expired())
+	{
+		m_wpCamera.lock()->SetRotationYMatrix(Math::Matrix::CreateFromQuaternion(rot));
+	}
 }
 
 void BowlingBall::HitFinishArea()

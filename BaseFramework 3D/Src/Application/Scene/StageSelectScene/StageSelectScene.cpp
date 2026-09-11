@@ -10,19 +10,13 @@ void StageSelectScene::Init()
 	AddObject(UIObj);
 
 	//フェードイン
-	FADEMGR.StartFadeIn();
+	FADEMGR.StartFadeIn(&m_isFadeInEnd);
 }
 
 void StageSelectScene::Event()
 {
-	//フェードイン終了待機
-	if (FADEMGR.IsFadeInEnd())
-	{
-		m_isFadeInEnd = true;
-	}
-
 	//フェードインが終わってかつフェードアウトも終わったら
-	if (m_isFadeInEnd && FADEMGR.IsFadeOutEnd())
+	if (m_isSceneChangeReady)
 	{
 		SceneManager::Instance().SetNextScene
 		(
@@ -49,26 +43,11 @@ void StageSelectScene::Event()
 				}
 
 				//フェードアウト
-				FADEMGR.StartFadeOut();
+				FADEMGR.StartFadeOut(&m_isSceneChangeReady);
 			}
 		}
 
 		isSpacePressed = true;
 	}
 	else isSpacePressed = false;
-
-	//仮置きタイトル戻り
-	static bool isShiftPressed = true;
-	if (GetAsyncKeyState(VK_LSHIFT) & 0x8000)
-	{
-		if (!isShiftPressed)
-		{
-			SceneManager::Instance().SetNextScene
-			(
-				SceneManager::SceneType::Title
-			);
-		}
-		isShiftPressed = true;
-	}
-	else isShiftPressed = false;
 }

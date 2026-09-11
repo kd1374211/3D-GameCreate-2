@@ -29,6 +29,7 @@ struct FontTypeConst
 
 	// Game
 	static constexpr int Game_CountDown = 7;
+	static constexpr int Game_ThrowResult = 8;
 	static constexpr int Game_TimerAndPin = 6;
 	static constexpr int Game_StageFinish = 8;
 	static constexpr int Game_KeyGuide = 3;

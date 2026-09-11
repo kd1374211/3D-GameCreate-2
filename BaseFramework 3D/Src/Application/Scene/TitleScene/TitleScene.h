@@ -13,5 +13,8 @@ public :
 
 private :
 
+	// シーン移行検知
+	bool m_isSceneChangeReady = false;
+
 	void Event() override;
 };

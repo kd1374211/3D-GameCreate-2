@@ -25,6 +25,9 @@ void FadeManager::Update()
 			m_isFade = false;
 			m_fadeState = FadeState::None;
 			m_fadeJustEnded = true;
+
+			// 遠隔登録フラグを起動
+			if (m_remoteActiveFlg != nullptr)*m_remoteActiveFlg = true;
 		}
 	}
 	else if (m_fadeState == FadeState::FadeIn)
@@ -37,6 +40,9 @@ void FadeManager::Update()
 			m_isFade = false;
 			m_fadeState = FadeState::None;
 			m_fadeJustEnded = true;
+
+			// 遠隔登録フラグを起動
+			if (m_remoteActiveFlg != nullptr)*m_remoteActiveFlg = true;
 		}
 	}
 }
@@ -47,20 +53,32 @@ void FadeManager::DrawFade()
 	KdShaderManager::Instance().m_spriteShader.DrawBox(0, 0, 1280, 720, &color, true);
 }
 
-void FadeManager::StartFadeIn()
+void FadeManager::StartFadeIn(bool* flg)
 {
 	//フェードが終わっていないならリターン
 	if (m_isFade)return;
 
 	m_fadeState = FadeState::FadeIn;
 	m_isFade = true;
+
+	// 遠隔起動フラグ登録
+	m_remoteActiveFlg = flg;
+
+	// フラグをリセット
+	*m_remoteActiveFlg = false;
 }
 
-void FadeManager::StartFadeOut()
+void FadeManager::StartFadeOut(bool* flg)
 {
 	//フェードが終わっていないならリターン
 	if (m_isFade)return;
 
 	m_fadeState = FadeState::FadeOut;
 	m_isFade = true;
+
+	// 遠隔起動フラグ登録
+	m_remoteActiveFlg = flg;
+
+	// フラグをリセット
+	*m_remoteActiveFlg = false;
 }

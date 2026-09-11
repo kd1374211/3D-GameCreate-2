@@ -58,6 +58,9 @@ protected:
 	// カメラ回転用角度
 	Math::Vector3								m_DegAng		= Math::Vector3::Zero;
 
+	void UpdateRotateByMouse();
+	void ResetCursorPos();
+
 	std::shared_ptr<KdCamera>					m_spCamera		= nullptr;
 	std::weak_ptr<KdGameObject>					m_wpTarget;
 	std::vector<std::weak_ptr<KdGameObject>>	m_wpHitObjectList{};
