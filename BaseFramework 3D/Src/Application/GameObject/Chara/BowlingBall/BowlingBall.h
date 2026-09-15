@@ -67,6 +67,7 @@ private:
 		static constexpr float ThrowSpeedDiv = 1000.0f;
 		static constexpr float ThrowSpeedMax = 1.0f;
 		static constexpr float ThrowSpeedMin = 0.1f;
+		static constexpr float AverageCalcTime = 0.1f;
 
 		// 引っ張り発射
 		static constexpr float ShootMinSpeed = 0.1f;
@@ -104,9 +105,17 @@ private:
 	// 物理が有効か
 	bool m_isActive = false;
 
-	// 追加9/10(TEST)
 	// 引っ張りハンティング用
 	bool m_isShootStart = false;
+
+	// 速度平均管理用
+	struct SpeedStoreData
+	{
+		float m_gameDt = 0.0f;
+		float m_moveDist = 0.0f;
+	};
+	std::vector<SpeedStoreData> m_speedStoreData = {};
+	float m_totalStoredTime = 0.0f;
 	
 	//↓playerクラスから移行した
 
@@ -160,6 +169,9 @@ private:
 
 		return dir; // 長さ 1 の単位ベクトル
 	}
+
+	// 平均計算
+	float CalcAvgMoveSpeed();
 
 	//カメラ用
 	std::weak_ptr<TPSCamera> m_wpCamera;

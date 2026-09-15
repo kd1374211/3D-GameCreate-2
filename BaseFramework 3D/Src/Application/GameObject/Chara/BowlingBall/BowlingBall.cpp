@@ -80,6 +80,9 @@ void BowlingBall::Update()
 				{
 					// ショット開始フラグをオンに
 					m_isShootStart = true;
+					// 平均をリセット
+					m_speedStoreData.clear();
+					m_totalStoredTime = 0.0f;
 
 					// カメラの回転を固定
 					if (!m_wpCamera.expired())
@@ -87,6 +90,21 @@ void BowlingBall::Update()
 						m_wpCamera.lock()->SetIsCamLocked(true);
 					}
 				}
+
+				// 押している間
+				// このフレームでの移動量を追加
+				m_speedStoreData.push_back(SpeedStoreData(gameDt, std::max(fixedPos.y, 0.0f)));
+				m_totalStoredTime += gameDt;
+
+				// 保持上限時間を超えなくなるまで古い記録を削除
+				while (m_totalStoredTime - m_speedStoreData.begin()->m_gameDt > BowlingBallConsts::AverageCalcTime)
+				{
+					m_totalStoredTime -= m_speedStoreData.begin()->m_gameDt;
+					m_speedStoreData.erase(m_speedStoreData.begin());
+				}
+
+				// DEBUG
+				KdDebugGUI::Instance().AddLog("ShotPower : %.2f\n", std::min(CalcAvgMoveSpeed() / BowlingBallConsts::ThrowSpeedDiv, BowlingBallConsts::ThrowSpeedMax));
 			}
 			// 左クリックを離す
 			else
@@ -94,14 +112,15 @@ void BowlingBall::Update()
 				// もし押している状態だったら
 				if (m_isShootStart)
 				{
-					// 前回と今回の差を確認
-					float mouseMoveDist = fixedPos.y;
+					// このフレームでの移動量を追加
+					m_speedStoreData.push_back(SpeedStoreData(gameDt, std::max(fixedPos.y, 0.0f)));
+					m_totalStoredTime += gameDt;
 
 					// ゲーム時間から1秒ごとの速度を確認
-					mouseMoveDist /= gameDt;
+					float mouseMoveAvg = CalcAvgMoveSpeed();
 
 					// 速度から発射速度を確定(最大値は制限)
-					float throwPower = std::min(mouseMoveDist / BowlingBallConsts::ThrowSpeedDiv, BowlingBallConsts::ThrowSpeedMax);
+					float throwPower = std::min(mouseMoveAvg / BowlingBallConsts::ThrowSpeedDiv, BowlingBallConsts::ThrowSpeedMax);
 
 					// 速度が一定値以上＆上向き
 					if (throwPower > BowlingBallConsts::ThrowSpeedMin)
@@ -288,6 +307,8 @@ void BowlingBall::Reset()
 
 	// マウス関連のリセット
 	m_isShootStart = false;
+	m_speedStoreData.clear();
+	m_totalStoredTime = 0.0f;
 
 	// カメラの回転を解放
 	if (!m_wpCamera.expired())
@@ -371,4 +392,22 @@ void BowlingBall::CheckIsStop()
 		// 連続停止時間リセット
 		m_stopTimer = 0.0f;
 	}
+}
+
+float BowlingBall::CalcAvgMoveSpeed()
+{
+	float moveDist = 0.0f;
+	float gdt = 0.0f;
+
+	// 保持しているデータの合計gdtと移動距離を計算
+	for (auto data : m_speedStoreData)
+	{
+		moveDist += data.m_moveDist;
+		gdt += data.m_gameDt;
+	}
+
+	// moveDistをgdtで割って平均を取得
+	float avg = moveDist / gdt;
+
+	return avg;
 }
