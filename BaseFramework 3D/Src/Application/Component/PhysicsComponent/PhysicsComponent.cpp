@@ -47,6 +47,17 @@ bool PhysicsComponent::Init(const std::string& path, PhysicsInitData initData)
 	if (m_isStatic)
 	{
 		JPH::MeshShapeSettings meshSettings(jphVertices, jphTriangles);
+
+		// 1. アクティブエッジ（Ghost Collision対策）の有効化設定
+		// 隣り合うポリゴンの角度差が小さい場合、継ぎ目の「法線（跳ねる方向）」を滑らかに補正します
+		// 50度〜60度以下の緩やかな斜面の継ぎ目を「障害物」として判定しなくなります
+		meshSettings.mActiveEdgeCosThresholdAngle = cosf(JPH::DegreesToRadians(50.0f));
+
+		// 2. 形状の生成
+		auto result = meshSettings.Create();
+		if (result.HasError()) return false;
+		finalShape = result.Get();
+
 		finalShape = meshSettings.Create().Get();
 	}
 	else
