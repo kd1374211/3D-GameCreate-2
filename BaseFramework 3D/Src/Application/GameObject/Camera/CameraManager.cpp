@@ -48,6 +48,9 @@ void CameraManager::SetDefaultCamera(CameraType type)
 			m_wpDebugCamera.lock()->SetIsDefault(true);
 		}
 	}
+
+	// アクティブカメラを更新
+	m_activeCamera = type;
 }
 
 void CameraManager::DeleteGameCamera()
@@ -64,4 +67,19 @@ void CameraManager::DeleteDebugCamera()
 	{
 		m_wpDebugCamera.lock()->SetExpire();
 	}
+}
+
+std::weak_ptr<CameraBase> CameraManager::GetActiveCamera()
+{
+	if (m_activeCamera == CameraType::Game)
+	{
+		return GetGameCamera();
+	}
+	else if (m_activeCamera == CameraType::Debug)
+	{
+		return GetDebugCamera();
+	}
+
+	// エラー
+	return GetGameCamera();
 }

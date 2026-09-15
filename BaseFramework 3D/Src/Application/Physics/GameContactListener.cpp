@@ -54,17 +54,37 @@ void GameContactListener::OnContactAdded(const JPH::Body& inBody1, const JPH::Bo
 		}
 	}
 
-	//// Player & Pin
-	//if (layer1 == Layers::BOWLINGBALL && layer2 == Layers::PIN_STATIC)
-	//{
-	//	// UserData から ピンオブジェクトのポインタを復元
-	//	if (auto* pin = dynamic_cast<PinBase*>(gameObj2))
-	//	{
-	//		// プレイヤーの現在速度を取得してピンに通知！
-	//		JPH::Vec3 playerVel = body1->GetLinearVelocity();
-	//		pin->OnHitByPlayer(playerVel);
-	//	}
-	//}
+	// Player & Pin
+	if (layer1 == Layers::BOWLINGBALL && layer2 == Layers::BOWLINGPIN)
+	{
+		// UserData から ピンオブジェクトのポインタを復元
+		if (auto* pin = dynamic_cast<PinBase*>(gameObj2))
+		{
+			// プレイヤーの現在速度を取得してピンに通知！
+			JPH::Vec3 playerVel = body1->GetLinearVelocity();
+			pin->OnHit(playerVel);
+		}
+	}
+
+	// Pin & Pin
+	if (layer1 == Layers::BOWLINGPIN && layer2 == Layers::BOWLINGPIN)
+	{
+		// UserData から ピンオブジェクトのポインタを復元
+		if (auto* pin = dynamic_cast<PinBase*>(gameObj1))
+		{
+			// プレイヤーの現在速度を取得してピンに通知！
+			JPH::Vec3 pinVel = body2->GetLinearVelocity();
+			pin->OnHit(pinVel);
+		}
+
+		// UserData から ピンオブジェクトのポインタを復元
+		if (auto* pin2 = dynamic_cast<PinBase*>(gameObj2))
+		{
+			// プレイヤーの現在速度を取得してピンに通知！
+			JPH::Vec3 pinVel = body1->GetLinearVelocity();
+			pin2->OnHit(pinVel);
+		}
+	}
 }
 
 void GameContactListener::OnContactPersisted(const JPH::Body& inBody1, const JPH::Body& inBody2, const JPH::ContactManifold& inManifold, JPH::ContactSettings& ioSettings)
@@ -114,6 +134,38 @@ void GameContactListener::OnContactPersisted(const JPH::Body& inBody1, const JPH
 		if (auto ball = dynamic_cast<BowlingBall*>(gameObj2))
 		{
 			ball->HitFinishArea();
+		}
+	}
+
+	// Player & Pin
+	if (layer1 == Layers::BOWLINGBALL && layer2 == Layers::BOWLINGPIN)
+	{
+		// UserData から ピンオブジェクトのポインタを復元
+		if (auto* pin = dynamic_cast<PinBase*>(gameObj2))
+		{
+			// プレイヤーの現在速度を取得してピンに通知！
+			JPH::Vec3 playerVel = body1->GetLinearVelocity();
+			pin->OnHit(playerVel);
+		}
+	}
+
+	// Pin & Pin
+	if (layer1 == Layers::BOWLINGPIN && layer2 == Layers::BOWLINGPIN)
+	{
+		// UserData から ピンオブジェクトのポインタを復元
+		if (auto* pin = dynamic_cast<PinBase*>(gameObj1))
+		{
+			// プレイヤーの現在速度を取得してピンに通知！
+			JPH::Vec3 pinVel = body2->GetLinearVelocity();
+			pin->OnHit(pinVel);
+		}
+
+		// UserData から ピンオブジェクトのポインタを復元
+		if (auto* pin2 = dynamic_cast<PinBase*>(gameObj2))
+		{
+			// プレイヤーの現在速度を取得してピンに通知！
+			JPH::Vec3 pinVel = body1->GetLinearVelocity();
+			pin2->OnHit(pinVel);
 		}
 	}
 }

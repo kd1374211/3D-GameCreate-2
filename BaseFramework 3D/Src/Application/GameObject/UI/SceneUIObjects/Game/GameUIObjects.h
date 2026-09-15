@@ -2,6 +2,16 @@
 
 enum class FrameMark;
 
+//流れる文字（位置やサイズ固定）
+struct MovingText
+{
+	bool m_isActive = false;		//有効フラグ
+	float m_activeTime = 0.0f;		//有効時間
+	float m_posX = 0.0f;			//X座標
+	std::string m_text = "";//テキスト
+	bool* m_endChecker = nullptr;	// 終了を受け取るための変数
+};
+
 class GameUIObjects :public KdGameObject
 {
 public:
@@ -11,6 +21,9 @@ public:
 
 	void Update()override;
 	void DrawSprite()override;
+
+	// 投球開始テキスト召喚
+	void SpawnThrowStartText(int frameNo, int throwNo, bool* endCheck);
 
 	// 中間リザルトテキスト召喚
 	void SpawnMiddleResult();
@@ -29,10 +42,24 @@ public:
 
 private:
 
+	// 各アップデート
+	void UpdateThrowStartText(float dt);
+	void UpdateThrowResult(float dt);
+	void UpdateMiddleResult(float dt);
+
 	// GameUI内の仮定義
 	struct GameUIConsts
 	{
-		//ピン数
+		// スタート演出
+		static constexpr float ThrowStartTextStartX = -1020.0f;
+		static constexpr float ThrowStartTextActiveSec = 0.9f;
+		static constexpr float MoveSpeedFast = 5000.0f;
+		static constexpr float MoveSpeedSlow = 80.0f;
+		static constexpr float SlowMoveStartSec = 0.2f;
+		static constexpr float SlowMoveEndSec = 0.7f;
+		static constexpr float ThrowStartTextPosY = 0.0f;
+
+		// ピン数
 		static constexpr float PinPosY = 318.0f;
 		static constexpr float PinIconPosX = 350.0f;
 		static constexpr float PinTextPosX = 630.0f;
@@ -60,6 +87,9 @@ private:
 
 	void Init()override;
 
+	// 流れる文字
+	MovingText m_throwStartText;
+
 	//ピン画像
 	std::shared_ptr<KdTexture> m_pinTex = nullptr;
 
@@ -75,6 +105,8 @@ private:
 	float m_middleResultPosY = GameUIConsts::MiddleResultStartY;
 	bool m_isMiddleResultUp = true;
 	bool m_isMiddleResultUpEnd = false;
+
+	std::shared_ptr<KdTexture> m_middleResultWindowTexK = nullptr;
 
 	//ステージ終了演出用
 	bool m_isStageFinishTextDraw = false;

@@ -22,17 +22,23 @@ void TPSCamera::PostUpdate()
 		_targetMat = Math::Matrix::CreateTranslation(_spTarget->GetPos());
 	}
 
-	// カメラの回転
-	if (m_isCamLocked)
+	// DEBUG
+	// シフト中はマウス開放
+	if (!(GetAsyncKeyState(VK_SHIFT) & 0x8000))
 	{
-		// ロック状態ならマウス位置補正だけ
-		ResetCursorPos();
+		// カメラの回転
+		if (m_isCamLocked)
+		{
+			// ロック状態ならマウス位置補正だけ
+			ResetCursorPos();
+		}
+		else
+		{
+			// ロック状態にないならカメラを回転させる
+			UpdateRotateYOnlyByMouse();
+		}
 	}
-	else
-	{	
-		// ロック状態にないならカメラを回転させる
-		UpdateRotateByMouse();
-	}
+	
 	m_mRotation = GetRotationMatrix();
 	m_mWorld = m_mLocalPos * m_mRotation * _targetMat;
 

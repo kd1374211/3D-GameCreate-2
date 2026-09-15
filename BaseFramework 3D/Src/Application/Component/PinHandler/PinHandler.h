@@ -11,6 +11,9 @@ public:
 	PinHandler() {}
 	~PinHandler() {}
 
+	// 初期化
+	void Init();
+
 	// ピンプールに必要な量だけ追加
 	void CreatePinPool(PinType type, size_t amount);
 
@@ -28,6 +31,9 @@ public:
 
 	// 全部のピンが倒れたかを確認
 	bool CheckIsAllPinsFallen()const;
+
+	// 現在使用中のピンの物理挙動をオン
+	void ActivateBody();
 
 private:
 

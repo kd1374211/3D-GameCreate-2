@@ -49,6 +49,9 @@ private:
 	// レーンの準備
 	void SetUpLane();
 
+	// 投球準備
+	void ReadyThrow();
+
 	// フラグのリセット
 	void Reset();
 
@@ -79,6 +82,9 @@ private:
 
 	// 現在のシーン状況
 	SceneState m_currentSceneState = SceneState::Waiting;
+
+	// 投球開始テキスト消滅確認
+	bool m_isThrowStartTextEnd = false;
 
 	//フェードイン終了確認
 	bool m_isFadeInEnd = false;

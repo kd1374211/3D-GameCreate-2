@@ -178,6 +178,9 @@
     <Filter Include="Src\Application\Component\CharaHandler">
       <UniqueIdentifier>{44afc1d6-86a3-435a-9ead-0d1424019bd3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\GameObject\ShotCursor">
+      <UniqueIdentifier>{50b49b6a-7ff8-4687-bd2f-fff1ced6fddc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -1557,6 +1560,9 @@
     <ClInclude Include="Src\Application\Const\DeviceAndKey.h">
       <Filter>Src\Application\Const</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\ShotCursor\ShotCursor.h">
+      <Filter>Src\Application\GameObject\ShotCursor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -2245,6 +2251,9 @@
     </ClCompile>
     <ClCompile Include="Src\Application\Component\CharaHandler\CharaHandler.cpp">
       <Filter>Src\Application\Component\CharaHandler</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\ShotCursor\ShotCursor.cpp">
+      <Filter>Src\Application\GameObject\ShotCursor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -11,6 +11,7 @@ enum class RollEndReason
 };
 
 class TPSCamera;
+class ShotCursor;
 
 class BowlingBall :public KdGameObject
 {
@@ -162,4 +163,7 @@ private:
 
 	//カメラ用
 	std::weak_ptr<TPSCamera> m_wpCamera;
+
+	// カーソル用
+	std::weak_ptr<ShotCursor> m_wpCursor;
 };

@@ -16,8 +16,8 @@ public:
 	void GenerateDepthMapFromLight()override;
 
 	// 使用・不使用切り替え
-	void Activate();
-	void Deactivate();
+	void ActivateBody();
+	void DeactivateBody();
 
 	// 使用状態チェック
 	bool GetIsActive()const { return m_isActive; }
@@ -41,7 +41,15 @@ public:
 	// ピン番号のゲッター
 	int GetPinIndex()const { return m_pinIndex; }
 
+	// 当たられたとき
+	void OnHit(JPH::Vec3 vel);
+
 protected:
+
+	struct PinBaseConsts
+	{
+		static constexpr float OnHitVelocityMulti = 1.0f;
+	};
 
 	virtual void Init()override;
 
@@ -59,6 +67,14 @@ protected:
 
 	// 使用状態か
 	bool m_isActive = false;
+	bool m_isBodyActive = false;
+
+	// 当たられたか
+	bool m_isHit = false;
+
+	// 吹っ飛び待ちか
+	bool m_isHitPending = false;
+	JPH::Vec3 m_pendingVelocity = JPH::Vec3::sZero();
 
 	// 倒れているか
 	bool m_isFallen = false;

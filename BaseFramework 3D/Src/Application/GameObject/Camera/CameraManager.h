@@ -28,6 +28,7 @@ public:
 	// カメラ取得
 	std::weak_ptr<CameraBase> GetGameCamera() { return m_wpGameCamera; }
 	std::weak_ptr<CameraBase> GetDebugCamera() { return m_wpDebugCamera; }
+	std::weak_ptr<CameraBase> GetActiveCamera();
 
 private:
 
@@ -39,6 +40,9 @@ private:
 
 	//カメラ（デバッグ）
 	std::weak_ptr<CameraBase> m_wpDebugCamera;
+
+	// 現在アクティブなカメラ
+	CameraType m_activeCamera = CameraType::Game;
 
 public:
 

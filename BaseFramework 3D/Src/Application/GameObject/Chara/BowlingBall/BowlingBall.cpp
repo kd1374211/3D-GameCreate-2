@@ -5,6 +5,7 @@
 #include "../../Camera/CameraManager.h"
 #include "../../Camera/TPSCamera/TPSCamera.h"
 #include "../../../Const/WindowConsts.h"
+#include "../../ShotCursor/ShotCursor.h"
 
 BowlingBall::BowlingBall()
 {
@@ -37,6 +38,11 @@ void BowlingBall::Init(float a_radius)
 	//物理Init
 	m_cPhysics = std::make_shared<PhysicsComponent>();
 	m_cPhysics->Init(a_radius, initData);
+
+	// カーソル生成
+	std::shared_ptr<ShotCursor> cursor = std::make_shared<ShotCursor>();
+	SCENEMGR.AddObject(cursor);
+	m_wpCursor = cursor;
 }
 
 void BowlingBall::Update()
@@ -139,6 +145,30 @@ void BowlingBall::Update()
 		PHYSICSMGR.GetBodyInterface().GetLinearAndAngularVelocity(m_cPhysics->GetBodyID(), linearV, angularV);
 		KdDebugGUI::Instance().AddLog("Linear Velocity : %.2f,%.2f,%.2f\n", linearV.GetX(), linearV.GetY(), linearV.GetZ());
 		KdDebugGUI::Instance().AddLog("Angular Velocity : %.2f,%.2f,%.2f\n", angularV.GetX(), angularV.GetY(), angularV.GetZ());
+	}
+
+	// カーソルの描画フラグを更新
+	auto cursor = m_wpCursor.lock();
+	if (cursor)
+	{
+		// 描画フラグを更新
+		cursor->SetIsDraw(m_isShootStart);
+
+		// 描画フラグオンなら位置も更新
+		if (m_isShootStart)
+		{
+			auto activeCam = CAMERAMGR.GetActiveCamera().lock();
+
+			if (activeCam)
+			{
+				// ボールの位置を変換
+				Math::Vector3 resultPos;
+				activeCam->WorkCamera()->ConvertWorldToScreenDetail(m_pos, resultPos);
+
+				// そこに指定
+				cursor->SetDrawPos(Math::Vector2(resultPos.x, resultPos.y));
+			}
+		}
 	}
 
 	//カメラに設定
@@ -252,7 +282,7 @@ void BowlingBall::Reset()
 	// 状態のリセット
 	m_isRolling = false;
 	m_canRoll = true;
-	m_isInputEnabled = true;
+	m_isInputEnabled = false;
 	m_reason = RollEndReason::None;
 	m_stopTimer = 0.0f;
 

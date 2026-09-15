@@ -31,6 +31,9 @@ public:
 	// ボールの投球状態フラグを取得する
 	RollingState GetRollingState()const { return m_rollingState; }
 
+	// ボールの投球可能フラグをオン
+	void StartThrow();
+
 private:
 
 	// プレイヤー召喚

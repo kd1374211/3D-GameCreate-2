@@ -3,6 +3,16 @@
 #include "../../StageManager/StageManager.h"
 #include "../../GameObject/BowlingPin/NormalPin/NormalPin.h"
 
+void PinHandler::Init()
+{
+	// 各種リストのクリア
+	for (size_t i = 0; i < (size_t)PinType::Number; i++)
+	{
+		m_pinPool[i].clear();
+	}
+	m_activePins.clear();
+}
+
 void PinHandler::CreatePinPool(PinType type, size_t amount)
 {
 	// ピンのプールへの追加とシーンへの追加
@@ -133,6 +143,19 @@ bool PinHandler::CheckIsAllPinsFallen() const
 
 	// 見つからずにループを抜けたらtrue
 	return true;
+}
+
+void PinHandler::ActivateBody()
+{
+	// 全てのアクティブなピンを見て物理をオンに
+	for (const auto& wpPin : m_activePins)
+	{
+		auto pin = wpPin.lock();
+		if (pin)
+		{
+			pin->ActivateBody();
+		}
+	}
 }
 
 void PinHandler::SpawnPin(PinType type, Math::Vector3 startPos, int pinIndex)

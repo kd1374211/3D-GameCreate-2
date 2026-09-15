@@ -14,6 +14,16 @@ void PinBase::Update()
 		return;
 	}
 
+	// 吹っ飛び待機があるなら実行
+	if (m_isHitPending)
+	{
+		// 待機力を強くして加える
+		m_cPhysics->AddImpulse(m_pendingVelocity * PinBaseConsts::OnHitVelocityMulti);
+
+		// 次呼ばれないように
+		m_isHitPending = false;
+	}
+
 	// 倒れチェック
 	m_isFallen = CheckIsFallen();
 }
@@ -57,16 +67,16 @@ void PinBase::GenerateDepthMapFromLight()
 	KdShaderManager::Instance().m_StandardShader.DrawModel(*m_model, m_mWorld);
 }
 
-void PinBase::Activate()
+void PinBase::ActivateBody()
 {
-	m_isActive = true;
-	//m_cPhysics->ActivateBody();
+	m_cPhysics->ActivateBody();
+	m_isBodyActive = true;
 }
 
-void PinBase::Deactivate()
+void PinBase::DeactivateBody()
 {
-	m_isActive = false;
 	m_cPhysics->DeactivateBody();
+	m_isBodyActive = false;
 }
 
 void PinBase::Reset()
@@ -77,8 +87,12 @@ void PinBase::Reset()
 		m_cPhysics->SetLinearVelocity(JPH::Vec3::sZero());
 		m_cPhysics->SetAngularVelocity(JPH::Vec3::sZero());
 	}
+
 	// 状態のリセット
 	m_isFallen = false;
+	m_isHit = false;
+	m_isHitPending = false;
+	m_pendingVelocity = JPH::Vec3::sZero();
 }
 
 void PinBase::Spawn(Math::Vector3 pos, Math::Quaternion rot, int index)
@@ -94,7 +108,7 @@ void PinBase::Spawn(Math::Vector3 pos, Math::Quaternion rot, int index)
 	Reset();
 
 	// 3.使用状態を活性化にする
-	Activate();
+	m_isActive = true;
 
 	// 4.ピンに管理番号を付与
 	m_pinIndex = index;
@@ -109,7 +123,8 @@ void PinBase::Despawn()
 	Reset();
 
 	// 2.使用状態を非活性にする
-	Deactivate();
+	m_isActive = false;
+	DeactivateBody();
 
 	// 3.ピンの管理番号を無効値に
 	m_pinIndex = -1;
@@ -133,10 +148,23 @@ void PinBase::SetRot(const Math::Quaternion rot)
 	m_cPhysics->SetRotation(JPH::Quat(rot.x, rot.y, rot.z, rot.w));
 }
 
+void PinBase::OnHit(JPH::Vec3 vel)
+{
+	// もう当たっているならリターン
+	if (m_isHit)return;
+
+	// 吹っ飛び待機
+	m_isHitPending = true;
+	m_isHit = true;
+
+	m_pendingVelocity = vel;
+}
+
 void PinBase::Init()
 {
 	// 最初は非活性
-	Deactivate();
+	m_isActive = false;
+	DeactivateBody();
 }
 
 bool PinBase::CheckIsFallen()

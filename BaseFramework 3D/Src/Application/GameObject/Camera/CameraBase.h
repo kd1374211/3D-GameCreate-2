@@ -50,6 +50,7 @@ public:
 	//追加8/25
 	//これに設定
 	void SetIsDefault(bool flg) { m_isDefault = flg; }
+	bool GetIsDefault()const { return m_isDefault; }
 
 	//ターゲット取得
 	std::weak_ptr<KdGameObject> GetTarget()const { return m_wpTarget; }
@@ -59,6 +60,7 @@ protected:
 	Math::Vector3								m_DegAng		= Math::Vector3::Zero;
 
 	void UpdateRotateByMouse();
+	void UpdateRotateYOnlyByMouse();
 	void ResetCursorPos();
 
 	std::shared_ptr<KdCamera>					m_spCamera		= nullptr;

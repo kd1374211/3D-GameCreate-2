@@ -54,6 +54,12 @@ void CharaHandler::CheckRollingState()
 	}
 }
 
+void CharaHandler::StartThrow()
+{
+	// プレイヤーを投球可能に
+	m_playerBall->SetIsInputEnabled(true);
+}
+
 void CharaHandler::InitPlayerBall()
 {
 	// ボール召喚

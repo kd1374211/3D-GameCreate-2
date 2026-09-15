@@ -45,16 +45,22 @@ void GameScene::SetUpLane()
 	STAGEMGR.BuildStage(m_cScoreHandler->GetCurrentFrame());
 }
 
+void GameScene::ReadyThrow()
+{
+	// ボールの投球可能フラグを有効化
+	m_cCharaHandler->StartThrow();
+}
+
 void GameScene::Reset()
 {
 	// 各フラグと値を初期化
+	m_isThrowStartTextEnd = false;
 	m_isFadeInEnd = false;
 	m_isSceneChangeReady = false;
 	m_isRollEndWaiting = false;
 	m_isFrameChangeReady = false;
 
 	m_countdownTimer = 0.0f;
-	
 }
 
 void GameScene::UpdateWaiting()
@@ -62,12 +68,29 @@ void GameScene::UpdateWaiting()
 	// フェードの終了を確認してPlayingに移行
 	if (m_isFadeInEnd)
 	{
+		// 投球開始テキスト召喚
+		auto ui = m_wpUI.lock();
+		if (ui)
+		{
+			ui->SpawnThrowStartText(m_cScoreHandler->GetCurrentFrame(), m_cScoreHandler->GetCurrentThrow(), &m_isThrowStartTextEnd);
+		}
+
 		m_currentSceneState = SceneState::Playing;
 	}
 }
 
 void GameScene::UpdatePlaying2()
 {
+	// 投球開始テキストの消滅確認
+	if (m_isThrowStartTextEnd)
+	{
+		// 準備
+		ReadyThrow();
+
+		// 次呼ばれないように
+		m_isThrowStartTextEnd = false;
+	}
+
 	// デバッグ用
 	static bool isSkipKey = true;
 	if (GetAsyncKeyState('S') & 0x8000)
@@ -168,6 +191,8 @@ void GameScene::UpdateCheckAndClean()
 			case NextActions::NextThrow:
 				// 同じレーンの再配置
 				STAGEMGR.RespawnStage(m_cScoreHandler->GetCurrentFrame());
+				// 投球開始テキスト召喚
+				m_wpUI.lock()->SpawnThrowStartText(m_cScoreHandler->GetCurrentFrame(), m_cScoreHandler->GetCurrentThrow(), &m_isThrowStartTextEnd);
 				m_currentSceneState = SceneState::Playing;
 				break;
 			case NextActions::NextFrame:
@@ -179,6 +204,8 @@ void GameScene::UpdateCheckAndClean()
 			case NextActions::BonusThrow:
 				// 未定
 				STAGEMGR.BonusStage(m_cScoreHandler->GetCurrentFrame());
+				// 投球開始テキスト召喚
+				m_wpUI.lock()->SpawnThrowStartText(m_cScoreHandler->GetCurrentFrame(), m_cScoreHandler->GetCurrentThrow(), &m_isThrowStartTextEnd);
 				m_currentSceneState = SceneState::Playing;
 				break;
 			case NextActions::GameEnd:
@@ -275,6 +302,7 @@ void GameScene::Init()
 
 	// ピンハンドラー生成
 	m_cPinHandler = std::make_shared<PinHandler>();
+	m_cPinHandler->Init();
 
 	// キャラハンドラー生成
 	m_cCharaHandler = std::make_shared<CharaHandler>();
