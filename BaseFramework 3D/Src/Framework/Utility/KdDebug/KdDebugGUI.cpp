@@ -60,19 +60,25 @@ void KdDebugGUI::GuiProcess()
 	// 以下にImGui描画処理を記述
 	//===========================================================
 
-	// スコアボード
 	static bool isScoreGUI = false;
-	static bool isRKey = true;
 
-	if (GetAsyncKeyState('R') & 0x8000)
+	if (!ImGui::GetIO().WantCaptureKeyboard)
 	{
-		if (!isRKey)
+		// スコアボード
+		static bool isRKey = true;
+
+		if (GetAsyncKeyState('R') & 0x8000)
 		{
-			isScoreGUI = !isScoreGUI;
-			isRKey = true;
+			if (!isRKey)
+			{
+				isScoreGUI = !isScoreGUI;
+				isRKey = true;
+			}
 		}
+		else isRKey = false;
 	}
-	else isRKey = false;
+
+	
 
 	if (isScoreGUI)KdDebugGUI::Instance().DrawDebugScoreGUI();
 
@@ -96,13 +102,13 @@ void KdDebugGUI::GuiProcess()
 				if (STAGEMGR.IsEditMode())
 				{
 					STAGEMGR.SetMode(StageMode::Play);
-					SCENEMGR.SetGameSpeed(1.0f);
+					// プレイヤーの操作を有効に
+					STAGEMGR.BuildStage_D();
 					CAMERAMGR.SetDefaultCamera(CameraType::Game);
 				}
 				else
 				{
 					STAGEMGR.SetMode(StageMode::Edit);
-					SCENEMGR.SetGameSpeed(0.0f);
 
 					//ポイントターゲットカメラ
 					//今のカメラのターゲット取得
@@ -120,6 +126,7 @@ void KdDebugGUI::GuiProcess()
 
 					std::shared_ptr<PointTargetCamera> camera = std::make_shared<PointTargetCamera>();
 					camera->Init(targetPos);
+					camera->SetIsMouseLocked(false);
 					SCENEMGR.AddObject(camera);
 
 					CAMERAMGR.SetDebugCamera(camera);
@@ -159,46 +166,66 @@ void KdDebugGUI::GuiProcess()
 		// カメラ取得
 		std::weak_ptr<CameraBase> parent = CAMERAMGR.GetDebugCamera();
 		std::shared_ptr<PointTargetCamera> camera;
-		if (!parent.expired())
+
+		// 入力中はストップ
+		if (!ImGui::GetIO().WantCaptureKeyboard)
 		{
-			camera = std::dynamic_pointer_cast<PointTargetCamera>(parent.lock());
-
-			//取得成功時
-			if (camera)
+			if (!parent.expired())
 			{
-				Math::Vector3 currentView = camera->GetCurrentViewPoint();
-				Math::Vector3 move = Math::Vector3::Zero;
+				camera = std::dynamic_pointer_cast<PointTargetCamera>(parent.lock());
 
-				//カメラ移動
-				if (GetAsyncKeyState(VK_UP) & 0x8000)
+				//取得成功時
+				if (camera)
 				{
-					move.z += 1.0f;
-				}
-				if (GetAsyncKeyState(VK_DOWN) & 0x8000)
-				{
-					move.z -= 1.0f;
-				}
-				if (GetAsyncKeyState(VK_LEFT) & 0x8000)
-				{
-					move.x -= 1.0f;
-				}
-				if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
-				{
-					move.x += 1.0f;
-				}
-				if (GetAsyncKeyState('Z') & 0x8000)
-				{
-					move.y += 1.0f;
-				}
-				if (GetAsyncKeyState('X') & 0x8000)
-				{
-					move.y -= 1.0f;
-				}
+					Math::Vector3 currentView = camera->GetCurrentViewPoint();
+					Math::Vector3 move = Math::Vector3::Zero;
 
-				move.Normalize();
-				move *= 0.2f;
-				camera->MoveCamera(currentView + move);
+					//カメラ移動
+					if (GetAsyncKeyState(VK_UP) & 0x8000)
+					{
+						move.z += 1.0f;
+					}
+					if (GetAsyncKeyState(VK_DOWN) & 0x8000)
+					{
+						move.z -= 1.0f;
+					}
+					if (GetAsyncKeyState(VK_LEFT) & 0x8000)
+					{
+						move.x -= 1.0f;
+					}
+					if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
+					{
+						move.x += 1.0f;
+					}
+					if (GetAsyncKeyState('Z') & 0x8000)
+					{
+						move.y += 1.0f;
+					}
+					if (GetAsyncKeyState('X') & 0x8000)
+					{
+						move.y -= 1.0f;
+					}
+
+					move.Normalize();
+					move *= 0.2f;
+					camera->MoveCamera(currentView + move);
+				}
 			}
+
+			// ギミックの再生、停止
+			static bool isPKey = true;
+
+			if (GetAsyncKeyState('P') & 0x8000)
+			{
+				if (!isPKey)
+				{
+					// 反転
+					STAGEMGR.SetIsGimmickStop(!STAGEMGR.GetIsGimmickStop());
+
+					isPKey = true;
+				}
+			}
+			else isPKey = false;
 		}
 
 		// 位置固定
@@ -503,11 +530,52 @@ void KdDebugGUI::GuiProcess()
 				{
 					auto& gimmicks = currentFrame.m_laneGimmickData;
 
+					// --- 追加ボタンエリア ---
+					if (ImGui::Button("+ Add Finish Area", ImVec2(140, 0)))
+					{
+						LaneGimmickData newGimmick;
+						newGimmick.m_type = "Goal";
+						newGimmick.m_param = FinishAreaParams{}; // FinishArea 用パラメータ
+
+						gimmicks.push_back(newGimmick);
+
+						// 追加したギミックを選択状態にする
+						selectedCategory = SelectedTargetCategory::Gimmick;
+						selectedIndex = static_cast<int>(gimmicks.size()) - 1;
+
+						STAGEMGR.BuildStage(currentLaneNo);
+					}
+
+					ImGui::SameLine();
+
+					if (ImGui::Button("+ Add Rotating Terrain", ImVec2(160, 0)))
+					{
+						LaneGimmickData newGimmick;
+						newGimmick.m_type = "RotatingTerrain";
+
+						// デフォルトの回転パラメータを設定
+						RotatingParams rotParam;
+						rotParam.m_modelPath = ""; // デフォルトのモデルパス
+						rotParam.m_rotateSpeed = 1.0f;
+						newGimmick.m_param = rotParam;
+
+						gimmicks.push_back(newGimmick);
+
+						// 追加したギミックを選択状態にする
+						selectedCategory = SelectedTargetCategory::Gimmick;
+						selectedIndex = static_cast<int>(gimmicks.size()) - 1;
+
+						STAGEMGR.BuildStage(currentLaneNo);
+					}
+
+					ImGui::Spacing();
+
 					// 1. ギミック一覧リストボックス
 					ImGui::BeginChild("GimmickListChild", ImVec2(0, 120), true);
 					for (int i = 0; i < static_cast<int>(gimmicks.size()); ++i)
 					{
-						std::string label = "[" + std::to_string(i) + "] Gimmick " + std::to_string(i + 1);
+						// タイプ名もラベルに表示して見やすくする
+						std::string label = "[" + std::to_string(i) + "] " + gimmicks[i].m_type;
 
 						// カテゴリとインデックスが両方一致している場合のみハイライト
 						bool isSelected = (selectedCategory == SelectedTargetCategory::Gimmick && selectedIndex == i);
@@ -533,25 +601,88 @@ void KdDebugGUI::GuiProcess()
 						{
 							selectedIndex = static_cast<int>(gimmicks.size()) - 1;
 						}
+					
 					}
+
+					static std::string gimmickModelPathInput = "";
+					static bool isGimmickModelError = false;
+					static int lastSelectedIndex = -1; // 選択切り替え検知用
 
 					// 3. 選択中ギミックの編集UI
 					if (selectedCategory == SelectedTargetCategory::Gimmick && selectedIndex >= 0 && selectedIndex < static_cast<int>(gimmicks.size()))
 					{
+						// 選択項目が切り替わったら入力バッファとエラー状態を同期・リセット
+						if (lastSelectedIndex != selectedIndex)
+						{
+							lastSelectedIndex = selectedIndex;
+							isGimmickModelError = false;
+
+							// 選択されたギミックから初期文字列を設定
+							if (auto* rot = std::get_if<RotatingParams>(&gimmicks[selectedIndex].m_param))
+							{
+								gimmickModelPathInput = rot->m_modelPath;
+							}
+						}
+
 						ImGui::Separator();
-						ImGui::Text("Edit Gimmick [%d]", selectedIndex + 1);
+						ImGui::Text("Edit Gimmick [%d] (%s)", selectedIndex + 1, gimmicks[selectedIndex].m_type.c_str());
 
 						auto& gimmick = gimmicks[selectedIndex];
 						bool isChanged = false;
 
+						// 共通：Transform編集
 						if (ImGui::DragFloat3("Position", &gimmick.m_data.m_position.x, 0.01f)) isChanged = true;
 						if (ImGui::DragFloat3("Rotation", &gimmick.m_data.m_rotation.x, 0.1f))  isChanged = true;
 						if (ImGui::DragFloat3("Scale", &gimmick.m_data.m_scale.x, 0.01f)) isChanged = true;
 
+						ImGui::Separator();
+
+						// 固有パラメータ編集
+						if (auto* rot = std::get_if<RotatingParams>(&gimmick.m_param))
+						{
+							ImGui::TextUnformatted("--- Rotating Settings ---");
+							ImGui::Text("Current Model Path: %s", rot->m_modelPath.c_str());
+
+							// Sky Asset Settings と同じスタイルでモデルパスを入力
+							ImGui::InputText("Model Path##GimmickModelInput", &gimmickModelPathInput);
+
+							if (isGimmickModelError)
+							{
+								ImGui::TextColored(ImVec4(1.0f, 0.2f, 0.2f, 1.0f), "[Error] File does not exist!");
+							}
+
+							if (ImGui::Button("Apply Model Path", ImVec2(150, 0)))
+							{
+								if (std::filesystem::exists(gimmickModelPathInput))
+								{
+									isGimmickModelError = false;
+									rot->m_modelPath = gimmickModelPathInput;
+									isChanged = true; // 適用されたのでステージ再構築フラグを立てる
+								}
+								else
+								{
+									isGimmickModelError = true;
+								}
+							}
+
+							// 回転速度（リアルタイム反映）
+							if (ImGui::DragFloat("Rotate Speed", &rot->m_rotateSpeed, 0.05f, -100.0f, 100.0f))
+							{
+								isChanged = true;
+							}
+						}
+						else if (auto* finish = std::get_if<FinishAreaParams>(&gimmick.m_param))
+						{
+							// ここは何もない
+						}
+
+						// 値が更新された場合のみ再構築
 						if (isChanged)
 						{
 							STAGEMGR.BuildStage(currentLaneNo);
 						}
+
+						ImGui::Spacing();
 
 						if (ImGui::Button("Delete Selected Gimmick", ImVec2(180, 0)))
 						{
@@ -698,8 +829,68 @@ void KdDebugGUI::GuiProcess()
 						rayCast.mDirection = JPH::Vec3(rayDir.x, rayDir.y, rayDir.z) * range; // 飛ばす長さ
 						GroundObjectFilter groundFilter;
 
+						// 位置情報からBodyIDを特定する
+						// 選択中の種類と Index から直接データを特定して移動
+						Math::Vector3 selectedObjectPos;
+						if (selectedCategory == SelectedTargetCategory::Gimmick)
+						{
+							if (selectedIndex >= 0 && selectedIndex < static_cast<int>(currentFrame.m_laneGimmickData.size()))
+							{
+								selectedObjectPos = currentFrame.m_laneGimmickData[selectedIndex].m_data.m_position;
+							}
+						}
+						else if (selectedCategory == SelectedTargetCategory::Pin)
+						{
+							if (selectedIndex >= 0 && selectedIndex < static_cast<int>(currentFrame.m_lanePinData.size()))
+							{
+								selectedObjectPos = currentFrame.m_lanePinData[selectedIndex].m_data.m_position;
+							}
+						}
+						else if (selectedCategory == SelectedTargetCategory::Player)
+						{
+							selectedObjectPos = currentFrame.m_playerData.m_position;
+						}
+
+						JPH::BodyID targetBodyID;
+
+						// 選択中データの位置（Vector3）を Jolt Vec3 に変換
+						JPH::Vec3 pos(selectedObjectPos.x,
+							selectedObjectPos.y,
+							selectedObjectPos.z);
+
+						// 選択中の座標からわずかに広がった AABB（検索範囲）を作成
+						JPH::AABox searchBox(pos - JPH::Vec3::sReplicate(0.1f), pos + JPH::Vec3::sReplicate(0.1f));
+
+						// AABB内に含まれる BodyID を収集するコレクター
+						class SimpleCollector : public JPH::CollideShapeBodyCollector
+						{
+						public:
+							virtual void AddHit(const JPH::BodyID& inBodyID) override { m_hits.push_back(inBodyID); }
+							std::vector<JPH::BodyID> m_hits;
+						};
+
+						SimpleCollector collector;
+						PHYSICSMGR.GetSystem().GetBroadPhaseQuery().CollideAABox(searchBox, collector);
+
+						if (!collector.m_hits.empty())
+						{
+							targetBodyID = collector.m_hits[0]; // 最も近い/最初に見つかったBody
+						}
+
+						// レイを飛ばす
+						bool hasHit = false;
 						JPH::RayCastResult hit;
-						bool hasHit = PHYSICSMGR.GetSystem().GetNarrowPhaseQuery().CastRay(rayCast, hit, {}, groundFilter);
+						if (!targetBodyID.IsInvalid())
+						{
+							// Jolt標準の単一Body除外フィルターをそのまま生成して渡す
+							JPH::IgnoreSingleBodyFilter selfFilter(targetBodyID);
+
+							hasHit = PHYSICSMGR.GetSystem().GetNarrowPhaseQuery().CastRay(rayCast, hit, {}, groundFilter, selfFilter);
+						}
+						else
+						{
+							hasHit = PHYSICSMGR.GetSystem().GetNarrowPhaseQuery().CastRay(rayCast, hit, {}, groundFilter);
+						}
 
 						if (hasHit)
 						{
@@ -776,35 +967,39 @@ void KdDebugGUI::GuiProcess()
 //	}
 //	ImGui::End();
 
-	// ログウィンドウ
 	static bool isLog = false;
-	static bool isLogKey = true;
-	if (GetAsyncKeyState('W') & 0x8000)
-	{
-		if (!isLogKey)
-		{
-			isLog = !isLog;
-		}
-
-		isLogKey = true;
-	}
-	else isLogKey = false;
-	if (isLog)m_uqLog->Draw("Log Window");
-
 	static bool isCursor = false;
-	static bool isCursorKey = true;
-	if (GetAsyncKeyState('E') & 0x8000)
+
+	if (!ImGui::GetIO().WantCaptureKeyboard)
 	{
-		if (!isCursorKey)
+		// ログウィンドウ
+		static bool isLogKey = true;
+		if (GetAsyncKeyState('W') & 0x8000)
 		{
-			isCursor = !isCursor;
+			if (!isLogKey)
+			{
+				isLog = !isLog;
+			}
 
-			ShowCursor(isCursor);
+			isLogKey = true;
 		}
+		else isLogKey = false;
+		if (isLog)m_uqLog->Draw("Log Window");
 
-		isCursorKey = true;
+		static bool isCursorKey = true;
+		if (GetAsyncKeyState('E') & 0x8000)
+		{
+			if (!isCursorKey)
+			{
+				isCursor = !isCursor;
+
+				ShowCursor(isCursor);
+			}
+
+			isCursorKey = true;
+		}
+		else isCursorKey = false;
 	}
-	else isCursorKey = false;
 
 	//=====================================================
 	// ログ出力 ・・・ AddLog("～") で追加

@@ -2,6 +2,7 @@
 
 //地形
 #include "../GameObject/Terrain/Ground/Ground.h"
+#include "../GameObject/Terrain/RotatingTerrain/RotatingTerrain.h"
 
 //天球
 #include "../GameObject/SkySphere/SkySphere.h"

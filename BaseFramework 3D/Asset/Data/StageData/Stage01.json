@@ -21,6 +21,48 @@
                         0.5
                     ],
                     "type": "Goal"
+                },
+                {
+                    "modelPath": "Asset/Models/Terrain/StageGimmicks/RotatingWall3/RotatingWall3.gltf",
+                    "position": [
+                        -0.5,
+                        4.76837158203125e-07,
+                        -2.5
+                    ],
+                    "rotateSpeed": -1080.0,
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "RotatingTerrain"
+                },
+                {
+                    "modelPath": "Asset/Models/Terrain/StageGimmicks/RotatingWall3/RotatingWall3.gltf",
+                    "position": [
+                        0.44999998807907104,
+                        0.0,
+                        -2.5
+                    ],
+                    "rotateSpeed": 1080.0,
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "RotatingTerrain"
                 }
             ],
             "pins": [
@@ -1941,6 +1983,27 @@
                         0.5
                     ],
                     "type": "Goal"
+                },
+                {
+                    "modelPath": "Asset/Models/Terrain/StageGimmicks/RotatingWall1/RotatingWall1.gltf",
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotateSpeed": 10.0,
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": "RotatingTerrain"
                 }
             ],
             "pins": [
@@ -2158,7 +2221,7 @@
                     1.0
                 ]
             },
-            "terrainPath": "Asset/Models/Terrain/Stage07/Stage07.gltf"
+            "terrainPath": "Asset/Models/Terrain/Stage01/Stage01.gltf"
         },
         {
             "frameNumber": 1,

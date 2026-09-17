@@ -132,6 +132,8 @@
 #include <Jolt/Physics/Collision/Shape/BoxShape.h>
 #include <Jolt/Physics/Collision/Shape/MeshShape.h>
 #include <Jolt/Physics/Collision/Shape/ConvexHullShape.h>
+#include <Jolt/Physics/Collision/Shape/StaticCompoundShape.h>
+#include <Jolt/Physics/Collision/Shape/ScaledShape.h>
 #include <Jolt/Physics/PhysicsSystem.h>
 #include <Jolt/Physics/Body/BodyID.h>
 #include <Jolt/Physics/Body/BodyInterface.h>
@@ -139,10 +141,12 @@
 #include <Jolt/Physics/Collision/RayCast.h>          // JPH::RRayCast, JPH::RayCast
 #include <Jolt/Physics/Collision/CastResult.h>        // JPH::RayCastResult
 #include <Jolt/Physics/Collision/NarrowPhaseQuery.h>  // CastRay 関数を使用する場合
+#include <Jolt/Physics/Collision/BroadPhase/BroadPhaseQuery.h>
 #include <Jolt/Physics/Collision/ShapeCast.h>          // スフィアキャスト (RShapeCast / ShapeCast) 用
 #include <Jolt/Physics/Collision/Shape/Shape.h>
 #include <Jolt/Physics/Collision/CollisionCollectorImpl.h>
 #include <Jolt/Physics/Collision/ContactListener.h>
+#include <Jolt/Physics/Collision/CollideShape.h>
 
 //追加8/8
 //Json

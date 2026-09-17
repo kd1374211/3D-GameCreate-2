@@ -198,6 +198,12 @@ void BowlingBall::Update()
 
 void BowlingBall::PostUpdate()
 {
+	// エディットモード中はプレイヤーの移動・操作・物理を停止
+	if (STAGEMGR.IsEditMode())
+	{
+		return;
+	}
+
 	// 1. 物理座標の同期（Joltから最新座標を反映）
 	m_cPhysics->Sync(m_pos, m_rot);
 

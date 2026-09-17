@@ -4,6 +4,8 @@
 #include "../GameObject/Camera/CameraBase.h"
 #include "../Component/PinHandler/PinHandler.h"
 
+#include "../GameObject/Chara/BowlingBall/BowlingBall.h"
+
 void StageManager::ResetStage()
 {
 	//地形削除
@@ -58,6 +60,34 @@ bool StageManager::SaveStage(const std::string& filePath)
 			gJson["position"] = { gimmick.m_data.m_position.x, gimmick.m_data.m_position.y, gimmick.m_data.m_position.z };
 			gJson["rotation"] = { gimmick.m_data.m_rotation.x, gimmick.m_data.m_rotation.y, gimmick.m_data.m_rotation.z, gimmick.m_data.m_rotation.w };
 			gJson["scale"] = { gimmick.m_data.m_scale.x, gimmick.m_data.m_scale.y, gimmick.m_data.m_scale.z };
+
+			// 固有パラメータ
+			switch (ConvertGimmickTypeStringToEnum(gimmick.m_type))
+			{
+			case GimmickType::FinishArea:
+				if (auto* param = std::get_if<FinishAreaParams>(&gimmick.m_param))
+				{
+
+				}
+				break;
+			case GimmickType::RotatingTerrain:
+				// データ確認
+				if (auto* param = std::get_if<RotatingParams>(&gimmick.m_param))
+				{
+					gJson["modelPath"] = param->m_modelPath;
+					gJson["rotateSpeed"] = param->m_rotateSpeed;
+				}
+				break;
+			case GimmickType::MovingTerrain:
+				// データ確認
+				if (auto* param = std::get_if<MovingParams>(&gimmick.m_param))
+				{
+				}
+				break;
+			default:
+				break;
+			}
+
 			gimmickArray.push_back(gJson);
 		}
 		frameJson["gimmicks"] = gimmickArray;
@@ -152,11 +182,42 @@ bool StageManager::LoadStage(const std::string& filePath)
 					// 情報クリア
 					gimmickData = {};
 
-					// 各情報を取得
+					// 共通情報を取得
 					gimmickData.m_type = gimmick.value("type", "Goal");
 					gimmickData.m_data.m_position = ParseVector3(gimmick, "position", { 0.0f, 0.0f, 0.0f });
 					gimmickData.m_data.m_rotation = ParseQuaternion(gimmick, "rotation", { 0.0f, 0.0f, 0.0f, 1.0f });
 					gimmickData.m_data.m_scale = ParseVector3(gimmick, "scale", { 1.0f, 1.0f, 1.0f });
+
+					// タイプで分岐し固有情報を取得
+					switch (ConvertGimmickTypeStringToEnum(gimmickData.m_type))
+					{
+					case GimmickType::FinishArea:
+						{
+							FinishAreaParams param;
+							gimmickData.m_param = param;
+							break;
+						}	
+					case GimmickType::RotatingTerrain:
+						{
+							RotatingParams param;
+							param.m_modelPath = Utf8ToMultiByte(gimmick.value("modelPath", "Error"));
+							param.m_rotateSpeed = gimmick.value("rotateSpeed", 1.0f);
+							gimmickData.m_param = param;
+							break;
+						}
+					case GimmickType::MovingTerrain:
+						{
+							MovingParams param;
+							gimmickData.m_param = param;
+							break;
+						}
+					default:
+						{
+							FinishAreaParams param;
+							gimmickData.m_param = param;
+							break;
+						}
+					}
 
 					// レーンデータに追加
 					laneData.m_laneGimmickData.push_back(gimmickData);
@@ -189,6 +250,24 @@ bool StageManager::LoadStage(const std::string& filePath)
 	}
 
 	return true;
+}
+
+void StageManager::BuildStage_D(int laneNumber, StageBuildMode mode)
+{
+	// 本体を呼ぶ
+	BuildStage(laneNumber, mode);
+
+	// デバッグ用で操作を有効に
+	m_wpCharaHandler.lock()->GetPlayerBall()->SetIsInputEnabled(true);
+}
+
+void StageManager::RespawnStage_D(int laneNumber)
+{
+	// 本体を呼ぶ
+	RespawnStage(laneNumber);
+
+	// デバッグ用で操作を有効に
+	m_wpCharaHandler.lock()->GetPlayerBall()->SetIsInputEnabled(true);
 }
 
 void StageManager::SetMode(StageMode mode)
@@ -242,7 +321,34 @@ void StageManager::BuildStage(int laneNumber, StageBuildMode mode)
 		// 有効タイプ確認
 		bool isValidType = false;
 
-		// ゴール地点
+		// 各ギミック
+		switch (ConvertGimmickTypeStringToEnum(gimmickData.m_type))
+		{
+		case GimmickType::FinishArea:
+			if (auto* param = std::get_if<FinishAreaParams>(&gimmickData.m_param))
+			{
+				gimmickObj = std::make_shared<FinishArea>(gimmickData.m_data.m_position, gimmickData.m_data.m_rotation, gimmickData.m_data.m_scale);
+				isValidType = true;
+			}
+			break;
+		case GimmickType::RotatingTerrain:
+			if (auto* param = std::get_if<RotatingParams>(&gimmickData.m_param))
+			{
+				gimmickObj = std::make_shared<RotatingTerrain>(param->m_modelPath, gimmickData.m_data.m_position, gimmickData.m_data.m_rotation, gimmickData.m_data.m_scale, param->m_rotateSpeed);
+				isValidType = true;
+			}
+			break;
+		case GimmickType::MovingTerrain:
+			if (auto* param = std::get_if<MovingParams>(&gimmickData.m_param))
+			{
+				//gimmickObj = std::make_shared<FinishArea>(param->m_modelPath, gimmickData.m_data.m_position, gimmickData.m_data.m_rotation, param->m_rotateSpeed);
+				//isValidType = true;
+			}
+			break;
+		default:
+			break;
+		}
+
 		if (gimmickData.m_type == "Goal")
 		{
 			gimmickObj = std::make_shared<FinishArea>(gimmickData.m_data.m_position, gimmickData.m_data.m_rotation, gimmickData.m_data.m_scale);
@@ -498,4 +604,34 @@ std::string StageManager::Utf8ToMultiByte(const std::string & utf8Str)
 	}
 
 	return ansiStr;
+}
+
+const GimmickType StageManager::ConvertGimmickTypeStringToEnum(std::string str)
+{
+	// 範囲Forで確認
+	for (auto& check : GimmickTypeNameData)
+	{
+		if (check.m_str == str)
+		{
+			return check.m_type;
+		}
+	}
+
+	// エラー
+	return GimmickType::Error;
+}
+
+const std::string StageManager::ConvertGimmickTypeEnumToString(GimmickType type)
+{
+	// 範囲Forで確認
+	for (auto& check : GimmickTypeNameData)
+	{
+		if (check.m_type == type)
+		{
+			return check.m_str;
+		}
+	}
+
+	// エラー
+	return "Error";
 }

@@ -181,6 +181,12 @@
     <Filter Include="Src\Application\GameObject\ShotCursor">
       <UniqueIdentifier>{50b49b6a-7ff8-4687-bd2f-fff1ced6fddc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\GameObject\Terrain\MovingTerrain">
+      <UniqueIdentifier>{c79457ae-6440-42b7-b597-739a7aa98538}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\GameObject\Terrain\RotatingTerrain">
+      <UniqueIdentifier>{2dd8dc59-b4a0-48a3-9f0e-e4ba3f671281}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -1563,6 +1569,15 @@
     <ClInclude Include="Src\Application\GameObject\ShotCursor\ShotCursor.h">
       <Filter>Src\Application\GameObject\ShotCursor</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\Terrain\MovingTerrain\MovingTerrain.h">
+      <Filter>Src\Application\GameObject\Terrain\MovingTerrain</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\Terrain\RotatingTerrain\RotatingTerrain.h">
+      <Filter>Src\Application\GameObject\Terrain\RotatingTerrain</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\StageManager\VariantParamData.h">
+      <Filter>Src\Application\StageManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -2254,6 +2269,12 @@
     </ClCompile>
     <ClCompile Include="Src\Application\GameObject\ShotCursor\ShotCursor.cpp">
       <Filter>Src\Application\GameObject\ShotCursor</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\Terrain\MovingTerrain\MovingTerrain.cpp">
+      <Filter>Src\Application\GameObject\Terrain\MovingTerrain</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\Terrain\RotatingTerrain\RotatingTerrain.cpp">
+      <Filter>Src\Application\GameObject\Terrain\RotatingTerrain</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

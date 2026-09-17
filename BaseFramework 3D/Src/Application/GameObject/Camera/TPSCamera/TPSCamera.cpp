@@ -14,6 +14,9 @@ void TPSCamera::Init()
 
 void TPSCamera::PostUpdate()
 {
+	// 有効でないならリターン
+	if (!m_isDefault)return;
+
 	// ターゲットの行列(有効な場合利用する)
 	Math::Matrix								_targetMat = Math::Matrix::Identity;
 	const std::shared_ptr<const KdGameObject>	_spTarget = m_wpTarget.lock();
@@ -21,22 +24,17 @@ void TPSCamera::PostUpdate()
 	{
 		_targetMat = Math::Matrix::CreateTranslation(_spTarget->GetPos());
 	}
-
-	// DEBUG
-	// シフト中はマウス開放
-	if (!(GetAsyncKeyState(VK_SHIFT) & 0x8000))
+	
+	// カメラの回転
+	if (m_isCamLocked)
 	{
-		// カメラの回転
-		if (m_isCamLocked)
-		{
-			// ロック状態ならマウス位置補正だけ
-			ResetCursorPos();
-		}
-		else
-		{
-			// ロック状態にないならカメラを回転させる
-			UpdateRotateYOnlyByMouse();
-		}
+		// ロック状態ならマウス位置補正だけ
+		ResetCursorPos();
+	}
+	else
+	{
+		// ロック状態にないならカメラを回転させる
+		UpdateRotateYOnlyByMouse();
 	}
 	
 	m_mRotation = GetRotationMatrix();

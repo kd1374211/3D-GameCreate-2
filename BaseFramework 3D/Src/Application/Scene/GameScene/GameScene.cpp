@@ -97,16 +97,19 @@ void GameScene::UpdatePlaying2()
 	{
 		if (!isSkipKey)
 		{
-			// 投球終了処理
-			EndRolling();
-			// ステート更新
-			m_currentSceneState = SceneState::CheckAndClean;
+			if (!STAGEMGR.IsEditMode())
+			{
+				// 投球終了処理
+				EndRolling();
+				// ステート更新
+				m_currentSceneState = SceneState::CheckAndClean;
+
+				// リターン
+				return;
+			}
 
 			// 長押し対策
 			isSkipKey = true;
-
-			// リターン
-			return;
 		}
 	}
 	else isSkipKey = false;

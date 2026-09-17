@@ -664,6 +664,8 @@
     <ClInclude Include="Src\Application\GameObject\SkySphere\SkySphere.h" />
     <ClInclude Include="Src\Application\GameObject\Terrain\FinishArea\FinishArea.h" />
     <ClInclude Include="Src\Application\GameObject\Terrain\Ground\Ground.h" />
+    <ClInclude Include="Src\Application\GameObject\Terrain\MovingTerrain\MovingTerrain.h" />
+    <ClInclude Include="Src\Application\GameObject\Terrain\RotatingTerrain\RotatingTerrain.h" />
     <ClInclude Include="Src\Application\GameObject\Terrain\TerrainBase.h" />
     <ClInclude Include="Src\Application\GameObject\UI\SceneUIObjects\Game\GameUIObjects.h" />
     <ClInclude Include="Src\Application\GameObject\UI\SceneUIObjects\Result\ResultUIObjects.h" />
@@ -681,6 +683,7 @@
     <ClInclude Include="Src\Application\Scene\TitleScene\TitleScene.h" />
     <ClInclude Include="Src\Application\StageManager\StageManager.h" />
     <ClInclude Include="Src\Application\StageManager\StageObjectInclude.h" />
+    <ClInclude Include="Src\Application\StageManager\VariantParamData.h" />
     <ClInclude Include="Src\Application\UserSave\UserSaveManager.h" />
     <ClInclude Include="Src\Framework\Direct3D\KdMaterial.h" />
     <ClInclude Include="Src\Framework\Direct3D\Polygon\KdPolygon.h" />
@@ -901,6 +904,8 @@
     <ClCompile Include="Src\Application\GameObject\SkySphere\SkySphere.cpp" />
     <ClCompile Include="Src\Application\GameObject\Terrain\FinishArea\FinishArea.cpp" />
     <ClCompile Include="Src\Application\GameObject\Terrain\Ground\Ground.cpp" />
+    <ClCompile Include="Src\Application\GameObject\Terrain\MovingTerrain\MovingTerrain.cpp" />
+    <ClCompile Include="Src\Application\GameObject\Terrain\RotatingTerrain\RotatingTerrain.cpp" />
     <ClCompile Include="Src\Application\GameObject\Terrain\TerrainBase.cpp" />
     <ClCompile Include="Src\Application\GameObject\UI\SceneUIObjects\Game\GameUIObjects.cpp" />
     <ClCompile Include="Src\Application\GameObject\UI\SceneUIObjects\Result\ResultUIObjects.cpp" />

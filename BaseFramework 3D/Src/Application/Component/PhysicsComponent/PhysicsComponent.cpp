@@ -44,7 +44,7 @@ bool PhysicsComponent::Init(const std::string& path, PhysicsInitData initData)
 	}
 
 	JPH::ShapeRefC finalShape;
-	if (m_isStatic)
+	if (initData.motionType != JPH::EMotionType::Dynamic)
 	{
 		JPH::MeshShapeSettings meshSettings(jphVertices, jphTriangles);
 
@@ -57,18 +57,69 @@ bool PhysicsComponent::Init(const std::string& path, PhysicsInitData initData)
 		auto result = meshSettings.Create();
 		if (result.HasError()) return false;
 		finalShape = result.Get();
-
-		finalShape = meshSettings.Create().Get();
 	}
 	else
-	{
-		std::vector<JPH::Vec3> convexVertices;
-		convexVertices.reserve(allVertices.size());
-		for (const auto& v : allVertices) {
-			convexVertices.push_back(JPH::Vec3(v.x, v.y, v.z));
+	{	
+		// 【Dynamic用】
+		// CompoundShapeにまとめる
+		JPH::StaticCompoundShapeSettings compoundSettings;
+
+		for (const auto& node : spModel->Nodes)
+		{
+			if (!node.IsMesh || node.Mesh.Vertices.empty()) continue;
+
+			// ノードごとの頂点リストを抽出
+			std::vector<JPH::Vec3> nodeVertices;
+			nodeVertices.reserve(node.Mesh.Vertices.size());
+			for (const auto& v : node.Mesh.Vertices) {
+				nodeVertices.push_back(JPH::Vec3(v.Pos.x, v.Pos.y, v.Pos.z));
+			}
+
+			// パーツ単位で ConvexHullShape（凸包）を作成
+			JPH::ConvexHullShapeSettings convexSettings(nodeVertices.data(), static_cast<int>(nodeVertices.size()));
+			JPH::Shape::ShapeResult subShapeResult = convexSettings.Create();
+
+			if (subShapeResult.IsValid())
+			{
+				// 位置・回転のオフセットなし（Vec3::sZero(), Quat::sIdentity()）でサブシェイプとして追加
+				compoundSettings.AddShape(
+					JPH::Vec3::sZero(),
+					JPH::Quat::sIdentity(),
+					subShapeResult.Get()
+				);
+			}
 		}
-		JPH::ConvexHullShapeSettings convexSettings(convexVertices.data(), static_cast<int>(convexVertices.size()));
-		finalShape = convexSettings.Create().Get();
+
+		// もしノード分割がなく単一メッシュだった場合のフォールバック（全体のConvex化）
+		if (compoundSettings.mSubShapes.empty())
+		{
+			std::vector<JPH::Vec3> convexVertices;
+			convexVertices.reserve(allVertices.size());
+			for (const auto& v : allVertices) {
+				convexVertices.push_back(JPH::Vec3(v.x, v.y, v.z));
+			}
+			JPH::ConvexHullShapeSettings convexSettings(convexVertices.data(), static_cast<int>(convexVertices.size()));
+			finalShape = convexSettings.Create().Get();
+		}
+		else
+		{
+			// 構築したCompoundShapeを確定
+			JPH::Shape::ShapeResult result = compoundSettings.Create();
+			if (result.HasError()) return false;
+			finalShape = result.Get();
+		}
+	}
+
+	JPH::Vec3 jphScale(initData.scale.x, initData.scale.y, initData.scale.z);
+
+	// 単位スケール (1, 1, 1) でなければ ScaledShape を適用
+	if (jphScale != JPH::Vec3::sReplicate(1.0f))
+	{
+		JPH::ScaledShapeSettings scaledSettings(finalShape, jphScale);
+		auto scaledResult = scaledSettings.Create();
+		if (scaledResult.HasError()) return false;
+
+		finalShape = scaledResult.Get(); // スケール適用後の Shape で上書き
 	}
 
 	JPH::BodyCreationSettings creationSettings(

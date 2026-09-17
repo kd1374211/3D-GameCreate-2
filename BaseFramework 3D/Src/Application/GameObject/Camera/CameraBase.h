@@ -55,6 +55,9 @@ public:
 	//ターゲット取得
 	std::weak_ptr<KdGameObject> GetTarget()const { return m_wpTarget; }
 
+	// マウスの移動を許すか
+	void SetIsMouseLocked(bool flg) { m_isMouseLocked = flg; }
+
 protected:
 	// カメラ回転用角度
 	Math::Vector3								m_DegAng		= Math::Vector3::Zero;
@@ -75,4 +78,7 @@ protected:
 
 	//有効状態か
 	bool m_isDefault = false;
+
+	// マウス固定か
+	bool m_isMouseLocked = true;
 };

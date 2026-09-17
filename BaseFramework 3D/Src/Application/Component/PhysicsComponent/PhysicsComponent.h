@@ -6,7 +6,8 @@ struct PhysicsInitData {
 	
 	//基本
 	Math::Vector3 pos = Math::Vector3::Zero;	//座標
-	Math::Quaternion rot = Math::Quaternion::Identity;	//回転
+	Math::Quaternion rot = Math::Quaternion::Identity;	// 回転
+	Math::Vector3 scale = Math::Vector3::One;			// 拡縮
 	JPH::EMotionType motionType = JPH::EMotionType::Dynamic;	//動的か静的か
 	JPH::EMotionQuality motionQuality = JPH::EMotionQuality::Discrete;	//モーションクオリティ
 	JPH::ObjectLayer layer = Layers::NUM_LAYERS;	//レイヤー

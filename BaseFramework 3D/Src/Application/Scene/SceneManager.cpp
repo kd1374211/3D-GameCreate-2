@@ -39,7 +39,7 @@ void SceneManager::Update()
 void SceneManager::PostUpdate()
 {
 	// エディットモード中は物理シミュレーションの更新ステップをスキップ
-	if (!STAGEMGR.IsEditMode())
+	if (!(STAGEMGR.IsEditMode() && STAGEMGR.GetIsGimmickStop()))
 	{
 		//追加7/17（仮）
 		PHYSICSMGR.Update(GetDeltaGameTime());

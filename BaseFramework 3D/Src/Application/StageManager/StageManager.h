@@ -2,6 +2,7 @@
 #include "StageObjectInclude.h"
 #include "../Const/BowlingSystemConst.h"
 #include "../Const/PinTypes.h"
+#include "VariantParamData.h"
 
 // 配置オブジェクト情報（座標・回転・スケール）
 struct LaneObjectData
@@ -14,7 +15,8 @@ struct LaneObjectData
 // ピン以外のステージオブジェクト
 struct LaneGimmickData
 {
-	std::string m_type = "Goal";		// "Goal" など
+	std::string m_type;
+	GimmickParam m_param;				// 固有パラメータ兼タイプ保持
 	LaneObjectData m_data;				// 配置情報
 };
 
@@ -50,6 +52,16 @@ struct StageOverallData
 	std::vector<StageLaneData> m_stageLaneData;	// 各レーンの情報
 };
 
+// ギミック識別enum
+enum class GimmickType
+{
+	FinishArea,
+	RotatingTerrain,
+	MovingTerrain,
+	Error = 999
+};
+
+
 enum class StageMode
 {
 	Edit,   // エディットモード（物理停止・編集可能）
@@ -68,6 +80,7 @@ struct StageManagerConsts
 {
 	static constexpr int StarCountMax = 3;		//最大星数
 };
+
 
 struct StageInfo
 {
@@ -108,6 +121,10 @@ public:
 	bool LoadStage(int stageNo);
 	bool LoadStage(const std::string& filePath);
 
+	// デバッグ用
+	void BuildStage_D(int laneNumber = BowlingSystemConsts::StartFrame, StageBuildMode mode = StageBuildMode::Full);
+	void RespawnStage_D(int laneNumber = BowlingSystemConsts::StartFrame);
+
 	// ゲッター(操作用)
 	//std::string& GetTerrainPath() { return ; }
 	//std::vector<LaneObjectData>& GetStageObjects() { return m_stageGimmicks; }
@@ -128,6 +145,10 @@ public:
 	void SetMode(StageMode mode);
 	StageMode GetMode() const { return m_mode; }
 	bool IsEditMode() const { return m_mode == StageMode::Edit; }
+
+	// ギミック停止
+	void SetIsGimmickStop(bool flg) { m_isGimmickStop = flg; }
+	bool GetIsGimmickStop()const { return m_isGimmickStop; }
 
 	// アウトラインの位置を設定
 	void SetDebugOutlinePos(bool isSelect, const Math::Vector3& pos) { 
@@ -214,6 +235,26 @@ private:
 	// UTF-8 の std::string を Shift-JIS (ANSI) の std::string に変換する関数
 	std::string Utf8ToMultiByte(const std::string& utf8Str);
 
+	struct GimmickTypeName
+	{
+		std::string m_str;
+		GimmickType m_type;
+	};
+
+	// GimmickTypeとstringの対応データ
+	const std::list<GimmickTypeName> GimmickTypeNameData =
+	{
+		GimmickTypeName("Goal",GimmickType::FinishArea),
+		GimmickTypeName("RotatingTerrain",GimmickType::RotatingTerrain),
+		GimmickTypeName("MovingTerrain",GimmickType::MovingTerrain)
+	};
+
+	// ギミックタイプ文字列をindexに変換する関数
+	const GimmickType ConvertGimmickTypeStringToEnum(std::string str);
+
+	// indexをギミックタイプ文字列に変換する関数
+	const std::string ConvertGimmickTypeEnumToString(GimmickType type);
+
 	//オブジェクトのリスト管理
 	std::weak_ptr<KdGameObject> m_wpSkySphere;
 	std::weak_ptr<KdGameObject> m_wpTerrain;
@@ -223,6 +264,7 @@ private:
 	StageOverallData m_stageOverallData;
 
 	StageMode m_mode = StageMode::Play; // 初期状態はエディットモード
+	bool m_isGimmickStop = true;
 	Math::Vector3 m_debugSpherePos = Math::Vector3::Zero;
 	bool m_isDebugSphereDraw = false;
 

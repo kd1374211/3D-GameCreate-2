@@ -31,6 +31,9 @@ void CameraBase::SetTarget(const std::shared_ptr<KdGameObject>& target)
 
 void CameraBase::UpdateRotateByMouse()
 {
+	// マウス固定でないならリターン
+	if (!m_isMouseLocked)return;
+
 	// マウスでカメラを回転させる処理
 	POINT _nowPos;
 	GetCursorPos(&_nowPos);
@@ -51,6 +54,9 @@ void CameraBase::UpdateRotateByMouse()
 
 void CameraBase::UpdateRotateYOnlyByMouse()
 {
+	// マウス固定でないならリターン
+	if (!m_isMouseLocked)return;
+
 	// マウスでカメラを回転させる処理
 	POINT _nowPos;
 	GetCursorPos(&_nowPos);
@@ -67,5 +73,8 @@ void CameraBase::UpdateRotateYOnlyByMouse()
 
 void CameraBase::ResetCursorPos()
 {
+	// マウス固定でないならリターン
+	if (!m_isMouseLocked)return;
+
 	SetCursorPos(m_FixMousePos.x, m_FixMousePos.y);
 }

@@ -1,6 +1,5 @@
 ﻿#pragma once
 #include "../TerrainBase.h"
-#include "../../../Component/PhysicsComponent/PhysicsComponent.h"
 
 class Ground :public TerrainBase
 {
@@ -12,8 +11,5 @@ public:
 	void DrawLit()override;
 
 private:
-	
-	//物理コンポーネント
-	std::shared_ptr<PhysicsComponent> m_cPhysics;
 
 };
