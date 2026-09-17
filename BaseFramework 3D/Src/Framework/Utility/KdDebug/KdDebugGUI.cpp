@@ -78,8 +78,6 @@ void KdDebugGUI::GuiProcess()
 		else isRKey = false;
 	}
 
-	
-
 	if (isScoreGUI)KdDebugGUI::Instance().DrawDebugScoreGUI();
 
 
@@ -103,7 +101,7 @@ void KdDebugGUI::GuiProcess()
 				{
 					STAGEMGR.SetMode(StageMode::Play);
 					// プレイヤーの操作を有効に
-					STAGEMGR.BuildStage_D();
+					STAGEMGR.BuildStage_D(currentLaneNo);
 					CAMERAMGR.SetDefaultCamera(CameraType::Game);
 				}
 				else
@@ -682,16 +680,42 @@ void KdDebugGUI::GuiProcess()
 							STAGEMGR.BuildStage(currentLaneNo);
 						}
 
-						ImGui::Spacing();
+						ImGui::Separator();
 
-						if (ImGui::Button("Delete Selected Gimmick", ImVec2(180, 0)))
+						// 1. 複製ボタン（Duplicate / Copy）
+						if (ImGui::Button("Duplicate Selected Gimmick", ImVec2(200, 0)))
+						{
+							// 選択中のギミックデータを深層コピー
+							auto duplicateGimmick = gimmicks[selectedIndex];
+
+							// （任意）重なって見づらくなるのを防ぐため座標を少しだけずらす
+							duplicateGimmick.m_data.m_position.x += 0.5f;
+
+							// 配列に追加
+							gimmicks.push_back(duplicateGimmick);
+
+							// 選択インデックスを新しく生成された末尾のギミックに変更
+							selectedIndex = static_cast<int>(gimmicks.size()) - 1;
+
+							// 入力バッファやエラー状態を新ギミック用にリセット
+							lastSelectedIndex = selectedIndex;
+							isGimmickModelError = false;
+							if (auto* rot = std::get_if<RotatingParams>(&gimmicks[selectedIndex].m_param))
+							{
+								gimmickModelPathInput = rot->m_modelPath;
+							}
+
+							// 構造変更のため物理ワールド・ステージを再構築
+							STAGEMGR.BuildStage(currentLaneNo);
+						}
+
+						ImGui::SameLine();
+
+						// 2. 既存の削除ボタン
+						if (ImGui::Button("Delete Selected Gimmick"))
 						{
 							gimmicks.erase(gimmicks.begin() + selectedIndex);
-
-							// 削除後は選択解除
-							selectedCategory = SelectedTargetCategory::None;
-							selectedIndex = -1;
-
+							selectedIndex = -1; // 選択解除
 							STAGEMGR.BuildStage(currentLaneNo);
 						}
 					}
