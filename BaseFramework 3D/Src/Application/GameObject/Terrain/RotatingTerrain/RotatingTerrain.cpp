@@ -1,8 +1,11 @@
 ﻿#include "RotatingTerrain.h"
 #include "../../../StageManager/StageManager.h"
+#include "../../../Const/Function.h"
 
-RotatingTerrain::RotatingTerrain(std::string modelPath, Math::Vector3 pos, Math::Quaternion rot, Math::Vector3 sca, float degPerSec)
+RotatingTerrain::RotatingTerrain(std::string modelPath, Math::Vector3 pos, Math::Vector3 rot, Math::Vector3 sca, float degPerSec)
 {
+	Math::Quaternion quat = ConvertEulerVec3ToQuat(rot);
+
 	m_model = std::make_shared<KdModelData>();
 	m_model->Load(modelPath);
 
@@ -11,7 +14,7 @@ RotatingTerrain::RotatingTerrain(std::string modelPath, Math::Vector3 pos, Math:
 	//物理Initに投げるパラメータ設定
 	PhysicsInitData initData = {};
 	initData.pos = pos;
-	initData.rot = rot;
+	initData.rot = quat;
 	initData.scale = sca;
 	initData.motionType = JPH::EMotionType::Kinematic;
 	initData.isStatic = false;
@@ -30,7 +33,7 @@ RotatingTerrain::RotatingTerrain(std::string modelPath, Math::Vector3 pos, Math:
 
 	// 情報設定
 	m_pos = pos;
-	m_rot = rot;
+	m_rot = quat;
 	m_scale = sca;
 
 	Math::Matrix trans = Math::Matrix::CreateTranslation(m_pos);

@@ -153,10 +153,13 @@ void KdDebugGUI::GuiProcess()
 	// ゲームシーンでないなら閉じる
 	if (SCENEMGR.GetCurrentSceneType() != SceneManager::SceneType::Game)
 	{
-		isEditWindow = false;
-		STAGEMGR.SetMode(StageMode::Play);
-		SCENEMGR.SetGameSpeed(1.0f);
-		CAMERAMGR.SetDefaultCamera(CameraType::Game);
+		if (isEditWindow)
+		{
+			isEditWindow = false;
+			STAGEMGR.SetMode(StageMode::Play);
+			SCENEMGR.SetGameSpeed(1.0f);
+			CAMERAMGR.SetDefaultCamera(CameraType::Game);
+		}
 	}
 
 	if (isEditWindow)
@@ -629,8 +632,8 @@ void KdDebugGUI::GuiProcess()
 						bool isChanged = false;
 
 						// 共通：Transform編集
-						if (ImGui::DragFloat3("Position", &gimmick.m_data.m_position.x, 0.01f)) isChanged = true;
-						if (ImGui::DragFloat3("Rotation", &gimmick.m_data.m_rotation.x, 0.1f))  isChanged = true;
+						if (ImGui::DragFloat3("Position", &gimmick.m_data.m_position.x, 0.01f)) isChanged = true;						
+						if (ImGui::DragFloat3("Rotation", &gimmick.m_data.m_rotation.x, 0.1f, 0.0f, 0.0f, "%.1f deg"))isChanged = true;
 						if (ImGui::DragFloat3("Scale", &gimmick.m_data.m_scale.x, 0.01f)) isChanged = true;
 
 						ImGui::Separator();

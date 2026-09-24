@@ -49,7 +49,7 @@ bool StageManager::SaveStage(const std::string& filePath)
 
 		// プレイヤー (player)
 		frameJson["player"]["position"] = { lane.m_playerData.m_position.x, lane.m_playerData.m_position.y, lane.m_playerData.m_position.z };
-		frameJson["player"]["rotation"] = { lane.m_playerData.m_rotation.x, lane.m_playerData.m_rotation.y, lane.m_playerData.m_rotation.z, lane.m_playerData.m_rotation.w };
+		frameJson["player"]["rotation"] = { lane.m_playerData.m_rotation.x, lane.m_playerData.m_rotation.y, lane.m_playerData.m_rotation.z };
 
 		// ギミック一覧 (gimmicks)
 		nlohmann::json gimmickArray = nlohmann::json::array();
@@ -58,7 +58,7 @@ bool StageManager::SaveStage(const std::string& filePath)
 			nlohmann::json gJson;
 			gJson["type"] = gimmick.m_type;
 			gJson["position"] = { gimmick.m_data.m_position.x, gimmick.m_data.m_position.y, gimmick.m_data.m_position.z };
-			gJson["rotation"] = { gimmick.m_data.m_rotation.x, gimmick.m_data.m_rotation.y, gimmick.m_data.m_rotation.z, gimmick.m_data.m_rotation.w };
+			gJson["rotation"] = { gimmick.m_data.m_rotation.x, gimmick.m_data.m_rotation.y, gimmick.m_data.m_rotation.z };
 			gJson["scale"] = { gimmick.m_data.m_scale.x, gimmick.m_data.m_scale.y, gimmick.m_data.m_scale.z };
 
 			// 固有パラメータ
@@ -100,7 +100,7 @@ bool StageManager::SaveStage(const std::string& filePath)
 			pinJson["index"] = pin.m_index;
 			pinJson["type"] = ConvertPinTypeToString(pin.m_type); // 例: "Normal" 等の文字列変換
 			pinJson["position"] = { pin.m_data.m_position.x, pin.m_data.m_position.y, pin.m_data.m_position.z };
-			pinJson["rotation"] = { pin.m_data.m_rotation.x, pin.m_data.m_rotation.y, pin.m_data.m_rotation.z, pin.m_data.m_rotation.w };
+			pinJson["rotation"] = { pin.m_data.m_rotation.x, pin.m_data.m_rotation.y, pin.m_data.m_rotation.z };
 			pinJson["scale"] = { pin.m_data.m_scale.x, pin.m_data.m_scale.y, pin.m_data.m_scale.z };
 			pinArray.push_back(pinJson);
 		}
@@ -168,7 +168,7 @@ bool StageManager::LoadStage(const std::string& filePath)
 
 				// 各情報を取得
 				playerData.m_position = ParseVector3(player, "position", {0.0f, 0.0f, 0.0f});
-				playerData.m_rotation = ParseQuaternion(player, "rotation", { 0.0f, 0.0f, 0.0f,1.0f });
+				playerData.m_rotation = ParseVector3(player, "rotation", { 0.0f, 0.0f, 0.0f });
 
 				// レーンデータに設定
 				laneData.m_playerData = playerData;
@@ -185,7 +185,7 @@ bool StageManager::LoadStage(const std::string& filePath)
 					// 共通情報を取得
 					gimmickData.m_type = gimmick.value("type", "Goal");
 					gimmickData.m_data.m_position = ParseVector3(gimmick, "position", { 0.0f, 0.0f, 0.0f });
-					gimmickData.m_data.m_rotation = ParseQuaternion(gimmick, "rotation", { 0.0f, 0.0f, 0.0f, 1.0f });
+					gimmickData.m_data.m_rotation = ParseVector3(gimmick, "rotation", { 0.0f, 0.0f, 0.0f });
 					gimmickData.m_data.m_scale = ParseVector3(gimmick, "scale", { 1.0f, 1.0f, 1.0f });
 
 					// タイプで分岐し固有情報を取得
@@ -236,7 +236,7 @@ bool StageManager::LoadStage(const std::string& filePath)
 					pinData.m_index = pin.value("index", -1);
 					pinData.m_type = ConvertStringToPinType(pin.value("type", "error"));
 					pinData.m_data.m_position = ParseVector3(pin, "position", { 0.0f, 0.0f, 0.0f });
-					pinData.m_data.m_rotation = ParseQuaternion(pin, "rotation", { 0.0f, 0.0f, 0.0f, 1.0f });
+					pinData.m_data.m_rotation = ParseVector3(pin, "rotation", { 0.0f, 0.0f, 0.0f });
 					pinData.m_data.m_scale = ParseVector3(pin, "scale", { 1.0f, 1.0f, 1.0f });
 
 					// レーンデータに追加
@@ -349,12 +349,6 @@ void StageManager::BuildStage(int laneNumber, StageBuildMode mode)
 			break;
 		}
 
-		if (gimmickData.m_type == "Goal")
-		{
-			gimmickObj = std::make_shared<FinishArea>(gimmickData.m_data.m_position, gimmickData.m_data.m_rotation, gimmickData.m_data.m_scale);
-			isValidType = true;
-		}
-
 		// 有効ならゲームシーンに追加
 		if (isValidType)
 		{
@@ -364,6 +358,9 @@ void StageManager::BuildStage(int laneNumber, StageBuildMode mode)
 			m_wpStageGimmicks.push_back(gimmickObj);
 		}
 	}
+
+	// 背景モードの場合この先は使わない
+	if (mode == StageBuildMode::Background)return;
 
 	// ピン生成（ハンドラー）
 	if (!m_wpPinHandler.expired())

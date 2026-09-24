@@ -648,6 +648,7 @@
     <ClInclude Include="Src\Application\Component\ScoreHandler\ScoreHandler.h" />
     <ClInclude Include="Src\Application\Const\BowlingSystemConst.h" />
     <ClInclude Include="Src\Application\Const\DeviceAndKey.h" />
+    <ClInclude Include="Src\Application\Const\Function.h" />
     <ClInclude Include="Src\Application\Const\PinTypes.h" />
     <ClInclude Include="Src\Application\Const\WindowConsts.h" />
     <ClInclude Include="Src\Application\FadeManager\FadeManager.h" />

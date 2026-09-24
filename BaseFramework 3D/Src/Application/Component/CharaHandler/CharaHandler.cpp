@@ -9,7 +9,7 @@ void CharaHandler::Init()
 	InitPlayerBall();
 }
 
-void CharaHandler::StartNextThrow(const Math::Vector3& pos, const Math::Quaternion& rot)
+void CharaHandler::StartNextThrow(const Math::Vector3& pos, const Math::Vector3& rot)
 {
 	// ボールリスポーン
 	RespawnPlayerBall(pos, rot);
@@ -23,7 +23,7 @@ void CharaHandler::ResetPlayerBall()
 	m_playerBall->Reset();
 }
 
-void CharaHandler::RespawnPlayerBall(const Math::Vector3& pos, const Math::Quaternion& rot)
+void CharaHandler::RespawnPlayerBall(const Math::Vector3& pos, const Math::Vector3& rot)
 {
 	m_playerBall->Respawn(pos, rot);
 }

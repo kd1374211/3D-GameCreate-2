@@ -1587,6 +1587,9 @@
     <ClInclude Include="Src\Application\GameObject\UI\ShotUI\ShotPowerBar\ShotPowerBar.h">
       <Filter>Src\Application\GameObject\UI\ShotUI\ShotPowerBar</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\Const\Function.h">
+      <Filter>Src\Application\Const</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">

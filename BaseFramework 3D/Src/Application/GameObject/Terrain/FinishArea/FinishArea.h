@@ -6,7 +6,7 @@ class FinishArea :public TerrainBase
 {
 public:
 
-	FinishArea(Math::Vector3 pos, Math::Quaternion rot, Math::Vector3 size);
+	FinishArea(Math::Vector3 pos, Math::Vector3 rot, Math::Vector3 size);
 	~FinishArea()override {}
 
 	void Init()override;

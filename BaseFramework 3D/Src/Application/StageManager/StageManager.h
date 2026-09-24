@@ -8,7 +8,7 @@
 struct LaneObjectData
 {
 	Math::Vector3 m_position = { 0.0f, 0.0f, 0.0f };
-	Math::Quaternion m_rotation = { 0.0f, 0.0f, 0.0f, 1.0f };
+	Math::Vector3 m_rotation = { 0.0f, 0.0f, 0.0f };
 	Math::Vector3 m_scale = { 1.0f, 1.0f, 1.0f };
 };
 
@@ -32,7 +32,7 @@ struct LanePinData
 struct PlayerPlacementData
 {
 	Math::Vector3 m_position = {};
-	Math::Quaternion m_rotation = {};
+	Math::Vector3 m_rotation = {};
 };
 
 // ステージのレーンごとの情報

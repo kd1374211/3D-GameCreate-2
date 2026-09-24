@@ -20,7 +20,7 @@ public:
 	void Init();
 
 	// 次の投球を開始（リセット＆位置・方向設定）
-	void StartNextThrow(const Math::Vector3& pos, const Math::Quaternion& rot);
+	void StartNextThrow(const Math::Vector3& pos, const Math::Vector3& rot);
 
 	//プレイヤー取得
 	std::shared_ptr <BowlingBall> GetPlayerBall() { return m_playerBall; }
@@ -42,7 +42,7 @@ private:
 	// リセット
 	void ResetPlayerBall();
 	// リスポーン
-	void RespawnPlayerBall(const Math::Vector3& pos, const Math::Quaternion& rot);
+	void RespawnPlayerBall(const Math::Vector3& pos, const Math::Vector3& rot);
 
 	// ボール保持
 	std::shared_ptr<BowlingBall> m_playerBall;

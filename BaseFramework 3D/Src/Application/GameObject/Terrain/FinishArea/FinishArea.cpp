@@ -1,15 +1,17 @@
 ﻿#include "FinishArea.h"
 #include "../../../StageManager/StageManager.h"
 #include "../../../Scene/SceneManager.h"
+#include "../../../Const/Function.h"
 
-FinishArea::FinishArea(Math::Vector3 pos, Math::Quaternion rot, Math::Vector3 size)
+FinishArea::FinishArea(Math::Vector3 pos, Math::Vector3 rot, Math::Vector3 size)
 {
 	m_cPhysics = std::make_shared<PhysicsComponent>();
+	Math::Quaternion quat = ConvertEulerVec3ToQuat(rot);
 
 	//物理Initに投げるパラメータ設定
 	PhysicsInitData initData = {};
 	initData.pos = pos;
-	initData.rot = Math::Quaternion::Identity;
+	initData.rot = quat;
 	initData.motionType = JPH::EMotionType::Static;
 	initData.isStatic = true;
 	initData.isSensor = true;
@@ -20,7 +22,7 @@ FinishArea::FinishArea(Math::Vector3 pos, Math::Quaternion rot, Math::Vector3 si
 
 	// 情報設定
 	m_pos = pos;
-	m_rot = rot;
+	m_rot = quat;
 	m_scale = size;
 
 	Init();
