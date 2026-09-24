@@ -33,7 +33,7 @@ void TitleScene::Init()
 	int backStageNo = (int)(rand() / RAND_MAX * (STAGEMGR.GetMaxStageNo() - STAGEMGR.GetMinStageNo()) + STAGEMGR.GetMinStageNo());
 	STAGEMGR.LoadStage(backStageNo);
 	//背景モードで生成
-	STAGEMGR.BuildStage(1, StageBuildMode::Background);
+	STAGEMGR.BuildStage(0, StageBuildMode::Background);
 
 	//ステージ確認カメラ
 	std::shared_ptr<StageViewCamera> camera = std::make_shared<StageViewCamera>();

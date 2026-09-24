@@ -5,7 +5,9 @@
 #include "../../Camera/CameraManager.h"
 #include "../../Camera/TPSCamera/TPSCamera.h"
 #include "../../../Const/WindowConsts.h"
-#include "../../ShotCursor/ShotCursor.h"
+#include "../../UI/ShotUI/ShotCursor/ShotCursor.h"
+#include "../../UI/ShotUI/ShotPowerBar/ShotPowerBar.h"
+#include "../../../Const/Function.h"
 
 BowlingBall::BowlingBall()
 {
@@ -43,6 +45,13 @@ void BowlingBall::Init(float a_radius)
 	std::shared_ptr<ShotCursor> cursor = std::make_shared<ShotCursor>();
 	SCENEMGR.AddObject(cursor);
 	m_wpCursor = cursor;
+
+	// バー生成
+	std::shared_ptr<ShotPowerBar> bar = std::make_shared<ShotPowerBar>();
+	SCENEMGR.AddObject(bar);
+	bar->SetIsDraw(true);
+	bar->SetPower(0.0f);
+	m_wpPowerBar = bar;
 }
 
 void BowlingBall::Update()
@@ -103,8 +112,11 @@ void BowlingBall::Update()
 					m_speedStoreData.erase(m_speedStoreData.begin());
 				}
 
-				// DEBUG
-				KdDebugGUI::Instance().AddLog("ShotPower : %.2f\n", std::min(CalcAvgMoveSpeed() / BowlingBallConsts::ThrowSpeedDiv, BowlingBallConsts::ThrowSpeedMax));
+				// バーに強さを設定
+				if (!m_wpPowerBar.expired())
+				{
+					m_wpPowerBar.lock()->SetPower(std::min(CalcAvgMoveSpeed() / BowlingBallConsts::ThrowSpeedDiv, BowlingBallConsts::ThrowSpeedMax));
+				}
 			}
 			// 左クリックを離す
 			else
@@ -224,7 +236,7 @@ void BowlingBall::PostUpdate()
 	m_mWorld = rotat * trans;
 
 	// 矢印配置テスト
-	if (m_isShootStart && m_isInputEnabled) // 左クリックホールド中
+	if (m_isInputEnabled) // 左クリックホールド中
 	{
 		Math::Matrix arrowLocalPos = Math::Matrix::CreateTranslation(0, 0, 0.25f);
 		Math::Matrix arrowScale = Math::Matrix::CreateScale(Math::Vector3(0.25f, 0.25f, 0.25f));
@@ -261,7 +273,7 @@ void BowlingBall::DrawLit()
 	KdShaderManager::Instance().m_StandardShader.DrawModel(*m_model, m_mWorld);
 
 	// 左クリックホールド中のみ
-	if (m_isShootStart && m_isInputEnabled)
+	if (m_isInputEnabled)
 	{
 		// 矢印
 		KdShaderManager::Instance().m_StandardShader.DrawModel(*m_arrowModel, m_arrowMat);
@@ -321,10 +333,19 @@ void BowlingBall::Reset()
 	{
 		m_wpCamera.lock()->SetIsCamLocked(false);
 	}
+
+	// パワーリセット
+	if (!m_wpPowerBar.expired())
+	{
+		m_wpPowerBar.lock()->SetPower(0.0f);
+	}
 }
 
-void BowlingBall::Respawn(const Math::Vector3& pos, const Math::Quaternion& rot)
+void BowlingBall::Respawn(const Math::Vector3& pos, const Math::Vector3& rot)
 {
+	// rotをQuatに変換
+	Math::Quaternion quat = ConvertEulerVec3ToQuat(rot);
+
 	// 状態のリセット
 	Reset();
 
@@ -332,7 +353,7 @@ void BowlingBall::Respawn(const Math::Vector3& pos, const Math::Quaternion& rot)
 	DeactivateBody();
 
 	m_cPhysics->SetPosition(JPH::Vec3(pos.x, pos.y, pos.z));
-	m_cPhysics->SetRotation(JPH::Quat(rot.x, rot.y, rot.z, rot.w));
+	m_cPhysics->SetRotation(JPH::Quat(quat.x, quat.y, quat.z, quat.w));
 
 	// 物理ボディを再度活性化
 	ActivateBody();
@@ -342,7 +363,7 @@ void BowlingBall::Respawn(const Math::Vector3& pos, const Math::Quaternion& rot)
 	m_pos = pos;
 	if (!m_wpCamera.expired())
 	{
-		m_wpCamera.lock()->SetRotationYMatrix(Math::Matrix::CreateFromQuaternion(rot));
+		m_wpCamera.lock()->SetRotationYMatrix(Math::Matrix::CreateFromQuaternion(quat));
 	}
 }
 

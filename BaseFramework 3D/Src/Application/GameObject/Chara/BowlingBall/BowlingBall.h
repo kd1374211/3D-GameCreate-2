@@ -12,6 +12,7 @@ enum class RollEndReason
 
 class TPSCamera;
 class ShotCursor;
+class ShotPowerBar;
 
 class BowlingBall :public KdGameObject
 {
@@ -37,7 +38,7 @@ public:
 	RollEndReason GetRollEndReason()const { return m_reason; }
 
 	// 位置・回転セット
-	void Respawn(const Math::Vector3& pos, const Math::Quaternion& rot);
+	void Respawn(const Math::Vector3& pos, const Math::Vector3& rot);
 
 	// ゴールに触れた
 	void HitFinishArea();
@@ -178,4 +179,7 @@ private:
 
 	// カーソル用
 	std::weak_ptr<ShotCursor> m_wpCursor;
+
+	// バー
+	std::weak_ptr<ShotPowerBar> m_wpPowerBar;
 };

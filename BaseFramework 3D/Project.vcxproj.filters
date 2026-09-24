@@ -178,14 +178,20 @@
     <Filter Include="Src\Application\Component\CharaHandler">
       <UniqueIdentifier>{44afc1d6-86a3-435a-9ead-0d1424019bd3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Src\Application\GameObject\ShotCursor">
-      <UniqueIdentifier>{50b49b6a-7ff8-4687-bd2f-fff1ced6fddc}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Src\Application\GameObject\Terrain\MovingTerrain">
       <UniqueIdentifier>{c79457ae-6440-42b7-b597-739a7aa98538}</UniqueIdentifier>
     </Filter>
     <Filter Include="Src\Application\GameObject\Terrain\RotatingTerrain">
       <UniqueIdentifier>{2dd8dc59-b4a0-48a3-9f0e-e4ba3f671281}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\GameObject\UI\ShotUI">
+      <UniqueIdentifier>{607abea6-2bf0-4254-8291-396fd40cbe7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\GameObject\UI\ShotUI\ShotCursor">
+      <UniqueIdentifier>{4378eec9-9824-48cc-ab86-2066cb1a161a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\GameObject\UI\ShotUI\ShotPowerBar">
+      <UniqueIdentifier>{883691d8-be7c-4392-b415-6e610a323e42}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1566,9 +1572,6 @@
     <ClInclude Include="Src\Application\Const\DeviceAndKey.h">
       <Filter>Src\Application\Const</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Application\GameObject\ShotCursor\ShotCursor.h">
-      <Filter>Src\Application\GameObject\ShotCursor</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Application\GameObject\Terrain\MovingTerrain\MovingTerrain.h">
       <Filter>Src\Application\GameObject\Terrain\MovingTerrain</Filter>
     </ClInclude>
@@ -1577,6 +1580,12 @@
     </ClInclude>
     <ClInclude Include="Src\Application\StageManager\VariantParamData.h">
       <Filter>Src\Application\StageManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\UI\ShotUI\ShotCursor\ShotCursor.h">
+      <Filter>Src\Application\GameObject\UI\ShotUI\ShotCursor</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\UI\ShotUI\ShotPowerBar\ShotPowerBar.h">
+      <Filter>Src\Application\GameObject\UI\ShotUI\ShotPowerBar</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -2267,14 +2276,17 @@
     <ClCompile Include="Src\Application\Component\CharaHandler\CharaHandler.cpp">
       <Filter>Src\Application\Component\CharaHandler</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Application\GameObject\ShotCursor\ShotCursor.cpp">
-      <Filter>Src\Application\GameObject\ShotCursor</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Application\GameObject\Terrain\MovingTerrain\MovingTerrain.cpp">
       <Filter>Src\Application\GameObject\Terrain\MovingTerrain</Filter>
     </ClCompile>
     <ClCompile Include="Src\Application\GameObject\Terrain\RotatingTerrain\RotatingTerrain.cpp">
       <Filter>Src\Application\GameObject\Terrain\RotatingTerrain</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\UI\ShotUI\ShotCursor\ShotCursor.cpp">
+      <Filter>Src\Application\GameObject\UI\ShotUI\ShotCursor</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\UI\ShotUI\ShotPowerBar\ShotPowerBar.cpp">
+      <Filter>Src\Application\GameObject\UI\ShotUI\ShotPowerBar</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

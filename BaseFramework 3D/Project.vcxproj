@@ -660,7 +660,6 @@
     <ClInclude Include="Src\Application\GameObject\Camera\StageViewCamera\StageViewCamera.h" />
     <ClInclude Include="Src\Application\GameObject\Camera\TPSCamera\TPSCamera.h" />
     <ClInclude Include="Src\Application\GameObject\Chara\BowlingBall\BowlingBall.h" />
-    <ClInclude Include="Src\Application\GameObject\ShotCursor\ShotCursor.h" />
     <ClInclude Include="Src\Application\GameObject\SkySphere\SkySphere.h" />
     <ClInclude Include="Src\Application\GameObject\Terrain\FinishArea\FinishArea.h" />
     <ClInclude Include="Src\Application\GameObject\Terrain\Ground\Ground.h" />
@@ -671,6 +670,8 @@
     <ClInclude Include="Src\Application\GameObject\UI\SceneUIObjects\Result\ResultUIObjects.h" />
     <ClInclude Include="Src\Application\GameObject\UI\SceneUIObjects\StageSelect\StageSelectUIObjects.h" />
     <ClInclude Include="Src\Application\GameObject\UI\SceneUIObjects\Title\TitleUIObjects.h" />
+    <ClInclude Include="Src\Application\GameObject\UI\ShotUI\ShotCursor\ShotCursor.h" />
+    <ClInclude Include="Src\Application\GameObject\UI\ShotUI\ShotPowerBar\ShotPowerBar.h" />
     <ClInclude Include="Src\Application\main.h" />
     <ClInclude Include="Src\Application\Physics\GameContactListener.h" />
     <ClInclude Include="Src\Application\Physics\PhysicsLayer.h" />
@@ -900,7 +901,6 @@
     <ClCompile Include="Src\Application\GameObject\Camera\StageViewCamera\StageViewCamera.cpp" />
     <ClCompile Include="Src\Application\GameObject\Camera\TPSCamera\TPSCamera.cpp" />
     <ClCompile Include="Src\Application\GameObject\Chara\BowlingBall\BowlingBall.cpp" />
-    <ClCompile Include="Src\Application\GameObject\ShotCursor\ShotCursor.cpp" />
     <ClCompile Include="Src\Application\GameObject\SkySphere\SkySphere.cpp" />
     <ClCompile Include="Src\Application\GameObject\Terrain\FinishArea\FinishArea.cpp" />
     <ClCompile Include="Src\Application\GameObject\Terrain\Ground\Ground.cpp" />
@@ -911,6 +911,8 @@
     <ClCompile Include="Src\Application\GameObject\UI\SceneUIObjects\Result\ResultUIObjects.cpp" />
     <ClCompile Include="Src\Application\GameObject\UI\SceneUIObjects\StageSelect\StageSelectUIObjects.cpp" />
     <ClCompile Include="Src\Application\GameObject\UI\SceneUIObjects\Title\TitleUIObjects.cpp" />
+    <ClCompile Include="Src\Application\GameObject\UI\ShotUI\ShotCursor\ShotCursor.cpp" />
+    <ClCompile Include="Src\Application\GameObject\UI\ShotUI\ShotPowerBar\ShotPowerBar.cpp" />
     <ClCompile Include="Src\Application\main.cpp" />
     <ClCompile Include="Src\Application\Physics\GameContactListener.cpp" />
     <ClCompile Include="Src\Application\Physics\PhysicsManager.cpp" />

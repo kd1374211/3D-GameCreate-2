@@ -26,40 +26,40 @@
 	"materials":[
 		{
 			"doubleSided":true,
-			"name":"Material.024",
+			"name":"Wood",
+			"normalTexture":{
+				"index":0
+			},
 			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					0.2663556635379791,
-					0.07818742841482162,
-					0.012983033433556557,
-					1
-				],
+				"baseColorTexture":{
+					"index":1
+				},
 				"metallicFactor":0
 			}
 		},
 		{
 			"doubleSided":true,
-			"name":"Material.025",
+			"name":"Grass",
+			"normalTexture":{
+				"index":2
+			},
 			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					0.06301002949476242,
-					0.36625269055366516,
-					0.051269471645355225,
-					1
-				],
+				"baseColorTexture":{
+					"index":3
+				},
 				"metallicFactor":0
 			}
 		},
 		{
 			"doubleSided":true,
-			"name":"Material",
+			"name":"Dirt",
+			"normalTexture":{
+				"index":4
+			},
 			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					0.07531645148992538,
-					0.07531645148992538,
-					0.07531645148992538,
-					1
-				],
+				"baseColorTexture":{
+					"index":5
+				},
 				"metallicFactor":0
 			}
 		}
@@ -101,6 +101,64 @@
 					"material":2
 				}
 			]
+		}
+	],
+	"textures":[
+		{
+			"sampler":0,
+			"source":0
+		},
+		{
+			"sampler":0,
+			"source":1
+		},
+		{
+			"sampler":0,
+			"source":2
+		},
+		{
+			"sampler":0,
+			"source":3
+		},
+		{
+			"sampler":0,
+			"source":4
+		},
+		{
+			"sampler":0,
+			"source":5
+		}
+	],
+	"images":[
+		{
+			"mimeType":"image/png",
+			"name":"WoodenWall_Normal",
+			"uri":"WoodenWall_Normal.png"
+		},
+		{
+			"mimeType":"image/png",
+			"name":"WoodenWall",
+			"uri":"WoodenWall.png"
+		},
+		{
+			"mimeType":"image/png",
+			"name":"GrassGround2_Normal",
+			"uri":"GrassGround2_Normal.png"
+		},
+		{
+			"mimeType":"image/png",
+			"name":"GrassGround2",
+			"uri":"GrassGround2.png"
+		},
+		{
+			"mimeType":"image/png",
+			"name":"DirtGutter_Normal",
+			"uri":"DirtGutter_Normal.png"
+		},
+		{
+			"mimeType":"image/png",
+			"name":"DirtGutter",
+			"uri":"DirtGutter.png"
 		}
 	],
 	"accessors":[
@@ -175,7 +233,7 @@
 		{
 			"bufferView":8,
 			"componentType":5126,
-			"count":56,
+			"count":96,
 			"max":[
 				0.8000009655952454,
 				1.5,
@@ -191,13 +249,13 @@
 		{
 			"bufferView":9,
 			"componentType":5126,
-			"count":56,
+			"count":96,
 			"type":"VEC3"
 		},
 		{
 			"bufferView":10,
 			"componentType":5126,
-			"count":56,
+			"count":96,
 			"type":"VEC2"
 		},
 		{
@@ -258,32 +316,38 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":672,
+			"byteLength":1152,
 			"byteOffset":13584,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":672,
-			"byteOffset":14256,
+			"byteLength":1152,
+			"byteOffset":14736,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":448,
-			"byteOffset":14928,
+			"byteLength":768,
+			"byteOffset":15888,
 			"target":34962
 		},
 		{
 			"buffer":0,
 			"byteLength":468,
-			"byteOffset":15376,
+			"byteOffset":16656,
 			"target":34963
+		}
+	],
+	"samplers":[
+		{
+			"magFilter":9729,
+			"minFilter":9987
 		}
 	],
 	"buffers":[
 		{
-			"byteLength":15844,
+			"byteLength":17124,
 			"uri":"Stage10.bin"
 		}
 	]

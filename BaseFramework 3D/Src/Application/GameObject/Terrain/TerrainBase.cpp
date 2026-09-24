@@ -9,3 +9,9 @@ void TerrainBase::DrawLit()
 	if (!m_model)return;
 	KdShaderManager::Instance().m_StandardShader.DrawModel(*m_model, m_mWorld);
 }
+
+void TerrainBase::GenerateDepthMapFromLight()
+{
+	if (!m_model)return;
+	KdShaderManager::Instance().m_StandardShader.DrawModel(*m_model, m_mWorld);
+}
