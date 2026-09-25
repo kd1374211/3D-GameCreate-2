@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "../Const/BowlingSystemConst.h"
 
 class BaseScene;
 class CameraBase;
@@ -62,6 +63,11 @@ public :
 	void SetStageNo(int No) { m_stageNo = No; }
 	int GetStageNo()const { return m_stageNo; }
 
+	// 追加9/25
+	// リザルト保管
+	ScoreDatas::GameResult GetGameResult() { return m_lastGameResult; }
+	void SetGameResult(ScoreDatas::GameResult result) { m_lastGameResult = result; }
+
 private :
 
 	// シーン切り替え関数
@@ -83,6 +89,10 @@ private :
 	//追加8/20
 	//ゲーム速度
 	float m_gameSpeedMulti = 1.0f;
+
+	// 追加9/25
+	// リザルト一時保管
+	ScoreDatas::GameResult m_lastGameResult;
 
 private:
 

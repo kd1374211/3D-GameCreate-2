@@ -89,6 +89,82 @@ FrameMark ScoreHandler::RecordThrow(int fallenPins)
 	return mark;
 }
 
+void ScoreHandler::CreateGameResult(ScoreDatas::GameResult& result)
+{
+	// 各フレーム
+	for (int i = 0; i < BowlingSystemConsts::FrameCount; i++)
+	{
+		ScoreDatas::FrameScoreData data = {};
+
+		// フレーム番号
+		data.m_frameNumber = i;
+		
+		// スペア確認用
+		int totalFallenPin = 0;
+
+		// j回繰り返し
+		for (int j = 0; j < (i == BowlingSystemConsts::LastFrame ? BowlingSystemConsts::MaxThrowCount_LastFrame : BowlingSystemConsts::MaxThrowCount_NotLastFrame); j++)
+		{
+			// フレームiのj番目の記録を取得
+			int fallenPin = GetScoreInt(i, j);
+
+			// 無効値でないか確認
+			if (fallenPin != ScoreHandlerConsts::EmptyDataID)
+			{
+				// 10本ならストライク
+				if (fallenPin == BowlingSystemConsts::PinCount)
+				{
+					data.m_throwRecord.push_back("X");
+
+					// 一応合計本数リセット
+					totalFallenPin = 0;
+				}
+				else
+				{
+					// 合計本数追加
+					totalFallenPin += fallenPin;
+
+					// 合計本数が10を超えたらスペア
+					if (totalFallenPin >= 10)
+					{
+						data.m_throwRecord.push_back("/");
+
+						// 合計本数リセット
+						totalFallenPin = 0;
+					}
+					// でないなら倒した本数そのまま
+					else
+					{
+						data.m_throwRecord.push_back(std::to_string(fallenPin));
+					}
+				}
+			}
+			else
+			{
+				// 無効値なら-を入力
+				data.m_throwRecord.push_back("-");
+			}
+		}
+
+		// 合計得点
+		int totalScore = GetTotalScoreInt(i);
+
+		// 有効チェック
+		if (totalScore != ScoreHandlerConsts::EmptyDataID)
+		{
+			data.m_totalScore = std::to_string(totalScore);
+		}
+		else
+		{
+			// 無効なら-返す
+			data.m_totalScore = "-";
+		}
+
+		// リザルトに追加
+		result.m_frameResult[i] = data;
+	}
+}
+
 void ScoreHandler::AddDebugScoreLog() const
 {
 	for (const auto& frameData : m_frameData)
@@ -145,6 +221,20 @@ std::string ScoreHandler::GetTotalScore(int frameNo)
 	else return "-";
 }
 
+int ScoreHandler::GetScoreInt(int frameNo, int throwNo)
+{
+	int ID = m_frameData[frameNo].m_recordID[throwNo];
+	FrameData data = m_frameData[frameNo];
+
+	// データが空ではないなら数値を返す
+	if (ID != ScoreHandlerConsts::EmptyDataID)
+	{
+		return m_throwRecord[ID];
+	}
+	// データが空なら-を返す
+	else return ScoreHandlerConsts::EmptyDataID;
+}
+
 int ScoreHandler::GetTotalScoreInt(int frameNo)
 {
 	// 計算済みなら計算結果
@@ -153,7 +243,21 @@ int ScoreHandler::GetTotalScoreInt(int frameNo)
 		return m_frameData[frameNo].m_frameTotalScore;
 	}
 	// でなければ-1
-	else return -1;
+	else return ScoreHandlerConsts::EmptyDataID;
+}
+
+void ScoreHandler::EndCurrentFrame()
+{
+	while (1)
+	{
+		// このフレームが終わるまで0を送信
+		RecordThrow(0);
+
+		if (!(GetNextAction() == NextActions::NextThrow || GetNextAction() == NextActions::BonusThrow))
+		{
+			return;
+		}
+	}
 }
 
 void ScoreHandler::UpdateScore()

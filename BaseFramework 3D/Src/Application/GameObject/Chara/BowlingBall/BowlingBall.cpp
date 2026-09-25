@@ -115,7 +115,7 @@ void BowlingBall::Update()
 				// バーに強さを設定
 				if (!m_wpPowerBar.expired())
 				{
-					m_wpPowerBar.lock()->SetPower(std::min(CalcAvgMoveSpeed() / BowlingBallConsts::ThrowSpeedDiv, BowlingBallConsts::ThrowSpeedMax));
+					m_wpPowerBar.lock()->SetPower(std::clamp(CalcAvgMoveSpeed() / BowlingBallConsts::ThrowSpeedDiv, 0.0f, BowlingBallConsts::ThrowSpeedMax));
 				}
 			}
 			// 左クリックを離す
@@ -435,6 +435,9 @@ float BowlingBall::CalcAvgMoveSpeed()
 
 	// moveDistをgdtで割って平均を取得
 	float avg = moveDist / gdt;
+
+	// DEBUG
+	KdDebugGUI::Instance().AddLog("AvgSpeed : %.1f\n", avg);
 
 	return avg;
 }

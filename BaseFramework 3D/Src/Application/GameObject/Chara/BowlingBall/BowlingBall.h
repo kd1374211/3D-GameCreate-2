@@ -65,7 +65,7 @@ private:
 		static constexpr float BallMass = 7.0f;
 
 		// 強さ
-		static constexpr float ThrowSpeedDiv = 1000.0f;
+		static constexpr float ThrowSpeedDiv = 7500.0f;
 		static constexpr float ThrowSpeedMax = 1.0f;
 		static constexpr float ThrowSpeedMin = 0.1f;
 		static constexpr float AverageCalcTime = 0.1f;

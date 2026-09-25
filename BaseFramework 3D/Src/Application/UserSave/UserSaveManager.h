@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "../Const/BowlingSystemConst.h"
 
 struct StageSaveData
 {

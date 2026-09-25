@@ -3,6 +3,7 @@
 #include "../../../../Const/BowlingSystemConst.h"
 #include "../../../../main.h"
 #include "../../../../Const/DeviceAndKey.h"
+#include "../../../../Component/ScoreHandler/ScoreHandler.h"
 
 void GameUIObjects::Update()
 {
@@ -126,7 +127,13 @@ void GameUIObjects::DrawSprite()
 
 		// ここに描画
 		// ウィンドウ本体
-		KdShaderManager::Instance().m_spriteShader.DrawTex(m_middleResultWindowTexK, 0, 0);
+		KdShaderManager::Instance().m_spriteShader.DrawTex(m_ResultWindowFrameTex, 0, 0, 1080, 480);
+
+		// 文字
+		KdShaderManager::Instance().m_spriteShader.DrawFont(FontTypeConst::Result_PinCount, Math::Vector2(0, 160), &kBlackColor, "中間リザルト", TextAlign::Center);
+
+		// 各スコア
+		DrawScoreTexts();
 
 		//ターゲット戻す
 		KdDirect3D::Instance().WorkDevContext()->OMSetRenderTargets(1, KdDirect3D::Instance().WorkBackBuffer()->WorkRTViewAddress(), KdDirect3D::Instance().WorkZBuffer()->WorkDSView());
@@ -360,11 +367,48 @@ void GameUIObjects::UpdateMiddleResult(float dt)
 	}
 }
 
+void GameUIObjects::DrawScoreTexts()
+{
+	// スコアハンドラー取得
+	auto spScoreHandler = m_wpScoreHandler.lock();
+
+	// 無かったらリターン
+	if (!spScoreHandler)return;
+
+	// リザルトデータ取得
+	ScoreDatas::GameResult result;
+	spScoreHandler->CreateGameResult(result);
+
+	// 各フレームごとに
+	for (const auto& data : result.m_frameResult)
+	{
+		int frameNumber = data.m_frameNumber;
+		int throwNumber = 0;
+
+		// フレーム番号表示
+		std::string frameNumText = std::to_string(frameNumber + 1);
+		KdShaderManager::Instance().m_spriteShader.DrawFont(FontTypeConst::Game_MiddleResultFrameNo, Math::Vector2(GameUIConsts::FrameNumberDrawStartPosX + frameNumber * GameUIConsts::MiddleResultTextDrawPosDiffX_Frame + (frameNumber == BowlingSystemConsts::LastFrame ? GameUIConsts::DrawPosDiff_LastFrame : 0), GameUIConsts::FrameNumberDrawPosY), &kBlackColor, frameNumText.c_str(), TextAlign::Center);
+
+		// 投球スコア表示
+		for (const auto& throwRec : data.m_throwRecord)
+		{
+			// スコア取得
+			KdShaderManager::Instance().m_spriteShader.DrawFont(FontTypeConst::Game_MiddleResultThrowRecord, Math::Vector2(GameUIConsts::ThrowRecordDrawStartPosX + frameNumber * GameUIConsts::MiddleResultTextDrawPosDiffX_Frame + throwNumber * GameUIConsts::ThrowRecordDrawPosDiffX_Throw, GameUIConsts::ThrowRecordDrawPosY), &kBlackColor, throwRec.c_str(), TextAlign::Center);
+
+			// ずらすためのカウント
+			throwNumber++;
+		}
+		
+		// フレームスコア表示
+		KdShaderManager::Instance().m_spriteShader.DrawFont(FontTypeConst::Game_MiddleResultFrameScore, Math::Vector2(GameUIConsts::FrameScoreDrawStartPosX + frameNumber * GameUIConsts::MiddleResultTextDrawPosDiffX_Frame + (frameNumber == BowlingSystemConsts::LastFrame ? GameUIConsts::DrawPosDiff_LastFrame : 0), GameUIConsts::FrameScoreDrawPosY), &kBlackColor, data.m_totalScore.c_str(), TextAlign::Center);
+	}
+}
+
 void GameUIObjects::Init()
 {
 	m_pinTex = std::make_shared<KdTexture>();
 	m_pinTex->Load("Asset/Textures/UI/SceneUI/PinIcon.png");
 
-	m_middleResultWindowTexK = std::make_shared<KdTexture>();
-	m_middleResultWindowTexK->Load("Asset/Textures/UI/SceneUI/Game/MiddleResultUI_K.png");
+	m_ResultWindowFrameTex = std::make_shared<KdTexture>();
+	m_ResultWindowFrameTex->Load("Asset/Textures/UI/SceneUI/ResultWindowFrame.png");
 }

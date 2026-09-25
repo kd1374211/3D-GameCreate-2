@@ -70,19 +70,27 @@ void GameContactListener::OnContactAdded(const JPH::Body& inBody1, const JPH::Bo
 	if (layer1 == Layers::BOWLINGPIN && layer2 == Layers::BOWLINGPIN)
 	{
 		// UserData から ピンオブジェクトのポインタを復元
-		if (auto* pin = dynamic_cast<PinBase*>(gameObj1))
-		{
-			// プレイヤーの現在速度を取得してピンに通知！
-			JPH::Vec3 pinVel = body2->GetLinearVelocity();
-			pin->OnHit(pinVel);
-		}
+		auto* pin = dynamic_cast<PinBase*>(gameObj1);
+		auto* pin2 = dynamic_cast<PinBase*>(gameObj2);
 
-		// UserData から ピンオブジェクトのポインタを復元
-		if (auto* pin2 = dynamic_cast<PinBase*>(gameObj2))
+		// どちらもあることを確認
+		if (pin && pin2)
 		{
-			// プレイヤーの現在速度を取得してピンに通知！
-			JPH::Vec3 pinVel = body1->GetLinearVelocity();
-			pin2->OnHit(pinVel);
+			// ピン１が既に当てられているならピン２の吹っ飛びを呼ぶ
+			if (pin->GetIsHit())
+			{
+				// プレイヤーの現在速度を取得してピンに通知！
+				JPH::Vec3 pinVel = body1->GetLinearVelocity();
+				pin2->OnHit(pinVel);
+			}
+
+			// ピン２が既に当てられているならピン１の吹っ飛びを呼ぶ
+			if (pin2->GetIsHit())
+			{
+				// プレイヤーの現在速度を取得してピンに通知！
+				JPH::Vec3 pinVel = body2->GetLinearVelocity();
+				pin->OnHit(pinVel);
+			}
 		}
 	}
 }
@@ -153,19 +161,27 @@ void GameContactListener::OnContactPersisted(const JPH::Body& inBody1, const JPH
 	if (layer1 == Layers::BOWLINGPIN && layer2 == Layers::BOWLINGPIN)
 	{
 		// UserData から ピンオブジェクトのポインタを復元
-		if (auto* pin = dynamic_cast<PinBase*>(gameObj1))
-		{
-			// プレイヤーの現在速度を取得してピンに通知！
-			JPH::Vec3 pinVel = body2->GetLinearVelocity();
-			pin->OnHit(pinVel);
-		}
+		auto* pin = dynamic_cast<PinBase*>(gameObj1);
+		auto* pin2 = dynamic_cast<PinBase*>(gameObj2);
 
-		// UserData から ピンオブジェクトのポインタを復元
-		if (auto* pin2 = dynamic_cast<PinBase*>(gameObj2))
+		// どちらもあることを確認
+		if (pin && pin2)
 		{
-			// プレイヤーの現在速度を取得してピンに通知！
-			JPH::Vec3 pinVel = body1->GetLinearVelocity();
-			pin2->OnHit(pinVel);
+			// ピン１が既に当てられているならピン２の吹っ飛びを呼ぶ
+			if (pin->GetIsHit())
+			{
+				// プレイヤーの現在速度を取得してピンに通知！
+				JPH::Vec3 pinVel = body1->GetLinearVelocity();
+				pin2->OnHit(pinVel);
+			}
+
+			// ピン２が既に当てられているならピン１の吹っ飛びを呼ぶ
+			if (pin2->GetIsHit())
+			{
+				// プレイヤーの現在速度を取得してピンに通知！
+				JPH::Vec3 pinVel = body2->GetLinearVelocity();
+				pin->OnHit(pinVel);
+			}
 		}
 	}
 }

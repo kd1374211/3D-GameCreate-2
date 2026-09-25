@@ -33,6 +33,9 @@ struct FontTypeConst
 	static constexpr int Game_TimerAndPin = 6;
 	static constexpr int Game_StageFinish = 8;
 	static constexpr int Game_KeyGuide = 3;
+	static constexpr int Game_MiddleResultFrameNo = 0;
+	static constexpr int Game_MiddleResultThrowRecord = 2;
+	static constexpr int Game_MiddleResultFrameScore = 2;
 
 	//Result
 	static constexpr int Result_ResultTop = 5;
@@ -189,6 +192,7 @@ private:
 	//番号とタイトルの組み合わせ
 	std::map<int, FontSetData> m_fontDatas =
 	{
+		{0,FontSetData("チェックポイント．（ピリオド）",SHIFTJIS_CHARSET,false,12.0f)},
 		{1,FontSetData("チェックポイント．（ピリオド）",SHIFTJIS_CHARSET,false,24.0f)},
 		{2,FontSetData("チェックポイント．（ピリオド）",SHIFTJIS_CHARSET,false,30.0f)},
 		{3,FontSetData("チェックポイント．（ピリオド）",SHIFTJIS_CHARSET,false,40.0f)},
@@ -209,7 +213,7 @@ private:
 		//追加済みフラグ
 		bool isCreated = false;
 	};
-	std::array<FontData, 10>			m_FontTbl;							// 登録されたフォントの配列
+	std::array<FontData, 9>			m_FontTbl;							// 登録されたフォントの配列
 
 	HWND								m_hWnd = 0;							// ウィンドウハンドル
 	HDC									m_hDC = 0;							// デバイスコンテキスト

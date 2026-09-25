@@ -41,6 +41,9 @@ public:
 	// ピン番号のゲッター
 	int GetPinIndex()const { return m_pinIndex; }
 
+	// ピンが当てられたか
+	bool GetIsHit()const { return m_isHit; }
+
 	// 当たられたとき
 	void OnHit(JPH::Vec3 vel);
 

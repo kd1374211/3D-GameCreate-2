@@ -99,8 +99,18 @@ void GameScene::UpdatePlaying2()
 		{
 			if (!STAGEMGR.IsEditMode())
 			{
-				// 投球終了処理
-				EndRolling();
+				// SPキーも押していればフレームごとスキップ
+				if (GetAsyncKeyState(VK_SPACE) & 0x8000)
+				{
+					// フレームをスキップ
+					m_cScoreHandler->EndCurrentFrame();
+				}
+				else
+				{
+					// 投球終了
+					EndRolling();
+				}
+
 				// ステート更新
 				m_currentSceneState = SceneState::CheckAndClean;
 
@@ -347,6 +357,7 @@ void GameScene::Init()
 	//UI
 	std::shared_ptr<GameUIObjects> UIObj = std::make_shared<GameUIObjects>();
 	m_wpUI = UIObj;
+	UIObj->RegistScoreHandler(m_cScoreHandler);
 	AddObject(UIObj);
 
 	//フェードイン

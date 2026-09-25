@@ -74,6 +74,9 @@ void FinishArea::Update()
 
 void FinishArea::DrawUnLit()
 {
+	// デバッグ中でないなら消す
+	if (!STAGEMGR.IsEditMode())return;
+
 	// 初期位置
 	float trailStart = CalcTrailStart();
 

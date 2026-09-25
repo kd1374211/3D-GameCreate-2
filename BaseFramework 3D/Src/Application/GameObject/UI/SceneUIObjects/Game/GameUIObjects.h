@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 enum class FrameMark;
+class ScoreHandler;
 
 //流れる文字（位置やサイズ固定）
 struct MovingText
@@ -40,12 +41,18 @@ public:
 	// ステージクリア・クリア失敗演出召喚(trueクリアfalse失敗)
 	void SpawnStageFinishText(bool isClear);
 
+	// スコアハンドラー登録
+	void RegistScoreHandler(std::shared_ptr<ScoreHandler> spScoreHandler) { m_wpScoreHandler = spScoreHandler; }
+
 private:
 
 	// 各アップデート
 	void UpdateThrowStartText(float dt);
 	void UpdateThrowResult(float dt);
 	void UpdateMiddleResult(float dt);
+
+	// 描画
+	void DrawScoreTexts();
 
 	// GameUI内の仮定義
 	struct GameUIConsts
@@ -75,6 +82,17 @@ private:
 		static constexpr float MiddleResultStartY = -500.0f;
 		static constexpr float MiddleResultEndY = 0.0f;
 		static constexpr float MiddleResultMoveSpeed = 1500.0f;
+
+		// 中間リザルト文字
+		static constexpr float MiddleResultTextDrawPosDiffX_Frame = 80.0f;		// １フレームごとの描画位置ずれX
+		static constexpr float DrawPosDiff_LastFrame = 20.0f;								// 最終フレームの描画位置ずれX
+		static constexpr float FrameNumberDrawPosY = 80.0f;						// フレーム番号描画位置Y
+		static constexpr float FrameNumberDrawStartPosX = -360.0f;				// フレーム番号描画位置Xスタート
+		static constexpr float ThrowRecordDrawPosY = 20.0f;						// 投球スコアの描画位置Y
+		static constexpr float ThrowRecordDrawStartPosX = -380.0f;				// 投球スコアの描画位置Xスタート
+		static constexpr float ThrowRecordDrawPosDiffX_Throw = 40.0f;			// 投球スコアのX差(1-2-3投目)
+		static constexpr float FrameScoreDrawPosY = -60.0f;						// フレームスコア描画位置Y
+		static constexpr float FrameScoreDrawStartPosX = -360.0f;				// フレームスコア描画位置Xスタート
 
 		//ステージ終了演出
 		static constexpr float WindowExpandSpeed_StageFinish = 10.0f;
@@ -106,10 +124,13 @@ private:
 	bool m_isMiddleResultUp = true;
 	bool m_isMiddleResultUpEnd = false;
 
-	std::shared_ptr<KdTexture> m_middleResultWindowTexK = nullptr;
+	std::shared_ptr<KdTexture> m_ResultWindowFrameTex = nullptr;
 
 	//ステージ終了演出用
 	bool m_isStageFinishTextDraw = false;
 	bool m_isStageClear = false;
 	float m_windowSize_stageFinish = 0.0f;
+
+	// スコアハンドラー保持
+	std::weak_ptr<ScoreHandler> m_wpScoreHandler;
 };
