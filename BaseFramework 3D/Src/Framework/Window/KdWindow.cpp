@@ -162,6 +162,18 @@ LRESULT KdWindow::WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 		// 破棄
 		Release();
 		break;
+	// 追加9/29
+	// ウィンドウサイズ変化
+	case WM_SYSCOMMAND:
+
+		// 確認
+		if (wParam == SC_MAXIMIZE)
+		{
+			// 最大化	
+			KdDirect3D::Instance().SetFullscreenState(TRUE, 0);
+		}
+
+		break;
 	// ウィンドウ破棄直前
 	case WM_DESTROY:
 		RemoveProp(hWnd, "GameWindowInstance");
