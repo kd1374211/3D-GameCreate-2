@@ -246,14 +246,44 @@ int ScoreHandler::GetTotalScoreInt(int frameNo)
 	else return ScoreHandlerConsts::EmptyDataID;
 }
 
-void ScoreHandler::EndCurrentFrame()
+void ScoreHandler::EndCurrentFrame(bool isRandom)
 {
 	while (1)
 	{
-		// このフレームが終わるまで0を送信
-		RecordThrow(0);
+		// このフレームが終わるまでスコアを送信
+		// ランダムスコアフラグ
+		if (isRandom)
+		{
+			RecordThrow(KdRandom::GetInt(0, BowlingSystemConsts::PinCount - m_currentPinFallen));
+		}
+		else
+		{
+			RecordThrow(0);
+		}
 
 		if (!(GetNextAction() == NextActions::NextThrow || GetNextAction() == NextActions::BonusThrow))
+		{
+			return;
+		}
+	}
+}
+
+void ScoreHandler::EndCurrentGame(bool isRandom)
+{
+	while (1)
+	{
+		// このゲームが終わるまでスコアを送信
+		// ランダムスコアフラグ
+		if (isRandom)
+		{
+			RecordThrow(KdRandom::GetInt(0, BowlingSystemConsts::PinCount - m_currentPinFallen));
+		}
+		else
+		{
+			RecordThrow(0);
+		}
+
+		if (GetNextAction() == NextActions::GameEnd)
 		{
 			return;
 		}

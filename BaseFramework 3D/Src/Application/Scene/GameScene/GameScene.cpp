@@ -92,18 +92,35 @@ void GameScene::UpdatePlaying2()
 	}
 
 	// デバッグ用
+	if (GetAsyncKeyState(VK_TAB) & 0x8000)
+	{
+		if (!STAGEMGR.IsEditMode())
+		{
+			// ゲームをスキップ
+			m_cScoreHandler->EndCurrentGame(true);
+
+			// ステート更新
+			m_currentSceneState = SceneState::CheckAndClean;
+
+			// リターン
+			return;
+		}
+	}
 	static bool isSkipKey = true;
 	if (GetAsyncKeyState('S') & 0x8000)
 	{
 		if (!isSkipKey)
 		{
+			// 長押し対策
+			isSkipKey = true;
+
 			if (!STAGEMGR.IsEditMode())
 			{
 				// SPキーも押していればフレームごとスキップ
 				if (GetAsyncKeyState(VK_SPACE) & 0x8000)
 				{
 					// フレームをスキップ
-					m_cScoreHandler->EndCurrentFrame();
+					m_cScoreHandler->EndCurrentFrame(true);
 				}
 				else
 				{
@@ -117,9 +134,6 @@ void GameScene::UpdatePlaying2()
 				// リターン
 				return;
 			}
-
-			// 長押し対策
-			isSkipKey = true;
 		}
 	}
 	else isSkipKey = false;
@@ -222,6 +236,11 @@ void GameScene::UpdateCheckAndClean()
 				m_currentSceneState = SceneState::Playing;
 				break;
 			case NextActions::GameEnd:
+				// リザルトを作成しシーンマネージャーに送る
+				ScoreDatas::GameResult result;
+				m_cScoreHandler->CreateGameResult(result);
+				SCENEMGR.SetGameResult(result);
+
 				// リザルト移行準備
 				m_currentSceneState = SceneState::End;
 				m_countdownTimer = GameSceneConsts::CountDownOnClear;

@@ -558,15 +558,7 @@ bool StageManager::LoadStageMasterData()
 		info.m_stageListName = Utf8ToMultiByte(item.value("stageListName", "エラー"));
 		info.m_stageName = Utf8ToMultiByte(item.value("stageName", "エラー"));
 		info.m_stageThumbPath = item.value("thumbnail", "Asset/Textures/System/WhiteNoise.png");
-		info.m_timeLimit = item.value("timeLimit", 10.0f);
 		info.m_fallOutLine = item.value("fallOutLine", -10.0f);
-		info.m_totalPinCount = item.value("totalPinCount", 1);
-		info.m_starTexts[0] = Utf8ToMultiByte(item.value("1StarText", "エラー"));
-		info.m_starTexts[1] = Utf8ToMultiByte(item.value("2StarText", "エラー"));
-		info.m_starTexts[2] = Utf8ToMultiByte(item.value("3StarText", "エラー"));
-		info.m_starPinNeed[0] = item.value("pinFallen1Star", 0);
-		info.m_starPinNeed[1] = item.value("pinFallen2Star", 0);
-		info.m_starPinNeed[2] = item.value("pinFallen3Star", 0);
 
 		// stageNo をキーとしてマップに格納
 		if (info.m_stageNo > 0)

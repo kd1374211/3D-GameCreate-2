@@ -1,8 +1,12 @@
 ﻿#pragma once
+#include "../main.h"
 
 // 共通のインライン関数（またはヘッダー専用関数）として定義
 inline Math::Vector2 GetFixedCursorPos(POINT cursor)
 {
+	// クライアント座標に変換
+	ScreenToClient(Application::Instance().GetWindowHandle(), &cursor);
+
 	// 中心に指定
 	cursor.x -= 640.0f;
 	cursor.y -= 360.0f;

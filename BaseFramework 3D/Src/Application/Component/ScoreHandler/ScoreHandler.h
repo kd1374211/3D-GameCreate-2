@@ -47,7 +47,8 @@ public:
 	// デバッグ用
 	std::string GetScore(int frameNo, int throwNo);
 	std::string GetTotalScore(int frameNo);
-	void EndCurrentFrame();
+	void EndCurrentFrame(bool isRandom = false);
+	void EndCurrentGame(bool isRandom = false);
 
 private:
 

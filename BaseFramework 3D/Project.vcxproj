@@ -669,6 +669,7 @@
     <ClInclude Include="Src\Application\GameObject\Terrain\TerrainBase.h" />
     <ClInclude Include="Src\Application\GameObject\UI\SceneUIObjects\Game\GameUIObjects.h" />
     <ClInclude Include="Src\Application\GameObject\UI\SceneUIObjects\Result\ResultUIObjects.h" />
+    <ClInclude Include="Src\Application\GameObject\UI\SceneUIObjects\StageSelect\StageListBox\StageListBox.h" />
     <ClInclude Include="Src\Application\GameObject\UI\SceneUIObjects\StageSelect\StageSelectUIObjects.h" />
     <ClInclude Include="Src\Application\GameObject\UI\SceneUIObjects\Title\TitleUIObjects.h" />
     <ClInclude Include="Src\Application\GameObject\UI\ShotUI\ShotCursor\ShotCursor.h" />
@@ -910,6 +911,7 @@
     <ClCompile Include="Src\Application\GameObject\Terrain\TerrainBase.cpp" />
     <ClCompile Include="Src\Application\GameObject\UI\SceneUIObjects\Game\GameUIObjects.cpp" />
     <ClCompile Include="Src\Application\GameObject\UI\SceneUIObjects\Result\ResultUIObjects.cpp" />
+    <ClCompile Include="Src\Application\GameObject\UI\SceneUIObjects\StageSelect\StageListBox\StageListBox.cpp" />
     <ClCompile Include="Src\Application\GameObject\UI\SceneUIObjects\StageSelect\StageSelectUIObjects.cpp" />
     <ClCompile Include="Src\Application\GameObject\UI\SceneUIObjects\Title\TitleUIObjects.cpp" />
     <ClCompile Include="Src\Application\GameObject\UI\ShotUI\ShotCursor\ShotCursor.cpp" />

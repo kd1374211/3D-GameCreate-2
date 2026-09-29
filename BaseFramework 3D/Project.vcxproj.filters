@@ -193,6 +193,9 @@
     <Filter Include="Src\Application\GameObject\UI\ShotUI\ShotPowerBar">
       <UniqueIdentifier>{883691d8-be7c-4392-b415-6e610a323e42}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\GameObject\UI\SceneUIObjects\StageSelect\StageListBox">
+      <UniqueIdentifier>{3a1839be-9abe-47cd-b294-d82c0b1a96fe}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -1590,6 +1593,9 @@
     <ClInclude Include="Src\Application\Const\Function.h">
       <Filter>Src\Application\Const</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\UI\SceneUIObjects\StageSelect\StageListBox\StageListBox.h">
+      <Filter>Src\Application\GameObject\UI\SceneUIObjects\StageSelect\StageListBox</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -2290,6 +2296,9 @@
     </ClCompile>
     <ClCompile Include="Src\Application\GameObject\UI\ShotUI\ShotPowerBar\ShotPowerBar.cpp">
       <Filter>Src\Application\GameObject\UI\ShotUI\ShotPowerBar</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\UI\SceneUIObjects\StageSelect\StageListBox\StageListBox.cpp">
+      <Filter>Src\Application\GameObject\UI\SceneUIObjects\StageSelect\StageListBox</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

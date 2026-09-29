@@ -201,11 +201,6 @@ void BowlingBall::Update()
 			}
 		}
 	}
-
-	//カメラに設定
-	//if (m_wpCamera.expired())return;
-
-	//m_wpCamera.lock()->SetRotationYMatrix(Math::Matrix::CreateRotationY(DirectX::XMConvertToRadians(m_facingAngle)));
 }
 
 void BowlingBall::PostUpdate()

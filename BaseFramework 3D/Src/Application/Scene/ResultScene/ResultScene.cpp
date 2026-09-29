@@ -47,6 +47,7 @@ void ResultScene::Init()
 	ScoreDatas::GameResult result = SCENEMGR.GetGameResult();
 
 	// UIに送信
+	UIObj->SetGameResult(result);
 }
 
 void ResultScene::Event()

@@ -27,27 +27,33 @@ void StageSelectScene::Event()
 	}
 
 	//長押し対策
-	static bool isSpacePressed = true;
+	static bool isLClickPressed = true;
 
-	if (GetAsyncKeyState(VK_SPACE) & 0x8000)
+	if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
 	{
-		if (!isSpacePressed)
+		if (!isLClickPressed)
 		{
 			//フェードインが終わっていたら
 			if (m_isFadeInEnd)
 			{
-				//ステージ準備
-				if (!m_wpUI.expired())
-				{
-					SCENEMGR.SetStageNo(m_wpUI.lock()->GetSelectedStageNo());
-				}
+				auto spUI = m_wpUI.lock();
 
-				//フェードアウト
-				FADEMGR.StartFadeOut(&m_isSceneChangeReady);
+				// いずれかのステージが選択状態なことを確認
+				if (spUI && spUI->GetIsSelect())
+				{
+					//ステージ準備
+					if (!m_wpUI.expired())
+					{
+						SCENEMGR.SetStageNo(m_wpUI.lock()->GetSelectedStageNo());
+					}
+
+					//フェードアウト
+					FADEMGR.StartFadeOut(&m_isSceneChangeReady);
+				}
 			}
 		}
 
-		isSpacePressed = true;
+		isLClickPressed = true;
 	}
-	else isSpacePressed = false;
+	else isLClickPressed = false;
 }

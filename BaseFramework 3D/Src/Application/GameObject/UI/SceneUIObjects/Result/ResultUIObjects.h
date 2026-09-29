@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "../../../../Const/BowlingSystemConst.h"
 
 enum class Stars
 {
@@ -54,6 +55,9 @@ public:
 	void Update()override;
 	void DrawSprite()override;
 
+	// スコア保持
+	void SetGameResult(ScoreDatas::GameResult result) { m_gameResult = result; }
+
 private:
 
 	void Init()override;
@@ -74,4 +78,7 @@ private:
 	float m_resultButtomTextAlpha = 1.0f;
 	bool m_isReverse = false;
 	float m_progress = 0.0f;
+
+	// スコア保持用
+	ScoreDatas::GameResult m_gameResult;
 };

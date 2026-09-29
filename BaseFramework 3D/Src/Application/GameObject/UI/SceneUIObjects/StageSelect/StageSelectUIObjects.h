@@ -1,12 +1,12 @@
 ﻿#pragma once
 
 // StageSelect内の仮定義
-struct UILayoutConfig
+struct StageSelectUIConsts
 {
-	// リスト領域
-	static constexpr Math::Vector2 ListStartPos = { -500.0f, 270.0f }; // screenW * 0.15f 等を基準にしたドット値
-	static constexpr Math::Vector2 FrameSize = { 200.0f,60.0f };
-	static constexpr float         LineSpacing = 80.0f;
+	// リスト配置
+	static constexpr int ListIndexX = 2;
+	static constexpr Math::Vector2 ListPosBase = { -530.0f,210.0f };
+	static constexpr float ListPosDiff = 220.0f;
 
 	// 詳細ウィンドウ領域
 	static constexpr Math::Vector2 DetailWindowPos = { 310.0f, 50.0f };
@@ -31,6 +31,8 @@ struct UILayoutConfig
 	static constexpr Math::Vector2 KeyHelpPos = { 0.0f, -320.0f }; // 画面最下部・中央
 };
 
+class StageListBox;
+
 class StageSelectUIObject :public KdGameObject
 {
 public:
@@ -43,6 +45,8 @@ public:
 
 	//選択チェック
 	int GetSelectedStageNo()const { return m_selectStageNo; }
+	// カーソルがあるか
+	bool GetIsSelect()const { return m_isCursorOnAnyStage; }
 
 private:
 
@@ -51,25 +55,21 @@ private:
 	//サムネイル画像変更
 	void ChangeThumbTex();
 
-	//ステージリストフレーム
-	std::shared_ptr<KdTexture> m_stageListFrameTex = nullptr;
-
 	//ステージウィンドウフレーム
 	std::shared_ptr<KdTexture> m_stageInfoFrameTex = nullptr;
 
 	//ステージサムネイル
 	std::shared_ptr<KdTexture> m_stageThumbTex = nullptr;
 
-	// ★アイコン
-	std::shared_ptr<KdTexture> m_starTex = nullptr;
-
 	// ピンアイコン
 	std::shared_ptr<KdTexture> m_pinTex = nullptr;
 
 	//現在の選択ステージ番号
 	int m_selectStageNo = 0;
-	//最大ステージ数
-	int m_maxStageNo = 0;
-	//最小ステージ数
-	int m_minStageNo = 0;
+
+	// ステージリスト分のフレーム用意
+	std::vector<std::shared_ptr<StageListBox>> m_spList;
+
+	// このフレームでいずれかのステージにカーソルがあるか
+	bool m_isCursorOnAnyStage = false;
 };

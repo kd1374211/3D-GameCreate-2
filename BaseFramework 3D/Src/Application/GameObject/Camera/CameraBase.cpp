@@ -1,4 +1,5 @@
 ﻿#include "CameraBase.h"
+#include "../../main.h"
 
 void CameraBase::Init()
 {
@@ -37,12 +38,15 @@ void CameraBase::UpdateRotateByMouse()
 	// マウスでカメラを回転させる処理
 	POINT _nowPos;
 	GetCursorPos(&_nowPos);
+	ScreenToClient(Application::Instance().GetWindowHandle(), &_nowPos);
 
 	POINT _mouseMove{};
 	_mouseMove.x = _nowPos.x - m_FixMousePos.x;
 	_mouseMove.y = _nowPos.y - m_FixMousePos.y;
 
-	SetCursorPos(m_FixMousePos.x, m_FixMousePos.y);
+	POINT _returnPos = m_FixMousePos;
+	ScreenToClient(Application::Instance().GetWindowHandle(), &_returnPos);
+	SetCursorPos(_returnPos.x, _returnPos.y);
 
 	// 実際にカメラを回転させる処理(0.15はただの補正値)
 	m_DegAng.x += _mouseMove.y * 0.15f;
@@ -60,12 +64,14 @@ void CameraBase::UpdateRotateYOnlyByMouse()
 	// マウスでカメラを回転させる処理
 	POINT _nowPos;
 	GetCursorPos(&_nowPos);
+	ScreenToClient(Application::Instance().GetWindowHandle(), &_nowPos);
 
 	POINT _mouseMove{};
 	_mouseMove.x = _nowPos.x - m_FixMousePos.x;
 	_mouseMove.y = _nowPos.y - m_FixMousePos.y;
 
-	SetCursorPos(m_FixMousePos.x, m_FixMousePos.y);
+	// カーソルを中央に設定
+	ResetCursorPos();
 
 	// 実際にカメラを回転させる処理(0.15はただの補正値)
 	m_DegAng.y += _mouseMove.x * 0.15f;
@@ -76,5 +82,7 @@ void CameraBase::ResetCursorPos()
 	// マウス固定でないならリターン
 	if (!m_isMouseLocked)return;
 
-	SetCursorPos(m_FixMousePos.x, m_FixMousePos.y);
+	POINT _returnPos = m_FixMousePos;
+	ClientToScreen(Application::Instance().GetWindowHandle(), &_returnPos);
+	SetCursorPos(_returnPos.x, _returnPos.y);
 }
