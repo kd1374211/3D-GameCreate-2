@@ -12,11 +12,15 @@
 #include "../Physics/PhysicsManager.h"
 #include "../StageManager/StageManager.h"
 #include "../FadeManager/FadeManager.h"
+#include "../Cursor/CursorManager.h"
 
 void SceneManager::PreUpdate()
 {
 	//デバッグ
 	KdDebugGUI::Instance().ClearLog();
+
+	// 最初にマウス位置更新
+	CURSOR.Update();
 
 	// シーン切替
 	if (m_currentSceneType != m_nextSceneType)

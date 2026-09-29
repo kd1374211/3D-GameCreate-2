@@ -1,5 +1,5 @@
 ﻿#include "CameraBase.h"
-#include "../../main.h"
+#include "../../Cursor/CursorManager.h"
 
 void CameraBase::Init()
 {
@@ -8,8 +8,8 @@ void CameraBase::Init()
 		m_spCamera = std::make_shared<KdCamera>();
 	}
 	// ↓画面中央座標
-	m_FixMousePos.x = 640;
-	m_FixMousePos.y = 360;
+	m_FixMousePos.x = 0;
+	m_FixMousePos.y = 0;
 }
 
 void CameraBase::PreDraw()
@@ -36,17 +36,14 @@ void CameraBase::UpdateRotateByMouse()
 	if (!m_isMouseLocked)return;
 
 	// マウスでカメラを回転させる処理
-	POINT _nowPos;
-	GetCursorPos(&_nowPos);
-	ScreenToClient(Application::Instance().GetWindowHandle(), &_nowPos);
+	POINT _nowPos = CURSOR.GetFixedCursorPos();
 
 	POINT _mouseMove{};
 	_mouseMove.x = _nowPos.x - m_FixMousePos.x;
 	_mouseMove.y = _nowPos.y - m_FixMousePos.y;
 
-	POINT _returnPos = m_FixMousePos;
-	ScreenToClient(Application::Instance().GetWindowHandle(), &_returnPos);
-	SetCursorPos(_returnPos.x, _returnPos.y);
+	// カーソル位置リセット
+	ResetCursorPos();
 
 	// 実際にカメラを回転させる処理(0.15はただの補正値)
 	m_DegAng.x += _mouseMove.y * 0.15f;
@@ -62,9 +59,7 @@ void CameraBase::UpdateRotateYOnlyByMouse()
 	if (!m_isMouseLocked)return;
 
 	// マウスでカメラを回転させる処理
-	POINT _nowPos;
-	GetCursorPos(&_nowPos);
-	ScreenToClient(Application::Instance().GetWindowHandle(), &_nowPos);
+	POINT _nowPos = CURSOR.GetFixedCursorPos();
 
 	POINT _mouseMove{};
 	_mouseMove.x = _nowPos.x - m_FixMousePos.x;
@@ -82,7 +77,6 @@ void CameraBase::ResetCursorPos()
 	// マウス固定でないならリターン
 	if (!m_isMouseLocked)return;
 
-	POINT _returnPos = m_FixMousePos;
-	ClientToScreen(Application::Instance().GetWindowHandle(), &_returnPos);
-	SetCursorPos(_returnPos.x, _returnPos.y);
+	// マネージャーの位置修正を呼ぶ
+	CURSOR.SetCursorPosToCenter();
 }

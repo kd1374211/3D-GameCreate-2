@@ -196,6 +196,9 @@
     <Filter Include="Src\Application\GameObject\UI\SceneUIObjects\StageSelect\StageListBox">
       <UniqueIdentifier>{3a1839be-9abe-47cd-b294-d82c0b1a96fe}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\Cursor">
+      <UniqueIdentifier>{df82dace-ff74-4705-82a9-afe5cdce14af}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -1596,6 +1599,9 @@
     <ClInclude Include="Src\Application\GameObject\UI\SceneUIObjects\StageSelect\StageListBox\StageListBox.h">
       <Filter>Src\Application\GameObject\UI\SceneUIObjects\StageSelect\StageListBox</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\Cursor\CursorManager.h">
+      <Filter>Src\Application\Cursor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -2299,6 +2305,9 @@
     </ClCompile>
     <ClCompile Include="Src\Application\GameObject\UI\SceneUIObjects\StageSelect\StageListBox\StageListBox.cpp">
       <Filter>Src\Application\GameObject\UI\SceneUIObjects\StageSelect\StageListBox</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Cursor\CursorManager.cpp">
+      <Filter>Src\Application\Cursor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

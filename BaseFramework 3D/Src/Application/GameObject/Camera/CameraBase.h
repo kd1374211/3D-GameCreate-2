@@ -57,6 +57,9 @@ public:
 
 	// マウスの移動を許すか
 	void SetIsMouseLocked(bool flg) { m_isMouseLocked = flg; }
+	
+	// カーソル位置リセット
+	void ResetCursorPos();
 
 protected:
 	// カメラ回転用角度
@@ -64,7 +67,6 @@ protected:
 
 	void UpdateRotateByMouse();
 	void UpdateRotateYOnlyByMouse();
-	void ResetCursorPos();
 
 	std::shared_ptr<KdCamera>					m_spCamera		= nullptr;
 	std::weak_ptr<KdGameObject>					m_wpTarget;

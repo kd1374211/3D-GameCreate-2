@@ -4,10 +4,10 @@
 #include "../../../StageManager/StageManager.h"
 #include "../../Camera/CameraManager.h"
 #include "../../Camera/TPSCamera/TPSCamera.h"
-#include "../../../Const/WindowConsts.h"
 #include "../../UI/ShotUI/ShotCursor/ShotCursor.h"
 #include "../../UI/ShotUI/ShotPowerBar/ShotPowerBar.h"
 #include "../../../Const/Function.h"
+#include "../../../Cursor/CursorManager.h"
 
 BowlingBall::BowlingBall()
 {
@@ -74,12 +74,7 @@ void BowlingBall::Update()
 		// 操作関連
 		if (m_isInputEnabled)
 		{
-			POINT cursorPos;
-			// 現在のマウス位置を取得
-			GetCursorPos(&cursorPos);
-			Math::Vector2 fixedPos = GetFixedCursorPos(cursorPos);
-
-			KdDebugGUI::Instance().AddLog("CursorPos : %.2f,%.2f\n", fixedPos.x, fixedPos.y);
+			Math::Vector2 cursorPos = CURSOR.GetFixedCursorPosVec2();
 
 			// 左クリックで準備
 			if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
@@ -102,7 +97,7 @@ void BowlingBall::Update()
 
 				// 押している間
 				// このフレームでの移動量を追加
-				m_speedStoreData.push_back(SpeedStoreData(gameDt, std::max(fixedPos.y, 0.0f)));
+				m_speedStoreData.push_back(SpeedStoreData(gameDt, std::max(cursorPos.y, 0.0f)));
 				m_totalStoredTime += gameDt;
 
 				// 保持上限時間を超えなくなるまで古い記録を削除
@@ -125,7 +120,7 @@ void BowlingBall::Update()
 				if (m_isShootStart)
 				{
 					// このフレームでの移動量を追加
-					m_speedStoreData.push_back(SpeedStoreData(gameDt, std::max(fixedPos.y, 0.0f)));
+					m_speedStoreData.push_back(SpeedStoreData(gameDt, std::max(cursorPos.y, 0.0f)));
 					m_totalStoredTime += gameDt;
 
 					// ゲーム時間から1秒ごとの速度を確認

@@ -1,4 +1,5 @@
 ﻿#include "StageListBox.h"
+#include "../../../../../Cursor/CursorManager.h"
 #include "../../../../../Const/WindowConsts.h"
 #include "../../../../../main.h"
 
@@ -11,17 +12,11 @@ void StageListBox::Update()
 	m_isCursorThisFrame = false;
 
 	// カーソル位置を確認
-	POINT cursorPos;
-	// 現在のマウス位置を取得
-	GetCursorPos(&cursorPos);
-	Math::Vector2 fixedPos = GetFixedCursorPos(cursorPos);
-
-	// D
-	KdDebugGUI::Instance().AddLog("Cursor : %.2f,%.2f\n", fixedPos.x, fixedPos.y);
+	Math::Vector2 cursorPos = CURSOR.GetFixedCursorPosVec2();
 
 	// マウス位置が自分の判定内にあるならフラグをtrueに
-	if (fabs(m_drawPos.x - fixedPos.x) <= (StageListBoxConsts::BoxHitSizeHalf.x * m_sizeMulti) &&
-		fabs(m_drawPos.y - fixedPos.y) <= (StageListBoxConsts::BoxHitSizeHalf.y * m_sizeMulti))
+	if (fabs(m_drawPos.x - cursorPos.x) <= (StageListBoxConsts::BoxHitSizeHalf.x * m_sizeMulti) &&
+		fabs(m_drawPos.y - cursorPos.y) <= (StageListBoxConsts::BoxHitSizeHalf.y * m_sizeMulti))
 	{
 		m_isCursorThisFrame = true;
 	}
@@ -40,17 +35,45 @@ void StageListBox::Update()
 
 void StageListBox::DrawSprite()
 {
+	//ウィンドウ作る
+	std::shared_ptr<KdTexture> tmpTex = std::make_shared<KdTexture>();
+
+	//レンダー作成
+	Math::Vector2 renderBase = WindowSizeConsts::WindowSize;
+	tmpTex->CreateRenderTarget(renderBase.x, renderBase.y);
+
+	//透明塗り
+	KdDirect3D::Instance().WorkDevContext()->ClearRenderTargetView(tmpTex->WorkRTView(), Math::Color(0, 0, 0, 0));
+
+	//ターゲット設定
+	KdDirect3D::Instance().WorkDevContext()->OMSetRenderTargets(1, tmpTex->WorkRTViewAddress(), tmpTex->WorkDSView());
+
 	// 先にサムネイル貼り
 	Math::Vector2 drawSize;
 	if (m_stageThumbTex)
 	{
-		drawSize = StageListBoxConsts::ThumbTexSize * m_sizeMulti;
-		KdShaderManager::Instance().m_spriteShader.DrawTex(m_stageThumbTex, m_drawPos.x, m_drawPos.y, drawSize.x, drawSize.y);
+		drawSize = StageListBoxConsts::ThumbTexSize;
+		KdShaderManager::Instance().m_spriteShader.DrawTex(m_stageThumbTex, 0, 0, drawSize.x, drawSize.y);
 	}
 
 	// 上からフレームを重ねる
-	drawSize = StageListBoxConsts::ListBoxTexSize * m_sizeMulti;
-	KdShaderManager::Instance().m_spriteShader.DrawTex(m_stageListFrameTex, m_drawPos.x, m_drawPos.y, drawSize.x, drawSize.y);
+	drawSize = StageListBoxConsts::ListBoxTexSize;
+	KdShaderManager::Instance().m_spriteShader.DrawTex(m_stageListFrameTex, 0, 0, drawSize.x, drawSize.y);
+
+	// さらに上からボックスを召喚
+	Math::Vector2 drawPos = StageListBoxConsts::StageNamePosOfs;
+	drawSize = StageListBoxConsts::StageNameBoxSize;
+	KdShaderManager::Instance().m_spriteShader.DrawBox(drawPos.x, drawPos.y, drawSize.x, drawSize.y, &StageListBoxConsts::StageNameBoxColor, true);
+
+	// ステージ名表示
+	KdShaderManager::Instance().m_spriteShader.DrawFont(FontTypeConst::StageSelect_StageListName, drawPos, &kWhiteColor, m_stageName.c_str(), TextAlign::Center);
+
+	//ターゲット戻す
+	KdDirect3D::Instance().WorkDevContext()->OMSetRenderTargets(1, KdDirect3D::Instance().WorkBackBuffer()->WorkRTViewAddress(), KdDirect3D::Instance().WorkZBuffer()->WorkDSView());
+
+	//tmpTexをサイズ変えて描画
+	drawSize = renderBase * m_sizeMulti;
+	KdShaderManager::Instance().m_spriteShader.DrawTex(tmpTex, m_drawPos.x, m_drawPos.y, drawSize.x, drawSize.y);
 }
 
 void StageListBox::LoadStageThumbPath(std::string path)

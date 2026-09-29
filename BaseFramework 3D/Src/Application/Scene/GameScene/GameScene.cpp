@@ -12,6 +12,7 @@
 #include "../../Component/PinHandler/PinHandler.h"
 #include "../../Component/ScoreHandler/ScoreHandler.h"
 #include "../../UserSave/UserSaveManager.h"
+#include "../../Cursor/CursorManager.h"
 
 void GameScene::Event()
 {
@@ -328,6 +329,9 @@ void GameScene::EndRolling()
 
 void GameScene::Init()
 {
+	// カーソル位置リセット
+	CURSOR.SetCursorPosToCenter();
+
 	// スコアハンドラー生成
 	m_cScoreHandler = std::make_shared<ScoreHandler>();
 	m_cScoreHandler->Init();

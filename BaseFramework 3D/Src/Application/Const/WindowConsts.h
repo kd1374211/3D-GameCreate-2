@@ -1,18 +1,15 @@
 ﻿#pragma once
-#include "../main.h"
 
-// 共通のインライン関数（またはヘッダー専用関数）として定義
-inline Math::Vector2 GetFixedCursorPos(POINT cursor)
+// ウィンドウサイズ
+struct WindowSizeConsts
 {
-	// クライアント座標に変換
-	ScreenToClient(Application::Instance().GetWindowHandle(), &cursor);
+	// 位置関連
+	static constexpr float WindowLeftX = -640.0f;
+	static constexpr float WindowRightX = 640.0f;
+	static constexpr float WindowTopY = 360.0f;
+	static constexpr float WindowBottomY = -360.0f;
 
-	// 中心に指定
-	cursor.x -= 640.0f;
-	cursor.y -= 360.0f;
-
-	// Y反転
-	cursor.y *= -1.0f;
-
-	return Math::Vector2(cursor.x, cursor.y);
-}
+	// サイズ関連
+	static constexpr Math::Vector2 WindowSize = Math::Vector2(1280.0f, 720.0f);
+	static constexpr Math::Vector2 WindowSizeHalf = Math::Vector2(640.0f, 360.0f);
+};

@@ -33,6 +33,11 @@ private:
 		static constexpr Math::Vector2 ListBoxTexSize = Math::Vector2(200.0f, 200.0f);
 		static constexpr Math::Vector2 ThumbTexSize = Math::Vector2(190.0f, 190.0f);
 
+		// ステージ名表記用のボックスの描画情報
+		static constexpr Math::Vector2 StageNamePosOfs = Math::Vector2(0, -80.0f);
+		static constexpr Math::Vector2 StageNameBoxSize = Math::Vector2(100.0f, 20.0f);
+		static constexpr Math::Color StageNameBoxColor = Math::Color(0.0f, 0.0f, 0.0f, 0.8f);
+
 		// 判定サイズ
 		static constexpr Math::Vector2 BoxHitSizeHalf = Math::Vector2(100.0f, 100.0f);
 
