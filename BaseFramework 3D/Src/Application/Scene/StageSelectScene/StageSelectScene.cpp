@@ -1,6 +1,7 @@
 ﻿#include "StageSelectScene.h"
 #include "../SceneManager.h"
 #include "../../GameObject/UI/SceneUIObjects/StageSelect/StageSelectUIObjects.h"
+#include "../../Cursor/CursorManager.h"
 
 void StageSelectScene::Init()
 {
@@ -18,6 +19,9 @@ void StageSelectScene::Event()
 	//フェードインが終わってかつフェードアウトも終わったら
 	if (m_isSceneChangeReady)
 	{
+		// カーソル非表示
+		CURSOR.SetIsShowCursor(false);
+
 		SceneManager::Instance().SetNextScene
 		(
 			SceneManager::SceneType::Game

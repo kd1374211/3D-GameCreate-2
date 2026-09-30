@@ -5,6 +5,7 @@
 #include "../../GameObject/Camera/StageViewCamera/StageViewCamera.h"
 #include "../../GameObject/Camera/CameraManager.h"
 #include "../../Const/DeviceAndKey.h"
+#include "../../Cursor/CursorManager.h"
 
 void TitleScene::Event()
 {
@@ -56,4 +57,7 @@ void TitleScene::Init()
 	//UI全般
 	std::shared_ptr<TitleUIObject> UIObj = std::make_shared<TitleUIObject>();
 	AddObject(UIObj);
+
+	// カーソル表示
+	CURSOR.SetIsShowCursor(true);
 }

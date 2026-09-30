@@ -668,6 +668,7 @@
     <ClInclude Include="Src\Application\GameObject\Terrain\MovingTerrain\MovingTerrain.h" />
     <ClInclude Include="Src\Application\GameObject\Terrain\RotatingTerrain\RotatingTerrain.h" />
     <ClInclude Include="Src\Application\GameObject\Terrain\TerrainBase.h" />
+    <ClInclude Include="Src\Application\GameObject\UI\MouseCursor\MouseCursor.h" />
     <ClInclude Include="Src\Application\GameObject\UI\SceneUIObjects\Game\GameUIObjects.h" />
     <ClInclude Include="Src\Application\GameObject\UI\SceneUIObjects\Result\ResultUIObjects.h" />
     <ClInclude Include="Src\Application\GameObject\UI\SceneUIObjects\StageSelect\StageListBox\StageListBox.h" />
@@ -911,6 +912,7 @@
     <ClCompile Include="Src\Application\GameObject\Terrain\MovingTerrain\MovingTerrain.cpp" />
     <ClCompile Include="Src\Application\GameObject\Terrain\RotatingTerrain\RotatingTerrain.cpp" />
     <ClCompile Include="Src\Application\GameObject\Terrain\TerrainBase.cpp" />
+    <ClCompile Include="Src\Application\GameObject\UI\MouseCursor\MouseCursor.cpp" />
     <ClCompile Include="Src\Application\GameObject\UI\SceneUIObjects\Game\GameUIObjects.cpp" />
     <ClCompile Include="Src\Application\GameObject\UI\SceneUIObjects\Result\ResultUIObjects.cpp" />
     <ClCompile Include="Src\Application\GameObject\UI\SceneUIObjects\StageSelect\StageListBox\StageListBox.cpp" />

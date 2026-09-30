@@ -74,6 +74,10 @@ void SceneManager::DrawSprite()
 	//追加8/20
 	//暗転用
 	FADEMGR.DrawFade();
+
+	// 追加9/30
+	// カーソル用
+	CURSOR.DrawCursor();
 }
 
 void SceneManager::DrawDebug()

@@ -199,6 +199,9 @@
     <Filter Include="Src\Application\Cursor">
       <UniqueIdentifier>{df82dace-ff74-4705-82a9-afe5cdce14af}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\GameObject\UI\MouseCursor">
+      <UniqueIdentifier>{2133a910-dc0d-453a-ab6c-392aa0b068f9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -1602,6 +1605,9 @@
     <ClInclude Include="Src\Application\Cursor\CursorManager.h">
       <Filter>Src\Application\Cursor</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\UI\MouseCursor\MouseCursor.h">
+      <Filter>Src\Application\GameObject\UI\MouseCursor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -2308,6 +2314,9 @@
     </ClCompile>
     <ClCompile Include="Src\Application\Cursor\CursorManager.cpp">
       <Filter>Src\Application\Cursor</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\UI\MouseCursor\MouseCursor.cpp">
+      <Filter>Src\Application\GameObject\UI\MouseCursor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
