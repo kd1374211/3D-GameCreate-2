@@ -45,13 +45,14 @@ public:
 	bool GetIsHit()const { return m_isHit; }
 
 	// 当たられたとき
-	void OnHit(JPH::Vec3 vel);
+	void OnHitByPlayer(JPH::Vec3 vel);
+	void OnHitByPin(JPH::Vec3 vel);
 
 protected:
 
 	struct PinBaseConsts
 	{
-		static constexpr float OnHitVelocityMulti = 1.0f;
+		static constexpr float OnHitVelocityMulti = 3.0f;
 	};
 
 	virtual void Init()override;

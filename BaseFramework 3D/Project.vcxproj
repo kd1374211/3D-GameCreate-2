@@ -668,6 +668,7 @@
     <ClInclude Include="Src\Application\GameObject\Terrain\MovingTerrain\MovingTerrain.h" />
     <ClInclude Include="Src\Application\GameObject\Terrain\RotatingTerrain\RotatingTerrain.h" />
     <ClInclude Include="Src\Application\GameObject\Terrain\TerrainBase.h" />
+    <ClInclude Include="Src\Application\GameObject\UI\Button\Button.h" />
     <ClInclude Include="Src\Application\GameObject\UI\MouseCursor\MouseCursor.h" />
     <ClInclude Include="Src\Application\GameObject\UI\SceneUIObjects\Game\GameUIObjects.h" />
     <ClInclude Include="Src\Application\GameObject\UI\SceneUIObjects\Result\ResultUIObjects.h" />
@@ -686,6 +687,7 @@
     <ClInclude Include="Src\Application\Scene\SceneManager.h" />
     <ClInclude Include="Src\Application\Scene\StageSelectScene\StageSelectScene.h" />
     <ClInclude Include="Src\Application\Scene\TitleScene\TitleScene.h" />
+    <ClInclude Include="Src\Application\Sound\SoundManager.h" />
     <ClInclude Include="Src\Application\StageManager\StageManager.h" />
     <ClInclude Include="Src\Application\StageManager\StageObjectInclude.h" />
     <ClInclude Include="Src\Application\StageManager\VariantParamData.h" />
@@ -912,6 +914,7 @@
     <ClCompile Include="Src\Application\GameObject\Terrain\MovingTerrain\MovingTerrain.cpp" />
     <ClCompile Include="Src\Application\GameObject\Terrain\RotatingTerrain\RotatingTerrain.cpp" />
     <ClCompile Include="Src\Application\GameObject\Terrain\TerrainBase.cpp" />
+    <ClCompile Include="Src\Application\GameObject\UI\Button\Button.cpp" />
     <ClCompile Include="Src\Application\GameObject\UI\MouseCursor\MouseCursor.cpp" />
     <ClCompile Include="Src\Application\GameObject\UI\SceneUIObjects\Game\GameUIObjects.cpp" />
     <ClCompile Include="Src\Application\GameObject\UI\SceneUIObjects\Result\ResultUIObjects.cpp" />
@@ -929,6 +932,7 @@
     <ClCompile Include="Src\Application\Scene\SceneManager.cpp" />
     <ClCompile Include="Src\Application\Scene\StageSelectScene\StageSelectScene.cpp" />
     <ClCompile Include="Src\Application\Scene\TitleScene\TitleScene.cpp" />
+    <ClCompile Include="Src\Application\Sound\SoundManager.cpp" />
     <ClCompile Include="Src\Application\StageManager\StageManager.cpp" />
     <ClCompile Include="Src\Application\UserSave\UserSaveManager.cpp" />
     <ClCompile Include="Src\Framework\Direct3D\KdMaterial.cpp">

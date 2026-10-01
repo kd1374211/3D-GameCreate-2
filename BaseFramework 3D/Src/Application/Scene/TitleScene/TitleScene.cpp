@@ -20,10 +20,14 @@ void TitleScene::Event()
 		return;
 	}
 
-	if (KdInputManager::Instance().IsPress(GetKeyRegistName(VK_SPACE)))
+	// UI経由でスタートボタンが押されたかを確認
+	if (auto UIObj = m_wpUI.lock())
 	{
-		//フェードアウト
-		FADEMGR.StartFadeOut(&m_isSceneChangeReady);
+		if (UIObj->IsStartButtonPressed())
+		{
+			//フェードアウト
+			FADEMGR.StartFadeOut(&m_isSceneChangeReady);
+		}
 	}
 }
 
@@ -57,6 +61,7 @@ void TitleScene::Init()
 	//UI全般
 	std::shared_ptr<TitleUIObject> UIObj = std::make_shared<TitleUIObject>();
 	AddObject(UIObj);
+	m_wpUI = UIObj;
 
 	// カーソル表示
 	CURSOR.SetIsShowCursor(true);

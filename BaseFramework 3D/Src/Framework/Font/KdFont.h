@@ -45,6 +45,9 @@ struct FontTypeConst
 	static constexpr int Result_StarList = 2;
 	static constexpr int Result_ButtonIndex = 5;
 	static constexpr int Result_Buttom = 3;
+
+	// その他
+	static constexpr int Other_ButtonText = 1;
 };
 
 //=====================================================================

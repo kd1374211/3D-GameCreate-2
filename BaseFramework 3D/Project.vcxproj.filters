@@ -202,6 +202,12 @@
     <Filter Include="Src\Application\GameObject\UI\MouseCursor">
       <UniqueIdentifier>{2133a910-dc0d-453a-ab6c-392aa0b068f9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\Sound">
+      <UniqueIdentifier>{c599093b-ddb2-4e6c-a3e9-b3273b5fe05e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\GameObject\UI\Button">
+      <UniqueIdentifier>{b33f05a8-66e8-4902-ab45-851cc82ae5d1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -1608,6 +1614,12 @@
     <ClInclude Include="Src\Application\GameObject\UI\MouseCursor\MouseCursor.h">
       <Filter>Src\Application\GameObject\UI\MouseCursor</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\Sound\SoundManager.h">
+      <Filter>Src\Application\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\UI\Button\Button.h">
+      <Filter>Src\Application\GameObject\UI\Button</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -2317,6 +2329,12 @@
     </ClCompile>
     <ClCompile Include="Src\Application\GameObject\UI\MouseCursor\MouseCursor.cpp">
       <Filter>Src\Application\GameObject\UI\MouseCursor</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Sound\SoundManager.cpp">
+      <Filter>Src\Application\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\UI\Button\Button.cpp">
+      <Filter>Src\Application\GameObject\UI\Button</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

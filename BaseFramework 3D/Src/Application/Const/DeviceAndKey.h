@@ -6,9 +6,10 @@ struct DeviceAndKeyConsts
 	static inline const std::string DeviceRegistName = "MainDevice";
 
 	// キー登録名
-	static inline const std::unordered_map<int, std::string> KeyRegistNames = 
+	static inline const std::unordered_map<int, std::string> KeyRegistNames =
 	{
-		{VK_SPACE,"SpaceKey"}
+		{VK_SPACE,"SpaceKey"},
+		{VK_LBUTTON,"LeftClick"}
 	};
 };
 

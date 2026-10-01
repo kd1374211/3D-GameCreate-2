@@ -15,13 +15,18 @@
 	"nodes":[
 		{
 			"mesh":0,
-			"name":"Cone"
+			"name":"Cone",
+			"scale":[
+				0.125,
+				0.5,
+				0.125
+			]
 		}
 	],
 	"materials":[
 		{
 			"doubleSided":true,
-			"name":"Material.001",
+			"name":"Material",
 			"pbrMetallicRoughness":{
 				"baseColorFactor":[
 					0.800000011920929,
@@ -53,29 +58,29 @@
 		{
 			"bufferView":0,
 			"componentType":5126,
-			"count":32,
+			"count":17,
 			"max":[
-				0.125,
 				1,
-				0.125
+				2,
+				1
 			],
 			"min":[
-				-0.125,
+				-1,
 				0,
-				-0.125
+				-1
 			],
 			"type":"VEC3"
 		},
 		{
 			"bufferView":1,
 			"componentType":5126,
-			"count":32,
+			"count":17,
 			"type":"VEC3"
 		},
 		{
 			"bufferView":2,
 			"componentType":5126,
-			"count":32,
+			"count":17,
 			"type":"VEC2"
 		},
 		{
@@ -88,32 +93,32 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":384,
+			"byteLength":204,
 			"byteOffset":0,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":384,
-			"byteOffset":384,
+			"byteLength":204,
+			"byteOffset":204,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":256,
-			"byteOffset":768,
+			"byteLength":136,
+			"byteOffset":408,
 			"target":34962
 		},
 		{
 			"buffer":0,
 			"byteLength":84,
-			"byteOffset":1024,
+			"byteOffset":544,
 			"target":34963
 		}
 	],
 	"buffers":[
 		{
-			"byteLength":1108,
+			"byteLength":628,
 			"uri":"PowerArrow.bin"
 		}
 	]

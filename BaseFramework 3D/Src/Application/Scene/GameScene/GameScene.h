@@ -24,6 +24,7 @@ struct GameSceneConsts
 	// カウントダウン
 	static constexpr float CountDownOnRollEnd = 2.0f;
 	static constexpr float CountDownOnRollEnd_Stopped = 0.2f;
+	static constexpr float CountDownOnRollEnd_NoHit = 0.5f;
 	static constexpr float CountDownOnClear = 2.0f;
 	static constexpr float CountDownOnFail = 2.0f;
 

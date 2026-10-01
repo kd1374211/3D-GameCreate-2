@@ -24,6 +24,7 @@ public:
 	void Init(float a_radius);
 	void Update()override;
 	void PostUpdate()override;
+	void DrawUnLit()override;
 	void DrawLit()override;
 	void GenerateDepthMapFromLight()override;
 
@@ -39,6 +40,11 @@ public:
 
 	// 位置・回転セット
 	void Respawn(const Math::Vector3& pos, const Math::Vector3& rot);
+
+	// ピンに触れた
+	void OnHitPin() { m_isHitPin = true; }
+	// ピンに触れたか
+	bool GetIsHitPin()const { return m_isHitPin; }
 
 	// ゴールに触れた
 	void HitFinishArea();
@@ -96,6 +102,8 @@ private:
 	bool m_isRolling = false;
 	// 転がり終了した原因
 	RollEndReason m_reason = RollEndReason::None;
+	// 一度でもピンに当たったか
+	bool m_isHitPin = false;
 
 	// 転がり開始か
 	bool m_canRoll = false;

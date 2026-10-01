@@ -18,7 +18,7 @@ void PinBase::Update()
 	if (m_isHitPending)
 	{
 		// 待機力を強くして加える
-		m_cPhysics->AddImpulse(m_pendingVelocity * PinBaseConsts::OnHitVelocityMulti);
+		m_cPhysics->AddImpulse(m_pendingVelocity);
 
 		// 次呼ばれないように
 		m_isHitPending = false;
@@ -148,7 +148,7 @@ void PinBase::SetRot(const Math::Quaternion rot)
 	m_cPhysics->SetRotation(JPH::Quat(rot.x, rot.y, rot.z, rot.w));
 }
 
-void PinBase::OnHit(JPH::Vec3 vel)
+void PinBase::OnHitByPlayer(JPH::Vec3 vel)
 {
 	// もう当たっているならリターン
 	if (m_isHit)return;
@@ -157,6 +157,17 @@ void PinBase::OnHit(JPH::Vec3 vel)
 	m_isHitPending = true;
 	m_isHit = true;
 
+	// プレイヤーからの当たりは強めにする
+	m_pendingVelocity = vel * PinBaseConsts::OnHitVelocityMulti;
+}
+
+void PinBase::OnHitByPin(JPH::Vec3 vel)
+{
+	// もう当たっているならリターン
+	if (m_isHit)return;
+	// 吹っ飛び待機
+	m_isHitPending = true;
+	m_isHit = true;
 	m_pendingVelocity = vel;
 }
 

@@ -187,7 +187,18 @@ void GameScene::UpdatePlaying2()
 				break;
 			case RollEndReason::Fall: // 落下
 			case RollEndReason::Finish: // ゴール
-				m_countdownTimer = GameSceneConsts::CountDownOnRollEnd;
+
+				// プレイヤーが一度でもピンに当たったかを確認
+				if (m_cCharaHandler->GetPlayerBall()->GetIsHitPin())
+				{
+					// 当たっていたら通常のカウントダウン
+					m_countdownTimer = GameSceneConsts::CountDownOnRollEnd;
+				}
+				else
+				{
+					// 当たっていなかったら落下扱いで短縮
+					m_countdownTimer = GameSceneConsts::CountDownOnRollEnd_NoHit;
+				}
 				break;
 			default:	// エラー
 				m_countdownTimer = 0.0f;

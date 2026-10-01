@@ -32,7 +32,7 @@ void BowlingBall::Init(float a_radius)
 	initData.layer = Layers::BOWLINGBALL;
 	initData.mass = BowlingBallConsts::BallMass;
 	initData.friction = 0.15f;
-	initData.restitution = 0.0f;
+	initData.restitution = 0.4f;
 	initData.linearDamping = 0.1f;
 	initData.angularDamping = 0.1f;
 	initData.userData = reinterpret_cast<JPH::uint64>(this);	//自分自身のポインタを登録
@@ -258,16 +258,19 @@ void BowlingBall::PostUpdate()
 	KdDebugGUI::Instance().AddLog("isRolling : %d\n", m_isRolling);
 }
 
-void BowlingBall::DrawLit()
+void BowlingBall::DrawUnLit()
 {
-	KdShaderManager::Instance().m_StandardShader.DrawModel(*m_model, m_mWorld);
-
 	// 左クリックホールド中のみ
 	if (m_isInputEnabled)
 	{
 		// 矢印
 		KdShaderManager::Instance().m_StandardShader.DrawModel(*m_arrowModel, m_arrowMat);
 	}
+}
+
+void BowlingBall::DrawLit()
+{
+	KdShaderManager::Instance().m_StandardShader.DrawModel(*m_model, m_mWorld);
 }
 
 void BowlingBall::GenerateDepthMapFromLight()
@@ -308,6 +311,7 @@ void BowlingBall::Reset()
 	}
 	// 状態のリセット
 	m_isRolling = false;
+	m_isHitPin = false;
 	m_canRoll = true;
 	m_isInputEnabled = false;
 	m_reason = RollEndReason::None;

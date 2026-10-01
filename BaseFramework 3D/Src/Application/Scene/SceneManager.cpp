@@ -13,6 +13,7 @@
 #include "../StageManager/StageManager.h"
 #include "../FadeManager/FadeManager.h"
 #include "../Cursor/CursorManager.h"
+#include "../Sound/SoundManager.h"
 
 void SceneManager::PreUpdate()
 {
@@ -21,6 +22,9 @@ void SceneManager::PreUpdate()
 
 	// 最初にマウス位置更新
 	CURSOR.Update();
+
+	// 音の消滅確認
+	SOUNDMGR.Update();
 
 	// シーン切替
 	if (m_currentSceneType != m_nextSceneType)

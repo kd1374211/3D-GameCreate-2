@@ -1,0 +1,22 @@
+{
+	"soundData": [
+		{
+			"name": "Explosion",
+			"filePath": "Assets/Sounds/explosion.wav",
+			"defaultVolume": 0.8,
+			"loop": false
+		},
+		{
+			"name": "BackgroundMusic",
+			"filePath": "Assets/Sounds/background_music.mp3",
+			"defaultVolume": 0.5,
+			"loop": true
+		},
+		{
+			"name": "Jump",
+			"filePath": "Assets/Sounds/jump.wav",
+			"defaultVolume": 1.0,
+			"loop": false
+		}
+	]
+}

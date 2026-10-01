@@ -62,7 +62,14 @@ void GameContactListener::OnContactAdded(const JPH::Body& inBody1, const JPH::Bo
 		{
 			// プレイヤーの現在速度を取得してピンに通知！
 			JPH::Vec3 playerVel = body1->GetLinearVelocity();
-			pin->OnHit(playerVel);
+			pin->OnHitByPlayer(playerVel);
+		}
+
+		// UserData から プレイヤーオブジェクトのポインタを復元
+		if (auto* ball = dynamic_cast<BowlingBall*>(gameObj1))
+		{
+			// ピンに当たったことを通知
+			ball->OnHitPin();
 		}
 	}
 
@@ -81,7 +88,7 @@ void GameContactListener::OnContactAdded(const JPH::Body& inBody1, const JPH::Bo
 			{
 				// プレイヤーの現在速度を取得してピンに通知！
 				JPH::Vec3 pinVel = body1->GetLinearVelocity();
-				pin2->OnHit(pinVel);
+				pin2->OnHitByPin(pinVel);
 			}
 
 			// ピン２が既に当てられているならピン１の吹っ飛びを呼ぶ
@@ -89,7 +96,7 @@ void GameContactListener::OnContactAdded(const JPH::Body& inBody1, const JPH::Bo
 			{
 				// プレイヤーの現在速度を取得してピンに通知！
 				JPH::Vec3 pinVel = body2->GetLinearVelocity();
-				pin->OnHit(pinVel);
+				pin->OnHitByPin(pinVel);
 			}
 		}
 	}
@@ -153,7 +160,14 @@ void GameContactListener::OnContactPersisted(const JPH::Body& inBody1, const JPH
 		{
 			// プレイヤーの現在速度を取得してピンに通知！
 			JPH::Vec3 playerVel = body1->GetLinearVelocity();
-			pin->OnHit(playerVel);
+			pin->OnHitByPlayer(playerVel);
+		}
+
+		// UserData から プレイヤーオブジェクトのポインタを復元
+		if (auto* ball = dynamic_cast<BowlingBall*>(gameObj1))
+		{
+			// ピンに当たったことを通知
+			ball->OnHitPin();
 		}
 	}
 
@@ -172,7 +186,7 @@ void GameContactListener::OnContactPersisted(const JPH::Body& inBody1, const JPH
 			{
 				// プレイヤーの現在速度を取得してピンに通知！
 				JPH::Vec3 pinVel = body1->GetLinearVelocity();
-				pin2->OnHit(pinVel);
+				pin2->OnHitByPin(pinVel);
 			}
 
 			// ピン２が既に当てられているならピン１の吹っ飛びを呼ぶ
@@ -180,7 +194,7 @@ void GameContactListener::OnContactPersisted(const JPH::Body& inBody1, const JPH
 			{
 				// プレイヤーの現在速度を取得してピンに通知！
 				JPH::Vec3 pinVel = body2->GetLinearVelocity();
-				pin->OnHit(pinVel);
+				pin->OnHitByPin(pinVel);
 			}
 		}
 	}

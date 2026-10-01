@@ -2,6 +2,7 @@
 #include "../SceneManager.h"
 #include "../../GameObject/UI/SceneUIObjects/StageSelect/StageSelectUIObjects.h"
 #include "../../Cursor/CursorManager.h"
+#include "../../Const/DeviceAndKey.h"
 
 void StageSelectScene::Init()
 {
@@ -12,6 +13,9 @@ void StageSelectScene::Init()
 
 	//フェードイン
 	FADEMGR.StartFadeIn(&m_isFadeInEnd);
+
+	// カーソル表示
+	CURSOR.SetIsShowCursor(true);
 }
 
 void StageSelectScene::Event()
@@ -30,34 +34,26 @@ void StageSelectScene::Event()
 		return;
 	}
 
-	//長押し対策
-	static bool isLClickPressed = true;
-
-	if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
+	// 押されたことを確認
+	if (KdInputManager::Instance().IsPress(GetKeyRegistName(VK_LBUTTON)))
 	{
-		if (!isLClickPressed)
+		//フェードインが終わっていたら
+		if (m_isFadeInEnd)
 		{
-			//フェードインが終わっていたら
-			if (m_isFadeInEnd)
+			auto spUI = m_wpUI.lock();
+
+			// いずれかのステージが選択状態なことを確認
+			if (spUI && spUI->GetIsSelect())
 			{
-				auto spUI = m_wpUI.lock();
-
-				// いずれかのステージが選択状態なことを確認
-				if (spUI && spUI->GetIsSelect())
+				//ステージ準備
+				if (!m_wpUI.expired())
 				{
-					//ステージ準備
-					if (!m_wpUI.expired())
-					{
-						SCENEMGR.SetStageNo(m_wpUI.lock()->GetSelectedStageNo());
-					}
-
-					//フェードアウト
-					FADEMGR.StartFadeOut(&m_isSceneChangeReady);
+					SCENEMGR.SetStageNo(m_wpUI.lock()->GetSelectedStageNo());
 				}
+
+				//フェードアウト
+				FADEMGR.StartFadeOut(&m_isSceneChangeReady);
 			}
 		}
-
-		isLClickPressed = true;
 	}
-	else isLClickPressed = false;
 }
