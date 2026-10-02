@@ -9,6 +9,7 @@
 #include "Const/DeviceAndKey.h"
 #include "Cursor/CursorManager.h"
 #include "Sound/SoundManager.h"
+#include "GameObject/Effect/EffectManager.h"
 
 // ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// /////
 // エントリーポイント
@@ -238,6 +239,7 @@ bool Application::Init(int w, int h)
 	CAMERAMGR.Init();
 	SAVEMGR.Init();
 	SOUNDMGR.Init();
+	EFFECTMGR.Init();
 	srand(timeGetTime());
 
 	// インプットコレクター

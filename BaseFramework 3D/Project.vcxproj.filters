@@ -208,6 +208,12 @@
     <Filter Include="Src\Application\GameObject\UI\Button">
       <UniqueIdentifier>{b33f05a8-66e8-4902-ab45-851cc82ae5d1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\GameObject\Effect">
+      <UniqueIdentifier>{b84986cd-2e2f-4f54-8fb6-0102e5d0cabf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\GameObject\Effect\PinHit">
+      <UniqueIdentifier>{2165c8b2-3ada-4a56-985e-391cf80f8630}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -1620,6 +1626,18 @@
     <ClInclude Include="Src\Application\GameObject\UI\Button\Button.h">
       <Filter>Src\Application\GameObject\UI\Button</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\Effect\EffectBase.h">
+      <Filter>Src\Application\GameObject\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\Effect\PinHit\PinHit.h">
+      <Filter>Src\Application\GameObject\Effect\PinHit</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\Effect\EffectManager.h">
+      <Filter>Src\Application\GameObject\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\Effect\EffectsInclude.h">
+      <Filter>Src\Application\GameObject\Effect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -2335,6 +2353,15 @@
     </ClCompile>
     <ClCompile Include="Src\Application\GameObject\UI\Button\Button.cpp">
       <Filter>Src\Application\GameObject\UI\Button</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\Effect\EffectBase.cpp">
+      <Filter>Src\Application\GameObject\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\Effect\PinHit\PinHit.cpp">
+      <Filter>Src\Application\GameObject\Effect\PinHit</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\Effect\EffectManager.cpp">
+      <Filter>Src\Application\GameObject\Effect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -1,0 +1,13 @@
+{
+	"Effects": [
+		{
+			"effectID": 0,
+			"texPath": "Asset/Textures/Effect/PinHit/PinHitCloud.png",
+			"splitX": 7,
+			"splitY": 1,
+			"scale": 0.5,
+			"animSpeed": 28.0,
+			"isLoop": false
+		}
+	]
+}

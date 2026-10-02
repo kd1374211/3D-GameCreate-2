@@ -1,6 +1,7 @@
 ﻿#include "PinBase.h"
 #include "../../../Scene/SceneManager.h"
 #include "../../../StageManager/StageManager.h"
+#include "../../Effect/EffectManager.h"
 
 void PinBase::Update()
 {
@@ -170,6 +171,9 @@ void PinBase::OnHitByPlayer(JPH::Vec3 vel)
 
 	// プレイヤーからの当たりは強めにする
 	m_pendingVelocity = vel * PinBaseConsts::OnHitVelocityMulti;
+
+	// インパクト召喚
+	EFFECTMGR.SpawnEffect(m_pos+Math::Vector3(0.0f,0.05f,0.0f), EffectType::HitImpact);
 }
 
 void PinBase::OnHitByPin(JPH::Vec3 vel)

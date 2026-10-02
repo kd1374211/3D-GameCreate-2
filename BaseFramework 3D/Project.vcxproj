@@ -662,6 +662,10 @@
     <ClInclude Include="Src\Application\GameObject\Camera\StageViewCamera\StageViewCamera.h" />
     <ClInclude Include="Src\Application\GameObject\Camera\TPSCamera\TPSCamera.h" />
     <ClInclude Include="Src\Application\GameObject\Chara\BowlingBall\BowlingBall.h" />
+    <ClInclude Include="Src\Application\GameObject\Effect\EffectBase.h" />
+    <ClInclude Include="Src\Application\GameObject\Effect\EffectManager.h" />
+    <ClInclude Include="Src\Application\GameObject\Effect\EffectsInclude.h" />
+    <ClInclude Include="Src\Application\GameObject\Effect\PinHit\PinHit.h" />
     <ClInclude Include="Src\Application\GameObject\SkySphere\SkySphere.h" />
     <ClInclude Include="Src\Application\GameObject\Terrain\FinishArea\FinishArea.h" />
     <ClInclude Include="Src\Application\GameObject\Terrain\Ground\Ground.h" />
@@ -908,6 +912,9 @@
     <ClCompile Include="Src\Application\GameObject\Camera\StageViewCamera\StageViewCamera.cpp" />
     <ClCompile Include="Src\Application\GameObject\Camera\TPSCamera\TPSCamera.cpp" />
     <ClCompile Include="Src\Application\GameObject\Chara\BowlingBall\BowlingBall.cpp" />
+    <ClCompile Include="Src\Application\GameObject\Effect\EffectBase.cpp" />
+    <ClCompile Include="Src\Application\GameObject\Effect\EffectManager.cpp" />
+    <ClCompile Include="Src\Application\GameObject\Effect\PinHit\PinHit.cpp" />
     <ClCompile Include="Src\Application\GameObject\SkySphere\SkySphere.cpp" />
     <ClCompile Include="Src\Application\GameObject\Terrain\FinishArea\FinishArea.cpp" />
     <ClCompile Include="Src\Application\GameObject\Terrain\Ground\Ground.cpp" />
