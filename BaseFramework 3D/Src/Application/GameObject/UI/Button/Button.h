@@ -22,6 +22,9 @@ public:
 	// ボタン上のテキストを設定
 	void SetButtonText(const std::string& text) { m_buttonText = text; }
 
+	// 判定の有効・無効を切り替え
+	void SetIsEnable(bool flg) { m_isEnable = flg; }
+
 private:
 
 	struct ButtonConsts
@@ -63,4 +66,6 @@ private:
 	// ボタン上のテキスト
 	std::string m_buttonText = "Button";
 
+	// ボタンが有効か
+	bool m_isEnable = true;
 };

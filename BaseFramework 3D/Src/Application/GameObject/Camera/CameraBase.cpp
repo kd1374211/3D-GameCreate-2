@@ -33,7 +33,7 @@ void CameraBase::SetTarget(const std::shared_ptr<KdGameObject>& target)
 void CameraBase::UpdateRotateByMouse()
 {
 	// マウス固定でないならリターン
-	if (!m_isMouseLocked)return;
+	if (!CURSOR.GetIsMouseLocked())return;
 
 	// マウスでカメラを回転させる処理
 	POINT _nowPos = CURSOR.GetFixedCursorPos();
@@ -41,9 +41,6 @@ void CameraBase::UpdateRotateByMouse()
 	POINT _mouseMove{};
 	_mouseMove.x = _nowPos.x - m_FixMousePos.x;
 	_mouseMove.y = _nowPos.y - m_FixMousePos.y;
-
-	// カーソル位置リセット
-	ResetCursorPos();
 
 	// 実際にカメラを回転させる処理(0.15はただの補正値)
 	m_DegAng.x += _mouseMove.y * 0.15f;
@@ -56,7 +53,7 @@ void CameraBase::UpdateRotateByMouse()
 void CameraBase::UpdateRotateYOnlyByMouse()
 {
 	// マウス固定でないならリターン
-	if (!m_isMouseLocked)return;
+	if (!CURSOR.GetIsMouseLocked())return;
 
 	// マウスでカメラを回転させる処理
 	POINT _nowPos = CURSOR.GetFixedCursorPos();
@@ -65,18 +62,6 @@ void CameraBase::UpdateRotateYOnlyByMouse()
 	_mouseMove.x = _nowPos.x - m_FixMousePos.x;
 	_mouseMove.y = _nowPos.y - m_FixMousePos.y;
 
-	// カーソルを中央に設定
-	ResetCursorPos();
-
 	// 実際にカメラを回転させる処理(0.15はただの補正値)
 	m_DegAng.y += _mouseMove.x * 0.15f;
-}
-
-void CameraBase::ResetCursorPos()
-{
-	// マウス固定でないならリターン
-	if (!m_isMouseLocked)return;
-
-	// マネージャーの位置修正を呼ぶ
-	CURSOR.SetCursorPosToCenter();
 }

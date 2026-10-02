@@ -21,30 +21,30 @@ enum class TextAlign
 struct FontTypeConst
 {
 	//StageSelect	
-	static constexpr int StageSelect_StageListName = 1;
-	static constexpr int StageSelect_StageName = 3;
-	static constexpr int StageSelect_Cleared = 2;
-	static constexpr int StageSelect_KeyGuide = 2;
-	static constexpr int StageSelect_PinCount = 2;
+	static constexpr int StageSelect_StageListName = 2;
+	static constexpr int StageSelect_StageName = 4;
+	static constexpr int StageSelect_Cleared = 3;
+	static constexpr int StageSelect_KeyGuide = 3;
+	static constexpr int StageSelect_PinCount = 3;
 
 	// Game
-	static constexpr int Game_CountDown = 7;
-	static constexpr int Game_ThrowResult = 8;
-	static constexpr int Game_TimerAndPin = 6;
-	static constexpr int Game_StageFinish = 8;
-	static constexpr int Game_KeyGuide = 3;
+	static constexpr int Game_CountDown = 8;
+	static constexpr int Game_ThrowResult = 9;
+	static constexpr int Game_TimerAndPin = 7;
+	static constexpr int Game_StageFinish = 9;
+	static constexpr int Game_KeyGuide = 4;
 	static constexpr int Game_MiddleResultFrameNo = 0;
-	static constexpr int Game_MiddleResultThrowRecord = 2;
-	static constexpr int Game_MiddleResultFrameScore = 2;
+	static constexpr int Game_MiddleResultThrowRecord = 3;
+	static constexpr int Game_MiddleResultFrameScore = 3;
 
 	//Result
-	static constexpr int Result_ResultTop = 5;
-	static constexpr int Result_StageName = 3;
-	static constexpr int Result_PinCount = 4;
-	static constexpr int Result_TimeLeft = 4;
-	static constexpr int Result_StarList = 2;
-	static constexpr int Result_ButtonIndex = 5;
-	static constexpr int Result_Buttom = 3;
+	static constexpr int Result_ResultTop = 6;
+	static constexpr int Result_StageName = 4;
+	static constexpr int Result_PinCount = 5;
+	static constexpr int Result_TimeLeft = 5;
+	static constexpr int Result_StarList = 3;
+	static constexpr int Result_ButtonIndex = 6;
+	static constexpr int Result_Buttom = 4;
 
 	// その他
 	static constexpr int Other_ButtonText = 1;
@@ -196,15 +196,17 @@ private:
 	std::map<int, FontSetData> m_fontDatas =
 	{
 		{0,FontSetData("チェックポイント．（ピリオド）",SHIFTJIS_CHARSET,false,12.0f)},
-		{1,FontSetData("チェックポイント．（ピリオド）",SHIFTJIS_CHARSET,false,24.0f)},
-		{2,FontSetData("チェックポイント．（ピリオド）",SHIFTJIS_CHARSET,false,30.0f)},
-		{3,FontSetData("チェックポイント．（ピリオド）",SHIFTJIS_CHARSET,false,40.0f)},
-		{4,FontSetData("チェックポイント．（ピリオド）",SHIFTJIS_CHARSET,false,50.0f)},
-		{5,FontSetData("チェックポイント．（ピリオド）",SHIFTJIS_CHARSET,false,60.0f)},
-		{6,FontSetData("チェックポイント．（ピリオド）",SHIFTJIS_CHARSET,false,80.0f)},
-		{7,FontSetData("Faster One Regular",DEFAULT_CHARSET,false,200.0f)},
-		{8,FontSetData("Black Ops One Regular",DEFAULT_CHARSET,false,200.0f)}
+		{1,FontSetData("チェックポイント．（ピリオド）",SHIFTJIS_CHARSET,false,18.0f)},
+		{2,FontSetData("チェックポイント．（ピリオド）",SHIFTJIS_CHARSET,false,24.0f)},
+		{3,FontSetData("チェックポイント．（ピリオド）",SHIFTJIS_CHARSET,false,30.0f)},
+		{4,FontSetData("チェックポイント．（ピリオド）",SHIFTJIS_CHARSET,false,40.0f)},
+		{5,FontSetData("チェックポイント．（ピリオド）",SHIFTJIS_CHARSET,false,50.0f)},
+		{6,FontSetData("チェックポイント．（ピリオド）",SHIFTJIS_CHARSET,false,60.0f)},
+		{7,FontSetData("チェックポイント．（ピリオド）",SHIFTJIS_CHARSET,false,80.0f)},
+		{8,FontSetData("Faster One Regular",DEFAULT_CHARSET,false,200.0f)},
+		{9,FontSetData("Black Ops One Regular",DEFAULT_CHARSET,false,200.0f)}
 	};
+	static constexpr int FontDataCount = 10;	// フォントデータの数
 
 	// フォント登録データ
 	struct FontData
@@ -216,7 +218,7 @@ private:
 		//追加済みフラグ
 		bool isCreated = false;
 	};
-	std::array<FontData, 9>			m_FontTbl;							// 登録されたフォントの配列
+	std::array<FontData, FontDataCount>			m_FontTbl;							// 登録されたフォントの配列
 
 	HWND								m_hWnd = 0;							// ウィンドウハンドル
 	HDC									m_hDC = 0;							// デバイスコンテキスト

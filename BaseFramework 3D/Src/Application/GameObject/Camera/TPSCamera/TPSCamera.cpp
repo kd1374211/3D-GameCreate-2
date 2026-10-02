@@ -26,12 +26,7 @@ void TPSCamera::PostUpdate()
 	}
 	
 	// カメラの回転
-	if (m_isCamLocked)
-	{
-		// ロック状態ならマウス位置補正だけ
-		ResetCursorPos();
-	}
-	else
+	if (!m_isCamLocked)
 	{
 		// ロック状態にないならカメラを回転させる
 		UpdateRotateYOnlyByMouse();

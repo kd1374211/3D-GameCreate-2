@@ -35,9 +35,6 @@ void GameScene::Event()
 		UpdateEnd();
 		break;
 	}
-
-	// デバッグ用
-	m_cScoreHandler->AddDebugScoreLog();
 }
 
 void GameScene::SetUpLane()
@@ -239,6 +236,10 @@ void GameScene::UpdateCheckAndClean()
 				m_wpUI.lock()->SpawnMiddleResult();
 				// 中間リザルト確認に移行
 				m_currentSceneState = SceneState::MiddleResult;
+				// カーソル固定を解除
+				CURSOR.UnlockCursor();
+				// カーソル表示
+				CURSOR.SetIsShowCursor(true);
 				break;
 			case NextActions::BonusThrow:
 				// 未定
@@ -275,6 +276,12 @@ void GameScene::UpdateMiddleResult()
 
 		// 待機ステートに移行
 		m_currentSceneState = SceneState::Waiting;
+
+		// マウス固定を再開
+		CURSOR.LockCursor();
+
+		// カーソル非表示
+		CURSOR.SetIsShowCursor(false);
 
 		// 撤退
 		return;
@@ -340,8 +347,10 @@ void GameScene::EndRolling()
 
 void GameScene::Init()
 {
-	// カーソル位置リセット
-	CURSOR.SetCursorPosToCenter();
+	// カーソル固定(&リセット)
+	CURSOR.LockCursor();
+	// カーソル非表示
+	CURSOR.SetIsShowCursor(false);
 
 	// スコアハンドラー生成
 	m_cScoreHandler = std::make_shared<ScoreHandler>();

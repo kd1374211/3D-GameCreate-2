@@ -6,6 +6,9 @@
 
 void Button::Update()
 {
+	// ボタンが有効でないならリターン
+	if (!m_isEnable)return;
+
 	// dt取得
 	float dt = Application::Instance().GetDeltaTime();
 
@@ -41,6 +44,11 @@ void Button::Update()
 
 void Button::DrawSprite()
 {
+	// 現在のレンダーターゲットを保存
+	ID3D11RenderTargetView* spCurrentRT = nullptr;
+	ID3D11DepthStencilView* spCurrentDS = nullptr;
+	KdDirect3D::Instance().WorkDevContext()->OMGetRenderTargets(1, &spCurrentRT, &spCurrentDS);
+
 	// レンダー作成
 	std::shared_ptr<KdTexture> tmpTex = std::make_shared<KdTexture>();
 	Math::Vector2 renderBase = WindowSizeConsts::WindowSize;
@@ -59,11 +67,15 @@ void Button::DrawSprite()
 	KdShaderManager::Instance().m_spriteShader.DrawFont(FontTypeConst::Other_ButtonText, Math::Vector2::Zero, &kWhiteColor, m_buttonText.c_str(), TextAlign::Center);
 
 	//ターゲット戻す
-	KdDirect3D::Instance().WorkDevContext()->OMSetRenderTargets(1, KdDirect3D::Instance().WorkBackBuffer()->WorkRTViewAddress(), KdDirect3D::Instance().WorkZBuffer()->WorkDSView());
+	KdDirect3D::Instance().WorkDevContext()->OMSetRenderTargets(1, &spCurrentRT, spCurrentDS);
 
 	//tmpTexをサイズ変えて描画
 	Math::Vector2 drawSize = renderBase * m_drawScale * m_sizeMulti;
 	KdShaderManager::Instance().m_spriteShader.DrawTex(tmpTex, m_drawPos.x, m_drawPos.y, drawSize.x, drawSize.y);
+
+	// 仮保存したレンダーターゲットを解放
+	if (spCurrentRT)spCurrentRT->Release();
+	if (spCurrentDS)spCurrentDS->Release();
 }
 
 void Button::Init()

@@ -2,6 +2,8 @@
 
 #include "../../../../main.h"
 #include "../../../../StageManager/StageManager.h"
+#include "../../Button/Button.h"
+#include "../../../../Cursor/CursorManager.h"
 
 void ResultUIObject::Update()
 {
@@ -12,23 +14,18 @@ void ResultUIObject::Update()
 	if (m_windowSizeMulti < 1.0f)
 	{
 		m_windowSizeMulti += ResultUIConsts::WindowExpandSpeed * dt;
-		if (m_windowSizeMulti >= 1.0f)m_windowSizeMulti = 1.0f;
+		
+		// 最大サイズになったらボタンを有効化
+		if (m_windowSizeMulti >= 1.0f)
+		{
+			m_windowSizeMulti = 1.0f;
+
+			m_spButton->SetIsEnable(true);
+		}
 	}
 
-	//進捗度の制御
-	m_progress += ResultUIConsts::AlphaChangeSpeed * dt * (m_isReverse * -2 + 1);
-
-	if (m_progress >= ResultUIConsts::ProgMax)
-	{
-		m_isReverse = true;
-	}
-	else if (m_progress <= ResultUIConsts::ProgMin)
-	{
-		m_isReverse = false;
-	}
-
-	m_resultButtomTextAlpha = std::clamp(m_progress, ResultUIConsts::AlphaMin, ResultUIConsts::AlphaMax);
-	KdDebugGUI::Instance().AddLog("Prog : %.2f\n", m_progress);
+	// ボタン更新
+	m_spButton->Update();
 }
 
 void ResultUIObject::DrawSprite()
@@ -85,10 +82,8 @@ void ResultUIObject::DrawSprite()
 		KdShaderManager::Instance().m_spriteShader.DrawFont(FontTypeConst::Game_MiddleResultFrameScore, Math::Vector2(-360.0f + frameNumber * 80.0f + (frameNumber == BowlingSystemConsts::LastFrame ? 17.5f : 0), -100.0f), &kWhiteColor, data.m_totalScore.c_str(), TextAlign::Center);
 	}
 
-	//リザルト下
-	text = "[SPACE] 戻る";
-	color = Math::Color(1.0f, 1.0f, 1.0f, m_resultButtomTextAlpha);
-	KdShaderManager::Instance().m_spriteShader.DrawFont(FontTypeConst::Result_Buttom, ResultUIConsts::ResultEndTextPos, &color, text.c_str(), TextAlign::Center);
+	// ボタン描画(多分無理)
+	m_spButton->DrawSprite();
 
 	//ターゲット戻す
 	KdDirect3D::Instance().WorkDevContext()->OMSetRenderTargets(1, KdDirect3D::Instance().WorkBackBuffer()->WorkRTViewAddress(), KdDirect3D::Instance().WorkZBuffer()->WorkDSView());
@@ -100,13 +95,11 @@ void ResultUIObject::DrawSprite()
 
 void ResultUIObject::Init()
 {
-	//画像
-	m_clockTex = std::make_shared<KdTexture>();
-	m_clockTex->Load("Asset/Textures/UI/SceneUI/ClockIcon.png");
-
-	m_pinTex = std::make_shared<KdTexture>();
-	m_pinTex->Load("Asset/Textures/UI/SceneUI/PinIcon.png");
-
-	m_starTex = std::make_shared<KdTexture>();
-	m_starTex->Load("Asset/Textures/UI/SceneUI/Result/ResultStars.png");
+	// ボタン生成(今回はマネージャーに追加しない)
+	m_spButton = std::make_shared<Button>();
+	m_spButton->SetButtonText("戻る");
+	m_spButton->SetOnClickFlag(&m_isButtonPressed);
+	m_spButton->SetIsEnable(false); // 初期状態では無効化
+	m_spButton->SetDrawScale(ResultUIConsts::ButtonScale);
+	m_spButton->SetDrawPos(ResultUIConsts::ButtonPosOfs);
 }

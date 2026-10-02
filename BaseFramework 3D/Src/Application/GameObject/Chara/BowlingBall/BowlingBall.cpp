@@ -89,9 +89,9 @@ void BowlingBall::Update()
 					m_totalStoredTime = 0.0f;
 
 					// カメラの回転を固定
-					if (!m_wpCamera.expired())
+					if (auto gameCam = m_wpCamera.lock())
 					{
-						m_wpCamera.lock()->SetIsCamLocked(true);
+						gameCam->SetIsCamLocked(true);
 					}
 				}
 
@@ -148,9 +148,9 @@ void BowlingBall::Update()
 					else
 					{
 						// カメラの回転を解放(投げキャンセル)
-						if (!m_wpCamera.expired())
+						if (auto gameCam = m_wpCamera.lock())
 						{
-							m_wpCamera.lock()->SetIsCamLocked(false);
+							gameCam->SetIsCamLocked(false);
 						}
 					}
 					
@@ -323,15 +323,15 @@ void BowlingBall::Reset()
 	m_totalStoredTime = 0.0f;
 
 	// カメラの回転を解放
-	if (!m_wpCamera.expired())
+	if (auto gameCam = m_wpCamera.lock())
 	{
-		m_wpCamera.lock()->SetIsCamLocked(false);
+		gameCam->SetIsCamLocked(false);
 	}
 
 	// パワーリセット
-	if (!m_wpPowerBar.expired())
+	if (auto powerBar = m_wpPowerBar.lock())
 	{
-		m_wpPowerBar.lock()->SetPower(0.0f);
+		powerBar->SetPower(0.0f);
 	}
 }
 
@@ -355,9 +355,9 @@ void BowlingBall::Respawn(const Math::Vector3& pos, const Math::Vector3& rot)
 	// ↓仮置き
 	// 位置と向きを設定
 	m_pos = pos;
-	if (!m_wpCamera.expired())
+	if (auto gameCam = m_wpCamera.lock())
 	{
-		m_wpCamera.lock()->SetRotationYMatrix(Math::Matrix::CreateFromQuaternion(quat));
+		gameCam->SetRotationYMatrix(Math::Matrix::CreateFromQuaternion(quat));
 	}
 }
 

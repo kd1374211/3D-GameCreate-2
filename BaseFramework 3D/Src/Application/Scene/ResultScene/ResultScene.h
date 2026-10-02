@@ -2,6 +2,8 @@
 
 #include"../BaseScene/BaseScene.h"
 
+class ResultUIObject;
+
 class ResultScene : public BaseScene
 {
 public:
@@ -20,4 +22,7 @@ private:
 
 	// シーン移行確認
 	bool m_isSceneChangeReady = false;
+
+	// UI
+	std::weak_ptr<ResultUIObject> m_wpUI;
 };

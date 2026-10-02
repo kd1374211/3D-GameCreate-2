@@ -27,6 +27,11 @@ public:
 	void SetCursorPosToCenter();
 	void SetCursorToTargetPos(POINT pos);
 
+	// マウス固定のオンオフ
+	void LockCursor();
+	void UnlockCursor();
+	bool GetIsMouseLocked()const { return m_isMouseLocked; }
+
 	// 表示の設定
 	void SetIsShowCursor(bool flg) { m_isShowCursor = flg; }
 	bool GetIsShowCursor()const { return m_isShowCursor; }
@@ -56,7 +61,7 @@ private:
 
 	// 位置の修正
 	POINT FixCursorPos(POINT cursorPos);
-	
+
 	// マウス座標
 	POINT m_cursorPos = {};
 
@@ -71,6 +76,9 @@ private:
 
 	// カーソル表示フラグ
 	bool m_isShowCursor = false;
+
+	// マウス固定フラグ
+	bool m_isMouseLocked = true;
 
 public:
 

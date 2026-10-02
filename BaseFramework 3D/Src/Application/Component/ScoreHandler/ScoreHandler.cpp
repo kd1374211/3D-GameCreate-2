@@ -165,18 +165,6 @@ void ScoreHandler::CreateGameResult(ScoreDatas::GameResult& result)
 	}
 }
 
-void ScoreHandler::AddDebugScoreLog() const
-{
-	for (const auto& frameData : m_frameData)
-	{
-		// 計算が終わっていないものはスキップ
-		if (!frameData.m_isCalcEnd) continue;
-
-		// ここまでの点数をログに出力
-		KdDebugGUI::Instance().AddLog("Frame Total Score: %d\n", frameData.m_frameTotalScore);
-	}
-}
-
 std::string ScoreHandler::GetScore(int frameNo, int throwNo)
 {
 	int ID = m_frameData[frameNo].m_recordID[throwNo];

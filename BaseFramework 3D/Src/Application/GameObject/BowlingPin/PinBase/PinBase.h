@@ -53,6 +53,9 @@ protected:
 	struct PinBaseConsts
 	{
 		static constexpr float OnHitVelocityMulti = 3.0f;
+
+		// 倒れた扱いにする距離
+		static constexpr float DistanceCountAsFallen = 7.5f;
 	};
 
 	virtual void Init()override;
@@ -64,6 +67,9 @@ protected:
 	std::shared_ptr<PhysicsComponent> m_cPhysics;
 
 	std::shared_ptr<KdModelData> m_model;
+
+	// 召喚時の座標
+	Math::Vector3 m_spawnPos = Math::Vector3::Zero;
 
 	//座標
 	Math::Vector3 m_pos = Math::Vector3::Zero;

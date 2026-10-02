@@ -11,6 +11,7 @@
 #include "../../../Application/Physics/PhysicsLayer.h"
 #include "../../../Application/Physics/PhysicsManager.h"
 #include "../../../Application/Component/ScoreHandler/ScoreHandler.h"
+#include "../../../Application/Cursor/CursorManager.h"
 
 KdDebugGUI::KdDebugGUI()
 {}
@@ -103,6 +104,11 @@ void KdDebugGUI::GuiProcess()
 					// プレイヤーの操作を有効に
 					STAGEMGR.BuildStage_D(currentLaneNo);
 					CAMERAMGR.SetDefaultCamera(CameraType::Game);
+
+					// カーソルの固定を再開
+					CURSOR.LockCursor();
+					// カーソル非表示
+					ShowCursor(false);
 				}
 				else
 				{
@@ -122,9 +128,13 @@ void KdDebugGUI::GuiProcess()
 						}
 					}
 
+					// カーソルの固定を解除
+					CURSOR.UnlockCursor();
+					// カーソルを表示
+					ShowCursor(true);
+
 					std::shared_ptr<PointTargetCamera> camera = std::make_shared<PointTargetCamera>();
 					camera->Init(targetPos);
-					camera->SetIsMouseLocked(false);
 					SCENEMGR.AddObject(camera);
 
 					CAMERAMGR.SetDebugCamera(camera);

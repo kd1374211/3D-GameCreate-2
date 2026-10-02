@@ -4,6 +4,8 @@
 #include "../../../../main.h"
 #include "../../../../Const/DeviceAndKey.h"
 #include "../../../../Component/ScoreHandler/ScoreHandler.h"
+#include "../../Button/Button.h"
+#include "../../../../Scene/SceneManager.h"
 
 void GameUIObjects::Update()
 {
@@ -48,41 +50,6 @@ void GameUIObjects::DrawSprite()
 		Math::Vector2 drawPos = Math::Vector2(m_throwStartText.m_posX, GameUIConsts::ThrowStartTextPosY);
 		KdShaderManager::Instance().m_spriteShader.DrawFont(FontTypeConst::Game_CountDown, drawPos, &kWhiteColor, m_throwStartText.m_text.c_str(),TextAlign::Center);
 	}
-
-	//// 操作ガイド
-	//KdShaderManager::Instance().m_spriteShader.DrawFont(FontTypeConst::Game_KeyGuide, GameUIConsts::KeyGuideTextPos, &kBlackColor, "[←/→] 方向転換", TextAlign::Left);
-
-	////ステージ終了演出
-	//if (m_isStageFinishTextDraw)
-	//{
-	//	std::shared_ptr<KdTexture> tmpTex = std::make_shared<KdTexture>();
-
-	//	//レンダー作成
-	//	Math::Vector2 renderBase = Math::Vector2(1280.0f, 720.0f);
-	//	tmpTex->CreateRenderTarget(renderBase.x, renderBase.y);
-
-	//	//黒塗り
-	//	KdDirect3D::Instance().WorkDevContext()->ClearRenderTargetView(tmpTex->WorkRTView(), Math::Color(0, 0, 0, 0));
-
-	//	//ターゲット設定
-	//	KdDirect3D::Instance().WorkDevContext()->OMSetRenderTargets(1, tmpTex->WorkRTViewAddress(), tmpTex->WorkDSView());
-
-	//	// 背景黒塗り
-	//	Math::Color color = Math::Color(0, 0, 0, GameUIConsts::WindowAlpha);
-	//	KdShaderManager::Instance().m_spriteShader.DrawBox(0, 0, GameUIConsts::WindowSize.x, GameUIConsts::WindowSize.y, &color, true);
-
-	//	// ここにクリアテキスト描画
-	//	color = m_isStageClear ? kGreenColor : kRedColor;
-	//	std::string text = m_isStageClear ? "STAGE  CLEAR!!" : "STAGE  FAILED...";
-	//	KdShaderManager::Instance().m_spriteShader.DrawFont(FontTypeConst::Game_StageFinish, Math::Vector2::Zero, &color, text.c_str(), TextAlign::Center);
-
-	//	//ターゲット戻す
-	//	KdDirect3D::Instance().WorkDevContext()->OMSetRenderTargets(1, KdDirect3D::Instance().WorkBackBuffer()->WorkRTViewAddress(), KdDirect3D::Instance().WorkZBuffer()->WorkDSView());
-
-	//	//tmpTexをサイズ変えて描画
-	//	float drawSizeY = renderBase.y * m_windowSize_stageFinish;
-	//	KdShaderManager::Instance().m_spriteShader.DrawTex(tmpTex, 0, 0, renderBase.x, drawSizeY);
-	//}
 
 	// 投球リザルトテキスト
 	if (m_isThrowResultTextActive)
@@ -231,9 +198,20 @@ void GameUIObjects::SpawnMiddleResult()
 	m_middleResultPosY = GameUIConsts::MiddleResultStartY;
 	m_isMiddleResultUp = true;
 	m_isMiddleResultUpEnd = false;
+	m_isButtonPressed = false;
 
 	// 有効化
 	m_isMiddleResultActive = true;
+
+	// ボタン生成
+	std::shared_ptr<Button> spButton = std::make_shared<Button>();
+	spButton->SetOnClickFlag(&m_isButtonPressed);
+	spButton->SetDrawPos(Math::Vector2(GameUIConsts::MiddleResultPosX, m_middleResultPosY) + GameUIConsts::MiddleResultButtonPosOfs);
+	spButton->SetDrawScale(GameUIConsts::MiddleResultButtonScale);
+	spButton->SetButtonText("次に進む");
+	spButton->SetIsEnable(false);	// 初期状態では無効化
+	SCENEMGR.AddObject(spButton);
+	m_wpButton = spButton;
 }
 
 void GameUIObjects::SpawnStageFinishText(bool isClear)
@@ -317,13 +295,10 @@ void GameUIObjects::UpdateThrowResult(float dt)
 
 void GameUIObjects::UpdateMiddleResult(float dt)
 {
-	// リザルト閉じチェック
-	if (m_isMiddleResultUpEnd && m_isMiddleResultUp)
+	// リザルト閉じボタンチェック
+	if (m_isButtonPressed)
 	{
-		if (KdInputManager::Instance().IsPress(GetKeyRegistName(VK_SPACE)))
-		{
-			m_isMiddleResultUp = false;
-		}
+		m_isMiddleResultUp = false;
 	}
 
 	// 位置更新
@@ -331,10 +306,16 @@ void GameUIObjects::UpdateMiddleResult(float dt)
 	{
 		// 上
 		// スキップ用
-		if (KdInputManager::Instance().IsPress(GetKeyRegistName(VK_SPACE)))
+		if (KdInputManager::Instance().IsPress(GetKeyRegistName(VK_LBUTTON)))
 		{
 			m_middleResultPosY = GameUIConsts::MiddleResultEndY;
 			m_isMiddleResultUpEnd = true;
+
+			// ボタンを有効化
+			if (auto spButton = m_wpButton.lock())
+			{
+				spButton->SetIsEnable(true);
+			}
 		}
 
 		// 通常
@@ -347,6 +328,12 @@ void GameUIObjects::UpdateMiddleResult(float dt)
 			{
 				m_middleResultPosY = GameUIConsts::MiddleResultEndY;
 				m_isMiddleResultUpEnd = true;
+
+				// ボタンを有効化
+				if (auto spButton = m_wpButton.lock())
+				{
+					spButton->SetIsEnable(true);
+				}
 			}
 		}
 	}
@@ -362,8 +349,20 @@ void GameUIObjects::UpdateMiddleResult(float dt)
 			if (m_middleResultPosY <= GameUIConsts::MiddleResultStartY)
 			{
 				m_isMiddleResultActive = false;
+
+				// ボタン破棄
+				if (auto spButton = m_wpButton.lock())
+				{
+					spButton->SetExpire();
+				}
 			}
 		}
+	}
+
+	// ボタンの位置を変更
+	if (auto spButton = m_wpButton.lock())
+	{
+		spButton->SetDrawPos(Math::Vector2(GameUIConsts::MiddleResultPosX, m_middleResultPosY) + GameUIConsts::MiddleResultButtonPosOfs);
 	}
 }
 

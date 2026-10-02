@@ -20,6 +20,12 @@ void CursorManager::Update()
 	// 修正して格納
 	m_cursorPos = FixCursorPos(cursorPos);
 
+	// マウス固定ならカーソル位置を中央に
+	if (m_isMouseLocked)
+	{
+		SetCursorPosToCenter();
+	}
+
 	// DEBUG
 	KdDebugGUI::Instance().AddLog("CursorPos : %.2f,%.2f\n", (float)m_cursorPos.x, (float)m_cursorPos.y);
 }
@@ -38,7 +44,24 @@ void CursorManager::SetCursorToTargetPos(POINT pos)
 	POINT _returnPos = pos;
 	ClientToScreen(Application::Instance().GetWindowHandle(), &_returnPos);
 	SetCursorPos(_returnPos.x, _returnPos.y);
-	m_cursorPos = FixCursorPos(pos);
+}
+
+void CursorManager::LockCursor()
+{
+	// マウス固定フラグオン
+	m_isMouseLocked = true;
+
+	// カーソル位置を中央に
+	SetCursorPosToCenter();
+
+	// 変数を合わせる
+	m_cursorPos = FixCursorPos(CursorManagerConsts::CenterCursorPos);
+}
+
+void CursorManager::UnlockCursor()
+{
+	// マウス固定フラグオフ
+	m_isMouseLocked = false;
 }
 
 void CursorManager::SetCursorPosToCenter()

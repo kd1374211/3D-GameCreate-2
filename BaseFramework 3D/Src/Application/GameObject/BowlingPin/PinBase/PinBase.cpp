@@ -45,6 +45,15 @@ void PinBase::PostUpdate()
 		m_isFallen = true;
 	}
 
+	// 一定距離以上離れたら倒れた扱いにする
+	if (Math::Vector3::Distance(m_pos, m_spawnPos) > PinBaseConsts::DistanceCountAsFallen)
+	{
+		m_isFallen = true;
+	}
+
+	// DEBUG 
+	KdDebugGUI::Instance().AddLog("Pin ID : %d, IsFallen : %d\n", m_pinIndex, m_isFallen);
+
 	// Matrix更新
 	Math::Matrix trans = Math::Matrix::CreateTranslation(m_pos);
 	Math::Matrix rotMat = Math::Matrix::CreateFromQuaternion(m_rot);
@@ -103,6 +112,8 @@ void PinBase::Spawn(Math::Vector3 pos, Math::Quaternion rot, int index)
 	// 1.位置と回転の設定
 	SetPos(pos);
 	SetRot(rot);
+	// 召喚時の座標を保持
+	m_spawnPos = pos;
 
 	// 2.リセット
 	Reset();

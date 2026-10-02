@@ -37,9 +37,6 @@ public:
 	// リザルトやセーブ移行用のデータ作成
 	void CreateGameResult(ScoreDatas::GameResult& result);
 
-	// デバッグ用・各フレームごとの得点を取得
-	void AddDebugScoreLog()const;
-
 	// スコア計算用
 	int GetScoreInt(int frameNo, int throwNo);
 	int GetTotalScoreInt(int frameNo);

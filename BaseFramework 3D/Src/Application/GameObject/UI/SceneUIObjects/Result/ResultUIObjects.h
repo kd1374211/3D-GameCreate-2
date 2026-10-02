@@ -1,12 +1,7 @@
 ﻿#pragma once
 #include "../../../../Const/BowlingSystemConst.h"
 
-enum class Stars
-{
-	Gold,
-	Empty,
-	Number
-};
+class Button;
 
 // Result内の仮定義
 struct ResultUIConsts
@@ -18,31 +13,10 @@ struct ResultUIConsts
 	// テキスト
 	static constexpr Math::Vector2 ResultTopTextPos = Math::Vector2(0.0f, 230.0f);
 	static constexpr Math::Vector2 StageNameTextPos = Math::Vector2(0.0f, 160.0f);
-	static constexpr Math::Vector2 TimeLeftTextPos = Math::Vector2(-70.0f, 50.0f);
-	static constexpr Math::Vector2 PinCountTextPos = Math::Vector2(450.0f, 50.0f);
-	static constexpr float StarListTextPosX = -150.0f;
 	
-	// 画像
-	static constexpr Math::Vector2 TimeIconPos = Math::Vector2(-400.0f, 50.0f);
-	static constexpr Math::Vector2 PinIconPos = Math::Vector2(120.0f, 50.0f);
-	static constexpr float StarIconPosX = -200.0f;
-
-	// 星
-	static constexpr float StarListBasePosY = -30.0f;
-	static constexpr float StarPosDiffY = 60.0f;
-
-	// ボタン(今は使わない)
-	static constexpr Math::Vector2 ButtonSize = Math::Vector2(0.0f, 170.0f);
-	static constexpr Math::Vector2 RestartButtonPos = Math::Vector2(0.0f, 170.0f);
-	static constexpr Math::Vector2 BackButtonPos = Math::Vector2(0.0f, 170.0f);
-
-	//終了テキスト
-	static constexpr Math::Vector2 ResultEndTextPos = Math::Vector2(0, -250.0f);
-	static constexpr float AlphaChangeSpeed = 1.5f;
-	static constexpr float AlphaMax = 1.0f;
-	static constexpr float AlphaMin = 0.2f;
-	static constexpr float ProgMax = 1.2f;
-	static constexpr float ProgMin = 0.2f;
+	// ボタン
+	static constexpr Math::Vector2 ButtonScale = Math::Vector2(2.5f, 2.5f);
+	static constexpr Math::Vector2 ButtonPosOfs = Math::Vector2(0.0f, -200.0f);
 };
 
 class ResultUIObject :public KdGameObject
@@ -58,6 +32,9 @@ public:
 	// スコア保持
 	void SetGameResult(ScoreDatas::GameResult result) { m_gameResult = result; }
 
+	// ボタンが押されたか
+	bool IsButtonPressed()const { return m_isButtonPressed; }
+
 private:
 
 	void Init()override;
@@ -65,20 +42,12 @@ private:
 	// ウィンドウ
 	float m_windowSizeMulti = 0.0f;
 
-	// 時計アイコン
-	std::shared_ptr<KdTexture> m_clockTex = nullptr;
-
-	// ピンアイコン
-	std::shared_ptr<KdTexture> m_pinTex = nullptr;
-
-	// ★アイコン
-	std::shared_ptr<KdTexture> m_starTex = nullptr;
-
-	// リザルト下テキストの点滅
-	float m_resultButtomTextAlpha = 1.0f;
-	bool m_isReverse = false;
-	float m_progress = 0.0f;
-
 	// スコア保持用
 	ScoreDatas::GameResult m_gameResult;
+
+	// ボタン
+	std::shared_ptr<Button> m_spButton = nullptr;
+
+	// ボタンを押したことを確認するためのフラグ
+	bool m_isButtonPressed = false;
 };

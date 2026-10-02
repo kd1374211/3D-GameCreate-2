@@ -164,15 +164,15 @@ LRESULT KdWindow::WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 		break;
 	// 追加9/29
 	// ウィンドウサイズ変化
-	case WM_SYSCOMMAND:
+	case WM_SIZE:
 
 		// 確認
-		if (wParam == SC_MAXIMIZE)
+		if (wParam == SIZE_MAXIMIZED) 
 		{
 			// 最大化	
 			KdDirect3D::Instance().SetFullscreenState(TRUE, 0);
 		}
-
+		
 		break;
 	// ウィンドウ破棄直前
 	case WM_DESTROY:

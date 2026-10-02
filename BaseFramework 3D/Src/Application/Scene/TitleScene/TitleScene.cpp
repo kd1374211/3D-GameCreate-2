@@ -63,6 +63,7 @@ void TitleScene::Init()
 	AddObject(UIObj);
 	m_wpUI = UIObj;
 
-	// カーソル表示
+	// カーソル表示・固定解除
 	CURSOR.SetIsShowCursor(true);
+	CURSOR.UnlockCursor();
 }

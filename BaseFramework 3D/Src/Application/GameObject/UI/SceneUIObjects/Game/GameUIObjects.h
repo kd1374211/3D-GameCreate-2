@@ -2,6 +2,7 @@
 
 enum class FrameMark;
 class ScoreHandler;
+class Button;
 
 //流れる文字（位置やサイズ固定）
 struct MovingText
@@ -94,6 +95,10 @@ private:
 		static constexpr float FrameScoreDrawPosY = -60.0f;						// フレームスコア描画位置Y
 		static constexpr float FrameScoreDrawStartPosX = -360.0f;				// フレームスコア描画位置Xスタート
 
+		// 中間リザルトボタン
+		static constexpr Math::Vector2 MiddleResultButtonPosOfs = Math::Vector2(0.0f, -150.0f);
+		static constexpr Math::Vector2 MiddleResultButtonScale = Math::Vector2(2.5f, 2.5f);
+
 		//ステージ終了演出
 		static constexpr float WindowExpandSpeed_StageFinish = 10.0f;
 		static constexpr Math::Vector2 WindowSize = Math::Vector2(640.0f, 120.0f);
@@ -122,7 +127,9 @@ private:
 	bool m_isMiddleResultActive = false;
 	float m_middleResultPosY = GameUIConsts::MiddleResultStartY;
 	bool m_isMiddleResultUp = true;
+	bool m_isButtonPressed = false;
 	bool m_isMiddleResultUpEnd = false;
+	std::weak_ptr<Button> m_wpButton;
 
 	std::shared_ptr<KdTexture> m_ResultWindowFrameTex = nullptr;
 

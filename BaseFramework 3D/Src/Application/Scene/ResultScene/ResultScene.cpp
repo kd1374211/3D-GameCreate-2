@@ -7,6 +7,7 @@
 #include "../../GameObject/Camera/StageViewCamera/StageViewCamera.h"
 #include "../../FadeManager/FadeManager.h"
 #include "../../GameObject/Camera/CameraManager.h"
+#include "../../Cursor/CursorManager.h"
 
 void ResultScene::Init()
 {
@@ -36,6 +37,7 @@ void ResultScene::Init()
 	//UI全般
 	std::shared_ptr<ResultUIObject> UIObj = std::make_shared<ResultUIObject>();
 	AddObject(UIObj);
+	m_wpUI = UIObj;
 
 	//ゲーム速度戻す
 	SCENEMGR.SetGameSpeed(1.0f);
@@ -48,6 +50,11 @@ void ResultScene::Init()
 
 	// UIに送信
 	UIObj->SetGameResult(result);
+
+	// カーソル表示
+	CURSOR.SetIsShowCursor(true);
+	// カーソル固定解除
+	CURSOR.UnlockCursor();
 }
 
 void ResultScene::Event()
@@ -62,20 +69,17 @@ void ResultScene::Event()
 		return;
 	}
 
-	static bool isSpacePressed = true;
-	if (GetAsyncKeyState(VK_SPACE) & 0x8000)
+	// ボタンが押されたことを確認
+	if (auto UIObj = m_wpUI.lock())
 	{
-		if (!isSpacePressed)
+		if (UIObj->IsButtonPressed())
 		{
 			if (m_isFadeInEnd)
 			{
 				FADEMGR.StartFadeOut(&m_isSceneChangeReady);
 			}
 		}
-
-		isSpacePressed = true;
 	}
-	else isSpacePressed = false;
 
 	// DEBUG
 	KdDebugGUI::Instance().AddLog("Total Score : %d\n", STAGEMGR.GetScore());

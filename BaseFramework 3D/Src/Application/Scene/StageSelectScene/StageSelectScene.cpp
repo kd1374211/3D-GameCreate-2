@@ -14,8 +14,9 @@ void StageSelectScene::Init()
 	//フェードイン
 	FADEMGR.StartFadeIn(&m_isFadeInEnd);
 
-	// カーソル表示
+	// カーソル表示・固定解除
 	CURSOR.SetIsShowCursor(true);
+	CURSOR.UnlockCursor();
 }
 
 void StageSelectScene::Event()
@@ -23,9 +24,6 @@ void StageSelectScene::Event()
 	//フェードインが終わってかつフェードアウトも終わったら
 	if (m_isSceneChangeReady)
 	{
-		// カーソル非表示
-		CURSOR.SetIsShowCursor(false);
-
 		SceneManager::Instance().SetNextScene
 		(
 			SceneManager::SceneType::Game
