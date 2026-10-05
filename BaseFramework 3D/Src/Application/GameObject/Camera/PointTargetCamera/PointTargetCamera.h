@@ -11,8 +11,9 @@ public:
 	void Init(Math::Vector3 targetPos);
 	void PostUpdate()		override;
 
-	//視点移動
-	void MoveCamera(Math::Vector3 move);
+	// 移動関連
+	void MoveCamera();
+	void RotateCamera();
 
 	//ターゲット関連
 	void SetTarget(Math::Vector3 target);

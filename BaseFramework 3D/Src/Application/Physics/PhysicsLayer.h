@@ -32,6 +32,18 @@ public:
 	}
 };
 
+// 地形（壁・床など）を除外して、編集対象オブジェクト（ピン・ギミック等）のみを検出するフィルター
+class NonGroundObjectFilter : public JPH::ObjectLayerFilter
+{
+public:
+	virtual bool ShouldCollide(JPH::ObjectLayer inLayer) const override
+	{
+		// 地形レイヤー以外のオブジェクト（ピン・ギミック・プレイヤー等）のみ true を返す
+		return inLayer != Layers::TERRAIN;
+	}
+
+};
+
 /// @brief 物理・ギミック用（センサーや不可視判定を除外したいレイキャスト用）
 class SolidOnlyObjectFilter : public JPH::ObjectLayerFilter
 {

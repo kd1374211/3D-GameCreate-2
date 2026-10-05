@@ -28,4 +28,8 @@ protected:
 
 	virtual void Init()override;
 
+	Math::Matrix SetRotationToCamera();
+
+	void UpdateRotate();
+
 };

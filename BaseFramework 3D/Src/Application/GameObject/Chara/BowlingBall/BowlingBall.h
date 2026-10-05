@@ -78,6 +78,9 @@ private:
 
 		// 引っ張り発射
 		static constexpr float ShootMinSpeed = 0.1f;
+
+		// 投げてからカメラ回転を再開するまでの時間
+		static constexpr float CameraUnlockTimeAfterThrow = 1.0f;
 	};
 
 	// 活性化・非活性化
@@ -125,6 +128,12 @@ private:
 	};
 	std::vector<SpeedStoreData> m_speedStoreData = {};
 	float m_totalStoredTime = 0.0f;
+
+	// 投げてからカメラの回転を解放しなおすまでの時間
+	float m_camUnlockTime = 0.0f;
+
+	// カメラのアンロック待ちか
+	bool m_isCamUnlockWait = false;
 	
 	//↓playerクラスから移行した
 

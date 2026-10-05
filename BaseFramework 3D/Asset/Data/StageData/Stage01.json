@@ -22,7 +22,7 @@
                     "type": "Goal"
                 },
                 {
-                    "modelPath": "Asset/Models/Terrain/StageGimmicks/RotatingWall2/RotatingWall2.gltf",
+                    "modelPath": "Asset/Models/Terrain/StageGimmicks/RotatingWall3/RotatingWall3.gltf",
                     "position": [
                         -0.4000000059604645,
                         0.0,
@@ -42,7 +42,7 @@
                     "type": "RotatingTerrain"
                 },
                 {
-                    "modelPath": "Asset/Models/Terrain/StageGimmicks/RotatingWall2/RotatingWall2.gltf",
+                    "modelPath": "Asset/Models/Terrain/StageGimmicks/RotatingWall3/RotatingWall3.gltf",
                     "position": [
                         0.4000000059604645,
                         0.0,
@@ -501,9 +501,9 @@
             "gimmicks": [
                 {
                     "position": [
-                        0.0,
+                        5.25,
                         -0.20000000298023224,
-                        9.399999618530273
+                        5.0
                     ],
                     "rotation": [
                         0.0,
@@ -511,9 +511,9 @@
                         0.0
                     ],
                     "scale": [
-                        0.5,
-                        0.25,
-                        0.5
+                        1.0,
+                        0.20000000298023224,
+                        1.5
                     ],
                     "type": "Goal"
                 }
@@ -522,9 +522,9 @@
                 {
                     "index": 0,
                     "position": [
-                        0.10000000149011612,
+                        3.5,
                         0.0,
-                        7.699999809265137
+                        5.0
                     ],
                     "rotation": [
                         0.0,
@@ -541,9 +541,9 @@
                 {
                     "index": 1,
                     "position": [
-                        0.30000001192092896,
+                        3.75,
                         0.0,
-                        7.699999809265137
+                        5.139999866485596
                     ],
                     "rotation": [
                         0.0,
@@ -560,9 +560,9 @@
                 {
                     "index": 2,
                     "position": [
-                        0.125,
-                        0.0,
-                        7.900000095367432
+                        3.75,
+                        2.384185791015625e-07,
+                        4.860000133514404
                     ],
                     "rotation": [
                         0.0,
@@ -579,9 +579,9 @@
                 {
                     "index": 3,
                     "position": [
-                        0.32499998807907104,
-                        0.0,
-                        7.900000095367432
+                        4.0,
+                        -2.384185791015625e-07,
+                        5.28000020980835
                     ],
                     "rotation": [
                         0.0,
@@ -598,9 +598,9 @@
                 {
                     "index": 4,
                     "position": [
-                        0.15000000596046448,
+                        4.0,
                         0.0,
-                        8.100000381469727
+                        5.0
                     ],
                     "rotation": [
                         0.0,
@@ -617,9 +617,9 @@
                 {
                     "index": 5,
                     "position": [
-                        0.3499999940395355,
+                        4.0,
                         0.0,
-                        8.100000381469727
+                        4.71999979019165
                     ],
                     "rotation": [
                         0.0,
@@ -636,9 +636,9 @@
                 {
                     "index": 6,
                     "position": [
-                        0.17499999701976776,
+                        4.25,
                         0.0,
-                        8.300000190734863
+                        5.420000076293945
                     ],
                     "rotation": [
                         0.0,
@@ -655,9 +655,9 @@
                 {
                     "index": 7,
                     "position": [
-                        0.375,
-                        0.0,
-                        8.300000190734863
+                        4.25,
+                        -2.384185791015625e-07,
+                        5.139999866485596
                     ],
                     "rotation": [
                         0.0,
@@ -674,9 +674,9 @@
                 {
                     "index": 8,
                     "position": [
-                        0.20000000298023224,
+                        4.25,
                         0.0,
-                        8.5
+                        4.860000133514404
                     ],
                     "rotation": [
                         0.0,
@@ -693,9 +693,9 @@
                 {
                     "index": 9,
                     "position": [
-                        0.4000000059604645,
-                        4.76837158203125e-07,
-                        8.5
+                        4.25,
+                        0.0,
+                        4.579999923706055
                     ],
                     "rotation": [
                         0.0,
@@ -712,9 +712,9 @@
             ],
             "player": {
                 "position": [
-                    0.0,
+                    -5.0,
                     0.10000000149011612,
-                    -9.399999618530273
+                    -4.400000095367432
                 ],
                 "rotation": [
                     0.0,
@@ -722,7 +722,7 @@
                     0.0
                 ]
             },
-            "terrainPath": "Asset/Models/Terrain/Stage01/Stage01.gltf"
+            "terrainPath": "Asset/Models/Terrain/Stage03/Stage03.gltf"
         },
         {
             "frameNumber": 1,

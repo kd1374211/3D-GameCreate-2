@@ -188,38 +188,36 @@ void KdDebugGUI::GuiProcess()
 				//取得成功時
 				if (camera)
 				{
-					Math::Vector3 currentView = camera->GetCurrentViewPoint();
-					Math::Vector3 move = Math::Vector3::Zero;
-
 					//カメラ移動
-					if (GetAsyncKeyState(VK_UP) & 0x8000)
+					camera->MoveCamera();
+					
+					// シフトを押している間は視点のY軸回転を認める
+					static bool isShift = false;
+					if (GetAsyncKeyState(VK_SHIFT) & 0x8000)
 					{
-						move.z += 1.0f;
-					}
-					if (GetAsyncKeyState(VK_DOWN) & 0x8000)
-					{
-						move.z -= 1.0f;
-					}
-					if (GetAsyncKeyState(VK_LEFT) & 0x8000)
-					{
-						move.x -= 1.0f;
-					}
-					if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
-					{
-						move.x += 1.0f;
-					}
-					if (GetAsyncKeyState('Z') & 0x8000)
-					{
-						move.y += 1.0f;
-					}
-					if (GetAsyncKeyState('X') & 0x8000)
-					{
-						move.y -= 1.0f;
-					}
+						// falseだった（このフレームで押された）場合カーソル非表示と固定
+						if (!isShift)
+						{
+							ShowCursor(false);
+							CURSOR.LockCursor();
+						}
 
-					move.Normalize();
-					move *= 0.2f;
-					camera->MoveCamera(currentView + move);
+						// PTカメラ内で回転をしてもらう
+						camera->RotateCamera();
+
+						isShift = true;
+					}
+					else
+					{
+						// trueだった（このフレームで離された）場合カーソル表示と移動フラグ
+						if (isShift)
+						{
+							ShowCursor(true);
+							CURSOR.UnlockCursor();
+						}
+
+						isShift = false;
+					}
 				}
 			}
 
@@ -866,7 +864,10 @@ void KdDebugGUI::GuiProcess()
 						rayCast.mDirection = JPH::Vec3(rayDir.x, rayDir.y, rayDir.z) * range; // 飛ばす長さ
 						GroundObjectFilter groundFilter;
 
-						// 位置情報からBodyIDを特定する
+						// DEBUG
+						AddLog("rayPos,%.2f,%.2f,%.2f\n", rayPos.x, rayPos.y, rayPos.z);
+						AddLog("rayDir,%.2f,%.2f,%.2f\n", rayDir.x, rayDir.y, rayDir.z);
+						
 						// 選択中の種類と Index から直接データを特定して移動
 						Math::Vector3 selectedObjectPos;
 						if (selectedCategory == SelectedTargetCategory::Gimmick)
@@ -891,9 +892,7 @@ void KdDebugGUI::GuiProcess()
 						JPH::BodyID targetBodyID;
 
 						// 選択中データの位置（Vector3）を Jolt Vec3 に変換
-						JPH::Vec3 pos(selectedObjectPos.x,
-							selectedObjectPos.y,
-							selectedObjectPos.z);
+						JPH::Vec3 pos(selectedObjectPos.x, selectedObjectPos.y, selectedObjectPos.z);
 
 						// 選択中の座標からわずかに広がった AABB（検索範囲）を作成
 						JPH::AABox searchBox(pos - JPH::Vec3::sReplicate(0.1f), pos + JPH::Vec3::sReplicate(0.1f));
@@ -906,12 +905,22 @@ void KdDebugGUI::GuiProcess()
 							std::vector<JPH::BodyID> m_hits;
 						};
 
-						SimpleCollector collector;
-						PHYSICSMGR.GetSystem().GetBroadPhaseQuery().CollideAABox(searchBox, collector);
+						// 1. 新しい専用フィルターの生成
+						NonGroundObjectFilter nonGroundFilter; // 地形レイヤーを指定
 
+						// 2. AABB内での BodyID 検索実行
+						SimpleCollector collector;
+						PHYSICSMGR.GetSystem().GetBroadPhaseQuery().CollideAABox(
+							searchBox,
+							collector,
+							{},               // BroadPhaseLayerFilter（空でOK）
+							nonGroundFilter   // 作成した地形除外フィルター
+						);
+
+						// 3. 地形が除外された状態で安全に BodyID を取得
 						if (!collector.m_hits.empty())
 						{
-							targetBodyID = collector.m_hits[0]; // 最も近い/最初に見つかったBody
+							targetBodyID = collector.m_hits[0];
 						}
 
 						// レイを飛ばす

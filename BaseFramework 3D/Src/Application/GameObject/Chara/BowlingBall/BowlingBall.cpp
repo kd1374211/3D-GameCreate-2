@@ -56,6 +56,9 @@ void BowlingBall::Init(float a_radius)
 
 void BowlingBall::Update()
 {
+	// ゲームタイム
+	float gameDt = SCENEMGR.GetDeltaGameTime();
+
 	// エディットモード中はプレイヤーの移動・操作・物理を停止
 	if (STAGEMGR.IsEditMode())
 	{
@@ -67,9 +70,6 @@ void BowlingBall::Update()
 	{
 		//移動不可ならリターン
 		if (!m_canRoll)return;
-
-		// ゲームタイム
-		float gameDt = SCENEMGR.GetDeltaGameTime();
 
 		// 操作関連
 		if (m_isInputEnabled)
@@ -142,6 +142,12 @@ void BowlingBall::Update()
 						// 速度と角度をもとに投げる
 						Throw(m_pos, direction, throwPower);
 
+						// カメラアンロック時間設定
+						m_camUnlockTime = BowlingBallConsts::CameraUnlockTimeAfterThrow;
+
+						// アンロック待ち状態に
+						m_isCamUnlockWait = true;
+
 						// 操作不可に
 						m_isInputEnabled = false;
 					}
@@ -193,6 +199,21 @@ void BowlingBall::Update()
 
 				// そこに指定
 				cursor->SetDrawPos(Math::Vector2(resultPos.x, resultPos.y));
+			}
+		}
+	}
+
+	// カメラの回転再開待ち時間減少
+	if (m_isCamUnlockWait)
+	{
+		m_camUnlockTime -= gameDt;
+
+		// 待ち時間が終わったらカメラの回転を再開
+		if (m_camUnlockTime <= 0.0f)
+		{
+			if (auto gameCam = m_wpCamera.lock())
+			{
+				gameCam->SetIsCamLocked(false);
 			}
 		}
 	}
@@ -327,6 +348,9 @@ void BowlingBall::Reset()
 	{
 		gameCam->SetIsCamLocked(false);
 	}
+
+	// 回転待ち状態ならオフに
+	m_isCamUnlockWait = false;
 
 	// パワーリセット
 	if (auto powerBar = m_wpPowerBar.lock())
