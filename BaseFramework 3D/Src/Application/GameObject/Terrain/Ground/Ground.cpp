@@ -19,8 +19,13 @@ Ground::Ground(std::string modelPath, Math::Vector3 pos, Math::Quaternion rot)
 	initData.restitution = 0.0f;
 	initData.userData = reinterpret_cast<JPH::uint64>(this);
 
+	// 壁用
+	WallInitData wallInit = {};
+	wallInit.friction = 0.05f;
+	wallInit.restitution = 0.8f;
+
 	// 🚀 ファイルパスを渡すだけで、ロードから Jolt への地形登録まで完結！
-	if (!m_cPhysics->Init(modelPath, initData)) {
+	if (!m_cPhysics->InitTerrainModel(modelPath, initData, wallInit)) {
 		// エラー処理
 	}
 

@@ -7,43 +7,52 @@
 
 void GameContactListener::OnContactAdded(const JPH::Body& inBody1, const JPH::Body& inBody2, const JPH::ContactManifold& inManifold, JPH::ContactSettings& ioSettings)
 {
-	// 衝突した2つのレイヤーを取得
+	// 1. 衝突した2つのレイヤーを取得
 	JPH::ObjectLayer layer1 = inBody1.GetObjectLayer();
 	JPH::ObjectLayer layer2 = inBody2.GetObjectLayer();
 
-	// ボディーを取得
+	// ボディーと SubShapeID を取得
 	const JPH::Body* body1 = &inBody1;
 	const JPH::Body* body2 = &inBody2;
+	JPH::SubShapeID subShapeID1 = inManifold.mSubShapeID1;
+	JPH::SubShapeID subShapeID2 = inManifold.mSubShapeID2;
 
 	// 衝突法線（初期値は Body1 -> Body2）
 	JPH::Vec3 normal = inManifold.mWorldSpaceNormal;
 
-	//番号が小さいレイヤーを基準にする
+	// 番号が小さいレイヤーを基準にする
 	if (layer1 > layer2)
 	{
 		std::swap(layer1, layer2);
 		std::swap(body1, body2);
+		std::swap(subShapeID1, subShapeID2); // ★ SubShapeID も入れ替えと連動させる
 
-		//法線反転
+		// 法線反転
 		normal = -normal;
 	}
 
-	// 2. 固定された body1 / body2 から事前キャスト
+	// 固定された body1 / body2 から事前キャスト
 	auto* gameObj1 = reinterpret_cast<KdGameObject*>(body1->GetUserData());
 	auto* gameObj2 = reinterpret_cast<KdGameObject*>(body2->GetUserData());
 
-	//// Terrain & Player
-	//if (layer1 == Layers::TERRAIN && layer2 == Layers::BOWLINGBALL)
-	//{
-	//	// ★ Y成分の絶対値が一定以下（＝水平に近い＝壁）の場合のみ通知
-	//	if (std::abs(normal.GetY()) < 0.3f)
-	//	{
-	//		if (auto player = dynamic_cast<Player*>(gameObj2))
-	//		{
-	//			player->OnHitWall(normal);
-	//		}
-	//	}
-	//}
+	// =================================================================
+	// Terrain & BowlingBall 判定部分（地形確定後に実行）
+	// =================================================================
+	if (layer1 == Layers::TERRAIN && layer2 == Layers::BOWLINGBALL)
+	{
+		// 地形（body1）と確定したため、swap対応済みの subShapeID1 から安全にマテリアルを取得
+		const JPH::PhysicsMaterial* hitMaterial = GetMaterialRecursively(body1->GetShape(), subShapeID1);
+
+		if (hitMaterial)
+		{
+			// カスタムマテリアルにキャストして物理係数（反発・摩擦）を上書き設定
+			if (auto* terrainMat = dynamic_cast<const TerrainPhysicsMaterial*>(hitMaterial))
+			{
+				ioSettings.mCombinedRestitution = terrainMat->GetRestitution();
+				ioSettings.mCombinedFriction = terrainMat->GetFriction();
+			}
+		}
+	}
 
 	// Finish & Player
 	if (layer1 == Layers::FINISHAREA && layer2 == Layers::BOWLINGBALL)
@@ -104,44 +113,52 @@ void GameContactListener::OnContactAdded(const JPH::Body& inBody1, const JPH::Bo
 
 void GameContactListener::OnContactPersisted(const JPH::Body& inBody1, const JPH::Body& inBody2, const JPH::ContactManifold& inManifold, JPH::ContactSettings& ioSettings)
 {
-	// 衝突した2つのレイヤーを取得
+	// 1. 衝突した2つのレイヤーを取得
 	JPH::ObjectLayer layer1 = inBody1.GetObjectLayer();
 	JPH::ObjectLayer layer2 = inBody2.GetObjectLayer();
 
-	// ボディーを取得
+	// ボディーと SubShapeID を取得
 	const JPH::Body* body1 = &inBody1;
 	const JPH::Body* body2 = &inBody2;
+	JPH::SubShapeID subShapeID1 = inManifold.mSubShapeID1;
+	JPH::SubShapeID subShapeID2 = inManifold.mSubShapeID2;
 
-	// 衝突法線（プレイヤーから見て押し返される向き）
+	// 衝突法線（初期値は Body1 -> Body2）
 	JPH::Vec3 normal = inManifold.mWorldSpaceNormal;
 
-	//番号が小さいレイヤーを基準にする
+	// 番号が小さいレイヤーを基準にする
 	if (layer1 > layer2)
 	{
 		std::swap(layer1, layer2);
 		std::swap(body1, body2);
+		std::swap(subShapeID1, subShapeID2); // ★ SubShapeID も入れ替えと連動させる
 
-		//法線反転
+		// 法線反転
 		normal = -normal;
 	}
 
-	// 2. 固定された body1 / body2 から事前キャスト
+	// 固定された body1 / body2 から事前キャスト
 	auto* gameObj1 = reinterpret_cast<KdGameObject*>(body1->GetUserData());
 	auto* gameObj2 = reinterpret_cast<KdGameObject*>(body2->GetUserData());
 
-	//// Terrain & Player
-	//if (layer1 == Layers::TERRAIN && layer2 == Layers::BOWLINGBALL)
-	//{
-	//	// ★ Y成分の絶対値が一定以下（＝水平に近い＝壁）の場合のみ通知
-	//	// std::abs(normal.GetY()) < 0.5f で約45度以上の急傾斜・壁を判別
-	//	if (std::abs(normal.GetY()) < 0.5f)
-	//	{
-	//		if (auto player = dynamic_cast<Player*>(gameObj2))
-	//		{
-	//			player->OnHitWall(normal);
-	//		}
-	//	}
-	//}
+	// =================================================================
+	// Terrain & BowlingBall 判定部分（地形確定後に実行）
+	// =================================================================
+	if (layer1 == Layers::TERRAIN && layer2 == Layers::BOWLINGBALL)
+	{
+		// 地形（body1）と確定したため、swap対応済みの subShapeID1 から安全にマテリアルを取得
+		const JPH::PhysicsMaterial* hitMaterial = GetMaterialRecursively(body1->GetShape(), subShapeID1);
+
+		if (hitMaterial)
+		{
+			// カスタムマテリアルにキャストして物理係数（反発・摩擦）を上書き設定
+			if (auto* terrainMat = dynamic_cast<const TerrainPhysicsMaterial*>(hitMaterial))
+			{
+				ioSettings.mCombinedRestitution = terrainMat->GetRestitution();
+				ioSettings.mCombinedFriction = terrainMat->GetFriction();
+			}
+		}
+	}
 
 	// Finish & Player
 	if (layer1 == Layers::FINISHAREA && layer2 == Layers::BOWLINGBALL)

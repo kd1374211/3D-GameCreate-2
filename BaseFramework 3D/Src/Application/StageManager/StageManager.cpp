@@ -273,8 +273,6 @@ void StageManager::RespawnStage_D(int laneNumber)
 void StageManager::SetMode(StageMode mode)
 {
 	m_mode = mode;
-
-	BuildStage();
 }
 
 void StageManager::Init()

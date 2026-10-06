@@ -27,6 +27,31 @@ struct PhysicsInitData {
 	uint64_t userData = 0;						//ユーザーデータ
 };
 
+// 壁用
+struct WallInitData
+{
+	//物理
+	float friction = 0.5f;						//摩擦力
+	float restitution = 0.5f;					//反発力
+};
+
+class TerrainPhysicsMaterial : public JPH::PhysicsMaterialSimple
+{
+public:
+	TerrainPhysicsMaterial(const std::string& inName, JPH::ColorArg inColor, float inRestitution, float inFriction)
+		: JPH::PhysicsMaterialSimple(inName, inColor)
+		, m_restitution(inRestitution)
+		, m_friction(inFriction)
+	{}
+
+	float GetRestitution() const { return m_restitution; }
+	float GetFriction() const { return m_friction; }
+
+private:
+	float m_restitution = 0.0f;
+	float m_friction = 0.2f;
+};
+
 class PhysicsComponent {
 public:
 
@@ -34,6 +59,7 @@ public:
 	~PhysicsComponent() { Release(); }
 
 	//新Init
+	bool InitTerrainModel(const std::string& path, PhysicsInitData initData, WallInitData wallPhysic);
 	bool Init(const std::string& path, PhysicsInitData initData);
 	void Init(float radius, PhysicsInitData initData);
 	void Init(const Math::Vector3& a_halfExtents, const PhysicsInitData& a_initData);

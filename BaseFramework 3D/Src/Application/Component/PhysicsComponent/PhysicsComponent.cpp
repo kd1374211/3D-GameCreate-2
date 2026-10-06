@@ -2,6 +2,248 @@
 #include "../../Physics/PhysicsManager.h"
 #include "../../../Framework/Direct3D/KdGLTFLoader.h"
 
+// 地形はこれでやる
+bool PhysicsComponent::InitTerrainModel(const std::string& path, PhysicsInitData initData, WallInitData wallPhysic)
+{
+	m_isStatic = initData.isStatic;
+	auto& bodyInterface = PHYSICSMGR.GetBodyInterface();
+
+	std::shared_ptr<KdGLTFModel> spModel = KdLoadGLTFModel(path);
+	if (!spModel) return false;
+
+	// =========================================================
+	// ステップ1: initData と wallPhysics から Jolt マテリアルを作成
+	// =========================================================
+
+	JPH::PhysicsMaterialList jphMaterials;
+
+	// 1-1. Ground用マテリアルの作成 (index 0)
+	JPH::RefConst<JPH::PhysicsMaterial> groundMat = new TerrainPhysicsMaterial(
+		"Ground",
+		JPH::Color::sGreen,
+		initData.restitution,
+		initData.friction
+	);
+	jphMaterials.push_back(groundMat); // Index 0: Ground
+
+	// 1-2. Wall用マテリアルの作成 (index 1)
+	JPH::RefConst<JPH::PhysicsMaterial> wallMat = new TerrainPhysicsMaterial(
+		"Wall",
+		JPH::Color::sRed,
+		wallPhysic.restitution,
+		wallPhysic.friction
+	);
+	jphMaterials.push_back(wallMat);  // Index 1: Wall
+
+	// 1-3. モデルのマテリアルインデックスから Jolt マテリアルID (0: Ground / 1: Wall) への変換テーブル
+	std::vector<uint32_t> modelMatToJphMatMap(spModel->Materials.size());
+
+	for (size_t i = 0; i < spModel->Materials.size(); ++i)
+	{
+		std::string matName = spModel->Materials[i].Name;
+		std::transform(matName.begin(), matName.end(), matName.begin(), ::tolower);
+
+		// 名前に "wall" が含まれていれば Wall用(1)、それ以外は Ground用(0)
+		if (matName.find("wall") != std::string::npos)
+		{
+			modelMatToJphMatMap[i] = 1; // Wall
+		}
+		else
+		{
+			modelMatToJphMatMap[i] = 0; // Ground
+		}
+	}
+
+	// =========================================================
+	// ステップ2: メッシュと面（Subsets）の構築（修正版）
+	// =========================================================
+
+	std::vector<Math::Vector3> allVertices;
+	std::vector<unsigned int>  allIndices;
+	std::vector<uint32_t> triangleMaterialIndices;
+
+	for (const auto& node : spModel->Nodes) {
+		if (!node.IsMesh) continue;
+		const auto& mesh = node.Mesh;
+		unsigned int vertexOffset = static_cast<unsigned int>(allVertices.size());
+
+		// 1. 頂点データの集約
+		for (const auto& vertex : mesh.Vertices) {
+			allVertices.push_back(vertex.Pos);
+		}
+
+		// 2. Subsets（マテリアルごとの面グループ）を巡回
+		for (const auto& subset : mesh.Subsets) {
+			// マテリアルインデックスの取得
+			int matIndex = subset.MaterialNo;
+
+			// 事前作成した変換テーブルから Ground(0) か Wall(1) かを取得
+			uint32_t jphMatIdx = 0;
+			if (matIndex >= 0 && matIndex < static_cast<int>(modelMatToJphMatMap.size())) {
+				jphMatIdx = modelMatToJphMatMap[matIndex];
+			}
+
+			// 該当サブセットの面（ポリゴン）を巡回
+			for (unsigned int f = 0; f < subset.FaceCount; ++f) {
+				unsigned int faceIndex = subset.FaceStart + f;
+
+				// 配列外参照の防止
+				if (faceIndex >= mesh.Faces.size()) break;
+
+				const auto& face = mesh.Faces[faceIndex];
+
+				allIndices.push_back(vertexOffset + face.Idx[0]);
+				allIndices.push_back(vertexOffset + face.Idx[1]);
+				allIndices.push_back(vertexOffset + face.Idx[2]);
+
+				// 追加した「三角形1つ」に対して「マテリアルID 1つ」を正確にプッシュ
+				triangleMaterialIndices.push_back(jphMatIdx);
+			}
+		}
+	}
+
+	if (allVertices.empty() || allIndices.empty()) return false;
+
+	JPH::VertexList jphVertices;
+	jphVertices.reserve(allVertices.size());
+	for (const auto& v : allVertices) {
+		jphVertices.push_back(JPH::Float3(v.x, v.y, v.z));
+	}
+
+	// 3. JPH::IndexedTriangleList にマテリアルインデックスを載せる
+	JPH::IndexedTriangleList jphTriangles;
+	jphTriangles.reserve(allIndices.size() / 3);
+	for (size_t i = 0; i < allIndices.size(); i += 3) {
+		uint32_t triIdx = static_cast<uint32_t>(i / 3);
+		uint32_t matIdx = (triIdx < triangleMaterialIndices.size()) ? triangleMaterialIndices[triIdx] : 0;
+
+		// IndexedTriangle の第4引数（inMaterialIndex）にマテリアルのインデックスを指定
+		jphTriangles.push_back(JPH::IndexedTriangle(
+			allIndices[i],
+			allIndices[i + 1],
+			allIndices[i + 2],
+			matIdx
+		));
+	}
+
+	JPH::ShapeRefC finalShape;
+
+	if (initData.motionType != JPH::EMotionType::Dynamic)
+	{
+		// ★ ポリゴンごとの JPH::PhysicsMaterialList を含めて MeshShapeSettings を作成
+		JPH::MeshShapeSettings meshSettings(jphVertices, jphTriangles, jphMaterials);
+
+		// 1. アクティブエッジ（Ghost Collision対策）の有効化設定
+		meshSettings.mActiveEdgeCosThresholdAngle = cosf(JPH::DegreesToRadians(50.0f));
+
+		// 2. 形状の生成
+		auto result = meshSettings.Create();
+		if (result.HasError()) return false;
+		finalShape = result.Get();
+	}
+	else
+	{
+		// 【Dynamic用】既存の CompoundShape 処理（変更なし）
+		JPH::StaticCompoundShapeSettings compoundSettings;
+
+		for (const auto& node : spModel->Nodes)
+		{
+			if (!node.IsMesh || node.Mesh.Vertices.empty()) continue;
+
+			std::vector<JPH::Vec3> nodeVertices;
+			nodeVertices.reserve(node.Mesh.Vertices.size());
+			for (const auto& v : node.Mesh.Vertices) {
+				nodeVertices.push_back(JPH::Vec3(v.Pos.x, v.Pos.y, v.Pos.z));
+			}
+
+			JPH::ConvexHullShapeSettings convexSettings(nodeVertices.data(), static_cast<int>(nodeVertices.size()));
+			JPH::Shape::ShapeResult subShapeResult = convexSettings.Create();
+
+			if (subShapeResult.IsValid())
+			{
+				compoundSettings.AddShape(
+					JPH::Vec3::sZero(),
+					JPH::Quat::sIdentity(),
+					subShapeResult.Get()
+				);
+			}
+		}
+
+		if (compoundSettings.mSubShapes.empty())
+		{
+			std::vector<JPH::Vec3> convexVertices;
+			convexVertices.reserve(allVertices.size());
+			for (const auto& v : allVertices) {
+				convexVertices.push_back(JPH::Vec3(v.x, v.y, v.z));
+			}
+			JPH::ConvexHullShapeSettings convexSettings(convexVertices.data(), static_cast<int>(convexVertices.size()));
+			finalShape = convexSettings.Create().Get();
+		}
+		else
+		{
+			JPH::Shape::ShapeResult result = compoundSettings.Create();
+			if (result.HasError()) return false;
+			finalShape = result.Get();
+		}
+	}
+
+	JPH::Vec3 jphScale(initData.scale.x, initData.scale.y, initData.scale.z);
+
+	if (jphScale != JPH::Vec3::sReplicate(1.0f))
+	{
+		JPH::ScaledShapeSettings scaledSettings(finalShape, jphScale);
+		auto scaledResult = scaledSettings.Create();
+		if (scaledResult.HasError()) return false;
+
+		finalShape = scaledResult.Get();
+	}
+
+	JPH::BodyCreationSettings creationSettings(
+		finalShape,
+		JPH::RVec3(initData.pos.x, initData.pos.y, initData.pos.z),
+		JPH::Quat(initData.rot.x, initData.rot.y, initData.rot.z, initData.rot.w),
+		initData.motionType,
+		initData.layer
+	);
+
+	creationSettings.mOverrideMassProperties = JPH::EOverrideMassProperties::CalculateInertia;
+	creationSettings.mMassPropertiesOverride.mMass = initData.mass;
+	creationSettings.mMotionQuality = initData.motionQuality;
+	creationSettings.mUserData = initData.userData;
+	creationSettings.mIsSensor = initData.isSensor;
+	creationSettings.mFriction = initData.friction;
+	creationSettings.mRestitution = initData.restitution;
+	creationSettings.mLinearDamping = initData.linearDamping;
+	creationSettings.mAngularDamping = initData.angularDamping;
+
+	m_bodyID = bodyInterface.CreateAndAddBody(
+		creationSettings,
+		initData.isStatic ? JPH::EActivation::DontActivate : JPH::EActivation::Activate
+	);
+
+	// InitTerrainModel の末尾（return true; の直前）に追加（クラッシュ回避版）
+	const JPH::Shape* pShape = bodyInterface.GetShape(m_bodyID);
+	if (pShape)
+	{
+		// ScaledShape の場合は内部の元 Shape を取得
+		if (pShape->GetSubType() == JPH::EShapeSubType::Scaled)
+		{
+			pShape = static_cast<const JPH::ScaledShape*>(pShape)->GetInnerShape();
+		}
+
+		// Shape が MeshShape であれば安全にチェック
+		if (pShape && pShape->GetSubType() == JPH::EShapeSubType::Mesh)
+		{
+			const auto* meshShape = static_cast<const JPH::MeshShape*>(pShape);
+
+			// SubShapeID 経由ではなく、内部に登録されているマテリアルリストを直接安全に確認
+			KdDebugGUI::Instance().AddLog("[Build] MeshShape successfully created.\n");
+		}
+	}
+
+	return true;
+}
+
 // 1. モデル版 Init
 bool PhysicsComponent::Init(const std::string& path, PhysicsInitData initData)
 {
