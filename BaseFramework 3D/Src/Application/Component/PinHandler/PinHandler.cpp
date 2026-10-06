@@ -35,12 +35,6 @@ void PinHandler::CreatePinPool(PinType type, size_t amount)
 
 void PinHandler::DespawnAllPins()
 {
-	// 全てのピンを見て非活性化させる
-	//for (const auto& pin : m_pinPool[type])
-	//{
-	//	pin->Despawn();
-	//}
-
 	// 全てのアクティブなピンを見てデスポーン
 	for (const auto& wpPin : m_activePins)
 	{

@@ -31,6 +31,9 @@ void PinBase::Update()
 
 void PinBase::PostUpdate()
 {
+	// DEBUG 
+	KdDebugGUI::Instance().AddLog("Pin ID : %d, IsFallen : %d, Pos : %.2f,%.2f,%.2f\n", m_pinIndex, m_isFallen, m_pos.x, m_pos.y, m_pos.z);
+
 	// 非活性状態ならリターン
 	if (!m_isActive) return;
 
@@ -51,9 +54,6 @@ void PinBase::PostUpdate()
 	{
 		m_isFallen = true;
 	}
-
-	// DEBUG 
-	KdDebugGUI::Instance().AddLog("Pin ID : %d, IsFallen : %d\n", m_pinIndex, m_isFallen);
 
 	// Matrix更新
 	Math::Matrix trans = Math::Matrix::CreateTranslation(m_pos);
@@ -130,6 +130,9 @@ void PinBase::Despawn()
 {
 	// もし非活性状態ならリターン
 	if (!m_isActive)return;
+
+	// 0.一応当たらない位置に飛ばす
+	SetPos(PinBaseConsts::InactivePinPos);
 
 	// 1.念のためリセット
 	Reset();

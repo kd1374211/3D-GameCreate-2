@@ -56,6 +56,9 @@ protected:
 
 		// 倒れた扱いにする距離
 		static constexpr float DistanceCountAsFallen = 7.5f;
+
+		// デスポーン時に遠くに配置しておく
+		static constexpr Math::Vector3 InactivePinPos = Math::Vector3(0.0f, 100.0f, 0.0f);
 	};
 
 	virtual void Init()override;
