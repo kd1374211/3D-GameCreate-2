@@ -47,6 +47,8 @@ public:
 		m_wpHitObjectList.push_back(object);
 	}
 
+	const void SetDegAng(Math::Vector3 degAng) { m_DegAng = degAng; }
+
 	//追加8/25
 	//これに設定
 	void SetIsDefault(bool flg) { m_isDefault = flg; }

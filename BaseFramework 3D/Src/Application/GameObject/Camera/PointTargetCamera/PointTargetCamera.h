@@ -18,6 +18,7 @@ public:
 	//ターゲット関連
 	void SetTarget(Math::Vector3 target);
 	void SetViewPoint(Math::Vector3 point);
+	void MoveTargetPoint(Math::Vector3 target);
 
 	// ゲッター
 	Math::Vector3 GetCurrentViewPoint()const { return m_viewPoint; }

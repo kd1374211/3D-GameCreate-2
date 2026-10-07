@@ -93,3 +93,10 @@ void PointTargetCamera::SetViewPoint(Math::Vector3 point)
 {
 	m_viewPoint = point;
 }
+
+void PointTargetCamera::MoveTargetPoint(Math::Vector3 target)
+{
+	SetTarget(target);
+	SetViewPoint(target + Math::Vector3(0, 0.7f, -3.0f));
+	m_DegAng = Math::Vector3::Zero;
+}

@@ -9,7 +9,7 @@ struct FinishAreaParams
 
 struct RotatingParams
 {
-	std::string m_modelPath = "";
+	std::string m_modelPath = "Asset/Models/Terrain/StageGimmicks/RotatingWall1/RotatingWall1.gltf";
 	float m_rotateSpeed = 1.0f;
 };
 

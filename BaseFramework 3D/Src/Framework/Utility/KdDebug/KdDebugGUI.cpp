@@ -178,6 +178,9 @@ void KdDebugGUI::GuiProcess()
 		std::weak_ptr<CameraBase> parent = CAMERAMGR.GetDebugCamera();
 		std::shared_ptr<PointTargetCamera> camera;
 
+		// ステージデータ取得
+		auto& stageData = STAGEMGR.WorkStageData();
+
 		// 入力中はストップ
 		if (!ImGui::GetIO().WantCaptureKeyboard)
 		{
@@ -265,6 +268,25 @@ void KdDebugGUI::GuiProcess()
 					{
 						// 内部インデックス(0〜9)をそのまま渡す
 						STAGEMGR.BuildStage(currentLaneNo);
+
+						// PTカメラの位置をプレイヤー位置へ
+						// カメラ取得
+						std::weak_ptr<CameraBase> parent = CAMERAMGR.GetDebugCamera();
+						std::shared_ptr<PointTargetCamera> camera;
+
+						if (!parent.expired())
+						{
+							camera = std::dynamic_pointer_cast<PointTargetCamera>(parent.lock());
+
+							//取得成功時
+							if (camera)
+							{
+								// プレイヤー座標取得
+								const auto playerPos = stageData.m_stageLaneData[currentLaneNo].m_playerData.m_position;
+
+								camera->MoveTargetPoint(playerPos);
+							}
+						}
 					}
 				}
 
@@ -302,6 +324,25 @@ void KdDebugGUI::GuiProcess()
 					{
 						// 計算不要でそのままインデックスを渡す
 						STAGEMGR.BuildStage(currentLaneNo);
+
+						// PTカメラの位置をプレイヤー位置へ
+						// カメラ取得
+						std::weak_ptr<CameraBase> parent = CAMERAMGR.GetDebugCamera();
+						std::shared_ptr<PointTargetCamera> camera;
+
+						if (!parent.expired())
+						{
+							camera = std::dynamic_pointer_cast<PointTargetCamera>(parent.lock());
+
+							//取得成功時
+							if (camera)
+							{
+								// プレイヤー座標取得
+								const auto playerPos = stageData.m_stageLaneData[currentLaneNo].m_playerData.m_position;
+
+								camera->MoveTargetPoint(playerPos);
+							}
+						}
 					}
 				}
 
@@ -390,9 +431,6 @@ void KdDebugGUI::GuiProcess()
 				std::string text = "Copy Lane " + std::to_string(currentLaneNo + 1) + " to Lane " + std::to_string(copyLaneNo + 1);
 				if (ImGui::Button(text.c_str(), ImVec2(180, 30)))
 				{
-					// データ取得
-					auto& stageData = STAGEMGR.WorkStageData();
-
 					// コピペ
 					stageData.m_stageLaneData[copyLaneNo] = stageData.m_stageLaneData[currentLaneNo];
 
@@ -426,7 +464,6 @@ void KdDebugGUI::GuiProcess()
 			static SelectedTargetCategory selectedCategory = SelectedTargetCategory::None;
 			static int selectedIndex = -1;
 
-			auto& stageData = STAGEMGR.WorkStageData();
 			auto& currentFrame = stageData.m_stageLaneData[currentLaneNo];
 
 			// --- A. StageEdit 直下で選択状態の変化をまとめて監視する変数 ---
@@ -564,8 +601,6 @@ void KdDebugGUI::GuiProcess()
 
 						// デフォルトの回転パラメータを設定
 						RotatingParams rotParam;
-						rotParam.m_modelPath = ""; // デフォルトのモデルパス
-						rotParam.m_rotateSpeed = 1.0f;
 						newGimmick.m_param = rotParam;
 
 						gimmicks.push_back(newGimmick);

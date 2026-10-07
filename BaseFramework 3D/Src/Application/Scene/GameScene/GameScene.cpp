@@ -379,9 +379,6 @@ void GameScene::Init()
 	// ピンプール用意
 	STAGEMGR.CreatePinPool();
 
-	// レーン生成
-	SetUpLane();
-
 	//カメラとプレイヤー生成
 	std::shared_ptr<TPSCamera> camera = std::make_shared<TPSCamera>();
 	camera->Init();
@@ -393,9 +390,12 @@ void GameScene::Init()
 	//リンク
 	camera->SetTarget(m_cCharaHandler->GetPlayerBall());
 	m_cCharaHandler->GetPlayerBall()->SetCamera(camera);
-	
+
 	//追加
 	AddObject(camera);
+
+	// レーン生成
+	SetUpLane();
 	
 	//UI
 	std::shared_ptr<GameUIObjects> UIObj = std::make_shared<GameUIObjects>();

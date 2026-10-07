@@ -221,23 +221,22 @@ void BowlingBall::Update()
 
 void BowlingBall::PostUpdate()
 {
-	// エディットモード中はプレイヤーの移動・操作・物理を停止
-	if (STAGEMGR.IsEditMode())
+	// エディットモード中はプレイヤーの物理を停止
+	if (!STAGEMGR.IsEditMode())
 	{
-		return;
-	}
+		// 1. 物理座標の同期（Joltから最新座標を反映）
+		m_cPhysics->Sync(m_pos, m_rot);
 
-	// 1. 物理座標の同期（Joltから最新座標を反映）
-	m_cPhysics->Sync(m_pos, m_rot);
+		// 落下チェック
+		if (m_pos.y < STAGEMGR.GetStageInfo()->m_fallOutLine)
+		{
+			m_isRolling = false;
+			m_reason = RollEndReason::Fall;
 
-	// 落下チェック
-	if (m_pos.y < STAGEMGR.GetStageInfo()->m_fallOutLine)
-	{
-		m_isRolling = false;
-		m_reason = RollEndReason::Fall;
-
-		// Stop
-		DeactivateBody();
+			// Stop
+			DeactivateBody();
+			m_isDraw = false;
+		}
 	}
 
 	// 1. 回転
@@ -294,11 +293,17 @@ void BowlingBall::DrawUnLit()
 
 void BowlingBall::DrawLit()
 {
+	// 描画しないならスキップ
+	if (!m_isDraw)return;
+
 	KdShaderManager::Instance().m_StandardShader.DrawModel(*m_model, m_mWorld);
 }
 
 void BowlingBall::GenerateDepthMapFromLight()
 {
+	// 描画しないならスキップ
+	if (!m_isDraw)return;
+
 	KdShaderManager::Instance().m_StandardShader.DrawModel(*m_model, m_mWorld);
 }
 
@@ -340,6 +345,7 @@ void BowlingBall::Reset()
 	m_isInputEnabled = false;
 	m_reason = RollEndReason::None;
 	m_stopTimer = 0.0f;
+	m_isDraw = true;
 
 	// マウス関連のリセット
 	m_isShootStart = false;
@@ -385,6 +391,7 @@ void BowlingBall::Respawn(const Math::Vector3& pos, const Math::Vector3& rot)
 	if (auto gameCam = m_wpCamera.lock())
 	{
 		gameCam->SetRotationYMatrix(Math::Matrix::CreateFromQuaternion(quat));
+		gameCam->SetDegAng(rot);
 	}
 }
 

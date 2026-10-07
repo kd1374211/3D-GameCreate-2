@@ -19,12 +19,17 @@ RotatingTerrain::RotatingTerrain(std::string modelPath, Math::Vector3 pos, Math:
 	initData.motionType = JPH::EMotionType::Kinematic;
 	initData.isStatic = false;
 	initData.layer = Layers::TERRAIN;
-	initData.friction = 0.05f;
-	initData.restitution = 0.0f;
+	initData.friction = MatPhysicsConst::Friction[(size_t)PhysicMaterials::NormalGround];
+	initData.restitution = MatPhysicsConst::Restitution[(size_t)PhysicMaterials::NormalGround];
 	initData.userData = reinterpret_cast<JPH::uint64>(this);
 
+	// 壁用
+	WallInitData wallData = {};
+	wallData.friction = MatPhysicsConst::Friction[(size_t)PhysicMaterials::NormalWall];
+	wallData.restitution = MatPhysicsConst::Restitution[(size_t)PhysicMaterials::NormalWall];
+
 	// 🚀 ファイルパスを渡すだけで、ロードから Jolt への地形登録まで完結！
-	if (!m_cPhysics->Init(modelPath, initData)) {
+	if (!m_cPhysics->InitTerrainModel(modelPath, initData, wallData)) {
 		// エラー処理
 	}
 

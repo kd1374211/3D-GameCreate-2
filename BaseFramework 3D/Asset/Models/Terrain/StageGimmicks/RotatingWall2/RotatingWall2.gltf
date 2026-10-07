@@ -15,27 +15,40 @@
 	"nodes":[
 		{
 			"mesh":0,
-			"name":"Cube.002"
+			"name":"Cube"
 		}
 	],
 	"materials":[
 		{
 			"doubleSided":true,
-			"name":"Material.024",
+			"name":"Wood_Ground",
+			"normalTexture":{
+				"index":0
+			},
 			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					0.2663556635379791,
-					0.07818742841482162,
-					0.012983033433556557,
-					1
-				],
+				"baseColorTexture":{
+					"index":1
+				},
+				"metallicFactor":0
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"Wood_Wall",
+			"normalTexture":{
+				"index":2
+			},
+			"pbrMetallicRoughness":{
+				"baseColorTexture":{
+					"index":3
+				},
 				"metallicFactor":0
 			}
 		}
 	],
 	"meshes":[
 		{
-			"name":"Cube",
+			"name":"Cube.001",
 			"primitives":[
 				{
 					"attributes":{
@@ -45,22 +58,61 @@
 					},
 					"indices":3,
 					"material":0
+				},
+				{
+					"attributes":{
+						"POSITION":4,
+						"NORMAL":5,
+						"TEXCOORD_0":6
+					},
+					"indices":7,
+					"material":1
 				}
 			]
+		}
+	],
+	"textures":[
+		{
+			"sampler":0,
+			"source":0
+		},
+		{
+			"sampler":0,
+			"source":1
+		},
+		{
+			"sampler":0,
+			"source":0
+		},
+		{
+			"sampler":0,
+			"source":1
+		}
+	],
+	"images":[
+		{
+			"mimeType":"image/png",
+			"name":"WoodenWall_Normal",
+			"uri":"WoodenWall_Normal.png"
+		},
+		{
+			"mimeType":"image/png",
+			"name":"WoodenWall",
+			"uri":"WoodenWall.png"
 		}
 	],
 	"accessors":[
 		{
 			"bufferView":0,
 			"componentType":5126,
-			"count":38,
+			"count":8,
 			"max":[
-				0.5,
-				0.20000004768371582,
-				0.4999999701976776
+				0.050000011920928955,
+				0.19999998807907104,
+				0.5
 			],
 			"min":[
-				-0.5,
+				-0.050000011920928955,
 				0,
 				-0.5
 			],
@@ -69,51 +121,115 @@
 		{
 			"bufferView":1,
 			"componentType":5126,
-			"count":38,
+			"count":8,
 			"type":"VEC3"
 		},
 		{
 			"bufferView":2,
 			"componentType":5126,
-			"count":38,
+			"count":8,
 			"type":"VEC2"
 		},
 		{
 			"bufferView":3,
 			"componentType":5123,
-			"count":132,
+			"count":12,
+			"type":"SCALAR"
+		},
+		{
+			"bufferView":4,
+			"componentType":5126,
+			"count":16,
+			"max":[
+				0.050000011920928955,
+				0.19999998807907104,
+				0.5
+			],
+			"min":[
+				-0.050000011920928955,
+				0,
+				-0.5
+			],
+			"type":"VEC3"
+		},
+		{
+			"bufferView":5,
+			"componentType":5126,
+			"count":16,
+			"type":"VEC3"
+		},
+		{
+			"bufferView":6,
+			"componentType":5126,
+			"count":16,
+			"type":"VEC2"
+		},
+		{
+			"bufferView":7,
+			"componentType":5123,
+			"count":24,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":456,
+			"byteLength":96,
 			"byteOffset":0,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":456,
-			"byteOffset":456,
+			"byteLength":96,
+			"byteOffset":96,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":304,
-			"byteOffset":912,
+			"byteLength":64,
+			"byteOffset":192,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":264,
-			"byteOffset":1216,
+			"byteLength":24,
+			"byteOffset":256,
 			"target":34963
+		},
+		{
+			"buffer":0,
+			"byteLength":192,
+			"byteOffset":280,
+			"target":34962
+		},
+		{
+			"buffer":0,
+			"byteLength":192,
+			"byteOffset":472,
+			"target":34962
+		},
+		{
+			"buffer":0,
+			"byteLength":128,
+			"byteOffset":664,
+			"target":34962
+		},
+		{
+			"buffer":0,
+			"byteLength":48,
+			"byteOffset":792,
+			"target":34963
+		}
+	],
+	"samplers":[
+		{
+			"magFilter":9729,
+			"minFilter":9987
 		}
 	],
 	"buffers":[
 		{
-			"byteLength":1480,
+			"byteLength":840,
 			"uri":"RotatingWall2.bin"
 		}
 	]

@@ -111,6 +111,9 @@ private:
 	// 転がり開始か
 	bool m_canRoll = false;
 
+	// 描画するか
+	bool m_isDraw = true;
+
 	// 物理コンポーネント
 	std::shared_ptr<PhysicsComponent> m_cPhysics;
 

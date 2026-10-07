@@ -1,6 +1,20 @@
 ﻿#pragma once
 #include "../../Component/PhysicsComponent/PhysicsComponent.h"
 
+enum class PhysicMaterials
+{
+	NormalGround,
+	NormalWall,
+	Number
+};
+
+// マテリアル毎の物理ステータス
+struct MatPhysicsConst
+{
+	static constexpr float Friction[(size_t)PhysicMaterials::Number] = { 0.05f,0.05f };
+	static constexpr float Restitution[(size_t)PhysicMaterials::Number] = { 0.1f,0.9f };
+};
+
 class TerrainBase :public KdGameObject
 {
 public:

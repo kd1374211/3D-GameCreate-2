@@ -102,6 +102,9 @@ void ScoreHandler::CreateGameResult(ScoreDatas::GameResult& result)
 		// スペア確認用
 		int totalFallenPin = 0;
 
+		// ストライクかの確認
+		bool isStrike = true;
+
 		// j回繰り返し
 		for (int j = 0; j < (i == BowlingSystemConsts::LastFrame ? BowlingSystemConsts::MaxThrowCount_LastFrame : BowlingSystemConsts::MaxThrowCount_NotLastFrame); j++)
 		{
@@ -111,18 +114,32 @@ void ScoreHandler::CreateGameResult(ScoreDatas::GameResult& result)
 			// 無効値でないか確認
 			if (fallenPin != ScoreHandlerConsts::EmptyDataID)
 			{
-				// 10本ならストライク
+				// 10本かどうか
 				if (fallenPin == BowlingSystemConsts::PinCount)
 				{
-					data.m_throwRecord.push_back("X");
+					// ストライクフラグを確認
+					if (isStrike)
+					{
+						data.m_throwRecord.push_back("X");
+					}
+					else
+					{
+						data.m_throwRecord.push_back("/");
+					}
 
 					// 一応合計本数リセット
 					totalFallenPin = 0;
+
+					// ストライクフラグ回復
+					isStrike = true;
 				}
 				else
 				{
 					// 合計本数追加
 					totalFallenPin += fallenPin;
+
+					// ストライクではない
+					isStrike = false;
 
 					// 合計本数が10を超えたらスペア
 					if (totalFallenPin >= 10)
@@ -131,6 +148,9 @@ void ScoreHandler::CreateGameResult(ScoreDatas::GameResult& result)
 
 						// 合計本数リセット
 						totalFallenPin = 0;
+
+						// ストライクフラグ回復
+						isStrike = true;
 					}
 					// でないなら倒した本数そのまま
 					else

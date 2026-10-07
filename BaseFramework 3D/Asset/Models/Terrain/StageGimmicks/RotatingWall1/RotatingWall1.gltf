@@ -8,39 +8,47 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				0,
-				1
+				0
 			]
 		}
 	],
 	"nodes":[
 		{
 			"mesh":0,
-			"name":"Cube"
-		},
-		{
-			"mesh":1,
-			"name":"Cube.001"
+			"name":"Cube.002"
 		}
 	],
 	"materials":[
 		{
 			"doubleSided":true,
-			"name":"Material.024",
+			"name":"Wood_Ground",
+			"normalTexture":{
+				"index":0
+			},
 			"pbrMetallicRoughness":{
-				"baseColorFactor":[
-					0.2663556635379791,
-					0.07818742841482162,
-					0.012983033433556557,
-					1
-				],
+				"baseColorTexture":{
+					"index":1
+				},
+				"metallicFactor":0
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"Wood_Wall",
+			"normalTexture":{
+				"index":2
+			},
+			"pbrMetallicRoughness":{
+				"baseColorTexture":{
+					"index":3
+				},
 				"metallicFactor":0
 			}
 		}
 	],
 	"meshes":[
 		{
-			"name":"Cube.001",
+			"name":"Cube",
 			"primitives":[
 				{
 					"attributes":{
@@ -50,135 +58,178 @@
 					},
 					"indices":3,
 					"material":0
-				}
-			]
-		},
-		{
-			"name":"Cube.002",
-			"primitives":[
+				},
 				{
 					"attributes":{
 						"POSITION":4,
 						"NORMAL":5,
 						"TEXCOORD_0":6
 					},
-					"indices":3,
-					"material":0
+					"indices":7,
+					"material":1
 				}
 			]
+		}
+	],
+	"textures":[
+		{
+			"sampler":0,
+			"source":0
+		},
+		{
+			"sampler":0,
+			"source":1
+		},
+		{
+			"sampler":0,
+			"source":0
+		},
+		{
+			"sampler":0,
+			"source":1
+		}
+	],
+	"images":[
+		{
+			"mimeType":"image/png",
+			"name":"WoodenWall_Normal",
+			"uri":"WoodenWall_Normal.png"
+		},
+		{
+			"mimeType":"image/png",
+			"name":"WoodenWall",
+			"uri":"WoodenWall.png"
 		}
 	],
 	"accessors":[
 		{
 			"bufferView":0,
 			"componentType":5126,
-			"count":46,
+			"count":68,
 			"max":[
-				-0.1499999761581421,
+				0.5,
 				0.20000004768371582,
-				0.5
+				0.4999999701976776
 			],
 			"min":[
-				-0.5000001788139343,
+				-0.5,
 				0,
-				-0.5000000596046448
+				-0.5
 			],
 			"type":"VEC3"
 		},
 		{
 			"bufferView":1,
 			"componentType":5126,
-			"count":46,
+			"count":68,
 			"type":"VEC3"
 		},
 		{
 			"bufferView":2,
 			"componentType":5126,
-			"count":46,
+			"count":68,
 			"type":"VEC2"
 		},
 		{
 			"bufferView":3,
 			"componentType":5123,
-			"count":132,
+			"count":180,
 			"type":"SCALAR"
 		},
 		{
 			"bufferView":4,
 			"componentType":5126,
-			"count":46,
+			"count":48,
 			"max":[
-				0.5000001192092896,
+				0.5,
 				0.20000004768371582,
-				0.5000000596046448
+				0.4999999701976776
 			],
 			"min":[
-				0.15000003576278687,
+				-0.5,
 				0,
-				-0.4999999701976776
+				-0.5
 			],
 			"type":"VEC3"
 		},
 		{
 			"bufferView":5,
 			"componentType":5126,
-			"count":46,
+			"count":48,
 			"type":"VEC3"
 		},
 		{
 			"bufferView":6,
 			"componentType":5126,
-			"count":46,
+			"count":48,
 			"type":"VEC2"
+		},
+		{
+			"bufferView":7,
+			"componentType":5123,
+			"count":72,
+			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":552,
+			"byteLength":816,
 			"byteOffset":0,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":552,
-			"byteOffset":552,
+			"byteLength":816,
+			"byteOffset":816,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":368,
-			"byteOffset":1104,
+			"byteLength":544,
+			"byteOffset":1632,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":264,
-			"byteOffset":1472,
+			"byteLength":360,
+			"byteOffset":2176,
 			"target":34963
 		},
 		{
 			"buffer":0,
-			"byteLength":552,
-			"byteOffset":1736,
+			"byteLength":576,
+			"byteOffset":2536,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":552,
-			"byteOffset":2288,
+			"byteLength":576,
+			"byteOffset":3112,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":368,
-			"byteOffset":2840,
+			"byteLength":384,
+			"byteOffset":3688,
 			"target":34962
+		},
+		{
+			"buffer":0,
+			"byteLength":144,
+			"byteOffset":4072,
+			"target":34963
+		}
+	],
+	"samplers":[
+		{
+			"magFilter":9729,
+			"minFilter":9987
 		}
 	],
 	"buffers":[
 		{
-			"byteLength":3208,
+			"byteLength":4216,
 			"uri":"RotatingWall1.bin"
 		}
 	]
