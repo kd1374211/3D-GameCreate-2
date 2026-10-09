@@ -2,12 +2,23 @@
 	"Effects": [
 		{
 			"effectID": 0,
-			"texPath": "Asset/Textures/Effect/PinHit/PinHitCloud.png",
-			"splitX": 7,
+			"texPath": "Asset/Textures/Effect/PinHit/PinHitImpact2.png",
+			"pivotType": 12,
+			"splitX": 5,
 			"splitY": 1,
-			"scale": 1.2,
-			"animSpeed": 28.0,
+			"scale": 0.5,
+			"animSpeed": 12.5,
 			"isLoop": false
+		},
+		{
+			"effectID": 1,
+			"texPath": "Asset/Textures/Effect/Confetti/RandomColoredSquare.png",
+			"pivotType": 11,
+			"splitX": 1,
+			"splitY": 1,
+			"scale": 0.2,
+			"animSpeed": 1.0,
+			"isLoop": true
 		}
 	]
 }

@@ -13,6 +13,7 @@
 #include "../../Component/ScoreHandler/ScoreHandler.h"
 #include "../../UserSave/UserSaveManager.h"
 #include "../../Cursor/CursorManager.h"
+#include "../../GameObject/Effect/EffectManager.h"
 
 void GameScene::Event()
 {
@@ -343,6 +344,12 @@ void GameScene::EndRolling()
 	{
 		m_wpUI.lock()->SpawnThrowResultText(fallenPins, mark);
 	}
+
+	//// ストライクならスポナー召喚
+	//if (mark == FrameMark::Strike)
+	//{
+	//	EFFECTMGR.SpawnEffect(Math::Vector3::Zero, EffectType::Confetti);
+	//}
 }
 
 void GameScene::Init()

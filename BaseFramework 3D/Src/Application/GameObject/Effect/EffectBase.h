@@ -26,10 +26,11 @@ protected:
 	// 位置
 	Math::Vector3 m_pos = Math::Vector3::Zero;
 
+	// 回転
+	Math::Vector3 m_rot = Math::Vector3::Zero;
+
 	virtual void Init()override;
 
-	Math::Matrix SetRotationToCamera();
-
-	void UpdateRotate();
+	const Math::Matrix& SetRotationToCamera();
 
 };

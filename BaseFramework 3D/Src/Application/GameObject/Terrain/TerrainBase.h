@@ -12,7 +12,7 @@ enum class PhysicMaterials
 struct MatPhysicsConst
 {
 	static constexpr float Friction[(size_t)PhysicMaterials::Number] = { 0.05f,0.05f };
-	static constexpr float Restitution[(size_t)PhysicMaterials::Number] = { 0.1f,0.9f };
+	static constexpr float Restitution[(size_t)PhysicMaterials::Number] = { 0.0f,0.9f };
 };
 
 class TerrainBase :public KdGameObject

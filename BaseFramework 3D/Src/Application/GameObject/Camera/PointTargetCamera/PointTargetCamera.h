@@ -21,7 +21,7 @@ public:
 	void MoveTargetPoint(Math::Vector3 target);
 
 	// ゲッター
-	Math::Vector3 GetCurrentViewPoint()const { return m_viewPoint; }
+	const Math::Vector3& GetCurrentViewPoint()const { return m_viewPoint; }
 
 private:
 

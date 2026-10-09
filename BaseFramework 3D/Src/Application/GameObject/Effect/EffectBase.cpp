@@ -39,6 +39,7 @@ void EffectBase::PreDraw()
 
 	// マトリックス設定
 	Math::Matrix scale = Math::Matrix::CreateScale(m_data.m_scale);
+	rotat *= Math::Matrix::CreateFromYawPitchRoll(m_rot);
 	Math::Matrix trans = Math::Matrix::CreateTranslation(m_pos);
 	m_mWorld = scale * rotat * trans;
 }
@@ -56,7 +57,7 @@ void EffectBase::Init()
 {
 }
 
-Math::Matrix EffectBase::SetRotationToCamera()
+const Math::Matrix& EffectBase::SetRotationToCamera()
 {
 	Math::Matrix rot = Math::Matrix::Identity;
 
@@ -68,9 +69,4 @@ Math::Matrix EffectBase::SetRotationToCamera()
 	}
 
 	return rot;
-}
-
-void EffectBase::UpdateRotate()
-{
-	
 }

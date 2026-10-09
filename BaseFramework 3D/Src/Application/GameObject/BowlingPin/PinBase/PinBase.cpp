@@ -176,7 +176,7 @@ void PinBase::OnHitByPlayer(JPH::Vec3 vel)
 	m_pendingVelocity = vel * PinBaseConsts::OnHitVelocityMulti;
 
 	// インパクト召喚
-	EFFECTMGR.SpawnEffect(m_pos + Math::Vector3(0.0f, 0.05f, 0.0f), EffectType::HitImpact);
+	EFFECTMGR.SpawnEffect(m_pos, EffectType::HitImpact);
 }
 
 void PinBase::OnHitByPin(JPH::Vec3 vel)
@@ -189,7 +189,7 @@ void PinBase::OnHitByPin(JPH::Vec3 vel)
 	m_pendingVelocity = vel;
 
 	// インパクト召喚
-	EFFECTMGR.SpawnEffect(m_pos + Math::Vector3(0.0f, 0.05f, 0.0f), EffectType::HitImpact);
+	EFFECTMGR.SpawnEffect(m_pos, EffectType::HitImpact);
 }
 
 void PinBase::Init()

@@ -48,7 +48,7 @@ void GameUIObjects::DrawSprite()
 	if (m_throwStartText.m_isActive)
 	{
 		Math::Vector2 drawPos = Math::Vector2(m_throwStartText.m_posX, GameUIConsts::ThrowStartTextPosY);
-		KdShaderManager::Instance().m_spriteShader.DrawFont(FontTypeConst::Game_CountDown, drawPos, &kWhiteColor, m_throwStartText.m_text.c_str(),TextAlign::Center);
+		KdShaderManager::Instance().m_spriteShader.DrawFont(FontTypeConst::Game_ThrowStart, drawPos, &kWhiteColor, m_throwStartText.m_text.c_str(),TextAlign::Center);
 	}
 
 	// 投球リザルトテキスト

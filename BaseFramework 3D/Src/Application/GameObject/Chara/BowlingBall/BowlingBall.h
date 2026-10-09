@@ -81,6 +81,9 @@ private:
 
 		// 投げてからカメラ回転を再開するまでの時間
 		static constexpr float CameraUnlockTimeAfterThrow = 1.0f;
+
+		// 消滅位置
+		static constexpr float DisappearPosY = -20.0f;
 	};
 
 	// 活性化・非活性化

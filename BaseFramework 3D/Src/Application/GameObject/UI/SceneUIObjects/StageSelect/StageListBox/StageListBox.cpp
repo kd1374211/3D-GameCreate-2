@@ -79,7 +79,7 @@ void StageListBox::DrawSprite()
 void StageListBox::LoadStageThumbPath(std::string path)
 {
 	// サムネイルロード
-	m_stageThumbTex->Load(path);
+	m_stageThumbTex = KdAssets::Instance().m_textures.GetData(path);
 }
 
 void StageListBox::Init()

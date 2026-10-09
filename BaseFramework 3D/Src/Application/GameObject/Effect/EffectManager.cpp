@@ -10,11 +10,16 @@ void EffectManager::Init()
 
 void EffectManager::SpawnEffect(Math::Vector3 pos, EffectType type)
 {
-	std::shared_ptr<EffectBase> effectObj;
+	std::shared_ptr<KdGameObject> effectObj;
 	switch (type)
 	{
 	case EffectType::HitImpact:
 		effectObj = std::make_shared<PinHit>();
+		effectObj->SetPos(pos);
+		SCENEMGR.AddObject(effectObj);
+		break;
+	case EffectType::Confetti:
+		effectObj = std::make_shared<ConfettiSpawner>();
 		effectObj->SetPos(pos);
 		SCENEMGR.AddObject(effectObj);
 		break;
@@ -45,6 +50,7 @@ void EffectManager::LoadData()
 	for (const auto& item : rootJson["Effects"])
 	{
 		EffectData data;
+		KdSquarePolygon::PivotType pivot = KdSquarePolygon::PivotType::Center_Middle;
 		int effectID = -1;
 		std::string texPath = "";
 
@@ -54,6 +60,7 @@ void EffectManager::LoadData()
 		// .value("キー名", デフォルト値) を使うことで、キーが存在しなくても安全に取得可能
 		effectID = item.value("effectID", -1);
 		texPath = item.value("texPath", "Error");
+		pivot = item.value("pivotType", KdSquarePolygon::PivotType::Center_Middle);
 		splitX = item.value("splitX", 1);
 		splitY = item.value("splitY", 1);
 		data.m_scale = item.value("scale", 1.0f);
@@ -66,6 +73,9 @@ void EffectManager::LoadData()
 		// 画像をロード
 		data.m_polygon = std::make_shared<KdSquarePolygon>();
 		data.m_polygon->SetMaterial(texPath);
+
+		// ピボット変更
+		data.m_polygon->SetPivot(pivot);
 
 		// 画像を縦横分割
 		data.m_polygon->SetSplit(splitX, splitY);

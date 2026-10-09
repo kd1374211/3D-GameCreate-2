@@ -124,5 +124,5 @@ void StageSelectUIObject::Init()
 void StageSelectUIObject::ChangeThumbTex()
 {
 	std::string startStagePath = STAGEMGR.GetStageInfo(m_selectStageNo)->m_stageThumbPath;
-	m_stageThumbTex->Load(startStagePath);
+	m_stageThumbTex = KdAssets::Instance().m_textures.GetData(startStagePath);
 }

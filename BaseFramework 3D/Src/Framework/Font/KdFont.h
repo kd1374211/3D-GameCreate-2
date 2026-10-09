@@ -28,7 +28,7 @@ struct FontTypeConst
 	static constexpr int StageSelect_PinCount = 3;
 
 	// Game
-	static constexpr int Game_CountDown = 8;
+	static constexpr int Game_ThrowStart = 8;
 	static constexpr int Game_ThrowResult = 9;
 	static constexpr int Game_TimerAndPin = 7;
 	static constexpr int Game_StageFinish = 9;

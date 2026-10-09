@@ -5,8 +5,8 @@ struct StageSelectUIConsts
 {
 	// リスト配置
 	static constexpr int ListIndexX = 2;
-	static constexpr Math::Vector2 ListPosBase = { -530.0f,210.0f };
-	static constexpr float ListPosDiff = 220.0f;
+	static constexpr Math::Vector2 ListPosBase = { -475.0f,255.0f };
+	static constexpr float ListPosDiff = 290.0f;
 
 	// 詳細ウィンドウ領域
 	static constexpr Math::Vector2 DetailWindowPos = { 310.0f, 50.0f };

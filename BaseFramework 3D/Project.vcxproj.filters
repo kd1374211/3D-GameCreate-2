@@ -214,6 +214,9 @@
     <Filter Include="Src\Application\GameObject\Effect\PinHit">
       <UniqueIdentifier>{2165c8b2-3ada-4a56-985e-391cf80f8630}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\GameObject\Effect\Confetti">
+      <UniqueIdentifier>{03850581-59b7-4e94-8740-7ee1ef68cc2c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -1638,6 +1641,12 @@
     <ClInclude Include="Src\Application\GameObject\Effect\EffectsInclude.h">
       <Filter>Src\Application\GameObject\Effect</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\Effect\Confetti\Confetti.h">
+      <Filter>Src\Application\GameObject\Effect\Confetti</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\Effect\Confetti\ConfettiSpawner.h">
+      <Filter>Src\Application\GameObject\Effect\Confetti</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -2362,6 +2371,12 @@
     </ClCompile>
     <ClCompile Include="Src\Application\GameObject\Effect\EffectManager.cpp">
       <Filter>Src\Application\GameObject\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\Effect\Confetti\Confetti.cpp">
+      <Filter>Src\Application\GameObject\Effect\Confetti</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\Effect\Confetti\ConfettiSpawner.cpp">
+      <Filter>Src\Application\GameObject\Effect\Confetti</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

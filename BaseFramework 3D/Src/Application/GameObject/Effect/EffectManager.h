@@ -3,6 +3,7 @@
 enum class EffectType
 {
 	HitImpact,
+	Confetti,
 	Number
 };
 

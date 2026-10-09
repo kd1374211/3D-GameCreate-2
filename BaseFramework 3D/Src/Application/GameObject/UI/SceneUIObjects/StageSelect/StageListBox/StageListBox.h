@@ -30,16 +30,16 @@ private:
 	struct StageListBoxConsts
 	{
 		// サムネイル画像サイズ
-		static constexpr Math::Vector2 ListBoxTexSize = Math::Vector2(200.0f, 200.0f);
-		static constexpr Math::Vector2 ThumbTexSize = Math::Vector2(190.0f, 190.0f);
+		static constexpr Math::Vector2 ListBoxTexSize = Math::Vector2(250.0f, 145.0f);
+		static constexpr Math::Vector2 ThumbTexSize = Math::Vector2(240.0f, 135.0f);
 
 		// ステージ名表記用のボックスの描画情報
-		static constexpr Math::Vector2 StageNamePosOfs = Math::Vector2(0, -80.0f);
-		static constexpr Math::Vector2 StageNameBoxSize = Math::Vector2(100.0f, 20.0f);
+		static constexpr Math::Vector2 StageNamePosOfs = Math::Vector2(0, -52.5f);
+		static constexpr Math::Vector2 StageNameBoxSize = Math::Vector2(125.0f, 20.0f);
 		static constexpr Math::Color StageNameBoxColor = Math::Color(0.0f, 0.0f, 0.0f, 0.8f);
 
 		// 判定サイズ
-		static constexpr Math::Vector2 BoxHitSizeHalf = Math::Vector2(100.0f, 100.0f);
+		static constexpr Math::Vector2 BoxHitSizeHalf = Math::Vector2(125.0f, 72.5f);
 
 		// 拡大倍率
 		static constexpr float OnCursorSizeMultiMin = 1.0f;
