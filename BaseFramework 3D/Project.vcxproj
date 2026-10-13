@@ -649,6 +649,7 @@
     <ClInclude Include="Src\Application\Const\BowlingSystemConst.h" />
     <ClInclude Include="Src\Application\Const\DeviceAndKey.h" />
     <ClInclude Include="Src\Application\Const\Function.h" />
+    <ClInclude Include="Src\Application\Const\PhysicsMaterialConsts.h" />
     <ClInclude Include="Src\Application\Const\PinTypes.h" />
     <ClInclude Include="Src\Application\Const\WindowConsts.h" />
     <ClInclude Include="Src\Application\Cursor\CursorManager.h" />
@@ -667,6 +668,7 @@
     <ClInclude Include="Src\Application\GameObject\Effect\EffectBase.h" />
     <ClInclude Include="Src\Application\GameObject\Effect\EffectManager.h" />
     <ClInclude Include="Src\Application\GameObject\Effect\EffectsInclude.h" />
+    <ClInclude Include="Src\Application\GameObject\Effect\Landing\Landing.h" />
     <ClInclude Include="Src\Application\GameObject\Effect\PinHit\PinHit.h" />
     <ClInclude Include="Src\Application\GameObject\SkySphere\SkySphere.h" />
     <ClInclude Include="Src\Application\GameObject\Terrain\FinishArea\FinishArea.h" />
@@ -918,6 +920,7 @@
     <ClCompile Include="Src\Application\GameObject\Effect\Confetti\ConfettiSpawner.cpp" />
     <ClCompile Include="Src\Application\GameObject\Effect\EffectBase.cpp" />
     <ClCompile Include="Src\Application\GameObject\Effect\EffectManager.cpp" />
+    <ClCompile Include="Src\Application\GameObject\Effect\Landing\Landing.cpp" />
     <ClCompile Include="Src\Application\GameObject\Effect\PinHit\PinHit.cpp" />
     <ClCompile Include="Src\Application\GameObject\SkySphere\SkySphere.cpp" />
     <ClCompile Include="Src\Application\GameObject\Terrain\FinishArea\FinishArea.cpp" />

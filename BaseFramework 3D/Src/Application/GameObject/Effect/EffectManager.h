@@ -3,6 +3,7 @@
 enum class EffectType
 {
 	HitImpact,
+	LandingAndWallHit,
 	Confetti,
 	Number
 };
@@ -17,6 +18,9 @@ struct EffectData
 	bool m_isLoop = false;							// ループするか
 };
 
+class ConfettiSpawner;
+class EffectBase;
+
 class EffectManager
 {
 public:
@@ -24,11 +28,20 @@ public:
 	// 初期化
 	void Init();
 
+	// 消滅確認
+	void PreUpdate();
+
 	// エフェクト召喚
-	void SpawnEffect(Math::Vector3 pos, EffectType type);
+	void SpawnEffect(Math::Vector3 pos, Math::Vector3 rot, Math::Vector3 scaleMulti, EffectType type);
+
+	// エフェクト全削除
+	void ClearActiveEffect();
 
 	// エフェクトデータ取得
 	const EffectData& GetEffectData(EffectType type)const { return m_effectData[(size_t)type]; }
+
+	// 仮置きテクスチャ取得
+	const std::shared_ptr<KdTexture> GetSquareTexture()const { return m_sqTex; }
 
 private:
 
@@ -38,8 +51,23 @@ private:
 	// データ読み込み
 	void LoadData();
 
+	// 召喚
+	void SpawnConfettiSpawner();
+
+	// リストの削除チェック
+	void CleanActiveList();
+
 	// データ
 	EffectData m_effectData[(size_t)EffectType::Number];
+
+	// エフェクトリスト
+	std::list<std::weak_ptr<EffectBase>> m_wpEffectList;
+
+	// コンフェッティ召喚用
+	std::weak_ptr<ConfettiSpawner> m_cfSpawner;
+
+	// 仮置きテクスチャ
+	std::shared_ptr<KdTexture> m_sqTex = nullptr;
 
 public:
 

@@ -6,23 +6,69 @@ void EffectManager::Init()
 {
 	// データの読み込み
 	LoadData();
+
+	// 仮置きテクスチャ生成
+	m_sqTex = std::make_shared<KdTexture>();
+	m_sqTex->Load("Asset/Textures/Effect/Confetti/RandomColoredSquare.png");
 }
 
-void EffectManager::SpawnEffect(Math::Vector3 pos, EffectType type)
+void EffectManager::PreUpdate()
 {
-	std::shared_ptr<KdGameObject> effectObj;
+	// 消去チェック
+	CleanActiveList();
+
+	// DEBUG
+	KdDebugGUI::Instance().AddLog("EffectListSize : %d\n", m_wpEffectList.size());
+}
+
+void EffectManager::SpawnEffect(Math::Vector3 pos, Math::Vector3 rot, Math::Vector3 scaleMulti, EffectType type)
+{
+	std::shared_ptr<EffectBase> effectObj;
 	switch (type)
 	{
 	case EffectType::HitImpact:
 		effectObj = std::make_shared<PinHit>();
-		effectObj->SetPos(pos);
-		SCENEMGR.AddObject(effectObj);
+		break;
+	case EffectType::LandingAndWallHit:
+		effectObj = std::make_shared<Landing>();
 		break;
 	case EffectType::Confetti:
-		effectObj = std::make_shared<ConfettiSpawner>();
+		// これは別枠
+		SpawnConfettiSpawner();
+		return;
+	}
+
+	// 変換成功したならパラメータを設定して召喚
+	if (effectObj)
+	{
 		effectObj->SetPos(pos);
+		effectObj->SetRot(rot);
+		effectObj->SetScaleMulti(scaleMulti);
 		SCENEMGR.AddObject(effectObj);
-		break;
+
+		// リストに追加
+		m_wpEffectList.push_back(effectObj);
+	}
+}
+
+void EffectManager::ClearActiveEffect()
+{
+	// 念のため先にアクティブなエフェクトを更新
+	CleanActiveList();
+
+	// 順番に見て残っていたらexpireセット
+	for (auto& effect : m_wpEffectList)
+	{
+		if (const auto& spEffect = effect.lock())
+		{
+			spEffect->SetExpire();
+		}
+	}
+
+	// もしスポナーがアクティブならexpire
+	if (const auto& cfSpawner = m_cfSpawner.lock())
+	{
+		cfSpawner->SetExpire();
 	}
 }
 
@@ -84,6 +130,35 @@ void EffectManager::LoadData()
 		if (effectID != -1 && effectID < (size_t)EffectType::Number)
 		{
 			m_effectData[effectID] = data;
+		}
+	}
+}
+
+void EffectManager::SpawnConfettiSpawner()
+{
+	// 無いことを確認して新しく召喚
+	if (!m_cfSpawner.expired())return;
+
+	std::shared_ptr<ConfettiSpawner> spawner = std::make_shared<ConfettiSpawner>();
+	m_cfSpawner = spawner;
+	SCENEMGR.AddObject(spawner);
+}
+
+void EffectManager::CleanActiveList()
+{
+	// オブジェクトリストを確認
+	auto it = m_wpEffectList.begin();
+	while (it != m_wpEffectList.end())
+	{
+		std::shared_ptr<EffectBase> spEffect = it->lock();
+		if (!spEffect)
+		{
+			// 無効なオブジェクトをリストから削除
+			it = m_wpEffectList.erase(it);
+		}
+		else
+		{
+			++it; // 次の要素へイテレータを進める
 		}
 	}
 }

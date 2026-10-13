@@ -34,12 +34,9 @@ void EffectBase::PreDraw()
 	// Rectを合わせる
 	m_data.m_polygon->SetUVRect((int)m_animCnt);
 
-	// 回転を合わせる
-	Math::Matrix rotat = SetRotationToCamera();
-
 	// マトリックス設定
-	Math::Matrix scale = Math::Matrix::CreateScale(m_data.m_scale);
-	rotat *= Math::Matrix::CreateFromYawPitchRoll(m_rot);
+	Math::Matrix scale = Math::Matrix::CreateScale(m_data.m_scale * m_scaleMulti);
+	Math::Matrix rotat = Math::Matrix::CreateFromYawPitchRoll(m_rot);
 	Math::Matrix trans = Math::Matrix::CreateTranslation(m_pos);
 	m_mWorld = scale * rotat * trans;
 }
@@ -57,15 +54,29 @@ void EffectBase::Init()
 {
 }
 
-const Math::Matrix& EffectBase::SetRotationToCamera()
+const Math::Vector3& EffectBase::SetRotationYToCamera()
 {
-	Math::Matrix rot = Math::Matrix::Identity;
+	Math::Vector3 rot = Math::Vector3(0.0f, 0.0f, 1.0f);
 
 	// 現在アクティブなカメラを取得
 	if (const auto& camera = CAMERAMGR.GetActiveCamera().lock())
 	{
 		// カメラの方向に向くようにする
-		rot = camera->GetRotationYMatrix();
+		rot = camera->GetRotationYMatrix().ToEuler();
+	}
+
+	return rot;
+}
+
+const Math::Vector3& EffectBase::SetAllRotationToCamera()
+{
+	Math::Vector3 rot = Math::Vector3(0.0f, 0.0f, 1.0f);
+
+	// 現在アクティブなカメラを取得
+	if (const auto& camera = CAMERAMGR.GetActiveCamera().lock())
+	{
+		// カメラの方向に向くようにする
+		rot = camera->GetRotationMatrix().ToEuler();
 	}
 
 	return rot;

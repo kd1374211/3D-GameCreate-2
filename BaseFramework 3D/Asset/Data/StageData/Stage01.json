@@ -20,46 +20,6 @@
                         20.0
                     ],
                     "type": "Goal"
-                },
-                {
-                    "modelPath": "Asset/Models/Terrain/StageGimmicks/RotatingWall2/RotatingWall2.gltf",
-                    "position": [
-                        -0.4000000059604645,
-                        0.0,
-                        -2.5
-                    ],
-                    "rotateSpeed": -180.0,
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "scale": [
-                        0.75,
-                        1.0,
-                        0.75
-                    ],
-                    "type": "RotatingTerrain"
-                },
-                {
-                    "modelPath": "Asset/Models/Terrain/StageGimmicks/RotatingWall2/RotatingWall2.gltf",
-                    "position": [
-                        0.4000000059604645,
-                        0.0,
-                        -2.5
-                    ],
-                    "rotateSpeed": 180.0,
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "scale": [
-                        0.75,
-                        1.0,
-                        0.75
-                    ],
-                    "type": "RotatingTerrain"
                 }
             ],
             "pins": [
@@ -1931,7 +1891,7 @@
                     "position": [
                         0.0,
                         -0.20000000298023224,
-                        0.0
+                        10.199999809265137
                     ],
                     "rotation": [
                         0.0,
@@ -1939,51 +1899,11 @@
                         0.0
                     ],
                     "scale": [
-                        20.0,
+                        2.0,
                         0.25,
-                        20.0
+                        1.2000000476837158
                     ],
                     "type": "Goal"
-                },
-                {
-                    "modelPath": "Asset/Models/Terrain/StageGimmicks/RotatingWall2/RotatingWall2.gltf",
-                    "position": [
-                        -0.4000000059604645,
-                        0.0,
-                        -2.5
-                    ],
-                    "rotateSpeed": -180.0,
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "scale": [
-                        0.75,
-                        1.0,
-                        0.75
-                    ],
-                    "type": "RotatingTerrain"
-                },
-                {
-                    "modelPath": "Asset/Models/Terrain/StageGimmicks/RotatingWall2/RotatingWall2.gltf",
-                    "position": [
-                        0.4000000059604645,
-                        0.0,
-                        -2.5
-                    ],
-                    "rotateSpeed": 180.0,
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "scale": [
-                        0.75,
-                        1.0,
-                        0.75
-                    ],
-                    "type": "RotatingTerrain"
                 }
             ],
             "pins": [
@@ -1992,7 +1912,7 @@
                     "position": [
                         0.0,
                         0.0,
-                        7.75
+                        8.25
                     ],
                     "rotation": [
                         0.0,
@@ -2011,7 +1931,7 @@
                     "position": [
                         -0.14000000059604645,
                         0.0,
-                        8.0
+                        8.5
                     ],
                     "rotation": [
                         0.0,
@@ -2030,7 +1950,7 @@
                     "position": [
                         0.14000000059604645,
                         0.0,
-                        8.0
+                        8.5
                     ],
                     "rotation": [
                         0.0,
@@ -2049,7 +1969,7 @@
                     "position": [
                         -0.2800000011920929,
                         0.0,
-                        8.25
+                        8.75
                     ],
                     "rotation": [
                         0.0,
@@ -2068,7 +1988,7 @@
                     "position": [
                         0.0,
                         0.0,
-                        8.25
+                        8.75
                     ],
                     "rotation": [
                         0.0,
@@ -2087,7 +2007,7 @@
                     "position": [
                         0.2800000011920929,
                         0.0,
-                        8.25
+                        8.75
                     ],
                     "rotation": [
                         0.0,
@@ -2106,7 +2026,7 @@
                     "position": [
                         -0.41999998688697815,
                         0.0,
-                        8.5
+                        9.0
                     ],
                     "rotation": [
                         0.0,
@@ -2125,7 +2045,7 @@
                     "position": [
                         -0.14000000059604645,
                         0.0,
-                        8.5
+                        9.0
                     ],
                     "rotation": [
                         0.0,
@@ -2144,7 +2064,7 @@
                     "position": [
                         0.14000000059604645,
                         0.0,
-                        8.5
+                        9.0
                     ],
                     "rotation": [
                         0.0,
@@ -2163,7 +2083,7 @@
                     "position": [
                         0.41999998688697815,
                         0.0,
-                        8.5
+                        9.0
                     ],
                     "rotation": [
                         0.0,
@@ -2180,9 +2100,9 @@
             ],
             "player": {
                 "position": [
-                    0.0,
-                    0.10000000149011612,
-                    -9.399999618530273
+                    0.03767600283026695,
+                    4.0,
+                    -0.8848781585693359
                 ],
                 "rotation": [
                     0.0,
@@ -2190,7 +2110,7 @@
                     0.0
                 ]
             },
-            "terrainPath": "Asset/Models/Terrain/Stage01/Stage01.gltf"
+            "terrainPath": "Asset/Models/Terrain/Stage06/Stage06.gltf"
         },
         {
             "frameNumber": 1,

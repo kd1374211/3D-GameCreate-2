@@ -12,23 +12,19 @@ public:
 
 	void PreUpdate()override;
 	void Update()override;
-	void PostUpdate()override;
-	void DrawEffect()override;
+	void PreDraw()override;
 	void DrawSprite()override;
 
 private:
 
 	struct ConfettiSpawnerConsts
 	{
-		// アクティブ時間
-		static constexpr float LifeTime = 7.0f;
-
 		// 1F毎の出現確確率
-		static constexpr int ConfettiSpawnChance = 10;
+		static constexpr int ConfettiSpawnChance = 8;
 
 		// 各ランダム要素の最大・最小
-		static constexpr float ScaleMin = 0.8f;
-		static constexpr float ScaleMax = 2.5f;
+		static constexpr float ScaleMin = 0.5f;
+		static constexpr float ScaleMax = 0.9f;
 
 		static constexpr float PosXMin = -600.0f;
 		static constexpr float PosXMax = 600.0f;
@@ -39,10 +35,13 @@ private:
 		static constexpr float MoveDirMin = -10.0f;
 		static constexpr float MoveDirMax = 10.0f;
 
-		static constexpr float RotateSpeedMin = 5.0f;
-		static constexpr float RotateSpeedMax = 30.0f;
+		static constexpr float RotateSpeedMin = 10.0f;
+		static constexpr float RotateSpeedMax = 70.0f;
 
 		static constexpr float ColorTotalValueMin = 1.0f;
+
+		// 召喚位置
+		static constexpr float StartPosY = 380.0f;
 	};
 
 	void Init();
@@ -52,9 +51,6 @@ private:
 
 	// リスト
 	std::list<std::shared_ptr<Confetti>> m_confettiObjects;
-
-	// 残り召喚時間
-	float m_lifeTime = 0.0f;
 
 	// 表示用レンダー
 	KdRenderTargetPack m_rtPack;

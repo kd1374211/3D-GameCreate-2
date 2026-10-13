@@ -12,6 +12,16 @@
 		},
 		{
 			"effectID": 1,
+			"texPath": "Asset/Textures/Effect/Landing/LandingSmoke.png",
+			"pivotType": 11,
+			"splitX": 6,
+			"splitY": 1,
+			"scale": 0.5,
+			"animSpeed": 24.0,
+			"isLoop": false
+		},
+		{
+			"effectID": 2,
 			"texPath": "Asset/Textures/Effect/Confetti/RandomColoredSquare.png",
 			"pivotType": 11,
 			"splitX": 1,

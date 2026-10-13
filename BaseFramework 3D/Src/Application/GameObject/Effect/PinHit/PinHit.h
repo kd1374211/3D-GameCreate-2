@@ -9,6 +9,7 @@ public:
 	~PinHit()override {}
 
 	void Update()override;
+	void PreDraw()override;
 	void DrawEffect()override;
 
 private:

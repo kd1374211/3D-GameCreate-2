@@ -231,6 +231,8 @@ void GameScene::UpdateCheckAndClean()
 				// 投球開始テキスト召喚
 				m_wpUI.lock()->SpawnThrowStartText(m_cScoreHandler->GetCurrentFrame(), m_cScoreHandler->GetCurrentThrow(), &m_isThrowStartTextEnd);
 				m_currentSceneState = SceneState::Playing;
+				// エフェクト全削除
+				EFFECTMGR.ClearActiveEffect();
 				break;
 			case NextActions::NextFrame:
 				// 中間リザルト召喚
@@ -248,13 +250,14 @@ void GameScene::UpdateCheckAndClean()
 				// 投球開始テキスト召喚
 				m_wpUI.lock()->SpawnThrowStartText(m_cScoreHandler->GetCurrentFrame(), m_cScoreHandler->GetCurrentThrow(), &m_isThrowStartTextEnd);
 				m_currentSceneState = SceneState::Playing;
+				// エフェクト全削除
+				EFFECTMGR.ClearActiveEffect();
 				break;
 			case NextActions::GameEnd:
 				// リザルトを作成しシーンマネージャーに送る
 				ScoreDatas::GameResult result;
 				m_cScoreHandler->CreateGameResult(result);
 				SCENEMGR.SetGameResult(result);
-
 				// リザルト移行準備
 				m_currentSceneState = SceneState::End;
 				m_countdownTimer = GameSceneConsts::CountDownOnClear;
@@ -284,6 +287,9 @@ void GameScene::UpdateMiddleResult()
 		// カーソル非表示
 		CURSOR.SetIsShowCursor(false);
 
+		// エフェクト全削除
+		EFFECTMGR.ClearActiveEffect();
+
 		// 撤退
 		return;
 	}
@@ -311,6 +317,9 @@ void GameScene::UpdateEnd()
 		(
 			SceneManager::SceneType::Result
 		);
+
+		// エフェクト全削除
+		EFFECTMGR.ClearActiveEffect();
 
 		return;
 	}
@@ -345,11 +354,11 @@ void GameScene::EndRolling()
 		m_wpUI.lock()->SpawnThrowResultText(fallenPins, mark);
 	}
 
-	//// ストライクならスポナー召喚
-	//if (mark == FrameMark::Strike)
-	//{
-	//	EFFECTMGR.SpawnEffect(Math::Vector3::Zero, EffectType::Confetti);
-	//}
+	// ストライクかスペアならスポナー召喚
+	if (mark == FrameMark::Strike || mark == FrameMark::Spare)
+	{
+		EFFECTMGR.SpawnEffect(Math::Vector3::Zero, Math::Vector3::Zero, Math::Vector3::Zero, EffectType::Confetti);
+	}
 }
 
 void GameScene::Init()

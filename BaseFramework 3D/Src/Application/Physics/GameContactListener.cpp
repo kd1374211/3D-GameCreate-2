@@ -1,5 +1,6 @@
 ﻿#include "GameContactListener.h"
 #include "PhysicsLayer.h"
+#include "../Const/PhysicsMaterialConsts.h"
 
 //オブジェクトのインクルード
 #include "../GameObject/BowlingPin/PinBase/PinBase.h"
@@ -7,6 +8,16 @@
 
 void GameContactListener::OnContactAdded(const JPH::Body& inBody1, const JPH::Body& inBody2, const JPH::ContactManifold& inManifold, JPH::ContactSettings& ioSettings)
 {
+	// 接触点が存在するか確認
+	if (inManifold.mRelativeContactPointsOn1.empty()) return;
+	// 衝突位置の確認
+	// 1. マニフォールドの基準となるワールド座標（Base Offset）
+	JPH::RVec3 baseOffset = inManifold.mBaseOffset;
+	// 2. 最初の接触点のローカル相対座標（Body1 側）
+	JPH::Vec3 relativePoint = inManifold.mRelativeContactPointsOn1[0];
+	// 3. ワールド空間での実際の衝突位置を算出
+	JPH::RVec3 worldContactPoint = baseOffset + relativePoint;
+
 	// 1. 衝突した2つのレイヤーを取得
 	JPH::ObjectLayer layer1 = inBody1.GetObjectLayer();
 	JPH::ObjectLayer layer2 = inBody2.GetObjectLayer();
@@ -50,6 +61,34 @@ void GameContactListener::OnContactAdded(const JPH::Body& inBody1, const JPH::Bo
 			{
 				ioSettings.mCombinedRestitution = terrainMat->GetRestitution();
 				ioSettings.mCombinedFriction = terrainMat->GetFriction();
+			}
+
+			// マテリアル名からマテリアルを確認
+			if (hitMaterial->GetDebugName() == PhysicMaterialName[(size_t)PhysicMaterials::NormalGround])
+			{
+				// UserData から プレイヤーオブジェクトのポインタを復元
+				if (auto* ball = dynamic_cast<BowlingBall*>(gameObj2))
+				{
+					// Y方向への速度を取得
+					float velY = body2->GetLinearVelocity().GetY();
+
+					// 着地を通知
+					ball->HitGround(velY, worldContactPoint, normal);
+				}
+			}
+			else if (hitMaterial->GetDebugName() == PhysicMaterialName[(size_t)PhysicMaterials::NormalWall])
+			{
+				// UserData から プレイヤーオブジェクトのポインタを復元
+				if (auto* ball = dynamic_cast<BowlingBall*>(gameObj2))
+				{
+					// 速度を取得
+					JPH::Vec3 velV3 = body2->GetLinearVelocity();
+					velV3.Normalized();
+					float velFloat = fabs(velV3.Length());
+
+					// 壁接触を通知
+					ball->HitWall(velFloat, worldContactPoint, normal);
+				}
 			}
 		}
 	}
@@ -113,6 +152,16 @@ void GameContactListener::OnContactAdded(const JPH::Body& inBody1, const JPH::Bo
 
 void GameContactListener::OnContactPersisted(const JPH::Body& inBody1, const JPH::Body& inBody2, const JPH::ContactManifold& inManifold, JPH::ContactSettings& ioSettings)
 {
+	// 接触点が存在するか確認
+	if (inManifold.mRelativeContactPointsOn1.empty()) return;
+	// 衝突位置の確認
+	// 1. マニフォールドの基準となるワールド座標（Base Offset）
+	JPH::RVec3 baseOffset = inManifold.mBaseOffset;
+	// 2. 最初の接触点のローカル相対座標（Body1 側）
+	JPH::Vec3 relativePoint = inManifold.mRelativeContactPointsOn1[0];
+	// 3. ワールド空間での実際の衝突位置を算出
+	JPH::RVec3 worldContactPoint = baseOffset + relativePoint;
+
 	// 1. 衝突した2つのレイヤーを取得
 	JPH::ObjectLayer layer1 = inBody1.GetObjectLayer();
 	JPH::ObjectLayer layer2 = inBody2.GetObjectLayer();
@@ -157,6 +206,8 @@ void GameContactListener::OnContactPersisted(const JPH::Body& inBody1, const JPH
 				ioSettings.mCombinedRestitution = terrainMat->GetRestitution();
 				ioSettings.mCombinedFriction = terrainMat->GetFriction();
 			}
+
+			// persistedではエフェクトの出現は行わない
 		}
 	}
 

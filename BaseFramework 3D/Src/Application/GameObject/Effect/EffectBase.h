@@ -13,7 +13,9 @@ public:
 	virtual void DrawEffect()override;
 
 	// セッター
-	void SetPos(Math::Vector3 pos) { m_pos = pos; }
+	void SetPos(const Math::Vector3& pos) { m_pos = pos; }
+	void SetRot(const Math::Vector3& rot) { m_rot = rot; }
+	void SetScaleMulti(const Math::Vector3& scale) { m_scaleMulti = scale; }
 
 protected:
 
@@ -27,10 +29,15 @@ protected:
 	Math::Vector3 m_pos = Math::Vector3::Zero;
 
 	// 回転
-	Math::Vector3 m_rot = Math::Vector3::Zero;
+	Math::Vector3 m_rot = Math::Vector3(0.0f, 1.0f, 0.0f);
+
+	// 拡縮
+	Math::Vector3 m_scaleMulti = Math::Vector3::One;
 
 	virtual void Init()override;
 
-	const Math::Matrix& SetRotationToCamera();
+	// カメラを向くように設定
+	const Math::Vector3& SetRotationYToCamera();
+	const Math::Vector3& SetAllRotationToCamera();
 
 };

@@ -217,6 +217,9 @@
     <Filter Include="Src\Application\GameObject\Effect\Confetti">
       <UniqueIdentifier>{03850581-59b7-4e94-8740-7ee1ef68cc2c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\GameObject\Effect\Landing">
+      <UniqueIdentifier>{379e0fbb-c8e0-4cb2-a1b9-64b48361ebbe}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -1644,6 +1647,12 @@
     <ClInclude Include="Src\Application\GameObject\Effect\Confetti\Confetti.h">
       <Filter>Src\Application\GameObject\Effect\Confetti</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\Effect\Landing\Landing.h">
+      <Filter>Src\Application\GameObject\Effect\Landing</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Const\PhysicsMaterialConsts.h">
+      <Filter>Src\Application\Const</Filter>
+    </ClInclude>
     <ClInclude Include="Src\Application\GameObject\Effect\Confetti\ConfettiSpawner.h">
       <Filter>Src\Application\GameObject\Effect\Confetti</Filter>
     </ClInclude>
@@ -2374,6 +2383,9 @@
     </ClCompile>
     <ClCompile Include="Src\Application\GameObject\Effect\Confetti\Confetti.cpp">
       <Filter>Src\Application\GameObject\Effect\Confetti</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\Effect\Landing\Landing.cpp">
+      <Filter>Src\Application\GameObject\Effect\Landing</Filter>
     </ClCompile>
     <ClCompile Include="Src\Application\GameObject\Effect\Confetti\ConfettiSpawner.cpp">
       <Filter>Src\Application\GameObject\Effect\Confetti</Filter>

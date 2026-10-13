@@ -1,5 +1,6 @@
 ﻿#include "Confetti.h"
 #include "../../../Scene/SceneManager.h"
+#include "../EffectManager.h"
 
 void Confetti::Update()
 {
@@ -17,7 +18,9 @@ void Confetti::Update()
 	m_pos += fixedMoveDir * m_param.m_fallSpeed * gameDt;
 
 	// 回転
-	m_rot += m_param.m_rotatDir * m_param.m_rotatSpeed * gameDt;
+	m_degAng += m_param.m_rotatSpeed * gameDt;
+	if (m_degAng >= 360.0f)m_degAng -= 360.0f;
+	else if (m_degAng <= 0.0f)m_degAng += 360.0f;
 
 	// 位置による消去チェック
 	if (fabs(m_pos.x) >= ConfettiConsts::ExpirePosX || fabs(m_pos.y) >= ConfettiConsts::ExpirePosY)
@@ -26,15 +29,31 @@ void Confetti::Update()
 	}
 }
 
-void Confetti::DrawEffect()
+void Confetti::PreDraw()
+{
+	// 消滅済みならストップ
+	if (m_isExpired)return;
+
+	// Rectを合わせる
+	m_data.m_polygon->SetUVRect((int)m_animCnt);
+
+	// マトリックス設定
+	Math::Matrix scale = Math::Matrix::CreateScale(m_data.m_scale * m_scaleMulti);
+	Math::Matrix rotat = Math::Matrix::CreateRotationZ(DirectX::XMConvertToRadians(m_degAng));
+	Math::Matrix trans = Math::Matrix::CreateTranslation(m_pos);
+	m_mWorld = scale * rotat * trans;
+}
+
+void Confetti::DrawSprite()
 {
 	// 消滅済みか
 	if (m_isExpired)return;
 
 	// このDrawはスポナー内でレンダーを切り替えてから呼ばれる
 
-	// カメラ基準に
-	KdShaderManager::Instance().m_StandardShader.DrawPolygon(*m_data.m_polygon, m_mWorld, m_param.m_color);
+	KdShaderManager::Instance().m_spriteShader.SetMatrix(m_mWorld);
+	KdShaderManager::Instance().m_spriteShader.DrawTex(EFFECTMGR.GetSquareTexture(), 0, 0, nullptr, &m_param.m_color);
+	KdShaderManager::Instance().m_spriteShader.SetMatrix(Math::Matrix::Identity);
 }
 
 void Confetti::SetConfettiParam(const ConfettiParam& param)
@@ -42,18 +61,16 @@ void Confetti::SetConfettiParam(const ConfettiParam& param)
 	m_param = param;
 
 	// すぐに反映する値もある
-	m_pos.x = param.m_startPosX;
 	m_data.m_scale = param.m_scale;
+	m_pos = param.m_startPos;
 }
 
 void Confetti::Init()
 {
 	// マネージャー経由でデータ取得
 	m_data = EFFECTMGR.GetEffectData(EffectType::Confetti);
+	m_degAng = 0.0f;
 
 	// 本体のInitを呼ぶ
 	EffectBase::Init();
-
-	// 初期位置Y
-	m_pos.y = ConfettiConsts::StartPosY;
 }

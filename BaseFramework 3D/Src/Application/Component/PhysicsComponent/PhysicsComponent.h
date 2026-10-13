@@ -95,7 +95,7 @@ public:
 	float GetMass()const;
 	JPH::Vec3 GetPos()const;
 	JPH::Quat GetRotation()const;
-	JPH::Vec3 GetDirection()const;
+	JPH::Vec3 GetLinearVelocity()const;
 	const JPH::BodyID& GetBodyID()const { return m_bodyID; }
 
 private:

@@ -14,6 +14,15 @@ void PinHit::Update()
 	m_alpha = std::clamp(m_alpha, 0.0f, 1.0f);
 }
 
+void PinHit::PreDraw()
+{
+	// 回転を合わせる
+	m_rot = SetRotationYToCamera();
+
+	// 本体のPreDrawを呼ぶ
+	EffectBase::PreDraw();
+}
+
 void PinHit::DrawEffect()
 {
 	// 消滅済みか

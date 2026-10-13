@@ -14,6 +14,7 @@
 #include "../FadeManager/FadeManager.h"
 #include "../Cursor/CursorManager.h"
 #include "../Sound/SoundManager.h"
+#include "../GameObject/Effect/EffectManager.h"
 
 void SceneManager::PreUpdate()
 {
@@ -25,6 +26,9 @@ void SceneManager::PreUpdate()
 
 	// 音の消滅確認
 	SOUNDMGR.Update();
+
+	// エフェクト消滅確認
+	EFFECTMGR.PreUpdate();
 
 	// シーン切替
 	if (m_currentSceneType != m_nextSceneType)

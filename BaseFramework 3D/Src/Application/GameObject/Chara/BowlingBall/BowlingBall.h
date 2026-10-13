@@ -48,6 +48,10 @@ public:
 
 	// ゴールに触れた
 	void HitFinishArea();
+	// 地面に触れた
+	void HitGround(float velocityY, JPH::Vec3 pos, JPH::Vec3 normal);
+	// 壁に触れた
+	void HitWall(float velocity, JPH::Vec3 pos, JPH::Vec3 normal);
 
 	//操作可能フラグ切り替え
 	void SetIsInputEnabled(bool flg) { m_isInputEnabled = flg; }
@@ -84,6 +88,23 @@ private:
 
 		// 消滅位置
 		static constexpr float DisappearPosY = -20.0f;
+
+		// 着地衝撃召喚最低強さ
+		static constexpr float LandingEffectSpawnPowerMin = -25.0f;
+		// 壁接触ver
+		static constexpr float WallHitEffectSpawnPowerMin = 25.0f;
+
+		// 計算式
+		static constexpr float LandingEffectScaleMulti = -0.005f;
+		// 壁
+		static constexpr float WallHitEffectScaleMulti = 0.0025f;
+
+		// 着地衝撃最大スケール
+		static constexpr float LandingEffectScaleMin = 0.5f;
+		static constexpr float LandingEffectScaleMax = 1.5f;
+		// 壁
+		static constexpr float WallHitEffectScaleMin = 0.25f;
+		static constexpr float WallHitEffectScaleMax = 1.0f;
 	};
 
 	// 活性化・非活性化

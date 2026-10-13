@@ -1,6 +1,7 @@
 ﻿#include "PhysicsComponent.h"
 #include "../../Physics/PhysicsManager.h"
 #include "../../../Framework/Direct3D/KdGLTFLoader.h"
+#include "../../Const/PhysicsMaterialConsts.h"
 
 // 地形はこれでやる
 bool PhysicsComponent::InitTerrainModel(const std::string& path, PhysicsInitData initData, WallInitData wallPhysic)
@@ -19,7 +20,7 @@ bool PhysicsComponent::InitTerrainModel(const std::string& path, PhysicsInitData
 
 	// 1-1. Ground用マテリアルの作成 (index 0)
 	JPH::RefConst<JPH::PhysicsMaterial> groundMat = new TerrainPhysicsMaterial(
-		"Ground",
+		PhysicMaterialName[(size_t)PhysicMaterials::NormalGround],
 		JPH::Color::sGreen,
 		initData.restitution,
 		initData.friction
@@ -28,7 +29,7 @@ bool PhysicsComponent::InitTerrainModel(const std::string& path, PhysicsInitData
 
 	// 1-2. Wall用マテリアルの作成 (index 1)
 	JPH::RefConst<JPH::PhysicsMaterial> wallMat = new TerrainPhysicsMaterial(
-		"Wall",
+		PhysicMaterialName[(size_t)PhysicMaterials::NormalWall],
 		JPH::Color::sRed,
 		wallPhysic.restitution,
 		wallPhysic.friction
@@ -134,7 +135,7 @@ bool PhysicsComponent::InitTerrainModel(const std::string& path, PhysicsInitData
 		JPH::MeshShapeSettings meshSettings(jphVertices, jphTriangles, jphMaterials);
 
 		// 1. アクティブエッジ（Ghost Collision対策）の有効化設定
-		meshSettings.mActiveEdgeCosThresholdAngle = cosf(JPH::DegreesToRadians(50.0f));
+		meshSettings.mActiveEdgeCosThresholdAngle = cosf(JPH::DegreesToRadians(60.0f));
 
 		// 2. 形状の生成
 		auto result = meshSettings.Create();
@@ -407,6 +408,7 @@ void PhysicsComponent::Init(float radius, PhysicsInitData initData)
 		initData.layer
 	);
 
+	creationSettings.mEnhancedInternalEdgeRemoval = true;
 	creationSettings.mOverrideMassProperties = JPH::EOverrideMassProperties::CalculateInertia;
 	creationSettings.mMassPropertiesOverride.mMass = initData.mass;
 	creationSettings.mMotionQuality = initData.motionQuality;
@@ -658,7 +660,7 @@ JPH::Quat PhysicsComponent::GetRotation() const
 	return bodyInterface.GetRotation(m_bodyID);
 }
 
-JPH::Vec3 PhysicsComponent::GetDirection() const
+JPH::Vec3 PhysicsComponent::GetLinearVelocity() const
 {
 	auto& bodyInterface = PHYSICSMGR.GetBodyInterface();
 

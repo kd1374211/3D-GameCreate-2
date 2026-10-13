@@ -1,12 +1,6 @@
 ﻿#pragma once
 #include "../../Component/PhysicsComponent/PhysicsComponent.h"
-
-enum class PhysicMaterials
-{
-	NormalGround,
-	NormalWall,
-	Number
-};
+#include "../../Const/PhysicsMaterialConsts.h"
 
 // マテリアル毎の物理ステータス
 struct MatPhysicsConst

@@ -20,12 +20,6 @@ void ConfettiSpawner::PreUpdate()
 			++it;	// 次の要素へイテレータを進める
 		}
 	}
-
-	// ライフタイムが無いかつオブジェクトが無くなれば消去
-	if (m_confettiObjects.empty() && m_lifeTime <= 0.0f)
-	{
-		SetExpire();
-	}
 }
 
 void ConfettiSpawner::Update()
@@ -33,17 +27,11 @@ void ConfettiSpawner::Update()
 	// gdt取得
 	float gameDt = SCENEMGR.GetDeltaGameTime();
 
-	// ライフタイム減少
-	m_lifeTime -= gameDt;
-	if (m_lifeTime <= 0.0f)m_lifeTime = 0.0f;
-
-	// ライフタイムが残っているなら確率で召喚
-	if (m_lifeTime > 0.0f)
+	
+	// 確率で召喚
+	if (KdRandom::GetInt(1, ConfettiSpawnerConsts::ConfettiSpawnChance) == 1)
 	{
-		if (KdRandom::GetInt(1, ConfettiSpawnerConsts::ConfettiSpawnChance) == 1)
-		{
-			SpawnConfetti();
-		}
+		SpawnConfetti();
 	}
 
 	// 各Update召喚
@@ -56,16 +44,16 @@ void ConfettiSpawner::Update()
 	KdDebugGUI::Instance().AddLog("ConfettiCnt : %d\n", m_confettiObjects.size());
 }
 
-void ConfettiSpawner::PostUpdate()
+void ConfettiSpawner::PreDraw()
 {
-	// 各PostUpdate召喚
+	// 各PreDraw召喚
 	for (auto& obj : m_confettiObjects)
 	{
-		obj->PostUpdate();
+		obj->PreDraw();
 	}
 }
 
-void ConfettiSpawner::DrawEffect()
+void ConfettiSpawner::DrawSprite()
 {
 	// レンダー召喚
 	m_rtPack.ClearTexture(Math::Color(0.0f, 0.0f, 0.0f, 0.0f));
@@ -74,19 +62,16 @@ void ConfettiSpawner::DrawEffect()
 	// CULLNONEに
 	KdShaderManager::Instance().ChangeRasterizerState(KdRasterizerState::CullNone);
 
-	// 各DrawEffect召喚
+	// 各DrawSprite召喚
 	for (auto& obj : m_confettiObjects)
 	{
-		obj->DrawEffect();
+		obj->DrawSprite();
 	}
 
 	// 戻す
 	m_rtChanger.UndoRenderTarget();
 	KdShaderManager::Instance().UndoRasterizerState();
-}
 
-void ConfettiSpawner::DrawSprite()
-{
 	// レンダーをここで書く
 	std::shared_ptr<KdTexture> m_rtTex = m_rtPack.m_RTTexture;
 	KdShaderManager::Instance().m_spriteShader.DrawTex(m_rtTex, 0, 0);
@@ -95,10 +80,7 @@ void ConfettiSpawner::DrawSprite()
 void ConfettiSpawner::Init()
 {
 	// レンダー召喚
-	m_rtPack.CreateRenderTarget(1280, 720, true);
-
-	// アクティブ時間設定
-	m_lifeTime = ConfettiSpawnerConsts::LifeTime;
+	m_rtPack.CreateRenderTarget(1280, 720, false);
 }
 
 void ConfettiSpawner::SpawnConfetti()
@@ -110,13 +92,11 @@ void ConfettiSpawner::SpawnConfetti()
 
 	// ランダムにサイズ、初期位置(X)、落下速度、回転速度、色をセット
 	param.m_scale = KdRandom::GetFloat(ConfettiSpawnerConsts::ScaleMin, ConfettiSpawnerConsts::ScaleMax);
-	param.m_startPosX = KdRandom::GetFloat(ConfettiSpawnerConsts::PosXMin, ConfettiSpawnerConsts::PosXMax);
+	param.m_startPos.x = KdRandom::GetFloat(ConfettiSpawnerConsts::PosXMin, ConfettiSpawnerConsts::PosXMax);
+	param.m_startPos.y = ConfettiSpawnerConsts::StartPosY;
 	param.m_fallSpeed = KdRandom::GetFloat(ConfettiSpawnerConsts::MoveSpeedMin, ConfettiSpawnerConsts::MoveSpeedMax);
 	param.m_fallDir = KdRandom::GetFloat(ConfettiSpawnerConsts::MoveDirMin, ConfettiSpawnerConsts::MoveDirMax);
 	param.m_rotatSpeed = KdRandom::GetFloat(ConfettiSpawnerConsts::RotateSpeedMin, ConfettiSpawnerConsts::RotateSpeedMax);
-	param.m_rotatDir.x = KdRandom::GetFloat(-1.0f, 1.0f);
-	param.m_rotatDir.y = KdRandom::GetFloat(-1.0f, 1.0f);
-	param.m_rotatDir.z = KdRandom::GetFloat(-1.0f, 1.0f);
 
 	// 色は合計値が少なくとも１を超えるように
 	float R = KdRandom::GetFloat(0.0f, 1.0f);

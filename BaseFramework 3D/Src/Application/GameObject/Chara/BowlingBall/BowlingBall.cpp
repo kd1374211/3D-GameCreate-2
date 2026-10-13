@@ -8,6 +8,7 @@
 #include "../../UI/ShotUI/ShotPowerBar/ShotPowerBar.h"
 #include "../../../Const/Function.h"
 #include "../../../Cursor/CursorManager.h"
+#include "../../Effect/EffectManager.h"
 
 BowlingBall::BowlingBall()
 {
@@ -279,10 +280,6 @@ void BowlingBall::PostUpdate()
 		Math::Matrix arrowLocalMat = arrowScale * arrowRotX * arrowLocalPos;
 		m_arrowMat = arrowLocalMat * rotY * matTrans;
 	}
-
-	// デバッグ
-	KdDebugGUI::Instance().AddLog("BallPos : %.2f,%.2f,%.2f\n", m_pos.x, m_pos.y, m_pos.z);
-	KdDebugGUI::Instance().AddLog("isRolling : %d\n", m_isRolling);
 }
 
 void BowlingBall::DrawUnLit()
@@ -405,6 +402,72 @@ void BowlingBall::HitFinishArea()
 
 	m_isRolling = false;
 	m_reason = RollEndReason::Finish;
+}
+
+void BowlingBall::HitGround(float velocityY, JPH::Vec3 pos, JPH::Vec3 normal)
+{
+	// gdt取得
+	float gameDt = SCENEMGR.GetDeltaGameTime();
+
+	// velYを1秒あたりに変換
+	velocityY /= gameDt;
+
+	// 下方向の強さが一定以上なら着地エフェクトを召喚
+	Math::Vector3 scale = Math::Vector3::One;
+	if (velocityY <= BowlingBallConsts::LandingEffectSpawnPowerMin)
+	{
+		// 拡大倍率を計算
+		float scaleMulti = (velocityY - BowlingBallConsts::LandingEffectSpawnPowerMin) * BowlingBallConsts::LandingEffectScaleMulti + BowlingBallConsts::LandingEffectScaleMin;
+		scaleMulti = std::min(scaleMulti, BowlingBallConsts::LandingEffectScaleMax);
+
+		// 衝突位置と法線を取得・正規化
+		Math::Vector3 hitPos = Math::Vector3(pos.GetX(), pos.GetY(), pos.GetZ());
+		Math::Vector3 hitNormal = Math::Vector3(normal.GetX(), normal.GetY(), normal.GetZ());
+		hitNormal.Normalize();
+
+		// 1. (0,0,1) から hitNormal 方向への回転クォータニオンを作成
+		Math::Quaternion rot = Math::Quaternion::FromToRotation(Math::Vector3(0, 0, 1), hitNormal);
+
+		// 2. クォータニオンをオイラー角(Vector3)に変換
+		Math::Vector3 rotAngles = rot.ToEuler();
+		// ※ライブラリによっては degrees(度数法) への変換が必要な場合があります
+
+		// エフェクトの召喚（オイラー角を渡す）
+		EFFECTMGR.SpawnEffect(hitPos + hitNormal * 0.015f, rotAngles, scale * scaleMulti, EffectType::LandingAndWallHit);
+	}
+}
+
+void BowlingBall::HitWall(float velocity, JPH::Vec3 pos, JPH::Vec3 normal)
+{
+	// gdt取得
+	float gameDt = SCENEMGR.GetDeltaGameTime();
+
+	// velを1秒あたりに変換
+	velocity /= gameDt;
+
+	// 強さが一定以上なら着地エフェクトを召喚
+	Math::Vector3 scale = Math::Vector3::One;
+	if (velocity >= BowlingBallConsts::WallHitEffectSpawnPowerMin)
+	{
+		// 拡大倍率を計算
+		float scaleMulti = (velocity - BowlingBallConsts::WallHitEffectSpawnPowerMin) * BowlingBallConsts::WallHitEffectScaleMulti + BowlingBallConsts::WallHitEffectScaleMin;
+		scaleMulti = std::min(scaleMulti, BowlingBallConsts::WallHitEffectScaleMax);
+
+		// 衝突位置と法線を取得・正規化
+		Math::Vector3 hitPos = Math::Vector3(pos.GetX(), pos.GetY(), pos.GetZ());
+		Math::Vector3 hitNormal = Math::Vector3(normal.GetX(), normal.GetY(), normal.GetZ());
+		hitNormal.Normalize();
+
+		// 1. (0,0,1) から hitNormal 方向への回転クォータニオンを作成
+		Math::Quaternion rot = Math::Quaternion::FromToRotation(Math::Vector3(0, 0, 1), hitNormal);
+
+		// 2. クォータニオンをオイラー角(Vector3)に変換
+		Math::Vector3 rotAngles = rot.ToEuler();
+		// ※ライブラリによっては degrees(度数法) への変換が必要な場合があります
+
+		// エフェクトの召喚（オイラー角を渡す）
+		EFFECTMGR.SpawnEffect(hitPos + hitNormal * 0.015f, rotAngles, scale * scaleMulti, EffectType::LandingAndWallHit);
+	}
 }
 
 void BowlingBall::ActivateBody()
