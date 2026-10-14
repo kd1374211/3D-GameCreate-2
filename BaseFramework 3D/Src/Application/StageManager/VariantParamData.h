@@ -15,17 +15,16 @@ struct RotatingParams
 
 struct MovingParams
 {
-	enum class Mode { PingPong, Waypoint } m_mode = Mode::PingPong;
-	std::string m_modelPath = "";
+	enum class MovePattern { Linear, Easing } m_movePattern = MovePattern::Linear;
+	std::string m_modelPath = "Asset/Models/Terrain/StageGimmicks/RotatingWall1/RotatingWall1.gltf";
 	float m_speed = 1.0f;
-	int m_movePattern = 0;
 
 	// 往復用
 	Math::Vector3 m_startPos = { 0.0f, 0.0f, 0.0f };
+	std::vector<Math::Vector3> m_waypoints;	// 中継点（任意数）
 	Math::Vector3 m_goalPos = { 0.0f, 0.0f, 0.0f };
+	float m_stopTime = 0.0f; // 各チェックポイントで停止している時間
 
-	// 中継用（任意数のポイント）
-	std::vector<Math::Vector3> m_waypoints;
 };
 
 // 3. バリアント型の定義

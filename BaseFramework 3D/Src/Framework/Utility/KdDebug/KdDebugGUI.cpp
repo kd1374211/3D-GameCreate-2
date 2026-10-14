@@ -612,6 +612,24 @@ void KdDebugGUI::GuiProcess()
 						STAGEMGR.BuildStage(currentLaneNo);
 					}
 
+					if (ImGui::Button("+ Add Moving Terrain", ImVec2(160, 0)))
+					{
+						LaneGimmickData newGimmick;
+						newGimmick.m_type = "MovingTerrain";
+
+						// デフォルトの移動パラメータを設定
+						MovingParams moveParam;
+						newGimmick.m_param = moveParam;
+
+						gimmicks.push_back(newGimmick);
+
+						// 追加したギミックを選択状態にする
+						selectedCategory = SelectedTargetCategory::Gimmick;
+						selectedIndex = static_cast<int>(gimmicks.size()) - 1;
+
+						STAGEMGR.BuildStage(currentLaneNo);
+					}
+
 					ImGui::Spacing();
 
 					// 1. ギミック一覧リストボックス
@@ -666,6 +684,11 @@ void KdDebugGUI::GuiProcess()
 							{
 								gimmickModelPathInput = rot->m_modelPath;
 							}
+
+							if (auto* mov = std::get_if<MovingParams>(&gimmicks[selectedIndex].m_param))
+							{
+								gimmickModelPathInput = mov->m_modelPath;
+							}
 						}
 
 						ImGui::Separator();
@@ -712,6 +735,121 @@ void KdDebugGUI::GuiProcess()
 							// 回転速度（リアルタイム反映）
 							if (ImGui::DragFloat("Rotate Speed", &rot->m_rotateSpeed, 0.05f, -100.0f, 100.0f))
 							{
+								isChanged = true;
+							}
+						}
+						else if (auto* mov = std::get_if<MovingParams>(&gimmick.m_param))
+						{
+							ImGui::TextUnformatted("--- Moving Settings ---");
+							ImGui::Text("Current Model Path: %s", mov->m_modelPath.c_str());
+
+							// Sky Asset Settings と同じスタイルでモデルパスを入力
+							ImGui::InputText("Model Path##GimmickModelInput", &gimmickModelPathInput);
+
+							if (isGimmickModelError)
+							{
+								ImGui::TextColored(ImVec4(1.0f, 0.2f, 0.2f, 1.0f), "[Error] File does not exist!");
+							}
+
+							if (ImGui::Button("Apply Model Path", ImVec2(150, 0)))
+							{
+								if (std::filesystem::exists(gimmickModelPathInput))
+								{
+									isGimmickModelError = false;
+									mov->m_modelPath = gimmickModelPathInput;
+									isChanged = true; // 適用されたのでステージ再構築フラグを立てる
+								}
+								else
+								{
+									isGimmickModelError = true;
+								}
+							}
+
+							// 移動速度（リアルタイム反映）
+							if (ImGui::DragFloat("Move Speed", &mov->m_speed, 0.05f, -100.0f, 100.0f))
+							{
+								isChanged = true;
+							}
+
+							// 移動方法
+							static std::string ModeText;
+							ModeText = (mov->m_movePattern == MovingParams::MovePattern::Linear) ? "Linear" : "Easing";
+							ImGui::Text("Move Pattern Current : %s", ModeText.c_str());
+
+							if (ImGui::Button("Linear", ImVec2(70, 0)))
+							{
+								mov->m_movePattern = MovingParams::MovePattern::Linear;
+								ModeText = "Linear";
+								isChanged = true;
+							}
+							ImGui::SameLine();
+							if (ImGui::Button("Easing", ImVec2(70, 0)))
+							{
+								mov->m_movePattern = MovingParams::MovePattern::Easing;
+								ModeText = "Easing";
+								isChanged = true;
+							}
+						
+							// 停止時間
+							if (ImGui::DragFloat("Stop Time", &mov->m_stopTime, 0.05f, 0.0f, 10.0f))
+							{
+								isChanged = true;
+							}
+
+							// スタートとゴールの位置
+							if (ImGui::DragFloat3("Start Position", &mov->m_startPos.x, 0.01f)) isChanged = true;
+							if (ImGui::DragFloat3("Goal Position", &mov->m_goalPos.x, 0.01f)) isChanged = true;
+
+							// -------------------------------------------------------------
+							// ウェイポイント（Waypoints）リスト管理処理
+							// -------------------------------------------------------------
+							ImGui::Spacing();
+							ImGui::Separator();
+							ImGui::TextUnformatted("--- Waypoints Management ---");
+
+							// 1. ウェイポイント追加ボタン
+							if (ImGui::Button("+ Add Waypoint", ImVec2(130, 0)))
+							{
+								// 初期位置：最後のウェイポイントの位置、または Start Position の少し先
+								Math::Vector3 newPoint = mov->m_startPos;
+								if (!mov->m_waypoints.empty())
+								{
+									newPoint = mov->m_waypoints.back();
+								}
+								newPoint.x += 1.0f; // 少しずらして配置
+
+								mov->m_waypoints.push_back(newPoint);
+								isChanged = true;
+							}
+
+							// 2. ウェイポイント一覧の表示・編集
+							int removeIndex = -1; // 削除予約用インデックス
+
+							for (int wpIdx = 0; wpIdx < static_cast<int>(mov->m_waypoints.size()); ++wpIdx)
+							{
+								ImGui::PushID(wpIdx); // ループ内 ID の競合防止
+
+								// ドラッグ入力で各座標を編集
+								std::string wpLabel = "WP [" + std::to_string(wpIdx + 1) + "]";
+								if (ImGui::DragFloat3(wpLabel.c_str(), &mov->m_waypoints[wpIdx].x, 0.01f))
+								{
+									isChanged = true;
+								}
+
+								// 削除ボタン
+								ImGui::SameLine();
+								if (ImGui::Button("X"))
+								{
+									removeIndex = wpIdx;
+								}
+
+								ImGui::PopID();
+							}
+
+							// 削除処理（ループ外で安全に実行）
+							if (removeIndex != -1)
+							{
+								mov->m_waypoints.erase(mov->m_waypoints.begin() + removeIndex);
 								isChanged = true;
 							}
 						}

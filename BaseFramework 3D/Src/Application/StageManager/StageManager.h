@@ -61,7 +61,6 @@ enum class GimmickType
 	Error = 999
 };
 
-
 enum class StageMode
 {
 	Edit,   // エディットモード（物理停止・編集可能）
@@ -74,13 +73,6 @@ enum class StageBuildMode
 	Full,       // 本編用（地形＋天球＋プレイヤー＋ピン＋ギミック等）
 	Background  // 背景用（地形＋天球のみ）
 };
-
-// このクラス内の定数
-struct StageManagerConsts
-{
-	static constexpr int StarCountMax = 3;		//最大星数
-};
-
 
 struct StageInfo
 {
@@ -158,11 +150,6 @@ public:
 	// ステージ番号からマスタ情報を取得（存在しない場合は nullptr）
 	const StageInfo* GetStageInfo(int stageNo) const;
 	const StageInfo* GetStageInfo() const;
-
-	// 指定したステージのピン撃破数から獲得星数（1〜3）を計算して返す
-	int CalculateStarCount(int stageNo, int pinFallen, bool isClear) const;
-	// 現在の選択ステージに対する星数計算（引数を減らしたい場合）
-	int CalculateCurrentStageStarCount(int pinFallen, bool isClear) const;
 
 	// リザルト画面で取得用
 	//GameResult GetLastGameResult() const { return m_lastGameResult; }

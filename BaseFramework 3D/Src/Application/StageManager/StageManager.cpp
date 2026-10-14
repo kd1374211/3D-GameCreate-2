@@ -82,6 +82,22 @@ bool StageManager::SaveStage(const std::string& filePath)
 				// データ確認
 				if (auto* param = std::get_if<MovingParams>(&gimmick.m_param))
 				{
+					gJson["modelPath"] = param->m_modelPath;
+					gJson["moveSpeed"] = param->m_speed;
+					gJson["movePattern"] = param->m_movePattern;
+					gJson["startPos"] = { param->m_startPos.x,param->m_startPos.y,param->m_startPos.z };
+					gJson["goalPos"] = { param->m_goalPos.x,param->m_goalPos.y,param->m_goalPos.z };
+					gJson["stopTime"] = param->m_stopTime;
+
+					// 中間地点s
+					nlohmann::json wayPointsArray = nlohmann::json::array();
+					for (const auto& wayPoints : param->m_waypoints)
+					{
+						nlohmann::json wayPointsJson;
+						wayPointsJson["position"] = { wayPoints.x,wayPoints.y,wayPoints.z };
+						wayPointsArray.push_back(wayPointsJson);
+					}
+					gJson["wayPoints"] = wayPointsArray;
 				}
 				break;
 			default:
@@ -202,12 +218,27 @@ bool StageManager::LoadStage(const std::string& filePath)
 							RotatingParams param;
 							param.m_modelPath = Utf8ToMultiByte(gimmick.value("modelPath", "Error"));
 							param.m_rotateSpeed = gimmick.value("rotateSpeed", 1.0f);
+
 							gimmickData.m_param = param;
 							break;
 						}
 					case GimmickType::MovingTerrain:
 						{
 							MovingParams param;
+							param.m_modelPath = Utf8ToMultiByte(gimmick.value("modelPath", "Error"));
+							param.m_speed = gimmick.value("moveSpeed", 0.0f);
+							param.m_movePattern = gimmick.value("movePattern", MovingParams::MovePattern::Linear);
+							param.m_startPos = ParseVector3(gimmick, "startPos", { 0.0f, 0.0f, 0.0f });
+							param.m_goalPos = ParseVector3(gimmick, "goalPos", { 0.0f, 0.0f, 0.0f });
+							param.m_stopTime = gimmick.value("stopTime", 0.0f);
+							if (gimmick.contains("wayPoints"))
+							{
+								for (const auto& wayPoints : gimmick["wayPoints"])
+								{
+									Math::Vector3 position = ParseVector3(wayPoints, "position", { 0.0f, 0.0f, 0.0f });
+									param.m_waypoints.push_back(position);
+								}
+							}
 							gimmickData.m_param = param;
 							break;
 						}
@@ -339,8 +370,8 @@ void StageManager::BuildStage(int laneNumber, StageBuildMode mode)
 		case GimmickType::MovingTerrain:
 			if (auto* param = std::get_if<MovingParams>(&gimmickData.m_param))
 			{
-				//gimmickObj = std::make_shared<FinishArea>(param->m_modelPath, gimmickData.m_data.m_position, gimmickData.m_data.m_rotation, param->m_rotateSpeed);
-				//isValidType = true;
+				gimmickObj = std::make_shared<MovingTerrain>(gimmickData.m_data.m_position, gimmickData.m_data.m_rotation, gimmickData.m_data.m_scale, *param);
+				isValidType = true;
 			}
 			break;
 		default:
@@ -437,44 +468,6 @@ const StageInfo* StageManager::GetStageInfo() const
 {
 	//現在のステージ番号を見る
 	return GetStageInfo(SCENEMGR.GetStageNo());
-}
-
-int StageManager::CalculateStarCount(int stageNo, int pinFallen, bool isClear) const
-{
-	//// マスタデータが存在しない、または無効なステージ番号の場合は最小の★1を返す
-	//auto it = m_stageTable.find(stageNo);
-	//if (it == m_stageTable.end())
-	//{
-	//	return 1;
-	//}
-
-	//const auto& info = it->second;
-
-	//// ここで評価の計算
-	//int starCount = 0;
-
-	//// クリアしていないなら0確定
-	//if (isClear)
-	//{
-	//	for (int i = 0; i < StageManagerConsts::StarCountMax; i++)
-	//	{
-	//		if (pinFallen >= info.m_starPinNeed[i])
-	//		{
-	//			starCount++;
-	//		}
-	//		else break;
-	//	}
-	//}
-
-	//return starCount; // 計算した星数
-	return 1;
-}
-
-int StageManager::CalculateCurrentStageStarCount(int pinFallen, bool isClear) const
-{
-	// 現在選択されているステージ番号（m_currentStageNo）を使って計算
-	//return CalculateStarCount(SCENEMGR.GetStageNo(), pinFallen, isClear);
-	return 1;
 }
 
 void StageManager::CreatePinPool()

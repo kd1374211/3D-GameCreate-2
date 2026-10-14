@@ -9,8 +9,8 @@ struct StageSelectUIConsts
 	static constexpr float ListPosDiff = 290.0f;
 
 	// 詳細ウィンドウ領域
-	static constexpr Math::Vector2 DetailWindowPos = { 310.0f, 50.0f };
-	static constexpr Math::Vector2 DetailWindowSize = { 620.0f, 540.0f };
+	static constexpr Math::Vector2 DetailWindowPos = { 310.0f, 20.0f };
+	static constexpr Math::Vector2 DetailWindowSize = { 620.0f, 640.0f };
 	static constexpr Math::Vector2 ThumbnailPos = { 320.0f, 165.0f };
 	static constexpr Math::Vector2 ThumbnailSize = { 480.0f, 270.0f };
 
@@ -28,7 +28,7 @@ struct StageSelectUIConsts
 	static constexpr Math::Vector2 ClearedTextPos = { 310.0f,-90.0f };
 
 	// ── 操作ガイド ──
-	static constexpr Math::Vector2 KeyHelpPos = { 0.0f, -320.0f }; // 画面最下部・中央
+	static constexpr Math::Vector2 KeyHelpPos = { 0.0f, -330.0f }; // 画面最下部・中央
 };
 
 class StageListBox;
