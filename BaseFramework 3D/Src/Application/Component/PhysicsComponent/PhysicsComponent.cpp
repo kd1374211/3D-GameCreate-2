@@ -4,7 +4,7 @@
 #include "../../Const/PhysicsMaterialConsts.h"
 
 // 地形はこれでやる
-bool PhysicsComponent::InitTerrainModel(const std::string& path, PhysicsInitData initData, WallInitData wallPhysic)
+bool PhysicsComponent::InitTerrainModel(const std::string& path, PhysicsInitData initData)
 {
 	m_isStatic = initData.isStatic;
 	auto& bodyInterface = PHYSICSMGR.GetBodyInterface();
@@ -18,25 +18,20 @@ bool PhysicsComponent::InitTerrainModel(const std::string& path, PhysicsInitData
 
 	JPH::PhysicsMaterialList jphMaterials;
 
-	// 1-1. Ground用マテリアルの作成 (index 0)
-	JPH::RefConst<JPH::PhysicsMaterial> groundMat = new TerrainPhysicsMaterial(
-		PhysicMaterialName[(size_t)PhysicMaterials::NormalGround],
-		JPH::Color::sGreen,
-		initData.restitution,
-		initData.friction
-	);
-	jphMaterials.push_back(groundMat); // Index 0: Ground
+	JPH::RefConst<JPH::PhysicsMaterial> materialMat;
+	for (size_t matType = 0; matType < (size_t)PhysicMaterials::Number; matType++)
+	{
+		// 1-1. 各マテリアルの作成
+		materialMat = new TerrainPhysicsMaterial(
+			PhysicMaterialName[matType],
+			JPH::Color::sGreen,
+			MatPhysicsConst::Restitution[matType],
+			MatPhysicsConst::Friction[matType]
+		);
+		jphMaterials.push_back(materialMat);
+	}
 
-	// 1-2. Wall用マテリアルの作成 (index 1)
-	JPH::RefConst<JPH::PhysicsMaterial> wallMat = new TerrainPhysicsMaterial(
-		PhysicMaterialName[(size_t)PhysicMaterials::NormalWall],
-		JPH::Color::sRed,
-		wallPhysic.restitution,
-		wallPhysic.friction
-	);
-	jphMaterials.push_back(wallMat);  // Index 1: Wall
-
-	// 1-3. モデルのマテリアルインデックスから Jolt マテリアルID (0: Ground / 1: Wall) への変換テーブル
+	// 1-2. モデルのマテリアルインデックスから Jolt マテリアルIDへの変換テーブル
 	std::vector<uint32_t> modelMatToJphMatMap(spModel->Materials.size());
 
 	for (size_t i = 0; i < spModel->Materials.size(); ++i)
@@ -44,14 +39,27 @@ bool PhysicsComponent::InitTerrainModel(const std::string& path, PhysicsInitData
 		std::string matName = spModel->Materials[i].Name;
 		std::transform(matName.begin(), matName.end(), matName.begin(), ::tolower);
 
-		// 名前に "wall" が含まれていれば Wall用(1)、それ以外は Ground用(0)
-		if (matName.find("wall") != std::string::npos)
+		// 名前に含まれている文字列からマテリアルを振り分け
+		if (matName.find("normalground") != std::string::npos)
 		{
-			modelMatToJphMatMap[i] = 1; // Wall
+			modelMatToJphMatMap[i] = 0; // NormalGround
+		}
+		else if(matName.find("normalwall") != std::string::npos)
+		{
+			modelMatToJphMatMap[i] = 1; // NormalWall
+		}
+		else if (matName.find("gutterground") != std::string::npos)
+		{
+			modelMatToJphMatMap[i] = 2; // GutterGround
+		}
+		else if (matName.find("gutterwall") != std::string::npos)
+		{
+			modelMatToJphMatMap[i] = 3; // GutterWall
 		}
 		else
 		{
-			modelMatToJphMatMap[i] = 0; // Ground
+			// エラー
+			modelMatToJphMatMap[i] = 0; // NormalGround
 		}
 	}
 

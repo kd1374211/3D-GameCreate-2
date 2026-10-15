@@ -9,15 +9,10 @@ struct SoundData
 
 enum SoundType
 {
-	SE_BowlingBallHit,
-	SE_BowlingBallRoll,
-	SE_BowlingBallThrow,
-	SE_BowlingBallFall,
-	SE_BowlingBallFinish,
-	SE_CursorMove,
-	SE_CursorSelect,
-	SE_PowerBarMove,
-	SE_PowerBarSelect,
+	SE_Throw,
+	SE_Rolling,
+	SE_HitPin,
+	SE_WallHitAndLanding,
 	SoundType_Max
 };
 
@@ -31,11 +26,14 @@ public:
 		static constexpr float DefValue = -1.0f;
 
 		// 音データjsonのパス
-		static constexpr const char* SoundDataPath = "Assets/Data/Sound/SoundData.json";
+		static constexpr const char* SoundDataPath = "Asset/Data/Sound/SoundData.json";
 	};
 
 	void Init();
 	void Update();
+
+	// 音再生＆インスタンス保持
+	std::weak_ptr<KdSoundInstance> PlayAndGetInst(SoundType type, float volume = SoundManagerConsts::DefValue);
 	
 	// 音再生
 	void Play(SoundType type, float volume = SoundManagerConsts::DefValue);

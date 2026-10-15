@@ -21,6 +21,34 @@ void SoundManager::Update()
 	}
 }
 
+std::weak_ptr<KdSoundInstance> SoundManager::PlayAndGetInst(SoundType type, float volume)
+{
+	// デフォルト音量かの確認
+	bool isDefaultVolume = (volume == SoundManagerConsts::DefValue);
+
+	// 音データ取得
+	const SoundData& data = GetSoundData(type);
+
+	// 音量がデフォルト値なら音データのデフォルト音量を使用
+	if (isDefaultVolume)
+	{
+		volume = data.m_defaultVolume;
+	}
+
+	// 再生
+	std::shared_ptr<KdSoundInstance> soundInstance = KdAudioManager::Instance().Play(data.m_path, data.m_isLoop);
+
+	// 音量設定
+	if (soundInstance)
+	{
+		soundInstance->SetVolume(volume);
+		m_storedSoundInstances.emplace(type, soundInstance);
+	}
+
+	// インスタンスを返す
+	return soundInstance;
+}
+
 void SoundManager::Play(SoundType type, float volume)
 {
 	// デフォルト音量かの確認
@@ -42,6 +70,7 @@ void SoundManager::Play(SoundType type, float volume)
 	if (soundInstance)
 	{
 		soundInstance->SetVolume(volume);
+		m_storedSoundInstances.emplace(type, soundInstance);
 	}
 }
 
@@ -52,7 +81,7 @@ void SoundManager::Stop(SoundType type)
 	{
 		if (it.first == type)
 		{
-			if (auto soundInstance = it.second.lock())
+			if (const auto& soundInstance = it.second.lock())
 			{
 				soundInstance->Stop();
 			}
@@ -90,14 +119,14 @@ void SoundManager::LoadSounds()
 	m_soundData.clear();
 
 	// 配列要素を1つずつ走査して構造体に格納
-	for (const auto& item : rootJson)
+	for (const auto& item : rootJson["soundData"])
 	{
 		SoundData data;
 
-		// .value("キー名", デフォルト値) を使うことで、キーが存在しなくても安全に取得可能
-		data.m_path = item.value("path", "Error");
-		data.m_isLoop = item.value("isLoop", false);
+		// 各値を取得
+		data.m_path = item.value("filePath", "Error");
 		data.m_defaultVolume = item.value("defaultVolume", 0.1f);
+		data.m_isLoop = item.value("loop", false);
 
 		// 音データをベクターに追加
 		m_soundData.push_back(data);

@@ -2,6 +2,7 @@
 #include "../../../Scene/SceneManager.h"
 #include "../../../StageManager/StageManager.h"
 #include "../../Effect/EffectManager.h"
+#include "../../../Sound/SoundManager.h"
 
 void PinBase::Update()
 {
@@ -177,6 +178,8 @@ void PinBase::OnHitByPlayer(JPH::Vec3 vel)
 
 	// インパクト召喚
 	EFFECTMGR.SpawnEffect(m_pos, Math::Vector3::Zero, Math::Vector3::One, EffectType::HitImpact);
+	// 音召喚
+	SOUNDMGR.Play(SoundType::SE_HitPin);
 }
 
 void PinBase::OnHitByPin(JPH::Vec3 vel)
@@ -190,6 +193,8 @@ void PinBase::OnHitByPin(JPH::Vec3 vel)
 
 	// インパクト召喚
 	EFFECTMGR.SpawnEffect(m_pos, Math::Vector3::Zero, Math::Vector3::One, EffectType::HitImpact);
+	// 音召喚
+	SOUNDMGR.Play(SoundType::SE_HitPin);
 }
 
 void PinBase::Init()

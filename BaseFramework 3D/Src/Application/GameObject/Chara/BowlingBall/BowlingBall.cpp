@@ -9,6 +9,7 @@
 #include "../../../Const/Function.h"
 #include "../../../Cursor/CursorManager.h"
 #include "../../Effect/EffectManager.h"
+#include "../../../Sound/SoundManager.h"
 
 BowlingBall::BowlingBall()
 {
@@ -65,6 +66,12 @@ void BowlingBall::Update()
 	{
 		return;
 	}
+
+	// 接地フラグリセット前に音の更新
+	UpdateRollingSound();
+
+	// 接地フラグリセット
+	m_isOnGroundThisFrame = false;
 
 	// 転がっていないとき
 	if (!m_isRolling)
@@ -171,13 +178,6 @@ void BowlingBall::Update()
 	{
 		// 停止チェック
 		CheckIsStop();
-
-		// DEBUG
-		JPH::Vec3 linearV;
-		JPH::Vec3 angularV;
-		PHYSICSMGR.GetBodyInterface().GetLinearAndAngularVelocity(m_cPhysics->GetBodyID(), linearV, angularV);
-		KdDebugGUI::Instance().AddLog("Linear Velocity : %.2f,%.2f,%.2f\n", linearV.GetX(), linearV.GetY(), linearV.GetZ());
-		KdDebugGUI::Instance().AddLog("Angular Velocity : %.2f,%.2f,%.2f\n", angularV.GetX(), angularV.GetY(), angularV.GetZ());
 	}
 
 	// カーソルの描画フラグを更新
@@ -329,6 +329,23 @@ void BowlingBall::Throw(const Math::Vector3& startPos, const Math::Vector3& dire
 	// 4. 指定された方向と強さでインパルス（初速）を与える
 	JPH::Vec3 impulse = JPH::Vec3(direction.x, direction.y, direction.z).Normalized() * power * BowlingBallConsts::ThrowPowerMulti * BowlingBallConsts::BallMass;
 	m_cPhysics->AddImpulse(impulse);
+
+	// 5. 音の再生＆管理用に受け取る
+	m_wpStoredSound = SOUNDMGR.PlayAndGetInst(SoundType::SE_Throw);
+	// ステート更新
+	m_soundState = RollingSoundState::Throw;
+}
+
+void BowlingBall::EndThrow()
+{
+	// アクティブな音の削除
+	if (const auto& sound = m_wpStoredSound.lock())
+	{
+		sound->Stop();
+	}
+
+	// サウンドステートのリセット
+	m_soundState = RollingSoundState::None;
 }
 
 void BowlingBall::Reset()
@@ -406,6 +423,9 @@ void BowlingBall::HitFinishArea()
 
 void BowlingBall::HitGround(float velocityY, JPH::Vec3 pos, JPH::Vec3 normal)
 {
+	// 接地フラグをオン
+	OnGround();
+
 	// gdt取得
 	float gameDt = SCENEMGR.GetDeltaGameTime();
 
@@ -513,6 +533,40 @@ void BowlingBall::CheckIsStop()
 	{
 		// 連続停止時間リセット
 		m_stopTimer = 0.0f;
+	}
+}
+
+void BowlingBall::UpdateRollingSound()
+{
+	// 音が無いならリターン
+	if (m_soundState == RollingSoundState::None)return;
+
+	// 最初の音の停止確認
+	if (m_soundState == RollingSoundState::Throw)
+	{
+		// 終わっていたら次の再生
+		if (m_wpStoredSound.expired())
+		{
+			m_wpStoredSound = SOUNDMGR.PlayAndGetInst(SoundType::SE_Rolling);
+			m_soundState = RollingSoundState::Roll;
+		}
+	}
+	// 転がり更新(前フレーム接地していなかったら一時停止)
+	else
+	{
+		const auto& sound = m_wpStoredSound.lock();
+		if (!sound)return;
+
+		if (m_isOnGroundThisFrame)
+		{
+			// 接地したので再生
+			if (sound->IsPause())sound->Resume();
+		}
+		else
+		{
+			// 接地しなかったので一時停止
+			if (sound->IsPlaying())sound->Pause();
+		}
 	}
 }
 

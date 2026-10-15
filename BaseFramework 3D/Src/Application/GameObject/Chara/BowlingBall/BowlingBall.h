@@ -30,6 +30,8 @@ public:
 
 	// 投げ
 	void Throw(const Math::Vector3& startPos, const Math::Vector3& direction, float power);
+	// 終了
+	void EndThrow();
 
 	// リセット
 	void Reset();
@@ -52,6 +54,8 @@ public:
 	void HitGround(float velocityY, JPH::Vec3 pos, JPH::Vec3 normal);
 	// 壁に触れた
 	void HitWall(float velocity, JPH::Vec3 pos, JPH::Vec3 normal);
+	// 地面に触れたかどうかのフラグをオンにする
+	void OnGround() { m_isOnGroundThisFrame = true; }
 
 	//操作可能フラグ切り替え
 	void SetIsInputEnabled(bool flg) { m_isInputEnabled = flg; }
@@ -114,6 +118,9 @@ private:
 	// 停止確認
 	void CheckIsStop();
 
+	// 転がる音の管理
+	void UpdateRollingSound();
+
 	//モデル
 	std::shared_ptr<KdModelData> m_model;
 
@@ -131,6 +138,8 @@ private:
 	RollEndReason m_reason = RollEndReason::None;
 	// 一度でもピンに当たったか
 	bool m_isHitPin = false;
+	// このフレームで着地判定を拾ったか
+	bool m_isOnGroundThisFrame = false;
 
 	// 転がり開始か
 	bool m_canRoll = false;
@@ -161,6 +170,10 @@ private:
 
 	// カメラのアンロック待ちか
 	bool m_isCamUnlockWait = false;
+
+	// 音切り替え用
+	std::weak_ptr<KdSoundInstance> m_wpStoredSound;
+	enum class RollingSoundState { None, Throw, Roll } m_soundState = RollingSoundState::None;
 	
 	//↓playerクラスから移行した
 

@@ -34,6 +34,9 @@ public:
 	// ボールの投球可能フラグをオン
 	void StartThrow();
 
+	// ボールの終了時処理
+	void EndThrow();
+
 private:
 
 	// プレイヤー召喚

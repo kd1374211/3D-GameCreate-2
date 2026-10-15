@@ -27,14 +27,6 @@ struct PhysicsInitData {
 	uint64_t userData = 0;						//ユーザーデータ
 };
 
-// 壁用
-struct WallInitData
-{
-	//物理
-	float friction = 0.5f;						//摩擦力
-	float restitution = 0.5f;					//反発力
-};
-
 class TerrainPhysicsMaterial : public JPH::PhysicsMaterialSimple
 {
 public:
@@ -59,7 +51,7 @@ public:
 	~PhysicsComponent() { Release(); }
 
 	//新Init
-	bool InitTerrainModel(const std::string& path, PhysicsInitData initData, WallInitData wallPhysic);
+	bool InitTerrainModel(const std::string& path, PhysicsInitData initData);
 	bool Init(const std::string& path, PhysicsInitData initData);
 	void Init(float radius, PhysicsInitData initData);
 	void Init(const Math::Vector3& a_halfExtents, const PhysicsInitData& a_initData);

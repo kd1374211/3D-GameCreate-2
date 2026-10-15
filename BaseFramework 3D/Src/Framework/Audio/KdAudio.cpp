@@ -47,6 +47,9 @@ void KdAudioManager::Update()
 
 		++iter;
 	}
+
+	// DEBUG
+	KdDebugGUI::Instance().AddLog("Active Sound Inst : %d\n", m_playList.size());
 }
 
 // ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// /////

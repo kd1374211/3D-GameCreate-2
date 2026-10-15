@@ -248,8 +248,6 @@ bool Application::Init(int w, int h)
 	{
 		device->AddButton(key.second, new KdInputButtonForWindows(key.first));
 	}
-	//device->AddButton(GetKeyRegistName(VK_SPACE), new KdInputButtonForWindows(VK_SPACE));
-	//device->AddButton(GetKeyRegistName(VK_LBUTTON), new KdInputButtonForWindows(VK_LBUTTON));
 	KdInputManager::Instance().AddDevice(DeviceAndKeyConsts::DeviceRegistName, device);
 
 	return true;

@@ -22,17 +22,10 @@ MovingTerrain::MovingTerrain(Math::Vector3 pos, Math::Vector3 rot, Math::Vector3
 	initData.motionType = JPH::EMotionType::Kinematic;
 	initData.isStatic = false;
 	initData.layer = Layers::TERRAIN;
-	initData.friction = MatPhysicsConst::Friction[(size_t)PhysicMaterials::NormalGround];
-	initData.restitution = MatPhysicsConst::Restitution[(size_t)PhysicMaterials::NormalGround];
 	initData.userData = reinterpret_cast<JPH::uint64>(this);
 
-	// 壁用
-	WallInitData wallData = {};
-	wallData.friction = MatPhysicsConst::Friction[(size_t)PhysicMaterials::NormalWall];
-	wallData.restitution = MatPhysicsConst::Restitution[(size_t)PhysicMaterials::NormalWall];
-
 	// 🚀 ファイルパスを渡すだけで、ロードから Jolt への地形登録まで完結！
-	if (!m_cPhysics->InitTerrainModel(param.m_modelPath, initData, wallData)) {
+	if (!m_cPhysics->InitTerrainModel(param.m_modelPath, initData)) {
 		// エラー処理
 	}
 	

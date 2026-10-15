@@ -60,6 +60,12 @@ void CharaHandler::StartThrow()
 	m_playerBall->SetIsInputEnabled(true);
 }
 
+void CharaHandler::EndThrow()
+{
+	// 終了時処理(音を止める)
+	m_playerBall->EndThrow();
+}
+
 void CharaHandler::InitPlayerBall()
 {
 	// ボール召喚

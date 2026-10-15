@@ -21,7 +21,7 @@
 	"materials":[
 		{
 			"doubleSided":true,
-			"name":"Wood_Ground",
+			"name":"Wood_NormalGround",
 			"normalTexture":{
 				"index":0
 			},
@@ -34,7 +34,7 @@
 		},
 		{
 			"doubleSided":true,
-			"name":"Wood_Wall",
+			"name":"Wood_NormalWall",
 			"normalTexture":{
 				"index":2
 			},

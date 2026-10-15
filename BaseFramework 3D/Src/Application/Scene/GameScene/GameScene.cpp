@@ -14,6 +14,7 @@
 #include "../../UserSave/UserSaveManager.h"
 #include "../../Cursor/CursorManager.h"
 #include "../../GameObject/Effect/EffectManager.h"
+#include "../../Sound/SoundManager.h"
 
 void GameScene::Event()
 {
@@ -129,6 +130,8 @@ void GameScene::UpdatePlaying2()
 
 				// ステート更新
 				m_currentSceneState = SceneState::CheckAndClean;
+
+				//SOUNDMGR.Play(SoundType::SE_HitPin);
 
 				// リターン
 				return;
@@ -359,6 +362,9 @@ void GameScene::EndRolling()
 	{
 		EFFECTMGR.SpawnEffect(Math::Vector3::Zero, Math::Vector3::Zero, Math::Vector3::Zero, EffectType::Confetti);
 	}
+
+	// ハンドラー経由でプレイヤーの終了時処理を呼ぶ
+	m_cCharaHandler->EndThrow();
 }
 
 void GameScene::Init()

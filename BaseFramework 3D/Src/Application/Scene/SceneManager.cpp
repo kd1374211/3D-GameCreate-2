@@ -45,6 +45,9 @@ void SceneManager::Update()
 	//暗転用
 	FADEMGR.Update();
 
+	// 呼ぶ必要がある
+	KdAudioManager::Instance().Update();
+
 	m_currentScene->Update();
 }
 

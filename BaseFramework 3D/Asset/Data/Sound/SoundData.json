@@ -1,21 +1,27 @@
 {
 	"soundData": [
 		{
-			"name": "Explosion",
-			"filePath": "Assets/Sounds/explosion.wav",
-			"defaultVolume": 0.8,
+			"name": "Throw",
+			"filePath": "Asset/Sounds/SE/Throw.wav",
+			"defaultVolume": 0.1,
 			"loop": false
 		},
 		{
-			"name": "BackgroundMusic",
-			"filePath": "Assets/Sounds/background_music.mp3",
-			"defaultVolume": 0.5,
+			"name": "Rolling",
+			"filePath": "Asset/Sounds/SE/Rolling.wav",
+			"defaultVolume": 0.1,
 			"loop": true
 		},
 		{
-			"name": "Jump",
-			"filePath": "Assets/Sounds/jump.wav",
-			"defaultVolume": 1.0,
+			"name": "HitPin",
+			"filePath": "Asset/Sounds/SE/HitPin.wav",
+			"defaultVolume": 0.4,
+			"loop": false
+		},
+		{
+			"name": "WallHitAndLanding",
+			"filePath": "Asset/Sounds/SE/Rolling.wav",
+			"defaultVolume": 0.2,
 			"loop": false
 		}
 	]

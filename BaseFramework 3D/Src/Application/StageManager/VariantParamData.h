@@ -16,7 +16,7 @@ struct RotatingParams
 struct MovingParams
 {
 	enum class MovePattern { Linear, Easing } m_movePattern = MovePattern::Linear;
-	std::string m_modelPath = "Asset/Models/Terrain/StageGimmicks/RotatingWall1/RotatingWall1.gltf";
+	std::string m_modelPath = "Asset/Models/Terrain/StageGimmicks/MovingWall1/MovingWall1.gltf";
 	float m_speed = 1.0f;
 
 	// 往復用

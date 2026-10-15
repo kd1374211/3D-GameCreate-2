@@ -64,7 +64,7 @@ void GameContactListener::OnContactAdded(const JPH::Body& inBody1, const JPH::Bo
 			}
 
 			// マテリアル名からマテリアルを確認
-			if (hitMaterial->GetDebugName() == PhysicMaterialName[(size_t)PhysicMaterials::NormalGround])
+			if (MaterialNameCheck::IsGround(hitMaterial->GetDebugName()))
 			{
 				// UserData から プレイヤーオブジェクトのポインタを復元
 				if (auto* ball = dynamic_cast<BowlingBall*>(gameObj2))
@@ -76,7 +76,7 @@ void GameContactListener::OnContactAdded(const JPH::Body& inBody1, const JPH::Bo
 					ball->HitGround(velY, worldContactPoint, normal);
 				}
 			}
-			else if (hitMaterial->GetDebugName() == PhysicMaterialName[(size_t)PhysicMaterials::NormalWall])
+			else if (MaterialNameCheck::IsWall(hitMaterial->GetDebugName()))
 			{
 				// UserData から プレイヤーオブジェクトのポインタを復元
 				if (auto* ball = dynamic_cast<BowlingBall*>(gameObj2))
@@ -207,7 +207,15 @@ void GameContactListener::OnContactPersisted(const JPH::Body& inBody1, const JPH
 				ioSettings.mCombinedFriction = terrainMat->GetFriction();
 			}
 
-			// persistedではエフェクトの出現は行わない
+			// Groundと接触したなら通知する
+			if (MaterialNameCheck::IsGround(hitMaterial->GetDebugName()))
+			{
+				// UserData から プレイヤーオブジェクトのポインタを復元
+				if (auto* ball = dynamic_cast<BowlingBall*>(gameObj2))
+				{
+					ball->OnGround();
+				}
+			}
 		}
 	}
 
