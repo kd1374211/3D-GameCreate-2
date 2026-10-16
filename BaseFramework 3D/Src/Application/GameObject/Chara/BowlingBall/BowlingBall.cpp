@@ -297,6 +297,16 @@ void BowlingBall::DrawLit()
 	// 描画しないならスキップ
 	if (!m_isDraw)return;
 
+	// トゥーン切り替え
+	KdShaderManager::Instance().m_StandardShader.SetToonEnable(true);
+
+	// 描画
+	KdShaderManager::Instance().m_StandardShader.DrawModel(*m_model, m_mWorld);
+
+	// アウトラインを切り替えて再度描画
+	KdShaderManager::Instance().m_StandardShader.SetOutLineEnable(true);
+
+	// 描画
 	KdShaderManager::Instance().m_StandardShader.DrawModel(*m_model, m_mWorld);
 }
 
@@ -305,6 +315,7 @@ void BowlingBall::GenerateDepthMapFromLight()
 	// 描画しないならスキップ
 	if (!m_isDraw)return;
 
+	// 描画
 	KdShaderManager::Instance().m_StandardShader.DrawModel(*m_model, m_mWorld);
 }
 

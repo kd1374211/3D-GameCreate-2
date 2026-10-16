@@ -31,6 +31,14 @@ float BlinnPhong(float3 lightDir, float3 vCam, float3 normal, float specPower)
 //================================
 float4 main(VSOutput In) : SV_Target0
 {
+	// 10/16
+	// アウトライン描画チェック(アウトライン対応)
+	if (g_OutLineEnable)
+	{
+		// アウトライン描画の場合は単色で返す
+		return float4(0, 0, 0, 1);
+	}
+	
 	// ディゾルブによる描画スキップ
 	float discardValue = g_dissolveTex.Sample(g_ss, In.UV).r;
 	if (discardValue < g_dissolveValue)
@@ -140,6 +148,18 @@ float4 main(VSOutput In) : SV_Target0
 		float lightDiffuse = dot( -g_DL_Dir, wN );
 		lightDiffuse = saturate( lightDiffuse ); // マイナス値は0にする　0(暗)～1(明)になる
 
+		// 10/16
+		// トゥーンレンダリング
+		if (g_ToonEnable)
+		{
+			if (lightDiffuse < 0.3)
+				lightDiffuse = 0.3;
+			else if (lightDiffuse < 0.7)
+				lightDiffuse = 0.7;
+			else
+				lightDiffuse = 1.0;
+		}
+		
 		// 正規化Lambert
 		lightDiffuse /= 3.1415926535;
 
@@ -153,6 +173,14 @@ float4 main(VSOutput In) : SV_Target0
 		// Blinn-Phong NDF
 		float spec = BlinnPhong( g_DL_Dir, vCam, wN, specPower );
 
+		// 10/16
+		// トゥーンレンダリング
+		if(g_ToonEnable)
+		{
+			// ステップ関数
+			spec = step(1, spec) * 10;
+		}
+		
 		// 光の色 * 反射光の強さ * 材質の反射色 * 透明率 * 適当な調整値
 		outColor += (g_DL_Color * spec) * baseSpecular * baseColor.a * 0.5 * shadow;
 	}
