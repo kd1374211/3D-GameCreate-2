@@ -46,9 +46,7 @@ void GameContactListener::OnContactAdded(const JPH::Body& inBody1, const JPH::Bo
 	auto* gameObj1 = reinterpret_cast<KdGameObject*>(body1->GetUserData());
 	auto* gameObj2 = reinterpret_cast<KdGameObject*>(body2->GetUserData());
 
-	// =================================================================
-	// Terrain & BowlingBall 判定部分（地形確定後に実行）
-	// =================================================================
+	// Terrain & Player
 	if (layer1 == Layers::TERRAIN && layer2 == Layers::BOWLINGBALL)
 	{
 		// 地形（body1）と確定したため、swap対応済みの subShapeID1 から安全にマテリアルを取得
@@ -88,6 +86,37 @@ void GameContactListener::OnContactAdded(const JPH::Body& inBody1, const JPH::Bo
 
 					// 壁接触を通知
 					ball->HitWall(hitMaterial->GetDebugName(), velFloat, worldContactPoint, normal);
+				}
+			}
+		}
+	}
+
+	// Island & Player
+	if (layer1 == Layers::TERRAIN_ISLAND && layer2 == Layers::BOWLINGBALL)
+	{
+		// 地形（body1）と確定したため、swap対応済みの subShapeID1 から安全にマテリアルを取得
+		const JPH::PhysicsMaterial* hitMaterial = GetMaterialRecursively(body1->GetShape(), subShapeID1);
+
+		if (hitMaterial)
+		{
+			// カスタムマテリアルにキャストして物理係数（反発・摩擦）を上書き設定
+			if (auto* terrainMat = dynamic_cast<const TerrainPhysicsMaterial*>(hitMaterial))
+			{
+				ioSettings.mCombinedRestitution = terrainMat->GetRestitution();
+				ioSettings.mCombinedFriction = terrainMat->GetFriction();
+			}
+
+			// UserData から プレイヤーオブジェクトのポインタを復元
+			if (auto* ball = dynamic_cast<BowlingBall*>(gameObj2))
+			{
+				// 速度を取得
+				JPH::Vec3 velV3 = body2->GetLinearVelocity();
+				velV3.Normalized();
+				float velFloat = fabs(velV3.Length());
+
+				if (auto ball = dynamic_cast<BowlingBall*>(gameObj2))
+				{
+					ball->HitIsland(hitMaterial->GetDebugName(), velFloat, worldContactPoint, normal);
 				}
 			}
 		}
@@ -215,6 +244,30 @@ void GameContactListener::OnContactPersisted(const JPH::Body& inBody1, const JPH
 				{
 					ball->OnGround();
 				}
+			}
+		}
+	}
+
+	// Island & Player
+	if (layer1 == Layers::TERRAIN_ISLAND && layer2 == Layers::BOWLINGBALL)
+	{
+		// 地形（body1）と確定したため、swap対応済みの subShapeID1 から安全にマテリアルを取得
+		const JPH::PhysicsMaterial* hitMaterial = GetMaterialRecursively(body1->GetShape(), subShapeID1);
+
+		if (hitMaterial)
+		{
+			// カスタムマテリアルにキャストして物理係数（反発・摩擦）を上書き設定
+			if (auto* terrainMat = dynamic_cast<const TerrainPhysicsMaterial*>(hitMaterial))
+			{
+				ioSettings.mCombinedRestitution = terrainMat->GetRestitution();
+				ioSettings.mCombinedFriction = terrainMat->GetFriction();
+			}
+
+			// UserData から プレイヤーオブジェクトのポインタを復元
+			if (auto* ball = dynamic_cast<BowlingBall*>(gameObj2))
+			{
+				// 島に乗っていることを通知
+				ball->OnIsland();
 			}
 		}
 	}

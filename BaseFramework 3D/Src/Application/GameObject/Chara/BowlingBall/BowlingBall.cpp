@@ -502,6 +502,29 @@ void BowlingBall::HitWall(const std::string& matName, float velocity, JPH::Vec3 
 	}
 }
 
+void BowlingBall::HitIsland(const std::string& matName, float velocity, JPH::Vec3 pos, JPH::Vec3 normal)
+{
+	// 島に乗った
+	OnIsland();
+
+	// 後は壁と同じ扱い()
+	HitWall(matName, velocity, pos, normal);
+}
+
+void BowlingBall::OnIsland()
+{
+	// 仮に地面扱い確定とする
+	OnGround();
+
+	// まだフラグが立っていないなら立てる
+	if (m_isRolling)
+	{
+		// 落下判定
+		m_isRolling = false;
+		m_reason = RollEndReason::Fall;
+	}
+}
+
 void BowlingBall::ActivateBody()
 {
 	// 有効ならリターン

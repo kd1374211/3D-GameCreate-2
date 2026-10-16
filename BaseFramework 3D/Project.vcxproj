@@ -672,7 +672,8 @@
     <ClInclude Include="Src\Application\GameObject\Effect\PinHit\PinHit.h" />
     <ClInclude Include="Src\Application\GameObject\SkySphere\SkySphere.h" />
     <ClInclude Include="Src\Application\GameObject\Terrain\FinishArea\FinishArea.h" />
-    <ClInclude Include="Src\Application\GameObject\Terrain\Ground\Ground.h" />
+    <ClInclude Include="Src\Application\GameObject\Terrain\Island\Island.h" />
+    <ClInclude Include="Src\Application\GameObject\Terrain\MainTerrain\MainTerrain.h" />
     <ClInclude Include="Src\Application\GameObject\Terrain\MovingTerrain\MovingTerrain.h" />
     <ClInclude Include="Src\Application\GameObject\Terrain\RotatingTerrain\RotatingTerrain.h" />
     <ClInclude Include="Src\Application\GameObject\Terrain\TerrainBase.h" />
@@ -924,7 +925,8 @@
     <ClCompile Include="Src\Application\GameObject\Effect\PinHit\PinHit.cpp" />
     <ClCompile Include="Src\Application\GameObject\SkySphere\SkySphere.cpp" />
     <ClCompile Include="Src\Application\GameObject\Terrain\FinishArea\FinishArea.cpp" />
-    <ClCompile Include="Src\Application\GameObject\Terrain\Ground\Ground.cpp" />
+    <ClCompile Include="Src\Application\GameObject\Terrain\Island\Island.cpp" />
+    <ClCompile Include="Src\Application\GameObject\Terrain\MainTerrain\MainTerrain.cpp" />
     <ClCompile Include="Src\Application\GameObject\Terrain\MovingTerrain\MovingTerrain.cpp" />
     <ClCompile Include="Src\Application\GameObject\Terrain\RotatingTerrain\RotatingTerrain.cpp" />
     <ClCompile Include="Src\Application\GameObject\Terrain\TerrainBase.cpp" />

@@ -9,9 +9,15 @@
 void StageManager::ResetStage()
 {
 	//地形削除
-	if (!m_wpTerrain.expired())
+	if (!m_wpMainTerrain.expired())
 	{
-		m_wpTerrain.lock()->SetExpire();
+		m_wpMainTerrain.lock()->SetExpire();
+	}
+
+	// 島削除
+	if (!m_wpIsland.expired())
+	{
+		m_wpIsland.lock()->SetExpire();
 	}
 
 	//天球削除
@@ -38,7 +44,11 @@ bool StageManager::SaveStage(const std::string& filePath)
 	// 1. 天球パス
 	rootJson["skyPath"] = m_stageOverallData.m_skyPath;
 
-	// 2. フレーム（レーン）配列
+	// 2. 島の情報
+	rootJson["islandModelPath"] = m_stageOverallData.m_islandPath;
+	rootJson["islandPos"] = { m_stageOverallData.m_islandPos.x,m_stageOverallData.m_islandPos.y,m_stageOverallData.m_islandPos.z };
+
+	// 3. フレーム（レーン）配列
 	nlohmann::json framesArray = nlohmann::json::array();
 
 	for (const auto& lane : m_stageOverallData.m_stageLaneData)
@@ -150,6 +160,8 @@ bool StageManager::LoadStage(const std::string& filePath)
 
 	// リセット
 	m_stageOverallData.m_skyPath = "";
+	m_stageOverallData.m_islandPath = "";
+	m_stageOverallData.m_islandPos = Math::Vector3::Zero;
 	m_stageOverallData.m_stageLaneData.clear();
 
 	// 1.ステージ全体の天球を読み込む
@@ -158,7 +170,17 @@ bool StageManager::LoadStage(const std::string& filePath)
 		m_stageOverallData.m_skyPath = rootJson.value("skyPath", "Asset/Models/Sky/SkySphere/SkySphere.gltf");
 	}
 
-	// 2.各フレームのデータを見る
+	// 2.ステージ島を読み込む
+	if (rootJson.contains("islandModelPath"))
+	{
+		m_stageOverallData.m_islandPath = rootJson.value("islandPath", "Asset/Models/Terrain/Island/Island.gltf");
+	}
+	if (rootJson.contains("islandPos"))
+	{
+		m_stageOverallData.m_islandPos = ParseVector3(rootJson, "islandPos", { 0.0f, 0.0f, 0.0f });
+	}
+
+	// 3.各フレームのデータを見る
 	if (rootJson.contains("frames"))
 	{
 		StageLaneData laneData;
@@ -171,13 +193,13 @@ bool StageManager::LoadStage(const std::string& filePath)
 			laneData = {};
 			playerData = {};
 			
-			// 2-1.レーン番号を取得
+			// 3-1.レーン番号を取得
 			laneData.m_frameNumber = frame.value("frameNumber", -1);
 
-			// 2-2.地形パスを取得
+			// 3-2.地形パスを取得
 			laneData.m_terrainPath = frame.value("terrainPath", "Asset/Models/Terrain/Stage01/Stage01.gltf");
 
-			// 2-3.プレイヤーを取得
+			// 3-3.プレイヤーを取得
 			if (frame.contains("player"))
 			{
 				const auto& player = frame["player"];
@@ -190,7 +212,7 @@ bool StageManager::LoadStage(const std::string& filePath)
 				laneData.m_playerData = playerData;
 			}
 				
-			// 2-4.ギミックを取得
+			// 3-4.ギミックを取得
 			if (frame.contains("gimmicks"))
 			{
 				for (const auto& gimmick : frame["gimmicks"])
@@ -255,7 +277,7 @@ bool StageManager::LoadStage(const std::string& filePath)
 				}
 			}
 
-			// 2-5.ピンを取得
+			// 3-5.ピンを取得
 			if (frame.contains("pins"))
 			{
 				for (const auto& pin : frame["pins"])
@@ -275,7 +297,7 @@ bool StageManager::LoadStage(const std::string& filePath)
 				}
 			}
 
-			// 2-6.全体データに追加
+			// 3-6.全体データに追加
 			m_stageOverallData.m_stageLaneData.push_back(laneData);
 		}
 	}
@@ -332,15 +354,22 @@ void StageManager::BuildStage(int laneNumber, StageBuildMode mode)
 	std::shared_ptr<SkySphere> sky = std::make_shared<SkySphere>(m_stageOverallData.m_skyPath);
 	// ゲームシーンの管理リストに追加
 	SCENEMGR.AddObject(sky);
-	// 後で消せるようにリスト持ち
+	// 後で消せるようにWP持ち
 	m_wpSkySphere = sky;
 
-	// 地形生成
-	std::shared_ptr<Ground> ground = std::make_shared<Ground>(laneData.m_terrainPath, Math::Vector3::Zero, Math::Quaternion::Identity);
+	// 島の生成
+	std::shared_ptr<Island> island = std::make_shared<Island>(m_stageOverallData.m_islandPath, m_stageOverallData.m_islandPos);
 	// ゲームシーンの管理リストに追加
-	SCENEMGR.AddObject(ground);
-	// 後で消せるようにリスト持ち
-	m_wpTerrain = ground;
+	SCENEMGR.AddObject(island);
+	// 後で消せるようにWP持ち
+	m_wpIsland = island;
+
+	// 地形生成
+	std::shared_ptr<MainTerrain> mainTerrain = std::make_shared<MainTerrain>(laneData.m_terrainPath, Math::Vector3::Zero, Math::Quaternion::Identity);
+	// ゲームシーンの管理リストに追加
+	SCENEMGR.AddObject(mainTerrain);
+	// 後で消せるようにWP持ち
+	m_wpMainTerrain = mainTerrain;
 
 	// ギミック生成
 	for (const auto& gimmickData : laneData.m_laneGimmickData)

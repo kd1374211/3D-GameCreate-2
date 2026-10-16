@@ -1,7 +1,7 @@
-﻿#include "Ground.h"
+﻿#include "MainTerrain.h"
 #include "../../../../Framework/Direct3D/KdGLTFLoader.h"
 
-Ground::Ground(std::string modelPath, Math::Vector3 pos, Math::Quaternion rot)
+MainTerrain::MainTerrain(std::string modelPath, Math::Vector3 pos, Math::Quaternion rot)
 {
 	m_model = std::make_shared<KdModelData>();
 	m_model->Load(modelPath);
@@ -31,7 +31,3 @@ Ground::Ground(std::string modelPath, Math::Vector3 pos, Math::Quaternion rot)
 	m_mWorld = rotat * trans;
 }
 
-void Ground::DrawLit()
-{
-	KdShaderManager::Instance().m_StandardShader.DrawModel(*m_model, m_mWorld);
-}

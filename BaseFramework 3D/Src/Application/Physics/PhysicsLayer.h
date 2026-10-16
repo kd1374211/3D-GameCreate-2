@@ -5,10 +5,11 @@ namespace Layers
 {
 	// オブジェクトレイヤー（細かな分類）
 	static constexpr JPH::ObjectLayer TERRAIN = 0;
-	static constexpr JPH::ObjectLayer FINISHAREA = 1;
-	static constexpr JPH::ObjectLayer BOWLINGBALL = 2;
-	static constexpr JPH::ObjectLayer BOWLINGPIN = 3;
-	static constexpr JPH::ObjectLayer NUM_LAYERS = 4;
+	static constexpr JPH::ObjectLayer TERRAIN_ISLAND = 1;
+	static constexpr JPH::ObjectLayer FINISHAREA = 2;
+	static constexpr JPH::ObjectLayer BOWLINGBALL = 3;
+	static constexpr JPH::ObjectLayer BOWLINGPIN = 4;
+	static constexpr JPH::ObjectLayer NUM_LAYERS = 5;
 
 	// ブロードフェーズレイヤー（大雑把な分類）
 	static constexpr JPH::BroadPhaseLayer BP_NON_MOVING(0);
@@ -27,7 +28,7 @@ public:
 	virtual bool ShouldCollide(JPH::ObjectLayer inLayer) const override
 	{
 		// 地形判定に含めたいレイヤーを追加・管理する
-		return inLayer == Layers::TERRAIN;
+		return inLayer == Layers::TERRAIN || inLayer == Layers::TERRAIN_ISLAND;
 		// 将来例: || inLayer == Layers::MOVING_FLOOR;
 	}
 };
@@ -39,7 +40,7 @@ public:
 	virtual bool ShouldCollide(JPH::ObjectLayer inLayer) const override
 	{
 		// 地形レイヤー以外のオブジェクト（ピン・ギミック・プレイヤー等）のみ true を返す
-		return inLayer != Layers::TERRAIN;
+		return inLayer != Layers::TERRAIN && inLayer != Layers::TERRAIN_ISLAND;
 	}
 
 };
@@ -64,6 +65,7 @@ public:
 		switch (inObject1)
 		{
 		case Layers::TERRAIN:
+		case Layers::TERRAIN_ISLAND:
 			return inObject2 == Layers::BOWLINGBALL||inObject2 == Layers::BOWLINGPIN; // 地形は動くものと当たる
 		case Layers::FINISHAREA:
 			return inObject2 == Layers::BOWLINGBALL;
@@ -86,6 +88,7 @@ public:
 	{
 		// マッピングの登録
 		mObjectToBroadPhase[Layers::TERRAIN] = Layers::BP_NON_MOVING;
+		mObjectToBroadPhase[Layers::TERRAIN_ISLAND] = Layers::BP_NON_MOVING;
 		mObjectToBroadPhase[Layers::FINISHAREA] = Layers::BP_NON_MOVING;
 		mObjectToBroadPhase[Layers::BOWLINGBALL] = Layers::BP_MOVING;
 		mObjectToBroadPhase[Layers::BOWLINGPIN] = Layers::BP_MOVING;
@@ -127,6 +130,7 @@ public:
 		switch (inLayer1)
 		{
 		case Layers::TERRAIN:
+		case Layers::TERRAIN_ISLAND:
 		case Layers::FINISHAREA:
 			return inLayer2 == Layers::BP_MOVING; // 動かないグループは、動くグループとだけ衝突する
 		case Layers::BOWLINGBALL:

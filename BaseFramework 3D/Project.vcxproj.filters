@@ -91,9 +91,6 @@
     <Filter Include="Src\Application\GameObject\Terrain">
       <UniqueIdentifier>{7ceaf4f7-45ef-4649-97f7-a76c033965cc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Src\Application\GameObject\Terrain\Ground">
-      <UniqueIdentifier>{a5d9d1fc-d036-4a29-ba57-83eb0db30b00}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Src\Application\GameObject\Chara">
       <UniqueIdentifier>{24a8cfb5-65b6-402a-bd0e-b1dd068ccc63}</UniqueIdentifier>
     </Filter>
@@ -219,6 +216,12 @@
     </Filter>
     <Filter Include="Src\Application\GameObject\Effect\Landing">
       <UniqueIdentifier>{379e0fbb-c8e0-4cb2-a1b9-64b48361ebbe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\GameObject\Terrain\Island">
+      <UniqueIdentifier>{86790a0e-9b70-410d-adc5-8663a3512c9b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\GameObject\Terrain\MainTerrain">
+      <UniqueIdentifier>{a5d9d1fc-d036-4a29-ba57-83eb0db30b00}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -407,9 +410,6 @@
     </ClInclude>
     <ClInclude Include="Src\Application\GameObject\Terrain\TerrainBase.h">
       <Filter>Src\Application\GameObject\Terrain</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Application\GameObject\Terrain\Ground\Ground.h">
-      <Filter>Src\Application\GameObject\Terrain\Ground</Filter>
     </ClInclude>
     <ClInclude Include="Src\Application\Physics\PhysicsLayer.h">
       <Filter>Src\Application\Physics</Filter>
@@ -1656,6 +1656,12 @@
     <ClInclude Include="Src\Application\GameObject\Effect\Confetti\ConfettiSpawner.h">
       <Filter>Src\Application\GameObject\Effect\Confetti</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\Terrain\MainTerrain\MainTerrain.h">
+      <Filter>Src\Application\GameObject\Terrain\MainTerrain</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\Terrain\Island\Island.h">
+      <Filter>Src\Application\GameObject\Terrain\Island</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -1813,9 +1819,6 @@
     </ClCompile>
     <ClCompile Include="Src\Application\GameObject\Terrain\TerrainBase.cpp">
       <Filter>Src\Application\GameObject\Terrain</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Application\GameObject\Terrain\Ground\Ground.cpp">
-      <Filter>Src\Application\GameObject\Terrain\Ground</Filter>
     </ClCompile>
     <ClCompile Include="Src\Application\Physics\PhysicsManager.cpp">
       <Filter>Src\Application\Physics</Filter>
@@ -2389,6 +2392,12 @@
     </ClCompile>
     <ClCompile Include="Src\Application\GameObject\Effect\Confetti\ConfettiSpawner.cpp">
       <Filter>Src\Application\GameObject\Effect\Confetti</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\Terrain\MainTerrain\MainTerrain.cpp">
+      <Filter>Src\Application\GameObject\Terrain\MainTerrain</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\Terrain\Island\Island.cpp">
+      <Filter>Src\Application\GameObject\Terrain\Island</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

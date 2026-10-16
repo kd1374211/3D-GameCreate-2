@@ -54,6 +54,10 @@ public:
 	void HitGround(const std::string& matName, float velocityY, JPH::Vec3 pos, JPH::Vec3 normal);
 	// 壁に触れた
 	void HitWall(const std::string& matName, float velocity, JPH::Vec3 pos, JPH::Vec3 normal);
+	// 島に触れた
+	void HitIsland(const std::string& matName, float velocity, JPH::Vec3 pos, JPH::Vec3 normal);
+	// 島に乗っていることを通知
+	void OnIsland();
 
 	// 地面に触れたかどうかのフラグをオンにする
 	void OnGround() { m_isOnGroundThisFrame = true; }

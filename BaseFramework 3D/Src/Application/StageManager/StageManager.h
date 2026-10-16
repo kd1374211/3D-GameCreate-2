@@ -49,6 +49,8 @@ struct StageLaneData
 struct StageOverallData
 {
 	std::string m_skyPath;			// 天球パス
+	std::string m_islandPath;		// 島のパス
+	Math::Vector3 m_islandPos;		// 島の座標
 	std::vector<StageLaneData> m_stageLaneData;	// 各レーンの情報
 };
 
@@ -118,7 +120,7 @@ public:
 	//std::vector<LaneObjectData>& GetStageObjects() { return m_stageGimmicks; }
 
 	//ゲッター（カメラ用）
-	std::weak_ptr<KdGameObject>& GetTerrain() { return m_wpTerrain; }
+	std::weak_ptr<KdGameObject>& GetTerrain() { return m_wpMainTerrain; }
 
 	//void AddStageObject(const LaneObjectData& objectData) { m_stageGimmicks.push_back(objectData); }
 	//void RemoveStageObject(size_t index)
@@ -240,7 +242,8 @@ private:
 
 	//オブジェクトのリスト管理
 	std::weak_ptr<KdGameObject> m_wpSkySphere;
-	std::weak_ptr<KdGameObject> m_wpTerrain;
+	std::weak_ptr<KdGameObject> m_wpIsland;
+	std::weak_ptr<KdGameObject> m_wpMainTerrain;
 	std::vector<std::weak_ptr<KdGameObject>> m_wpStageGimmicks;
 
 	// ステージデータ
