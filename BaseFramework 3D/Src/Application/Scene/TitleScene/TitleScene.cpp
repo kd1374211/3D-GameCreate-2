@@ -6,6 +6,7 @@
 #include "../../GameObject/Camera/CameraManager.h"
 #include "../../Const/DeviceAndKey.h"
 #include "../../Cursor/CursorManager.h"
+#include "../../Sound/SoundManager.h"
 
 void TitleScene::Event()
 {
@@ -16,6 +17,9 @@ void TitleScene::Event()
 		(
 			SceneManager::SceneType::StageSelect
 		);
+
+		// BGM停止
+		SOUNDMGR.Stop(SoundType::BGM_Title);
 
 		return;
 	}
@@ -66,4 +70,7 @@ void TitleScene::Init()
 	// カーソル表示・固定解除
 	CURSOR.SetIsShowCursor(true);
 	CURSOR.UnlockCursor();
+	
+	// BGM再生
+	SOUNDMGR.Play(SoundType::BGM_Title);
 }

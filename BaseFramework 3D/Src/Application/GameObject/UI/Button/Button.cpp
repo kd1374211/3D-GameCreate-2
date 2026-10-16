@@ -3,6 +3,7 @@
 #include "../../../main.h"
 #include "../../../Const/DeviceAndKey.h"
 #include "../../../Const/WindowConsts.h"
+#include "../../../Sound/SoundManager.h"
 
 void Button::Update()
 {
@@ -16,6 +17,12 @@ void Button::Update()
 	if(fabs(CursorManager::Instance().GetFixedCursorPosVec2().x - m_drawPos.x) < HITSIZE.x &&
 	   fabs(CursorManager::Instance().GetFixedCursorPosVec2().y - m_drawPos.y) < HITSIZE.y)
 	{
+		// もしこのフレームが最初なら効果音
+		if (!m_isCursor)
+		{
+			SOUNDMGR.Play(SoundType::SE_Cursor);
+		}
+
 		m_isCursor = true;
 	}
 	else
@@ -37,8 +44,15 @@ void Button::Update()
 	// ボタンが押されたか確認
 	if (m_isCursor && KdInputManager::Instance().IsPress(GetKeyRegistName(VK_LBUTTON)))
 	{
-		// ボタンが押されたことを通知
-		*m_onClickFlg = true;
+		// もしまだ押されていなければ(通知先のフラグがfalseなら)
+		if (!*m_onClickFlg)
+		{
+			// ボタンが押されたことを通知
+			*m_onClickFlg = true;
+
+			// 効果音を鳴らす
+			SOUNDMGR.Play(SoundType::SE_Decide);
+		}
 	}
 }
 

@@ -25,4 +25,7 @@ private:
 
 	// 次シーンへの移行待ち
 	bool m_isSceneChangeReady = false;
+
+	// 決定したか
+	bool m_isStageSelected = false;
 };

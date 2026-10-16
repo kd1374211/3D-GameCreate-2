@@ -9,6 +9,12 @@ struct SoundData
 
 enum SoundType
 {
+	BGM_Title,
+	BGM_Select,
+	BGM_Ingame,
+	BGM_Result,
+	SE_Cursor,
+	SE_Decide,
 	SE_Throw,
 	SE_Rolling,
 	SE_HitPin,
@@ -22,8 +28,8 @@ public:
 
 	struct SoundManagerConsts
 	{
-		// デフォルト値(これが引数の場合は音データのデフォルト音量を使う)
-		static constexpr float DefValue = -1.0f;
+		// デフォルト値(音量倍率)
+		static constexpr float DefValue = 1.0f;
 
 		// 音データjsonのパス
 		static constexpr const char* SoundDataPath = "Asset/Data/Sound/SoundData.json";
@@ -36,7 +42,7 @@ public:
 	std::weak_ptr<KdSoundInstance> PlayAndGetInst(SoundType type, float volume = SoundManagerConsts::DefValue);
 	
 	// 音再生
-	void Play(SoundType type, float volume = SoundManagerConsts::DefValue);
+	void Play(SoundType type, float volumeMulti = SoundManagerConsts::DefValue);
 
 	// 音停止（タイプを指定して該当する音を全て停止）
 	void Stop(SoundType type);

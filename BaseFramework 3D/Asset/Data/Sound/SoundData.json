@@ -1,27 +1,63 @@
 {
 	"soundData": [
 		{
+			"name": "Title",
+			"filePath": "Asset/Sounds/BGM/Title.wav",
+			"defaultVolume": 0.1,
+			"loop": true
+		},
+		{
+			"name": "Select",
+			"filePath": "Asset/Sounds/BGM/Select.wav",
+			"defaultVolume": 0.1,
+			"loop": true
+		},
+		{
+			"name": "Ingame",
+			"filePath": "Asset/Sounds/BGM/Ingame.wav",
+			"defaultVolume": 0.05,
+			"loop": true
+		},
+		{
+			"name": "Result",
+			"filePath": "Asset/Sounds/BGM/Result.wav",
+			"defaultVolume": 0.1,
+			"loop": true
+		},
+		{
+			"name": "Cursor",
+			"filePath": "Asset/Sounds/SE/Cursor.wav",
+			"defaultVolume": 0.2,
+			"loop": false
+		},
+		{
+			"name": "Decide",
+			"filePath": "Asset/Sounds/SE/Decide.wav",
+			"defaultVolume": 0.2,
+			"loop": false
+		},
+		{
 			"name": "Throw",
 			"filePath": "Asset/Sounds/SE/Throw.wav",
-			"defaultVolume": 0.1,
+			"defaultVolume": 0.05,
 			"loop": false
 		},
 		{
 			"name": "Rolling",
 			"filePath": "Asset/Sounds/SE/Rolling.wav",
-			"defaultVolume": 0.1,
+			"defaultVolume": 0.05,
 			"loop": true
 		},
 		{
 			"name": "HitPin",
 			"filePath": "Asset/Sounds/SE/HitPin.wav",
-			"defaultVolume": 0.4,
+			"defaultVolume": 0.15,
 			"loop": false
 		},
 		{
 			"name": "WallHitAndLanding",
-			"filePath": "Asset/Sounds/SE/Rolling.wav",
-			"defaultVolume": 0.2,
+			"filePath": "Asset/Sounds/SE/HitWall.wav",
+			"defaultVolume": 0.6,
 			"loop": false
 		}
 	]

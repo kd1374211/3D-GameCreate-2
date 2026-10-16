@@ -421,7 +421,7 @@ void BowlingBall::HitFinishArea()
 	m_reason = RollEndReason::Finish;
 }
 
-void BowlingBall::HitGround(float velocityY, JPH::Vec3 pos, JPH::Vec3 normal)
+void BowlingBall::HitGround(const std::string& matName, float velocityY, JPH::Vec3 pos, JPH::Vec3 normal)
 {
 	// 接地フラグをオン
 	OnGround();
@@ -454,10 +454,16 @@ void BowlingBall::HitGround(float velocityY, JPH::Vec3 pos, JPH::Vec3 normal)
 
 		// エフェクトの召喚（オイラー角を渡す）
 		EFFECTMGR.SpawnEffect(hitPos + hitNormal * 0.015f, rotAngles, scale * scaleMulti, EffectType::LandingAndWallHit);
+
+		// 衝突音が鳴る材質なら鳴らす
+		if (MaterialNameCheck::IsImpactSound(matName))
+		{
+			SOUNDMGR.Play(SoundType::SE_WallHitAndLanding, scaleMulti);
+		}
 	}
 }
 
-void BowlingBall::HitWall(float velocity, JPH::Vec3 pos, JPH::Vec3 normal)
+void BowlingBall::HitWall(const std::string& matName, float velocity, JPH::Vec3 pos, JPH::Vec3 normal)
 {
 	// gdt取得
 	float gameDt = SCENEMGR.GetDeltaGameTime();
@@ -487,6 +493,12 @@ void BowlingBall::HitWall(float velocity, JPH::Vec3 pos, JPH::Vec3 normal)
 
 		// エフェクトの召喚（オイラー角を渡す）
 		EFFECTMGR.SpawnEffect(hitPos + hitNormal * 0.015f, rotAngles, scale * scaleMulti, EffectType::LandingAndWallHit);
+
+		// 衝突音が鳴る材質なら鳴らす
+		if (MaterialNameCheck::IsImpactSound(matName))
+		{
+			SOUNDMGR.Play(SoundType::SE_WallHitAndLanding, scaleMulti);
+		}
 	}
 }
 

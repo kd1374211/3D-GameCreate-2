@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 // マテリアル種
-enum class PhysicMaterials
+enum class ModelMaterialType
 {
 	NormalGround,
 	NormalWall,
@@ -13,11 +13,11 @@ enum class PhysicMaterials
 // マテリアル毎の物理ステータス
 struct MatPhysicsConst
 {
-	static constexpr float Friction[(size_t)PhysicMaterials::Number] = { 0.05f,0.05f,0.05f,0.05f };
-	static constexpr float Restitution[(size_t)PhysicMaterials::Number] = { 0.0f,0.9f,0.0f,0.0f };
+	static constexpr float Friction[(size_t)ModelMaterialType::Number] = { 0.05f,0.05f,0.05f,0.05f };
+	static constexpr float Restitution[(size_t)ModelMaterialType::Number] = { 0.0f,0.9f,0.0f,0.0f };
 };
 
-static std::string PhysicMaterialName[(size_t)PhysicMaterials::Number] =
+static std::string PhysicMaterialName[(size_t)ModelMaterialType::Number] =
 {
 	"NormalGround",
 	"NormalWall",
@@ -27,18 +27,41 @@ static std::string PhysicMaterialName[(size_t)PhysicMaterials::Number] =
 
 struct MaterialNameCheck
 {
+	// 種類を取得
+	static inline const ModelMaterialType GetMaterialType(const std::string& name)
+	{
+		// 全部を見て合った種類を返す
+		for (size_t type = 0; type < (size_t)ModelMaterialType::Number; type++)
+		{
+			if (name == PhysicMaterialName[type])
+			{
+				return (ModelMaterialType)type;
+			}
+		}
+
+		// 見つからなかったら通常地面を返す
+		return ModelMaterialType::NormalGround;
+	}
+
 	// 地面チェック
  	static inline const bool IsGround(const std::string& name)
 	{
-		return name == PhysicMaterialName[(size_t)PhysicMaterials::NormalGround]
-			|| name == PhysicMaterialName[(size_t)PhysicMaterials::GutterGround];
+		return name == PhysicMaterialName[(size_t)ModelMaterialType::NormalGround]
+			|| name == PhysicMaterialName[(size_t)ModelMaterialType::GutterGround];
 	}
 
 	// 壁チェック
 	static inline const bool IsWall(const std::string& name)
 	{
-		return name == PhysicMaterialName[(size_t)PhysicMaterials::NormalWall]
-			|| name == PhysicMaterialName[(size_t)PhysicMaterials::GutterWall];
+		return name == PhysicMaterialName[(size_t)ModelMaterialType::NormalWall]
+			|| name == PhysicMaterialName[(size_t)ModelMaterialType::GutterWall];
+	}
+
+	// 衝突音が鳴るかチェック
+	static inline const bool IsImpactSound(const std::string& name)
+	{
+		return name == PhysicMaterialName[(size_t)ModelMaterialType::NormalGround]
+			|| name == PhysicMaterialName[(size_t)ModelMaterialType::NormalWall];
 	}
 };
 

@@ -216,6 +216,7 @@ bool Application::Init(int w, int h)
 	// オーディオ初期化
 	//===================================================================
 	KdAudioManager::Instance().Init();
+	SOUNDMGR.Init();	// 追加10/16
 
 	//===================================================================
 	// フォント初期化
@@ -238,7 +239,6 @@ bool Application::Init(int w, int h)
 	FADEMGR.Init();
 	CAMERAMGR.Init();
 	SAVEMGR.Init();
-	SOUNDMGR.Init();
 	EFFECTMGR.Init();
 	srand(timeGetTime());
 

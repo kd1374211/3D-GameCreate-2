@@ -49,19 +49,10 @@ std::weak_ptr<KdSoundInstance> SoundManager::PlayAndGetInst(SoundType type, floa
 	return soundInstance;
 }
 
-void SoundManager::Play(SoundType type, float volume)
+void SoundManager::Play(SoundType type, float volumeMulti)
 {
-	// デフォルト音量かの確認
-	bool isDefaultVolume = (volume == SoundManagerConsts::DefValue);
-
 	// 音データ取得
 	const SoundData& data = GetSoundData(type);
-
-	// 音量がデフォルト値なら音データのデフォルト音量を使用
-	if (isDefaultVolume)
-	{
-		volume = data.m_defaultVolume;
-	}
 
 	// 再生
 	std::shared_ptr<KdSoundInstance> soundInstance = KdAudioManager::Instance().Play(data.m_path, data.m_isLoop);
@@ -69,7 +60,7 @@ void SoundManager::Play(SoundType type, float volume)
 	// 音量設定
 	if (soundInstance)
 	{
-		soundInstance->SetVolume(volume);
+		soundInstance->SetVolume(data.m_defaultVolume * volumeMulti);
 		m_storedSoundInstances.emplace(type, soundInstance);
 	}
 }

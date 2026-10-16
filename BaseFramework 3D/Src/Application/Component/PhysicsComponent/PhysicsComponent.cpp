@@ -19,7 +19,7 @@ bool PhysicsComponent::InitTerrainModel(const std::string& path, PhysicsInitData
 	JPH::PhysicsMaterialList jphMaterials;
 
 	JPH::RefConst<JPH::PhysicsMaterial> materialMat;
-	for (size_t matType = 0; matType < (size_t)PhysicMaterials::Number; matType++)
+	for (size_t matType = 0; matType < (size_t)ModelMaterialType::Number; matType++)
 	{
 		// 1-1. 各マテリアルの作成
 		materialMat = new TerrainPhysicsMaterial(

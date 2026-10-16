@@ -324,6 +324,9 @@ void GameScene::UpdateEnd()
 		// エフェクト全削除
 		EFFECTMGR.ClearActiveEffect();
 
+		// 停止
+		SOUNDMGR.Stop(SoundType::BGM_Ingame);
+
 		return;
 	}
 
@@ -433,4 +436,7 @@ void GameScene::Init()
 
 	// デバッグ用
 	KdDebugGUI::Instance().RegistScoreHandler(m_cScoreHandler);
+
+	// 再生
+	SOUNDMGR.Play(SoundType::BGM_Ingame);
 }

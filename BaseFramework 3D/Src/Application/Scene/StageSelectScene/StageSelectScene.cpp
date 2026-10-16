@@ -3,6 +3,7 @@
 #include "../../GameObject/UI/SceneUIObjects/StageSelect/StageSelectUIObjects.h"
 #include "../../Cursor/CursorManager.h"
 #include "../../Const/DeviceAndKey.h"
+#include "../../Sound/SoundManager.h"
 
 void StageSelectScene::Init()
 {
@@ -17,6 +18,9 @@ void StageSelectScene::Init()
 	// カーソル表示・固定解除
 	CURSOR.SetIsShowCursor(true);
 	CURSOR.UnlockCursor();
+
+	// BGM再生
+	SOUNDMGR.Play(SoundType::BGM_Select);
 }
 
 void StageSelectScene::Event()
@@ -29,20 +33,26 @@ void StageSelectScene::Event()
 			SceneManager::SceneType::Game
 		);
 
+		// BGM停止
+		SOUNDMGR.Stop(SoundType::BGM_Select);
+
 		return;
 	}
 
 	// 押されたことを確認
 	if (KdInputManager::Instance().IsPress(GetKeyRegistName(VK_LBUTTON)))
 	{
-		//フェードインが終わっていたら
-		if (m_isFadeInEnd)
+		//フェードインが終わっているかつステージ選択が終わっていないなら
+		if (m_isFadeInEnd && !m_isStageSelected)
 		{
 			auto spUI = m_wpUI.lock();
 
 			// いずれかのステージが選択状態なことを確認
 			if (spUI && spUI->GetIsSelect())
 			{
+				// 効果音
+				SOUNDMGR.Play(SoundType::SE_Decide);
+
 				//ステージ準備
 				if (!m_wpUI.expired())
 				{
@@ -51,6 +61,9 @@ void StageSelectScene::Event()
 
 				//フェードアウト
 				FADEMGR.StartFadeOut(&m_isSceneChangeReady);
+
+				// ステージ選択完了
+				m_isStageSelected = true;
 			}
 		}
 	}

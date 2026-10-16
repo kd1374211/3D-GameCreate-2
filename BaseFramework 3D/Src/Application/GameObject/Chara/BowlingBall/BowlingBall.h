@@ -51,9 +51,10 @@ public:
 	// ゴールに触れた
 	void HitFinishArea();
 	// 地面に触れた
-	void HitGround(float velocityY, JPH::Vec3 pos, JPH::Vec3 normal);
+	void HitGround(const std::string& matName, float velocityY, JPH::Vec3 pos, JPH::Vec3 normal);
 	// 壁に触れた
-	void HitWall(float velocity, JPH::Vec3 pos, JPH::Vec3 normal);
+	void HitWall(const std::string& matName, float velocity, JPH::Vec3 pos, JPH::Vec3 normal);
+
 	// 地面に触れたかどうかのフラグをオンにする
 	void OnGround() { m_isOnGroundThisFrame = true; }
 

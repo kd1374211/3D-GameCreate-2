@@ -8,6 +8,7 @@
 #include "../../FadeManager/FadeManager.h"
 #include "../../GameObject/Camera/CameraManager.h"
 #include "../../Cursor/CursorManager.h"
+#include "../../Sound/SoundManager.h"
 
 void ResultScene::Init()
 {
@@ -55,6 +56,9 @@ void ResultScene::Init()
 	CURSOR.SetIsShowCursor(true);
 	// カーソル固定解除
 	CURSOR.UnlockCursor();
+
+	// 再生
+	SOUNDMGR.Play(SoundType::BGM_Result);
 }
 
 void ResultScene::Event()
@@ -65,6 +69,9 @@ void ResultScene::Event()
 		(
 			SceneManager::SceneType::StageSelect
 		);
+
+		// 停止
+		SOUNDMGR.Stop(SoundType::BGM_Result);
 
 		return;
 	}

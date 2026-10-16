@@ -2,6 +2,7 @@
 #include "../../../../../Cursor/CursorManager.h"
 #include "../../../../../Const/WindowConsts.h"
 #include "../../../../../main.h"
+#include "../../../../../Sound/SoundManager.h"
 
 void StageListBox::Update()
 {
@@ -9,6 +10,7 @@ void StageListBox::Update()
 	float dt = Application::Instance().GetDeltaTime();
 
 	// フラグリセット
+	m_wasCursorLastFrame = m_isCursorThisFrame;
 	m_isCursorThisFrame = false;
 
 	// カーソル位置を確認
@@ -18,6 +20,12 @@ void StageListBox::Update()
 	if (fabs(m_drawPos.x - cursorPos.x) <= (StageListBoxConsts::BoxHitSizeHalf.x * m_sizeMulti) &&
 		fabs(m_drawPos.y - cursorPos.y) <= (StageListBoxConsts::BoxHitSizeHalf.y * m_sizeMulti))
 	{
+		// このフレームが最初なら効果音
+		if (!m_wasCursorLastFrame)
+		{
+			SOUNDMGR.Play(SoundType::SE_Cursor);
+		}
+
 		m_isCursorThisFrame = true;
 	}
 

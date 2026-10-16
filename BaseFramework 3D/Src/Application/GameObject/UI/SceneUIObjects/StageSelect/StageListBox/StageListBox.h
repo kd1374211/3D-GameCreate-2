@@ -57,6 +57,8 @@ private:
 	// ステージサムネイル画像
 	std::shared_ptr<KdTexture> m_stageThumbTex = nullptr;
 
+	// 前のフレームでカーソルがあったか
+	bool m_wasCursorLastFrame = false;
 	// このフレームでカーソルがあるか
 	bool m_isCursorThisFrame = false;
 

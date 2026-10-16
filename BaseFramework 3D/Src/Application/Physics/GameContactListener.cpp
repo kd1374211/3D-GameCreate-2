@@ -73,7 +73,7 @@ void GameContactListener::OnContactAdded(const JPH::Body& inBody1, const JPH::Bo
 					float velY = body2->GetLinearVelocity().GetY();
 
 					// 着地を通知
-					ball->HitGround(velY, worldContactPoint, normal);
+					ball->HitGround(hitMaterial->GetDebugName(), velY, worldContactPoint, normal);
 				}
 			}
 			else if (MaterialNameCheck::IsWall(hitMaterial->GetDebugName()))
@@ -87,7 +87,7 @@ void GameContactListener::OnContactAdded(const JPH::Body& inBody1, const JPH::Bo
 					float velFloat = fabs(velV3.Length());
 
 					// 壁接触を通知
-					ball->HitWall(velFloat, worldContactPoint, normal);
+					ball->HitWall(hitMaterial->GetDebugName(), velFloat, worldContactPoint, normal);
 				}
 			}
 		}
