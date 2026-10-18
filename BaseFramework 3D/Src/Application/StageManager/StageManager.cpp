@@ -20,6 +20,16 @@ void StageManager::ResetStage()
 		m_wpIsland.lock()->SetExpire();
 	}
 
+	// デコレーション削除
+	for (auto& obj : m_wpIslandDecorations)
+	{
+		if (obj.expired())continue;
+
+		//削除
+		obj.lock()->SetExpire();
+	}
+	m_wpIslandDecorations.clear();
+
 	//天球削除
 	if (!m_wpSkySphere.expired())
 	{
@@ -47,6 +57,22 @@ bool StageManager::SaveStage(const std::string& filePath)
 	// 2. 島の情報
 	rootJson["islandModelPath"] = m_stageOverallData.m_islandPath;
 	rootJson["islandPos"] = { m_stageOverallData.m_islandPos.x,m_stageOverallData.m_islandPos.y,m_stageOverallData.m_islandPos.z };
+
+	// 2-2. デコレーションの情報
+	nlohmann::json decorationsArray = nlohmann::json::array();
+	for (const auto& deco : m_stageOverallData.m_decorationData)
+	{
+		nlohmann::json decoJson;
+
+		decoJson["modelPath"] = deco.m_modelPath;
+
+		decoJson["position"] = { deco.m_srtData.m_position.x, deco.m_srtData.m_position.y, deco.m_srtData.m_position.z };
+		decoJson["rotation"] = { deco.m_srtData.m_rotation.x, deco.m_srtData.m_rotation.y, deco.m_srtData.m_rotation.z };
+		decoJson["scale"] = { deco.m_srtData.m_scale.x, deco.m_srtData.m_scale.y, deco.m_srtData.m_scale.z };
+
+		decorationsArray.push_back(decoJson);
+	}
+	rootJson["decorations"] = decorationsArray;
 
 	// 3. フレーム（レーン）配列
 	nlohmann::json framesArray = nlohmann::json::array();
@@ -163,6 +189,7 @@ bool StageManager::LoadStage(const std::string& filePath)
 	m_stageOverallData.m_islandPath = "";
 	m_stageOverallData.m_islandPos = Math::Vector3::Zero;
 	m_stageOverallData.m_stageLaneData.clear();
+	m_stageOverallData.m_decorationData.clear();
 
 	// 1.ステージ全体の天球を読み込む
 	if (rootJson.contains("skyPath"))
@@ -178,6 +205,27 @@ bool StageManager::LoadStage(const std::string& filePath)
 	if (rootJson.contains("islandPos"))
 	{
 		m_stageOverallData.m_islandPos = ParseVector3(rootJson, "islandPos", { 0.0f, 0.0f, 0.0f });
+	}
+
+	// 2-2. 島のデコレーションを読み込む
+	if (rootJson.contains("decorations"))
+	{
+		IslandDecorationData decoData;
+		for (const auto& deco : rootJson["decorations"])
+		{
+			// 情報クリア
+			decoData = {};
+
+			// モデルパスを取得
+			decoData.m_modelPath = deco.value("modelPath", "Asset/Models/Terrain/Decoration/Stone1/Stone1.gltf");
+
+			// SRT情報を取得
+			decoData.m_srtData.m_position = ParseVector3(deco, "position", { 0.0f,0.0f,0.0f });
+			decoData.m_srtData.m_rotation = ParseVector3(deco, "rotation", { 0.0f,0.0f,0.0f });
+			decoData.m_srtData.m_scale = ParseVector3(deco, "scale", { 1.0f,1.0f,1.0f });
+
+			m_stageOverallData.m_decorationData.push_back(decoData);
+		}
 	}
 
 	// 3.各フレームのデータを見る
@@ -363,6 +411,16 @@ void StageManager::BuildStage(int laneNumber, StageBuildMode mode)
 	SCENEMGR.AddObject(island);
 	// 後で消せるようにWP持ち
 	m_wpIsland = island;
+
+	// 島のデコレーション生成
+	for (const auto& decoData : m_stageOverallData.m_decorationData)
+	{
+		std::shared_ptr<IslandDecoration> islandDeco = std::make_shared<IslandDecoration>(decoData.m_modelPath, decoData.m_srtData.m_position, decoData.m_srtData.m_rotation, decoData.m_srtData.m_scale);
+		// ゲームシーンの管理リストに追加
+		SCENEMGR.AddObject(islandDeco);
+		// 後で消せるようにWP持ち
+		m_wpIslandDecorations.push_back(islandDeco);
+	}
 
 	// 地形生成
 	std::shared_ptr<MainTerrain> mainTerrain = std::make_shared<MainTerrain>(laneData.m_terrainPath, Math::Vector3::Zero, Math::Quaternion::Identity);

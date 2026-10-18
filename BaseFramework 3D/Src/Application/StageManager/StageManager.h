@@ -45,6 +45,13 @@ struct StageLaneData
 	PlayerPlacementData m_playerData;			// プレイヤーの位置
 };
 
+// 島に配置するオブジェクトのデータ
+struct IslandDecorationData
+{
+	std::string m_modelPath;
+	LaneObjectData m_srtData;
+};
+
 // ステージ全体の情報
 struct StageOverallData
 {
@@ -52,6 +59,7 @@ struct StageOverallData
 	std::string m_islandPath;		// 島のパス
 	Math::Vector3 m_islandPos;		// 島の座標
 	std::vector<StageLaneData> m_stageLaneData;	// 各レーンの情報
+	std::vector<IslandDecorationData> m_decorationData;	// デコレーション
 };
 
 // ギミック識別enum
@@ -244,6 +252,7 @@ private:
 	std::weak_ptr<KdGameObject> m_wpSkySphere;
 	std::weak_ptr<KdGameObject> m_wpIsland;
 	std::weak_ptr<KdGameObject> m_wpMainTerrain;
+	std::vector<std::weak_ptr<KdGameObject>> m_wpIslandDecorations;
 	std::vector<std::weak_ptr<KdGameObject>> m_wpStageGimmicks;
 
 	// ステージデータ

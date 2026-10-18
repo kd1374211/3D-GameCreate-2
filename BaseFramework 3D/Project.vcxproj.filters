@@ -223,6 +223,9 @@
     <Filter Include="Src\Application\GameObject\Terrain\MainTerrain">
       <UniqueIdentifier>{a5d9d1fc-d036-4a29-ba57-83eb0db30b00}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\GameObject\Terrain\IslandDecoration">
+      <UniqueIdentifier>{db2a27cc-9942-41bd-9bb2-509e9310bdd1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -1662,6 +1665,9 @@
     <ClInclude Include="Src\Application\GameObject\Terrain\Island\Island.h">
       <Filter>Src\Application\GameObject\Terrain\Island</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\Terrain\IslandDecoration\IslandDecoration.h">
+      <Filter>Src\Application\GameObject\Terrain\IslandDecoration</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -2398,6 +2404,9 @@
     </ClCompile>
     <ClCompile Include="Src\Application\GameObject\Terrain\Island\Island.cpp">
       <Filter>Src\Application\GameObject\Terrain\Island</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\Terrain\IslandDecoration\IslandDecoration.cpp">
+      <Filter>Src\Application\GameObject\Terrain\IslandDecoration</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

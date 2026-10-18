@@ -456,6 +456,7 @@ void KdDebugGUI::GuiProcess()
 			enum class SelectedTargetCategory
 			{
 				None,
+				Decoration,
 				Gimmick,
 				Pin,
 				Player
@@ -526,6 +527,162 @@ void KdDebugGUI::GuiProcess()
 			}
 
 			// ★ セクション間の区切り
+			ImGui::Separator();
+
+			// 島のデコレーション
+			if (ImGui::TreeNode("Decoration Management"))
+			{
+				auto& decorations = stageData.m_decorationData;
+
+				// --- 追加ボタンエリア ---
+				if (ImGui::Button("+ Add Decoration", ImVec2(140, 0)))
+				{
+					IslandDecorationData newDeco;
+					newDeco.m_modelPath = "Asset/Models/Terrain/Decoration/Stone1/Stone1.gltf";
+					newDeco.m_srtData = {};
+
+					decorations.push_back(newDeco);
+
+					// 追加したデコレーションを選択状態にする
+					selectedCategory = SelectedTargetCategory::Decoration;
+					selectedIndex = static_cast<int>(decorations.size()) - 1;
+
+					STAGEMGR.BuildStage(currentLaneNo);
+				}
+
+				ImGui::Spacing();
+
+				// 1. デコレーション一覧リストボックス
+				ImGui::BeginChild("DecorationListChild", ImVec2(0, 120), true);
+				for (int i = 0; i < static_cast<int>(decorations.size()); ++i)
+				{
+					// 番号をラベルに
+					std::string label = "[" + std::to_string(i) + "] ";
+
+					// カテゴリとインデックスが両方一致している場合のみハイライト
+					bool isSelected = (selectedCategory == SelectedTargetCategory::Decoration && selectedIndex == i);
+
+					if (ImGui::Selectable(label.c_str(), isSelected))
+					{
+						// 選択カテゴリとインデックスを更新（他カテゴリの選択は自動解除）
+						selectedCategory = SelectedTargetCategory::Decoration;
+						selectedIndex = i;
+					}
+				}
+				ImGui::EndChild();
+
+				// 2. 範囲チェック（削除等でオーバーした場合の安全対策）
+				if (selectedCategory == SelectedTargetCategory::Decoration)
+				{
+					if (decorations.empty())
+					{
+						selectedCategory = SelectedTargetCategory::None;
+						selectedIndex = -1;
+					}
+					else if (selectedIndex >= static_cast<int>(decorations.size()))
+					{
+						selectedIndex = static_cast<int>(decorations.size()) - 1;
+					}
+
+				}
+
+				static std::string decoModelPathInput = "";
+				static bool isDecoModelError = false;
+				static int lastSelectedIndex = -1; // 選択切り替え検知用
+
+				// 3. 選択中デコレーションの編集UI
+				if (selectedCategory == SelectedTargetCategory::Decoration && selectedIndex >= 0 && selectedIndex < static_cast<int>(decorations.size()))
+				{
+					// 選択項目が切り替わったら入力バッファとエラー状態を同期・リセット
+					if (lastSelectedIndex != selectedIndex)
+					{
+						lastSelectedIndex = selectedIndex;
+						isDecoModelError = false;
+
+						decoModelPathInput = decorations[selectedIndex].m_modelPath;
+					}
+
+					ImGui::Separator();
+					ImGui::Text("Edit Deco [%d]", selectedIndex + 1);
+
+					auto& decoration = decorations[selectedIndex];
+					bool isChanged = false;
+
+					ImGui::Text("Current Model Path: %s", decoration.m_modelPath.c_str());
+					ImGui::InputText("Model Path##DecoInput", &decoModelPathInput);
+
+					if (isDecoModelError)
+					{
+						ImGui::TextColored(ImVec4(1.0f, 0.2f, 0.2f, 1.0f), "[Error] File does not exist!");
+					}
+
+					if (ImGui::Button("Apply Model Path", ImVec2(150, 0)))
+					{
+						if (std::filesystem::exists(decoModelPathInput))
+						{
+							isDecoModelError = false;
+							decoration.m_modelPath = decoModelPathInput;
+
+							// 構造変更のため BuildStage
+							STAGEMGR.BuildStage(currentLaneNo);
+						}
+						else
+						{
+							isDecoModelError = true;
+						}
+					}
+
+					// SRT編集
+					if (ImGui::DragFloat3("Position", &decoration.m_srtData.m_position.x, 0.01f)) isChanged = true;
+					if (ImGui::DragFloat3("Rotation", &decoration.m_srtData.m_rotation.x, 0.1f, 0.0f, 0.0f, "%.1f deg"))isChanged = true;
+					if (ImGui::DragFloat3("Scale", &decoration.m_srtData.m_scale.x, 0.01f)) isChanged = true;
+
+					// 値が更新された場合のみ再構築
+					if (isChanged)
+					{
+						STAGEMGR.BuildStage(currentLaneNo);
+					}
+
+					ImGui::Separator();
+
+					// 1. 複製ボタン（Duplicate / Copy）
+					if (ImGui::Button("Duplicate Selected", ImVec2(200, 0)))
+					{
+						// 選択中のギミックデータを深層コピー
+						auto duplicateDecoration = decorations[selectedIndex];
+
+						// （任意）重なって見づらくなるのを防ぐため座標を少しだけずらす
+						duplicateDecoration.m_srtData.m_position.x += 0.5f;
+
+						// 配列に追加
+						decorations.push_back(duplicateDecoration);
+
+						// 選択インデックスを新しく生成された末尾のギミックに変更
+						selectedIndex = static_cast<int>(decorations.size()) - 1;
+
+						// 入力バッファやエラー状態をリセット
+						lastSelectedIndex = selectedIndex;
+						isDecoModelError = false;
+						decoModelPathInput = decorations[selectedIndex].m_modelPath;
+
+						// 構造変更のため物理ワールド・ステージを再構築
+						STAGEMGR.BuildStage(currentLaneNo);
+					}
+
+					ImGui::SameLine();
+
+					// 2. 既存の削除ボタン
+					if (ImGui::Button("Delete Selected"))
+					{
+						decorations.erase(decorations.begin() + selectedIndex);
+						selectedIndex = -1; // 選択解除
+						STAGEMGR.BuildStage(currentLaneNo);
+					}
+				}
+
+				ImGui::TreePop();
+			}
+
 			ImGui::Separator();
 
 			// -------------------------------------------------------------
@@ -888,6 +1045,10 @@ void KdDebugGUI::GuiProcess()
 							{
 								gimmickModelPathInput = rot->m_modelPath;
 							}
+							if (auto* mov = std::get_if<MovingParams>(&gimmicks[selectedIndex].m_param))
+							{
+								gimmickModelPathInput = mov->m_modelPath;
+							}
 
 							// 構造変更のため物理ワールド・ステージを再構築
 							STAGEMGR.BuildStage(currentLaneNo);
@@ -1011,169 +1172,185 @@ void KdDebugGUI::GuiProcess()
 				}
 
 				ImGui::TreePop(); // Lane Placement Settings (※1) の TreePop
+			}
 
-				//右クリックで現在選択中のオブジェクトをカーソル位置に飛ばす
-				if (GetAsyncKeyState(VK_RBUTTON) & 0x8000)
+
+			//右クリックで現在選択中のオブジェクトをカーソル位置に飛ばす
+			if (GetAsyncKeyState(VK_RBUTTON) & 0x8000)
+			{
+				// マウス座標(2D)を3D座標へ変換
+				if (camera)
 				{
-					// マウス座標(2D)を3D座標へ変換
-					if (camera)
+					// 手順①
+					// マウス座標を取得
+					POINT _mousePos;
+					GetCursorPos(&_mousePos);
+					ScreenToClient(Application::Instance().GetWindowHandle(), &_mousePos);
+
+					// 手順②
+					// マウスの2D座標を3D座標へ変換する
+					Math::Vector3	rayPos = camera->GetCurrentViewPoint();
+					Math::Vector3	rayDir = Math::Vector3::Zero;
+					float			range = 2000.f;
+					camera->WorkCamera()->GenerateRayInfoFromClientPos(_mousePos, rayPos, rayDir, range);
+
+					// Jolt Physics への RayCast
+					JPH::RRayCast rayCast;
+					rayCast.mOrigin = JPH::RVec3(rayPos.x, rayPos.y, rayPos.z);
+					rayCast.mDirection = JPH::Vec3(rayDir.x, rayDir.y, rayDir.z) * range; // 飛ばす長さ
+					GroundObjectFilter groundFilter;
+
+					// DEBUG
+					AddLog("rayPos,%.2f,%.2f,%.2f\n", rayPos.x, rayPos.y, rayPos.z);
+					AddLog("rayDir,%.2f,%.2f,%.2f\n", rayDir.x, rayDir.y, rayDir.z);
+
+					// 選択中の種類と Index から直接データを特定して移動
+					Math::Vector3 selectedObjectPos;
+					if (selectedCategory == SelectedTargetCategory::Gimmick)
 					{
-						// 手順①
-						// マウス座標を取得
-						POINT _mousePos;
-						GetCursorPos(&_mousePos);
-						ScreenToClient(Application::Instance().GetWindowHandle(), &_mousePos);
+						if (selectedIndex >= 0 && selectedIndex < static_cast<int>(currentFrame.m_laneGimmickData.size()))
+						{
+							selectedObjectPos = currentFrame.m_laneGimmickData[selectedIndex].m_data.m_position;
+						}
+					}
+					else if (selectedCategory == SelectedTargetCategory::Pin)
+					{
+						if (selectedIndex >= 0 && selectedIndex < static_cast<int>(currentFrame.m_lanePinData.size()))
+						{
+							selectedObjectPos = currentFrame.m_lanePinData[selectedIndex].m_data.m_position;
+						}
+					}
+					else if (selectedCategory == SelectedTargetCategory::Player)
+					{
+						selectedObjectPos = currentFrame.m_playerData.m_position;
+					}
 
-						// 手順②
-						// マウスの2D座標を3D座標へ変換する
-						Math::Vector3	rayPos = camera->GetCurrentViewPoint();
-						Math::Vector3	rayDir = Math::Vector3::Zero;
-						float			range = 2000.f;
-						camera->WorkCamera()->GenerateRayInfoFromClientPos(_mousePos, rayPos, rayDir, range);
+					JPH::BodyID targetBodyID;
 
-						// Jolt Physics への RayCast
-						JPH::RRayCast rayCast;
-						rayCast.mOrigin = JPH::RVec3(rayPos.x, rayPos.y, rayPos.z);
-						rayCast.mDirection = JPH::Vec3(rayDir.x, rayDir.y, rayDir.z) * range; // 飛ばす長さ
-						GroundObjectFilter groundFilter;
+					// 選択中データの位置（Vector3）を Jolt Vec3 に変換
+					JPH::Vec3 pos(selectedObjectPos.x, selectedObjectPos.y, selectedObjectPos.z);
 
-						// DEBUG
-						AddLog("rayPos,%.2f,%.2f,%.2f\n", rayPos.x, rayPos.y, rayPos.z);
-						AddLog("rayDir,%.2f,%.2f,%.2f\n", rayDir.x, rayDir.y, rayDir.z);
-						
+					// 選択中の座標からわずかに広がった AABB（検索範囲）を作成
+					JPH::AABox searchBox(pos - JPH::Vec3::sReplicate(0.1f), pos + JPH::Vec3::sReplicate(0.1f));
+
+					// AABB内に含まれる BodyID を収集するコレクター
+					class SimpleCollector : public JPH::CollideShapeBodyCollector
+					{
+					public:
+						virtual void AddHit(const JPH::BodyID& inBodyID) override { m_hits.push_back(inBodyID); }
+						std::vector<JPH::BodyID> m_hits;
+					};
+
+					// 1. 新しい専用フィルターの生成
+					NonGroundObjectFilter nonGroundFilter; // 地形レイヤーを指定
+
+					// 2. AABB内での BodyID 検索実行
+					SimpleCollector collector;
+					PHYSICSMGR.GetSystem().GetBroadPhaseQuery().CollideAABox(
+						searchBox,
+						collector,
+						{},               // BroadPhaseLayerFilter（空でOK）
+						nonGroundFilter   // 作成した地形除外フィルター
+					);
+
+					// 3. 地形が除外された状態で安全に BodyID を取得
+					if (!collector.m_hits.empty())
+					{
+						targetBodyID = collector.m_hits[0];
+					}
+
+					// レイを飛ばす
+					bool hasHit = false;
+					JPH::RayCastResult hit;
+					if (!targetBodyID.IsInvalid())
+					{
+						// Jolt標準の単一Body除外フィルターをそのまま生成して渡す
+						JPH::IgnoreSingleBodyFilter selfFilter(targetBodyID);
+
+						hasHit = PHYSICSMGR.GetSystem().GetNarrowPhaseQuery().CastRay(rayCast, hit, {}, groundFilter, selfFilter);
+					}
+					else
+					{
+						hasHit = PHYSICSMGR.GetSystem().GetNarrowPhaseQuery().CastRay(rayCast, hit, {}, groundFilter);
+					}
+
+					if (hasHit)
+					{
+						// ★レイが何かに当たった！その「衝突点の3D座標」を取得
+						JPH::RVec3 hitPos = rayCast.GetPointOnRay(hit.mFraction);
+						Math::Vector3 hitVec3Pos = Math::Vector3(hitPos.GetX(), hitPos.GetY(), hitPos.GetZ());
+
 						// 選択中の種類と Index から直接データを特定して移動
-						Math::Vector3 selectedObjectPos;
+						if (selectedCategory == SelectedTargetCategory::Decoration)
+						{
+							if (selectedIndex >= 0 && selectedIndex < static_cast<int>(stageData.m_decorationData.size()))
+							{
+								auto& deco = stageData.m_decorationData[selectedIndex];
+								deco.m_srtData.m_position = Math::Vector3(hitVec3Pos.x, hitVec3Pos.y, hitVec3Pos.z);
+
+								STAGEMGR.BuildStage(currentLaneNo);
+							}
+						}
 						if (selectedCategory == SelectedTargetCategory::Gimmick)
 						{
 							if (selectedIndex >= 0 && selectedIndex < static_cast<int>(currentFrame.m_laneGimmickData.size()))
 							{
-								selectedObjectPos = currentFrame.m_laneGimmickData[selectedIndex].m_data.m_position;
+								auto& gimmick = currentFrame.m_laneGimmickData[selectedIndex];
+								gimmick.m_data.m_position = Math::Vector3(hitVec3Pos.x, hitVec3Pos.y, hitVec3Pos.z);
+
+								STAGEMGR.BuildStage(currentLaneNo);
 							}
 						}
 						else if (selectedCategory == SelectedTargetCategory::Pin)
 						{
 							if (selectedIndex >= 0 && selectedIndex < static_cast<int>(currentFrame.m_lanePinData.size()))
 							{
-								selectedObjectPos = currentFrame.m_lanePinData[selectedIndex].m_data.m_position;
-							}
-						}
-						else if (selectedCategory == SelectedTargetCategory::Player)
-						{
-							selectedObjectPos = currentFrame.m_playerData.m_position;
-						}
-
-						JPH::BodyID targetBodyID;
-
-						// 選択中データの位置（Vector3）を Jolt Vec3 に変換
-						JPH::Vec3 pos(selectedObjectPos.x, selectedObjectPos.y, selectedObjectPos.z);
-
-						// 選択中の座標からわずかに広がった AABB（検索範囲）を作成
-						JPH::AABox searchBox(pos - JPH::Vec3::sReplicate(0.1f), pos + JPH::Vec3::sReplicate(0.1f));
-
-						// AABB内に含まれる BodyID を収集するコレクター
-						class SimpleCollector : public JPH::CollideShapeBodyCollector
-						{
-						public:
-							virtual void AddHit(const JPH::BodyID& inBodyID) override { m_hits.push_back(inBodyID); }
-							std::vector<JPH::BodyID> m_hits;
-						};
-
-						// 1. 新しい専用フィルターの生成
-						NonGroundObjectFilter nonGroundFilter; // 地形レイヤーを指定
-
-						// 2. AABB内での BodyID 検索実行
-						SimpleCollector collector;
-						PHYSICSMGR.GetSystem().GetBroadPhaseQuery().CollideAABox(
-							searchBox,
-							collector,
-							{},               // BroadPhaseLayerFilter（空でOK）
-							nonGroundFilter   // 作成した地形除外フィルター
-						);
-
-						// 3. 地形が除外された状態で安全に BodyID を取得
-						if (!collector.m_hits.empty())
-						{
-							targetBodyID = collector.m_hits[0];
-						}
-
-						// レイを飛ばす
-						bool hasHit = false;
-						JPH::RayCastResult hit;
-						if (!targetBodyID.IsInvalid())
-						{
-							// Jolt標準の単一Body除外フィルターをそのまま生成して渡す
-							JPH::IgnoreSingleBodyFilter selfFilter(targetBodyID);
-
-							hasHit = PHYSICSMGR.GetSystem().GetNarrowPhaseQuery().CastRay(rayCast, hit, {}, groundFilter, selfFilter);
-						}
-						else
-						{
-							hasHit = PHYSICSMGR.GetSystem().GetNarrowPhaseQuery().CastRay(rayCast, hit, {}, groundFilter);
-						}
-
-						if (hasHit)
-						{
-							// ★レイが何かに当たった！その「衝突点の3D座標」を取得
-							JPH::RVec3 hitPos = rayCast.GetPointOnRay(hit.mFraction);
-							Math::Vector3 hitVec3Pos = Math::Vector3(hitPos.GetX(), hitPos.GetY(), hitPos.GetZ());
-
-							// 選択中の種類と Index から直接データを特定して移動
-							if (selectedCategory == SelectedTargetCategory::Gimmick)
-							{
-								if (selectedIndex >= 0 && selectedIndex < static_cast<int>(currentFrame.m_laneGimmickData.size()))
-								{
-									auto& gimmick = currentFrame.m_laneGimmickData[selectedIndex];
-									gimmick.m_data.m_position = DirectX::XMFLOAT3(hitVec3Pos.x, hitVec3Pos.y, hitVec3Pos.z);
-
-									STAGEMGR.BuildStage(currentLaneNo);
-								}
-							}
-							else if (selectedCategory == SelectedTargetCategory::Pin)
-							{
-								if (selectedIndex >= 0 && selectedIndex < static_cast<int>(currentFrame.m_lanePinData.size()))
-								{
-									auto& pin = currentFrame.m_lanePinData[selectedIndex];
-									pin.m_data.m_position = DirectX::XMFLOAT3(hitVec3Pos.x, hitVec3Pos.y, hitVec3Pos.z);
-
-									STAGEMGR.RespawnStage(currentLaneNo);
-								}
-							}
-							else if (selectedCategory == SelectedTargetCategory::Player)
-							{
-								auto& player = currentFrame.m_playerData;
-								player.m_position = DirectX::XMFLOAT3(hitVec3Pos.x, hitVec3Pos.y, hitVec3Pos.z);
+								auto& pin = currentFrame.m_lanePinData[selectedIndex];
+								pin.m_data.m_position = Math::Vector3(hitVec3Pos.x, hitVec3Pos.y, hitVec3Pos.z);
 
 								STAGEMGR.RespawnStage(currentLaneNo);
 							}
 						}
+						else if (selectedCategory == SelectedTargetCategory::Player)
+						{
+							auto& player = currentFrame.m_playerData;
+							player.m_position = Math::Vector3(hitVec3Pos.x, hitVec3Pos.y, hitVec3Pos.z);
+
+							STAGEMGR.RespawnStage(currentLaneNo);
+						}
 					}
 				}
-
-				// -------------------------------------------------------------
-				// E. 選択オブジェクトの位置を取得して DebugSphere に表示
-				// -------------------------------------------------------------
-				Math::Vector3 debugPos = { 0.0f, 0.0f, 0.0f };
-				bool hasSelection = false;
-
-				if (selectedCategory == SelectedTargetCategory::Gimmick && selectedIndex >= 0 && selectedIndex < static_cast<int>(currentFrame.m_laneGimmickData.size()))
-				{
-					debugPos = currentFrame.m_laneGimmickData[selectedIndex].m_data.m_position;
-					hasSelection = true;
-				}
-				else if (selectedCategory == SelectedTargetCategory::Pin && selectedIndex >= 0 && selectedIndex < static_cast<int>(currentFrame.m_lanePinData.size()))
-				{
-					debugPos = currentFrame.m_lanePinData[selectedIndex].m_data.m_position;
-					hasSelection = true;
-				}
-				else if (selectedCategory == SelectedTargetCategory::Player)
-				{
-					debugPos = currentFrame.m_playerData.m_position;
-					hasSelection = true;
-				}
-
-				// STAGEMGR に選択中の座標を渡して DebugSphere を表示
-				STAGEMGR.SetDebugOutlinePos(hasSelection, debugPos);
 			}
+
+			// -------------------------------------------------------------
+			// E. 選択オブジェクトの位置を取得して DebugSphere に表示
+			// -------------------------------------------------------------
+			Math::Vector3 debugPos = { 0.0f, 0.0f, 0.0f };
+			bool hasSelection = false;
+
+			if (selectedCategory == SelectedTargetCategory::Decoration && selectedIndex >= 0 && selectedIndex < static_cast<int>(stageData.m_decorationData.size()))
+			{
+				debugPos = stageData.m_decorationData[selectedIndex].m_srtData.m_position;
+				hasSelection = true;
+			}
+			if (selectedCategory == SelectedTargetCategory::Gimmick && selectedIndex >= 0 && selectedIndex < static_cast<int>(currentFrame.m_laneGimmickData.size()))
+			{
+				debugPos = currentFrame.m_laneGimmickData[selectedIndex].m_data.m_position;
+				hasSelection = true;
+			}
+			else if (selectedCategory == SelectedTargetCategory::Pin && selectedIndex >= 0 && selectedIndex < static_cast<int>(currentFrame.m_lanePinData.size()))
+			{
+				debugPos = currentFrame.m_lanePinData[selectedIndex].m_data.m_position;
+				hasSelection = true;
+			}
+			else if (selectedCategory == SelectedTargetCategory::Player)
+			{
+				debugPos = currentFrame.m_playerData.m_position;
+				hasSelection = true;
+			}
+
+			// STAGEMGR に選択中の座標を渡して DebugSphere を表示
+			STAGEMGR.SetDebugOutlinePos(hasSelection, debugPos);
 		}
 		ImGui::End();
 	}

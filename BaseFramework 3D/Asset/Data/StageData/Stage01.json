@@ -1,4 +1,204 @@
 {
+    "decorations": [
+        {
+            "modelPath": "Asset/Models/Terrain/Decoration/Stone1/Stone1.gltf",
+            "position": [
+                7.567875862121582,
+                -0.5,
+                -14.362909317016602
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ]
+        },
+        {
+            "modelPath": "Asset/Models/Terrain/Decoration/Stone1/Stone1.gltf",
+            "position": [
+                9.22429084777832,
+                -0.5,
+                2.639862060546875
+            ],
+            "rotation": [
+                0.0,
+                125.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ]
+        },
+        {
+            "modelPath": "Asset/Models/Terrain/Decoration/Stone2/Stone2.gltf",
+            "position": [
+                -5.71890926361084,
+                -0.5,
+                -14.378596305847168
+            ],
+            "rotation": [
+                0.0,
+                28.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ]
+        },
+        {
+            "modelPath": "Asset/Models/Terrain/Decoration/Stone2/Stone2.gltf",
+            "position": [
+                -13.594025611877441,
+                -0.5,
+                -2.10233211517334
+            ],
+            "rotation": [
+                0.0,
+                130.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ]
+        },
+        {
+            "modelPath": "Asset/Models/Terrain/Decoration/Stone1/Stone1.gltf",
+            "position": [
+                -7.2510576248168945,
+                -0.4999995231628418,
+                -8.120341300964355
+            ],
+            "rotation": [
+                0.0,
+                43.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ]
+        },
+        {
+            "modelPath": "Asset/Models/Terrain/Decoration/Stone3/Stone3.gltf",
+            "position": [
+                -9.15262508392334,
+                -0.4999995231628418,
+                9.73299789428711
+            ],
+            "rotation": [
+                0.0,
+                210.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ]
+        },
+        {
+            "modelPath": "Asset/Models/Terrain/Decoration/Tree1/Tree1.gltf",
+            "position": [
+                10.384757995605469,
+                -0.4999995231628418,
+                -5.386127471923828
+            ],
+            "rotation": [
+                0.0,
+                120.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ]
+        },
+        {
+            "modelPath": "Asset/Models/Terrain/Decoration/Tree1/Tree1.gltf",
+            "position": [
+                -0.8301963806152344,
+                -0.4999995231628418,
+                -16.743860244750977
+            ],
+            "rotation": [
+                0.0,
+                210.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ]
+        },
+        {
+            "modelPath": "Asset/Models/Terrain/Decoration/Tree1/Tree1.gltf",
+            "position": [
+                -8.19554615020752,
+                -0.5,
+                -10.853519439697266
+            ],
+            "rotation": [
+                0.0,
+                72.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ]
+        },
+        {
+            "modelPath": "Asset/Models/Terrain/Decoration/Tree2/Tree2.gltf",
+            "position": [
+                -7.48199987411499,
+                -0.5,
+                1.1945219039916992
+            ],
+            "rotation": [
+                0.0,
+                278.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ]
+        },
+        {
+            "modelPath": "Asset/Models/Terrain/Decoration/Tree2/Tree2.gltf",
+            "position": [
+                5.165358543395996,
+                -0.5,
+                9.776909828186035
+            ],
+            "rotation": [
+                0.0,
+                17.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ]
+        }
+    ],
     "frames": [
         {
             "frameNumber": 1,
@@ -2374,7 +2574,11 @@
             "terrainPath": "Asset/Models/Terrain/Stage10/Stage10.gltf"
         }
     ],
-	"skyPath": "Asset/Models/Sky/SkySphere/SkySphere.gltf",
-	"islandModelPath": "Asset/Models/Terrain/Island/Island.gltf",
-	"islandPos": [-0.5,0.0,0.0]
+    "islandModelPath": "Asset/Models/Terrain/Island/Island.gltf",
+    "islandPos": [
+        0.0,
+        -0.0,
+        0.0
+    ],
+    "skyPath": "Asset/Models/Sky/SkySphere/SkySphere.gltf"
 }

@@ -26,7 +26,7 @@
 	"materials":[
 		{
 			"doubleSided":true,
-			"name":"Grass_NormalGround",
+			"name":"Stone_NormalGround",
 			"normalTexture":{
 				"index":0
 			},
@@ -39,7 +39,7 @@
 		},
 		{
 			"doubleSided":true,
-			"name":"Grass_NormalWall",
+			"name":"Stone_NormalWall",
 			"normalTexture":{
 				"index":2
 			},
@@ -222,13 +222,13 @@
 	"images":[
 		{
 			"mimeType":"image/png",
-			"name":"GrassGround2_Normal",
-			"uri":"GrassGround2_Normal.png"
+			"name":"StoneGround_Normal",
+			"uri":"StoneGround_Normal.png"
 		},
 		{
 			"mimeType":"image/png",
-			"name":"GrassGround2",
-			"uri":"GrassGround2.png"
+			"name":"StoneGround",
+			"uri":"StoneGround.png"
 		},
 		{
 			"mimeType":"image/png",
