@@ -7,14 +7,15 @@ enum class ModelMaterialType
 	NormalWall,
 	GutterGround,
 	GutterWall,
+	IslandGround,
 	Number
 };
 
 // マテリアル毎の物理ステータス
 struct MatPhysicsConst
 {
-	static constexpr float Friction[(size_t)ModelMaterialType::Number] = { 0.05f,0.05f,0.05f,0.05f };
-	static constexpr float Restitution[(size_t)ModelMaterialType::Number] = { 0.0f,0.9f,0.0f,0.0f };
+	static constexpr float Friction[(size_t)ModelMaterialType::Number] = { 0.05f,0.05f,0.05f,0.05f,2.4f };
+	static constexpr float Restitution[(size_t)ModelMaterialType::Number] = { 0.0f,0.9f,0.0f,0.0f,0.0f };
 };
 
 static std::string PhysicMaterialName[(size_t)ModelMaterialType::Number] =
@@ -22,7 +23,17 @@ static std::string PhysicMaterialName[(size_t)ModelMaterialType::Number] =
 	"NormalGround",
 	"NormalWall",
 	"GutterGround",
-	"GutterWall"
+	"GutterWall",
+	"IslandGround"
+};
+
+static std::string PhysicMaterialKeyWord[(size_t)ModelMaterialType::Number] =
+{
+	"normalground",
+	"normalwall",
+	"gutterground",
+	"gutterwall",
+	"islandground"
 };
 
 struct MaterialNameCheck
@@ -47,7 +58,8 @@ struct MaterialNameCheck
  	static inline const bool IsGround(const std::string& name)
 	{
 		return name == PhysicMaterialName[(size_t)ModelMaterialType::NormalGround]
-			|| name == PhysicMaterialName[(size_t)ModelMaterialType::GutterGround];
+			|| name == PhysicMaterialName[(size_t)ModelMaterialType::GutterGround]
+			|| name == PhysicMaterialName[(size_t)ModelMaterialType::IslandGround];
 	}
 
 	// 壁チェック
@@ -61,7 +73,8 @@ struct MaterialNameCheck
 	static inline const bool IsImpactSound(const std::string& name)
 	{
 		return name == PhysicMaterialName[(size_t)ModelMaterialType::NormalGround]
-			|| name == PhysicMaterialName[(size_t)ModelMaterialType::NormalWall];
+			|| name == PhysicMaterialName[(size_t)ModelMaterialType::NormalWall]
+			|| name == PhysicMaterialName[(size_t)ModelMaterialType::IslandGround];
 	}
 };
 

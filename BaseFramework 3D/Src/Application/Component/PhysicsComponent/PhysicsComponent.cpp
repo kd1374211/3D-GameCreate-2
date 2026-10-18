@@ -40,26 +40,21 @@ bool PhysicsComponent::InitTerrainModel(const std::string& path, PhysicsInitData
 		std::transform(matName.begin(), matName.end(), matName.begin(), ::tolower);
 
 		// 名前に含まれている文字列からマテリアルを振り分け
-		if (matName.find("normalground") != std::string::npos)
+		bool isMatFound = false;
+		for (size_t matType = 0; matType < (size_t)ModelMaterialType::Number; matType++)
 		{
-			modelMatToJphMatMap[i] = 0; // NormalGround
+			if (matName.find(PhysicMaterialKeyWord[matType]) != std::string::npos)
+			{
+				modelMatToJphMatMap[i] = matType;
+				isMatFound = true;
+				break;
+			}
 		}
-		else if(matName.find("normalwall") != std::string::npos)
+
+		// 見つからなかったら通常地面とする
+		if (!isMatFound)
 		{
-			modelMatToJphMatMap[i] = 1; // NormalWall
-		}
-		else if (matName.find("gutterground") != std::string::npos)
-		{
-			modelMatToJphMatMap[i] = 2; // GutterGround
-		}
-		else if (matName.find("gutterwall") != std::string::npos)
-		{
-			modelMatToJphMatMap[i] = 3; // GutterWall
-		}
-		else
-		{
-			// エラー
-			modelMatToJphMatMap[i] = 0; // NormalGround
+			modelMatToJphMatMap[i] = 0;
 		}
 	}
 
