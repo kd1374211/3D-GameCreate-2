@@ -44,7 +44,8 @@ void FinishArea::Init()
 	Math::Matrix trans = Math::Matrix::CreateTranslation(m_pos);
 	Math::Matrix rotat = Math::Matrix::CreateFromQuaternion(m_rot);
 	Math::Matrix scale = Math::Matrix::CreateScale(m_scale);
-	m_mWorld = scale * rotat * trans;
+	Math::Matrix overallScale = GetOverAllScaleMat();
+	m_mWorld = scale * rotat * trans * overallScale;
 
 	// 各面のマトリックス
 	for (int i = 0; i < FinishAreaConsts::TrailCPCount; i++)

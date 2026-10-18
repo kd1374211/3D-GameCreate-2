@@ -8,7 +8,7 @@ void PointTargetCamera::Init(Math::Vector3 targetPos)
 
 	// 基準位置
 	SetTarget(targetPos);
-	SetViewPoint(targetPos + Math::Vector3(0, 0.7f, -3.0f));
+	SetViewPoint(targetPos + Math::Vector3(0, 0.07f, -0.3f));
 	m_DegAng = Math::Vector3::Zero;
 }
 
@@ -53,7 +53,7 @@ void PointTargetCamera::MoveCamera()
 	}
 
 	move.Normalize();
-	move *= 0.2f;
+	move *= 0.02f;
 
 	// 移動を歪める
 	Math::Vector3 moveNormal = Math::Vector3::TransformNormal(move, GetRotationYMatrix());
@@ -97,6 +97,6 @@ void PointTargetCamera::SetViewPoint(Math::Vector3 point)
 void PointTargetCamera::MoveTargetPoint(Math::Vector3 target)
 {
 	SetTarget(target);
-	SetViewPoint(target + Math::Vector3(0, 0.7f, -3.0f));
+	SetViewPoint(target + Math::Vector3(0, 0.07f, -0.3f));
 	m_DegAng = Math::Vector3::Zero;
 }

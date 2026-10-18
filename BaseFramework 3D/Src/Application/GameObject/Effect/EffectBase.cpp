@@ -38,7 +38,8 @@ void EffectBase::PreDraw()
 	Math::Matrix scale = Math::Matrix::CreateScale(m_data.m_scale * m_scaleMulti);
 	Math::Matrix rotat = Math::Matrix::CreateFromYawPitchRoll(m_rot);
 	Math::Matrix trans = Math::Matrix::CreateTranslation(m_pos);
-	m_mWorld = scale * rotat * trans;
+	Math::Matrix overallScale = GetOverAllScaleMat();
+	m_mWorld = scale * rotat * trans * overallScale;
 }
 
 void EffectBase::DrawEffect()
