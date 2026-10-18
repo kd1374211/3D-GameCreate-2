@@ -1,5 +1,4 @@
 ﻿#include "KdGameObject.h"
-#include "../../Application/Const/GameSystemConst.h"
 
 void KdGameObject::DrawDebug()
 {
@@ -61,9 +60,3 @@ bool KdGameObject::Intersects(const KdCollider::RayInfo& targetShape, std::list<
 
 	return m_pCollider->Intersects(targetShape, m_mWorld, pResults);
 }
-
-const Math::Matrix& KdGameObject::GetOverAllScaleMat() const
-{
-	return Math::Matrix::CreateScale(GameSystemConst::OverAllScale);
-}
-

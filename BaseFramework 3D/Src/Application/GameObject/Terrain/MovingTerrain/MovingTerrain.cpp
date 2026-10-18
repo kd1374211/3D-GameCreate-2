@@ -51,8 +51,7 @@ MovingTerrain::MovingTerrain(Math::Vector3 pos, Math::Vector3 rot, Math::Vector3
 	Math::Matrix trans = Math::Matrix::CreateTranslation(m_pos);
 	Math::Matrix rotat = Math::Matrix::CreateFromQuaternion(m_rot);
 	Math::Matrix scale = Math::Matrix::CreateScale(m_scale);
-	Math::Matrix overallScale = GetOverAllScaleMat();
-	m_mWorld = scale * rotat * trans * overallScale;
+	m_mWorld = scale * rotat * trans;
 }
 
 void MovingTerrain::Update()
@@ -116,9 +115,8 @@ void MovingTerrain::PostUpdate()
 	Math::Matrix rotat = Math::Matrix::CreateFromQuaternion(m_rot);
 	Math::Matrix trans = Math::Matrix::CreateTranslation(m_pos);
 	Math::Matrix scale = Math::Matrix::CreateScale(m_scale);
-	Math::Matrix overallScale = GetOverAllScaleMat();
 	//  ワールド行列の合成（旋回 → 移動)
-	m_mWorld = scale * rotat * trans * overallScale;
+	m_mWorld = scale * rotat * trans;
 }
 
 void MovingTerrain::DrawUnLit()

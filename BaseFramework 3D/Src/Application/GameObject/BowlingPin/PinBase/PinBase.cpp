@@ -59,8 +59,7 @@ void PinBase::PostUpdate()
 	// Matrix更新
 	Math::Matrix trans = Math::Matrix::CreateTranslation(m_pos);
 	Math::Matrix rotMat = Math::Matrix::CreateFromQuaternion(m_rot);
-	Math::Matrix overallScale = GetOverAllScaleMat();
-	m_mWorld = rotMat * trans * overallScale; // ワールド行列を更新
+	m_mWorld = rotMat * trans; // ワールド行列を更新
 }
 
 void PinBase::DrawLit()

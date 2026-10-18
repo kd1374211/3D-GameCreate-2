@@ -6,7 +6,7 @@ void TPSCamera::Init()
 	CameraBase::Init();
 
 	// 注視点
-	m_mLocalPos = Math::Matrix::CreateTranslation(0, 0.04f, -0.23f);
+	m_mLocalPos = Math::Matrix::CreateTranslation(0, 0.4f, -2.3f);
 	
 	// 見下ろし
 	m_mLocalRot = Math::Matrix::CreateRotationX(DirectX::XMConvertToRadians(30.0f));
@@ -50,7 +50,7 @@ void TPSCamera::PostUpdate()
 	if (_spTarget)
 	{
 		Math::Vector3 _targetPos = _spTarget->GetPos();
-		_targetPos.y += 0.01f;
+		_targetPos.y += 0.1f;
 		rayInfo.m_dir = _targetPos - GetPos();
 		rayInfo.m_range = rayInfo.m_dir.Length();
 		rayInfo.m_dir.Normalize();
@@ -88,7 +88,7 @@ void TPSCamera::PostUpdate()
 			{
 				// 何かしらの障害物に当たっている
 				Math::Vector3 _hitPos = hitPos;
-				_hitPos += rayInfo.m_dir * 0.04f;
+				_hitPos += rayInfo.m_dir * 0.4f;
 				SetPos(_hitPos);
 			}
 		}

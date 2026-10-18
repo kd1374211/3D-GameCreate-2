@@ -51,7 +51,6 @@ void RotatingTerrain::PostUpdate()
 	Math::Matrix rotat = Math::Matrix::CreateFromQuaternion(m_rot);
 	Math::Matrix trans = Math::Matrix::CreateTranslation(m_pos);
 	Math::Matrix scale = Math::Matrix::CreateScale(m_scale);
-	Math::Matrix overallScale = GetOverAllScaleMat();
 	//  ワールド行列の合成（旋回 → 移動)
-	m_mWorld = scale * rotat * trans * overallScale;
+	m_mWorld = scale * rotat * trans;
 }

@@ -19,7 +19,7 @@ VSOutput main(
 	if (g_OutLineEnable)
 	{
 		// 頂点座標を法線方向に少しずらす
-		pos.xyz = pos.xyz + normal * 0.002;
+		pos.xyz = pos.xyz + normal * 0.02;
 	}
 	
 	// スキニング---------------->
