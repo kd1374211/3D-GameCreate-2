@@ -47,7 +47,7 @@ void TitleScene::Init()
 	//ステージ確認カメラ
 	std::shared_ptr<StageViewCamera> camera = std::make_shared<StageViewCamera>();
 	camera->Init();
-	camera->SetViewDistance(20.0f);
+	camera->SetViewDistance(2.0f);
 
 	//マネージャー
 	CAMERAMGR.SetGameCamera(camera);

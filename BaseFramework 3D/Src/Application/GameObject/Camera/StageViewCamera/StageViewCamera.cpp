@@ -6,7 +6,7 @@ void StageViewCamera::Init()
 	CameraBase::Init();
 
 	// 注視点
-	m_mLocalPos = Math::Matrix::CreateTranslation(0, 0.7f, -3.0f);
+	m_mLocalPos = Math::Matrix::CreateTranslation(0, 0.07f, -0.3f);
 
 	// 見下ろし
 	m_mLocalRot = Math::Matrix::CreateRotationX(DirectX::XMConvertToRadians(20.0f));

@@ -1662,6 +1662,9 @@
     <ClInclude Include="Src\Application\GameObject\Terrain\Island\Island.h">
       <Filter>Src\Application\GameObject\Terrain\Island</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\Const\GameSystemConst.h">
+      <Filter>Src\Application\Const</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
