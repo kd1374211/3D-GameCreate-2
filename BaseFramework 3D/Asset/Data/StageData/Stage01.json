@@ -2376,5 +2376,5 @@
     ],
 	"skyPath": "Asset/Models/Sky/SkySphere/SkySphere.gltf",
 	"islandModelPath": "Asset/Models/Terrain/Island/Island.gltf",
-	"islandPos": [0.0,0.0,0.0]
+	"islandPos": [-0.5,0.0,0.0]
 }

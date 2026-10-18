@@ -20,7 +20,7 @@ void ResultScene::Init()
 	//ステージ確認カメラ
 	std::shared_ptr<StageViewCamera> camera = std::make_shared<StageViewCamera>();
 	camera->Init();
-	camera->SetViewDistance(2.0f);
+	camera->SetViewDistance(20.0f);
 
 	//さっき生成した地形をターゲットに
 	if (!STAGEMGR.GetTerrain().expired())

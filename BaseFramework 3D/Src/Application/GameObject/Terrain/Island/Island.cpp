@@ -28,6 +28,5 @@ Island::Island(const std::string& modelPath, const Math::Vector3& pos)
 
 	Math::Matrix trans = Math::Matrix::CreateTranslation(m_pos);
 	Math::Matrix rotat = Math::Matrix::CreateFromQuaternion(m_rot);
-	Math::Matrix overallScale = GetOverAllScaleMat();
-	m_mWorld = rotat * trans * overallScale;
+	m_mWorld = rotat * trans;
 }

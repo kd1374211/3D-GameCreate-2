@@ -10,7 +10,6 @@
 #include "../../../Cursor/CursorManager.h"
 #include "../../Effect/EffectManager.h"
 #include "../../../Sound/SoundManager.h"
-#include "../../../Const/GameSystemConst.h"
 
 BowlingBall::BowlingBall()
 {
@@ -197,7 +196,7 @@ void BowlingBall::Update()
 			{
 				// ボールの位置を変換
 				Math::Vector3 resultPos;
-				activeCam->WorkCamera()->ConvertWorldToScreenDetail(m_pos* GameSystemConst::OverAllScale, resultPos);
+				activeCam->WorkCamera()->ConvertWorldToScreenDetail(m_pos, resultPos);
 
 				// そこに指定
 				cursor->SetDrawPos(Math::Vector2(resultPos.x, resultPos.y));
@@ -251,17 +250,14 @@ void BowlingBall::PostUpdate()
 	// 2. 位置（Translation）
 	Math::Matrix trans = Math::Matrix::CreateTranslation(m_pos);
 
-	// 3. 拡縮（座標も）
-	Math::Matrix overallScale = GetOverAllScaleMat();
-
 	// 3. ワールド行列の合成（旋回 → 移動)
-	m_mWorld = rotat * trans * overallScale;
+	m_mWorld = rotat * trans;
 
 	// 矢印配置テスト
 	if (m_isInputEnabled) // 左クリックホールド中
 	{
-		Math::Matrix arrowLocalPos = Math::Matrix::CreateTranslation(0, 0, 0.025f);
-		Math::Matrix arrowScale = Math::Matrix::CreateScale(Math::Vector3(0.025f, 0.025f, 0.025f));
+		Math::Matrix arrowLocalPos = Math::Matrix::CreateTranslation(0, 0, 0.25f);
+		Math::Matrix arrowScale = Math::Matrix::CreateScale(Math::Vector3(0.25f, 0.25f, 0.25f));
 		Math::Matrix arrowRotX = Math::Matrix::CreateRotationX(DirectX::XMConvertToRadians(90.0f));
 
 		// カメラからY回転を取得
@@ -277,7 +273,7 @@ void BowlingBall::PostUpdate()
 
 		// C. 位置（Translation）
 		Math::Matrix matTrans = Math::Matrix::CreateTranslation(
-			m_pos * GameSystemConst::OverAllScale
+			m_pos
 		);
 
 		//
