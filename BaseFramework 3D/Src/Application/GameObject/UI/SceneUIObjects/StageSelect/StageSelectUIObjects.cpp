@@ -53,15 +53,10 @@ void StageSelectUIObject::DrawSprite()
 	//ステージ名
 	KdShaderManager::Instance().m_spriteShader.DrawFont(FontTypeConst::StageSelect_StageName, StageSelectUIConsts::StageNamePos, &kWhiteColor, stageInfo->m_stageName.c_str(), TextAlign::Center);
 
-	//クリアしているか
-	if (stageSave->m_isClear)
-	{
-		KdShaderManager::Instance().m_spriteShader.DrawFont(FontTypeConst::StageSelect_Cleared, StageSelectUIConsts::ClearedTextPos, &kGreenColor, "Cleared!", TextAlign::Center);
-	}
-
-	// ピン
-	// アイコン
-	KdShaderManager::Instance().m_spriteShader.DrawTex(m_pinTex, StageSelectUIConsts::PinIconPos.x, StageSelectUIConsts::PinIconPos.y);
+	// 最高スコア
+	std::string bestScoreText = "";
+	bestScoreText = "最高スコア : " + std::to_string(stageSave->m_bestScore);
+	KdShaderManager::Instance().m_spriteShader.DrawFont(FontTypeConst::StageSelect_BestScore, StageSelectUIConsts::BestScoreTextPos, &kWhiteColor, bestScoreText.c_str(), TextAlign::Center);
 
 	// 操作キーヘルプ
 	std::string keyHelpText = "[MOUSE] 選択   [LCLICK] 決定";

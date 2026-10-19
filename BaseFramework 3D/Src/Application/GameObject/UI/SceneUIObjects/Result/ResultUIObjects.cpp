@@ -58,6 +58,12 @@ void ResultUIObject::DrawSprite()
 	color = kWhiteColor;
 	KdShaderManager::Instance().m_spriteShader.DrawFont(FontTypeConst::Result_StageName, ResultUIConsts::StageNameTextPos , &color, text.c_str(), TextAlign::Center);
 
+	// 新記録
+	if (m_isNewRecord)
+	{
+		KdShaderManager::Instance().m_spriteShader.DrawFont(FontTypeConst::Result_NewRecord, ResultUIConsts::NewRecordTextPos, &kGreenColor, "New Record!!", TextAlign::Center);
+	}
+
 	// 各フレームごとに
 	for (const auto& data : m_gameResult.m_frameResult)
 	{

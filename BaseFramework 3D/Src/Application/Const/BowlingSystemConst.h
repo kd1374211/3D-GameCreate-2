@@ -41,5 +41,6 @@ struct ScoreDatas
 	struct GameResult
 	{
 		std::array<FrameScoreData, BowlingSystemConsts::FrameCount> m_frameResult;		// 各フレームのリザルト
+		int m_totalScore;																// ステージ全体の合計スコア
 	};
 };

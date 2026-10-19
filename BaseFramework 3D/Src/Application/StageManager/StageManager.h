@@ -161,10 +161,6 @@ public:
 	const StageInfo* GetStageInfo(int stageNo) const;
 	const StageInfo* GetStageInfo() const;
 
-	// リザルト画面で取得用
-	//GameResult GetLastGameResult() const { return m_lastGameResult; }
-	//int GetLastGameStarCount()const { return m_lastStarCount; }
-
 	//ステージ数ゲッター（仮置き）
 	int GetMaxStageNo()const { return static_cast<int>(m_stageTable.size()); }
 	int GetMinStageNo()const { return 1; }
@@ -179,10 +175,6 @@ public:
 
 	// エディター用
 	StageOverallData& WorkStageData() { return m_stageOverallData; }
-
-	// 仮置きスコア表示用
-	void SetTotalScore(int score) { m_score = score; }
-	int GetScore()const { return m_score; }
 
 private:
 

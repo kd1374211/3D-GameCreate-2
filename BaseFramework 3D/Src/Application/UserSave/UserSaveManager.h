@@ -3,9 +3,8 @@
 
 struct StageSaveData
 {
-	int m_stageNo = 0;				//ステージ番号
-	bool m_isClear = false;			//クリアしているか
-	int m_bestPinFallen = 0;		//最大ピン数
+	int m_stageNo = 0;				// ステージ番号
+	int m_bestScore = 0;				// 最高得点
 };
 
 //リザルト
@@ -25,14 +24,7 @@ public:
 	void Init();
 
 	// セーブデータ更新
-	void UpdateSave();
-
-	//// ゲームクリア時に呼び出して結果を保存
-	//void SetGameResult(GameResult result)
-	//{
-	//	m_lastGameResult = result;
-	//	m_lastStarCount = CalculateCurrentStageStarCount(m_lastGameResult.m_fallenPinCnt, result.m_isCleared);
-	//}
+	bool UpdateSave(int score);
 
 	// ステージ番号からセーブ情報を取得（存在しない場合は nullptr）
 	const StageSaveData* GetUserSave(int stageNo) const;

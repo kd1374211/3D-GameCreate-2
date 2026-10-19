@@ -9,8 +9,27 @@ void UserSaveManager::Init()
 	}
 }
 
-void UserSaveManager::UpdateSave()
-{}
+bool UserSaveManager::UpdateSave(int score)
+{
+	// 更新確認
+	auto recordData = WorkUserSave();
+
+	// スコアが増えていたら
+	if (score > recordData->m_bestScore)
+	{
+		// スコア更新
+		recordData->m_bestScore = score;
+
+		// セーブ
+		SaveUserSaveData();
+
+		// 更新した
+		return true;
+	}
+
+	// 更新していない
+	return false;
+}
 
 const StageSaveData* UserSaveManager::GetUserSave(int stageNo) const
 {
@@ -71,8 +90,7 @@ bool UserSaveManager::LoadUserSaveData()
 
 		// .value("キー名", デフォルト値) を使うことで、キーが存在しなくても安全に取得可能
 		data.m_stageNo = item.value("stageNo", 0);
-		data.m_isClear = item.value("isClear", false);
-		data.m_bestPinFallen = item.value("bestPinsFallen", 0);
+		data.m_bestScore = item.value("bestScore", 0);
 
 		// stageNo をキーとしてマップに格納
 		if (data.m_stageNo > 0)
@@ -93,8 +111,7 @@ bool UserSaveManager::SaveUserSaveData()
 	{
 		nlohmann::json jObj;
 		jObj["stageNo"] = obj.second.m_stageNo;
-		jObj["isClear"] = obj.second.m_isClear;
-		jObj["bestPinsFallen"] = obj.second.m_bestPinFallen;
+		jObj["bestScore"] = obj.second.m_bestScore;
 
 		rootJson.push_back(jObj);
 	}

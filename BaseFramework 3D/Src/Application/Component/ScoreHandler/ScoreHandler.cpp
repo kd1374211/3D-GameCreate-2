@@ -182,6 +182,12 @@ void ScoreHandler::CreateGameResult(ScoreDatas::GameResult& result)
 
 		// リザルトに追加
 		result.m_frameResult[i] = data;
+
+		// 最後のフレームなら合計点にも追加
+		if (i == BowlingSystemConsts::LastFrame)
+		{
+			result.m_totalScore = totalScore;
+		}
 	}
 }
 

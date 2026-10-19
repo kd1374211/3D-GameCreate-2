@@ -14,20 +14,11 @@ struct StageSelectUIConsts
 	static constexpr Math::Vector2 ThumbnailPos = { 320.0f, 165.0f };
 	static constexpr Math::Vector2 ThumbnailSize = { 480.0f, 270.0f };
 
-	// 星
-	static constexpr float StarListPosY = -120.0f;
-	static constexpr float StarListBasePosX = 270.0f;
-	static constexpr float StarPosDiffX = 40.0f;
-
-	// ピン数
-	static constexpr Math::Vector2 PinIconPos = { 240.0f, -170.0f };
-	static constexpr Math::Vector2 PinCountTextPos = { 390.0f, -170.0f };
-
 	// テキスト
 	static constexpr Math::Vector2 StageNamePos = { 310.0f, -30.0f };
-	static constexpr Math::Vector2 ClearedTextPos = { 310.0f,-90.0f };
+	static constexpr Math::Vector2 BestScoreTextPos = { 310.0f,-160.0f };
 
-	// ── 操作ガイド ──
+	// 操作ガイド
 	static constexpr Math::Vector2 KeyHelpPos = { 0.0f, -330.0f }; // 画面最下部・中央
 };
 

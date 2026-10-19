@@ -313,9 +313,6 @@ void GameScene::UpdateEnd()
 	//リザルト移行
 	if (m_isSceneChangeReady)
 	{
-		// スコア仮転送用
-		STAGEMGR.SetTotalScore(m_cScoreHandler->GetTotalScoreInt(BowlingSystemConsts::LastFrame));
-
 		SceneManager::Instance().SetNextScene
 		(
 			SceneManager::SceneType::Result

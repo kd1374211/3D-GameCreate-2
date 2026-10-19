@@ -9,6 +9,7 @@
 #include "../../GameObject/Camera/CameraManager.h"
 #include "../../Cursor/CursorManager.h"
 #include "../../Sound/SoundManager.h"
+#include "../../UserSave/UserSaveManager.h"
 
 void ResultScene::Init()
 {
@@ -51,6 +52,8 @@ void ResultScene::Init()
 
 	// UIに送信
 	UIObj->SetGameResult(result);
+	// セーブ確認
+	UIObj->SetIsNewRecord(SAVEMGR.UpdateSave(result.m_totalScore));
 
 	// カーソル表示
 	CURSOR.SetIsShowCursor(true);
@@ -87,7 +90,4 @@ void ResultScene::Event()
 			}
 		}
 	}
-
-	// DEBUG
-	KdDebugGUI::Instance().AddLog("Total Score : %d\n", STAGEMGR.GetScore());
 }

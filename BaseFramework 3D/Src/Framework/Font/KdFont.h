@@ -23,14 +23,12 @@ struct FontTypeConst
 	//StageSelect	
 	static constexpr int StageSelect_StageListName = 2;
 	static constexpr int StageSelect_StageName = 4;
-	static constexpr int StageSelect_Cleared = 3;
 	static constexpr int StageSelect_KeyGuide = 3;
-	static constexpr int StageSelect_PinCount = 3;
+	static constexpr int StageSelect_BestScore = 4;
 
 	// Game
 	static constexpr int Game_ThrowStart = 8;
 	static constexpr int Game_ThrowResult = 9;
-	static constexpr int Game_TimerAndPin = 7;
 	static constexpr int Game_StageFinish = 9;
 	static constexpr int Game_KeyGuide = 4;
 	static constexpr int Game_MiddleResultFrameNo = 0;
@@ -40,9 +38,8 @@ struct FontTypeConst
 	//Result
 	static constexpr int Result_ResultTop = 6;
 	static constexpr int Result_StageName = 4;
+	static constexpr int Result_NewRecord = 3;
 	static constexpr int Result_PinCount = 5;
-	static constexpr int Result_TimeLeft = 5;
-	static constexpr int Result_StarList = 3;
 	static constexpr int Result_ButtonIndex = 6;
 	static constexpr int Result_Buttom = 4;
 

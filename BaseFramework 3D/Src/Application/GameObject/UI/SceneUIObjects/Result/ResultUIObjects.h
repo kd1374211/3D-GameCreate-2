@@ -13,6 +13,7 @@ struct ResultUIConsts
 	// テキスト
 	static constexpr Math::Vector2 ResultTopTextPos = Math::Vector2(0.0f, 230.0f);
 	static constexpr Math::Vector2 StageNameTextPos = Math::Vector2(0.0f, 160.0f);
+	static constexpr Math::Vector2 NewRecordTextPos = Math::Vector2(0.0f, 60.0f);
 	
 	// ボタン
 	static constexpr Math::Vector2 ButtonScale = Math::Vector2(2.5f, 2.5f);
@@ -32,6 +33,9 @@ public:
 	// スコア保持
 	void SetGameResult(ScoreDatas::GameResult result) { m_gameResult = result; }
 
+	// 記録更新か
+	void SetIsNewRecord(bool flg) { m_isNewRecord = flg; }
+
 	// ボタンが押されたか
 	bool IsButtonPressed()const { return m_isButtonPressed; }
 
@@ -44,6 +48,9 @@ private:
 
 	// スコア保持用
 	ScoreDatas::GameResult m_gameResult;
+
+	// 新記録フラグ
+	bool m_isNewRecord = false;
 
 	// ボタン
 	std::shared_ptr<Button> m_spButton = nullptr;

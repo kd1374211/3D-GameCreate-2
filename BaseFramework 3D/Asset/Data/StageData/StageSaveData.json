@@ -1,12 +1,10 @@
 [
     {
-        "bestPinsFallen": 47,
-        "isClear": true,
+        "bestScore": 124,
         "stageNo": 1
     },
     {
-        "bestPinsFallen": 0,
-        "isClear": false,
+        "bestScore": 0,
         "stageNo": 2
     }
 ]
