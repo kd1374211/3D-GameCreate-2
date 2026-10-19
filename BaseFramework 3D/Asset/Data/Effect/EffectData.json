@@ -2,12 +2,12 @@
 	"Effects": [
 		{
 			"effectID": 0,
-			"texPath": "Asset/Textures/Effect/PinHit/PinHitImpact2.png",
-			"pivotType": 12,
-			"splitX": 5,
+			"texPath": "Asset/Textures/Effect/PinHit/PinHitImpact3.png",
+			"pivotType": 11,
+			"splitX": 1,
 			"splitY": 1,
 			"scale": 1.5,
-			"animSpeed": 12.5,
+			"animSpeed": 0.5,
 			"isLoop": false
 		},
 		{

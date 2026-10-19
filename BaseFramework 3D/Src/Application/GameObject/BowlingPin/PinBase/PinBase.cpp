@@ -187,8 +187,18 @@ void PinBase::OnHitByPlayer(JPH::Vec3 vel)
 	// プレイヤーからの当たりは強めにする
 	m_pendingVelocity = vel * PinBaseConsts::OnHitVelocityMulti;
 
+	// 召喚位置を取得
+	Math::Vector3 effectSpawnPos = m_pos;
+	const auto& node = m_model->FindNode("EffectSpawnPos");
+
+	if (node)
+	{
+		// 取得した位置を追加
+		effectSpawnPos += node->m_worldTransform.Translation();
+	}
+
 	// インパクト召喚
-	EFFECTMGR.SpawnEffect(m_pos, Math::Vector3::Zero, Math::Vector3::One, EffectType::HitImpact);
+	EFFECTMGR.SpawnEffect(effectSpawnPos, Math::Vector3(KdRandom::GetFloat(-0.6f, 0.6f), KdRandom::GetFloat(-0.6f, 0.6f), KdRandom::GetFloat(-0.6f, 0.6f)), PinBaseConsts::PinHitEffectScaleMultiStart, EffectType::HitImpact);
 	// 音召喚
 	SOUNDMGR.Play(SoundType::SE_HitPin);
 }
@@ -201,9 +211,18 @@ void PinBase::OnHitByPin(JPH::Vec3 vel)
 	m_isHitPending = true;
 	m_isHit = true;
 	m_pendingVelocity = vel;
+	// 召喚位置を取得
+	Math::Vector3 effectSpawnPos = m_pos;
+	const auto& node = m_model->FindNode("EffectSpawnPos");
+
+	if (node)
+	{
+		// 取得した位置を追加
+		effectSpawnPos += node->m_worldTransform.Translation();
+	}
 
 	// インパクト召喚
-	EFFECTMGR.SpawnEffect(m_pos, Math::Vector3::Zero, Math::Vector3::One, EffectType::HitImpact);
+	EFFECTMGR.SpawnEffect(effectSpawnPos, Math::Vector3(KdRandom::GetFloat(-0.6f, 0.6f), KdRandom::GetFloat(-0.6f, 0.6f), KdRandom::GetFloat(-0.6f, 0.6f)), PinBaseConsts::PinHitEffectScaleMultiStart, EffectType::HitImpact);
 	// 音召喚
 	SOUNDMGR.Play(SoundType::SE_HitPin);
 }

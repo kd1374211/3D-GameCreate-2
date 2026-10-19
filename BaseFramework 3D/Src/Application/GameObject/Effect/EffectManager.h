@@ -32,7 +32,7 @@ public:
 	void PreUpdate();
 
 	// エフェクト召喚
-	void SpawnEffect(Math::Vector3 pos, Math::Vector3 rot, Math::Vector3 scaleMulti, EffectType type);
+	void SpawnEffect(const Math::Vector3& pos, const Math::Vector3& rot, float scaleMulti, EffectType type);
 
 	// エフェクト全削除
 	void ClearActiveEffect();

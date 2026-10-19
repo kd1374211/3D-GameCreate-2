@@ -8,7 +8,8 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				0
+				0,
+				1
 			]
 		}
 	],
@@ -16,12 +17,20 @@
 		{
 			"mesh":0,
 			"name":"pin"
+		},
+		{
+			"name":"EffectSpawnPos",
+			"translation":[
+				0,
+				0.1899999976158142,
+				0
+			]
 		}
 	],
 	"materials":[
 		{
 			"doubleSided":true,
-			"name":"white",
+			"name":"white.001",
 			"pbrMetallicRoughness":{
 				"metallicFactor":0,
 				"roughnessFactor":0.5
@@ -29,7 +38,7 @@
 		},
 		{
 			"doubleSided":true,
-			"name":"red",
+			"name":"red.001",
 			"pbrMetallicRoughness":{
 				"baseColorFactor":[
 					0.552004873752594,
@@ -44,7 +53,7 @@
 	],
 	"meshes":[
 		{
-			"name":"\u0426\u0438\u043b\u0438\u043d\u0434\u0440",
+			"name":"\u0426\u0438\u043b\u0438\u043d\u0434\u0440.001",
 			"primitives":[
 				{
 					"attributes":{

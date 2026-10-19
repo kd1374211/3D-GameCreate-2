@@ -15,7 +15,7 @@ void ResultScene::Init()
 	//背景ステージ読み込み
 	STAGEMGR.LoadStage(SCENEMGR.GetStageNo());
 	//背景モードで生成
-	STAGEMGR.BuildStage(1, StageBuildMode::Background);
+	STAGEMGR.BuildStage(0, StageBuildMode::Background);
 
 	//ステージ確認カメラ
 	std::shared_ptr<StageViewCamera> camera = std::make_shared<StageViewCamera>();

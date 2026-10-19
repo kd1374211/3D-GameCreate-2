@@ -15,7 +15,7 @@ public:
 	// セッター
 	void SetPos(const Math::Vector3& pos) { m_pos = pos; }
 	void SetRot(const Math::Vector3& rot) { m_rot = rot; }
-	void SetScaleMulti(const Math::Vector3& scale) { m_scaleMulti = scale; }
+	void SetScaleMulti(float scale) { m_scaleMulti = scale; }
 
 protected:
 
@@ -32,7 +32,7 @@ protected:
 	Math::Vector3 m_rot = Math::Vector3(0.0f, 1.0f, 0.0f);
 
 	// 拡縮
-	Math::Vector3 m_scaleMulti = Math::Vector3::One;
+	float m_scaleMulti = 1.0f;
 
 	virtual void Init()override;
 

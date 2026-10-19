@@ -59,9 +59,6 @@ void ConfettiSpawner::DrawSprite()
 	m_rtPack.ClearTexture(Math::Color(0.0f, 0.0f, 0.0f, 0.0f));
 	m_rtChanger.ChangeRenderTarget(m_rtPack);
 
-	// CULLNONEに
-	KdShaderManager::Instance().ChangeRasterizerState(KdRasterizerState::CullNone);
-
 	// 各DrawSprite召喚
 	for (auto& obj : m_confettiObjects)
 	{
@@ -70,8 +67,7 @@ void ConfettiSpawner::DrawSprite()
 
 	// 戻す
 	m_rtChanger.UndoRenderTarget();
-	KdShaderManager::Instance().UndoRasterizerState();
-
+	
 	// レンダーをここで書く
 	std::shared_ptr<KdTexture> m_rtTex = m_rtPack.m_RTTexture;
 	KdShaderManager::Instance().m_spriteShader.DrawTex(m_rtTex, 0, 0);

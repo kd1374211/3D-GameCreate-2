@@ -59,6 +59,9 @@ protected:
 
 		// デスポーン時に遠くに配置しておく
 		static constexpr Math::Vector3 InactivePinPos = Math::Vector3(0.0f, 100.0f, 0.0f);
+
+		// エフェクト初期スケール
+		static constexpr float PinHitEffectScaleMultiStart = 1.0f;
 	};
 
 	virtual void Init()override;

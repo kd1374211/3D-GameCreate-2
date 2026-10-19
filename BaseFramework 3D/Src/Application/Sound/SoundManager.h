@@ -39,7 +39,7 @@ public:
 	void Update();
 
 	// 音再生＆インスタンス保持
-	std::weak_ptr<KdSoundInstance> PlayAndGetInst(SoundType type, float volume = SoundManagerConsts::DefValue);
+	std::weak_ptr<KdSoundInstance> PlayAndGetInst(SoundType type, float volumeMulti = SoundManagerConsts::DefValue);
 	
 	// 音再生
 	void Play(SoundType type, float volumeMulti = SoundManagerConsts::DefValue);

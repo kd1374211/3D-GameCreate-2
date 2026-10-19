@@ -444,7 +444,7 @@ void BowlingBall::HitGround(const std::string& matName, float velocityY, JPH::Ve
 	velocityY /= gameDt;
 
 	// 下方向の強さが一定以上なら着地エフェクトを召喚
-	Math::Vector3 scale = Math::Vector3::One;
+	float scale = 1.0f;
 	if (velocityY <= BowlingBallConsts::LandingEffectSpawnPowerMin)
 	{
 		// 拡大倍率を計算
@@ -483,7 +483,7 @@ void BowlingBall::HitWall(const std::string& matName, float velocity, JPH::Vec3 
 	velocity /= gameDt;
 
 	// 強さが一定以上なら着地エフェクトを召喚
-	Math::Vector3 scale = Math::Vector3::One;
+	float scale = 1.0f;
 	if (velocity >= BowlingBallConsts::WallHitEffectSpawnPowerMin)
 	{
 		// 拡大倍率を計算

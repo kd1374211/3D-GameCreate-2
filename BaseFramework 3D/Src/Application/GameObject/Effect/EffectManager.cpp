@@ -21,7 +21,7 @@ void EffectManager::PreUpdate()
 	KdDebugGUI::Instance().AddLog("EffectListSize : %d\n", m_wpEffectList.size());
 }
 
-void EffectManager::SpawnEffect(Math::Vector3 pos, Math::Vector3 rot, Math::Vector3 scaleMulti, EffectType type)
+void EffectManager::SpawnEffect(const Math::Vector3& pos, const Math::Vector3& rot, float scaleMulti, EffectType type)
 {
 	std::shared_ptr<EffectBase> effectObj;
 	switch (type)

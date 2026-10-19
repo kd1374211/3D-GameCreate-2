@@ -3,7 +3,7 @@
 		{
 			"name": "Title",
 			"filePath": "Asset/Sounds/BGM/Title.wav",
-			"defaultVolume": 0.05,
+			"defaultVolume": 0.02,
 			"loop": true
 		},
 		{
@@ -45,7 +45,7 @@
 		{
 			"name": "Rolling",
 			"filePath": "Asset/Sounds/SE/Rolling.wav",
-			"defaultVolume": 0.05,
+			"defaultVolume": 0.1,
 			"loop": true
 		},
 		{

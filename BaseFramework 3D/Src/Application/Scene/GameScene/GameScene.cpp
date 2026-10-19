@@ -363,7 +363,7 @@ void GameScene::EndRolling()
 	// ストライクかスペアならスポナー召喚
 	if (mark == FrameMark::Strike || mark == FrameMark::Spare)
 	{
-		EFFECTMGR.SpawnEffect(Math::Vector3::Zero, Math::Vector3::Zero, Math::Vector3::Zero, EffectType::Confetti);
+		EFFECTMGR.SpawnEffect(Math::Vector3::Zero, Math::Vector3::Zero, 0.0f, EffectType::Confetti);
 	}
 
 	// ハンドラー経由でプレイヤーの終了時処理を呼ぶ
