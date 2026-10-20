@@ -190,7 +190,7 @@ private:
 
 	//追加8/15
 	//番号とタイトルの組み合わせ
-	std::map<int, FontSetData> m_fontDatas =
+	const std::map<int, FontSetData> m_fontDatas =
 	{
 		{0,FontSetData("チェックポイント．（ピリオド）",SHIFTJIS_CHARSET,false,12.0f)},
 		{1,FontSetData("チェックポイント．（ピリオド）",SHIFTJIS_CHARSET,false,18.0f)},
@@ -200,7 +200,7 @@ private:
 		{5,FontSetData("チェックポイント．（ピリオド）",SHIFTJIS_CHARSET,false,50.0f)},
 		{6,FontSetData("チェックポイント．（ピリオド）",SHIFTJIS_CHARSET,false,60.0f)},
 		{7,FontSetData("チェックポイント．（ピリオド）",SHIFTJIS_CHARSET,false,80.0f)},
-		{8,FontSetData("Faster One Regular",DEFAULT_CHARSET,false,200.0f)},
+		{8,FontSetData("チェックポイント．（ピリオド）",SHIFTJIS_CHARSET,false,130.0f)},
 		{9,FontSetData("Black Ops One Regular",DEFAULT_CHARSET,false,200.0f)}
 	};
 	static constexpr int FontDataCount = 10;	// フォントデータの数

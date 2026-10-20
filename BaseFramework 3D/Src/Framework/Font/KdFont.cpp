@@ -282,9 +282,6 @@ void KdFontManager::LoadFonts()
 	//cp.period入れる
 	KdFontManager::Instance().AddFontResource("Asset/Fonts/cp_period.ttf");
 
-	//faster one入れる
-	KdFontManager::Instance().AddFontResource("Asset/Fonts/FasterOne-Regular.ttf");
-
 	//black ops one入れる
 	KdFontManager::Instance().AddFontResource("Asset/Fonts/BlackOpsOne-Regular.ttf");
 }

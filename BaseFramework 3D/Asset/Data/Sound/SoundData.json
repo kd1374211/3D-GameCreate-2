@@ -69,7 +69,7 @@
 		{
 			"name": "Miss",
 			"filePath": "Asset/Sounds/SE/ThrowResult_Miss.wav",
-			"defaultVolume": 0.4,
+			"defaultVolume": 0.25,
 			"loop": false
 		},
 		{

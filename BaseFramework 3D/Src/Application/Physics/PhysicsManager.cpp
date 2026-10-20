@@ -63,7 +63,10 @@ void PhysicsManager::Init() {
 	JPH::PhysicsSettings settings = m_physicsSystem->GetPhysicsSettings();
 
 	// 反発する最低速度
-	settings.mMinVelocityForRestitution = 0.2f;
+	settings.mMinVelocityForRestitution = 0.25f;
+
+	// 設定を反映
+	m_physicsSystem->SetPhysicsSettings(settings);
 }
 
 void PhysicsManager::Update(float deltaTime) {
