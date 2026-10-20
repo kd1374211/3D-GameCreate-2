@@ -19,6 +19,10 @@ enum SoundType
 	SE_Rolling,
 	SE_HitPin,
 	SE_WallHitAndLanding,
+	SE_Throw_Normal,
+	SE_Throw_Miss,
+	SE_Throw_AllPinFallen,
+	SE_Finish,
 	SoundType_Max
 };
 

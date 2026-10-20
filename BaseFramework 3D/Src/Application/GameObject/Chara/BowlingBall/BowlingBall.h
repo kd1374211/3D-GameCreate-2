@@ -114,6 +114,11 @@ private:
 		// 壁
 		static constexpr float WallHitEffectScaleMin = 0.25f;
 		static constexpr float WallHitEffectScaleMax = 1.0f;
+
+		// 矢印スケール
+		static constexpr float ShotArrowScale = 0.25f;
+		static constexpr float CursorPowerDiv = 3750.0f;
+		static constexpr float CursorPowerMax = 2.0f;
 	};
 
 	// 活性化・非活性化

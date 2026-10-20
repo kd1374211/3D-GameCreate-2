@@ -39,8 +39,8 @@ public:
 	// 投球終了テキストの消滅確認
 	bool GetIsThrowRecordTextActive()const { return m_isThrowResultTextActive; }
 
-	// ステージクリア・クリア失敗演出召喚(trueクリアfalse失敗)
-	void SpawnStageFinishText(bool isClear);
+	// ステージ終了テキスト召喚
+	void SpawnStageFinishText();
 
 	// スコアハンドラー登録
 	void RegistScoreHandler(std::shared_ptr<ScoreHandler> spScoreHandler) { m_wpScoreHandler = spScoreHandler; }
@@ -101,8 +101,8 @@ private:
 
 		//ステージ終了演出
 		static constexpr float WindowExpandSpeed_StageFinish = 10.0f;
-		static constexpr Math::Vector2 WindowSize = Math::Vector2(640.0f, 120.0f);
-		static constexpr float WindowAlpha = 0.95f;
+		static constexpr Math::Vector2 WindowSize_StageFinish = Math::Vector2(640.0f, 120.0f);
+		static constexpr float WindowAlpha_StageFinish = 0.95f;
 
 		// 操作ガイド
 		static constexpr Math::Vector2 KeyGuideTextPos = Math::Vector2(-635.0f, -330.0f);
@@ -135,7 +135,6 @@ private:
 
 	//ステージ終了演出用
 	bool m_isStageFinishTextDraw = false;
-	bool m_isStageClear = false;
 	float m_windowSize_stageFinish = 0.0f;
 
 	// スコアハンドラー保持

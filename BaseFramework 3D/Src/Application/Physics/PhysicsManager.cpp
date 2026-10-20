@@ -58,6 +58,12 @@ void PhysicsManager::Init() {
 
 	//Joltにリスナーを登録する
 	m_physicsSystem->SetContactListener(&m_contactListener);
+
+	// 各種設定を変える場所
+	JPH::PhysicsSettings settings = m_physicsSystem->GetPhysicsSettings();
+
+	// 反発する最低速度
+	settings.mMinVelocityForRestitution = 0.2f;
 }
 
 void PhysicsManager::Update(float deltaTime) {

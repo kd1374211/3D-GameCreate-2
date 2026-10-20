@@ -57,14 +57,8 @@ private:
 	void Reset();
 
 	//各ステートの更新
-	//void UpdateCountDown();
-	//void UpdatePlaying();
-	//void UpdateGameOver();
-	//void UpdateGameClear();
-
-	//各ステートの更新
 	void UpdateWaiting();
-	void UpdatePlaying2();
+	void UpdatePlaying();
 	void UpdateCheckAndClean();
 	void UpdateMiddleResult();
 	void UpdateEnd();

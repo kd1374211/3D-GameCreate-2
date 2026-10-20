@@ -253,11 +253,25 @@ void BowlingBall::PostUpdate()
 	// 3. ワールド行列の合成（旋回 → 移動)
 	m_mWorld = rotat * trans;
 
-	// 矢印配置テスト
-	if (m_isInputEnabled) // 左クリックホールド中
+	// 矢印配置
+	if (m_isInputEnabled)
 	{
+		// チャージ中なら伸ばす
+		Math::Vector3 scaleMulti = Math::Vector3::One;
+		if (m_isShootStart)
+		{
+			// ゲーム時間から1秒ごとの速度を確認
+			float mouseMoveAvg = CalcAvgMoveSpeed();
+
+			// 速度から発射速度を確定(最大値は制限)
+			float throwPower = std::min(mouseMoveAvg / BowlingBallConsts::CursorPowerDiv, BowlingBallConsts::CursorPowerMax);
+
+			// パワーに合わせてアローを伸ばす
+			scaleMulti.y += throwPower;
+		}
+
 		Math::Matrix arrowLocalPos = Math::Matrix::CreateTranslation(0, 0, 0.25f);
-		Math::Matrix arrowScale = Math::Matrix::CreateScale(Math::Vector3(0.25f, 0.25f, 0.25f));
+		Math::Matrix arrowScale = Math::Matrix::CreateScale(BowlingBallConsts::ShotArrowScale * scaleMulti);
 		Math::Matrix arrowRotX = Math::Matrix::CreateRotationX(DirectX::XMConvertToRadians(90.0f));
 
 		// カメラからY回転を取得
@@ -276,7 +290,7 @@ void BowlingBall::PostUpdate()
 			m_pos
 		);
 
-		//
+		// 矢印の行列
 		Math::Matrix arrowLocalMat = arrowScale * arrowRotX * arrowLocalPos;
 		m_arrowMat = arrowLocalMat * rotY * matTrans;
 	}

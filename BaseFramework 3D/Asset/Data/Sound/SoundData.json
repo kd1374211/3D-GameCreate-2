@@ -57,7 +57,31 @@
 		{
 			"name": "WallHitAndLanding",
 			"filePath": "Asset/Sounds/SE/HitWall.wav",
-			"defaultVolume": 0.6,
+			"defaultVolume": 0.5,
+			"loop": false
+		},
+		{
+			"name": "Normal",
+			"filePath": "Asset/Sounds/SE/ThrowResult_Normal.wav",
+			"defaultVolume": 0.3,
+			"loop": false
+		},
+		{
+			"name": "Miss",
+			"filePath": "Asset/Sounds/SE/ThrowResult_Miss.wav",
+			"defaultVolume": 0.4,
+			"loop": false
+		},
+		{
+			"name": "AllPinFallen",
+			"filePath": "Asset/Sounds/SE/ThrowResult_AllPin.wav",
+			"defaultVolume": 0.2,
+			"loop": false
+		},
+		{
+			"name": "Finish",
+			"filePath": "Asset/Sounds/SE/Finish.wav",
+			"defaultVolume": 0.3,
 			"loop": false
 		}
 	]

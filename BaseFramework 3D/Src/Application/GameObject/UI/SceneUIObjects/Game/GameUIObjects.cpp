@@ -109,6 +109,36 @@ void GameUIObjects::DrawSprite()
 		Math::Vector2 drawPos = Math::Vector2(GameUIConsts::MiddleResultPosX, m_middleResultPosY);
 		KdShaderManager::Instance().m_spriteShader.DrawTex(tmpTex, drawPos.x, drawPos.y, renderBase.x, renderBase.y);
 	}
+
+	// ステージ終了テキスト
+	if (m_isStageFinishTextDraw)
+	{
+		std::shared_ptr<KdTexture> tmpTex = std::make_shared<KdTexture>();
+
+		//レンダー作成
+		Math::Vector2 renderBase = Math::Vector2(1280.0f, 720.0f);
+		tmpTex->CreateRenderTarget(renderBase.x, renderBase.y);
+
+		//透明塗り
+		KdDirect3D::Instance().WorkDevContext()->ClearRenderTargetView(tmpTex->WorkRTView(), Math::Color(0, 0, 0, 0));
+
+		//ターゲット設定
+		KdDirect3D::Instance().WorkDevContext()->OMSetRenderTargets(1, tmpTex->WorkRTViewAddress(), tmpTex->WorkDSView());
+
+		// ここに描画
+		// ウィンドウ本体
+		Math::Color color = Math::Color(0.0f, 0.0f, 0.0f, GameUIConsts::WindowAlpha_StageFinish);
+		KdShaderManager::Instance().m_spriteShader.DrawBox(0, 0, GameUIConsts::WindowSize_StageFinish.x, GameUIConsts::WindowSize_StageFinish.y, &color);
+
+		// 文字
+		KdShaderManager::Instance().m_spriteShader.DrawFont(FontTypeConst::Game_StageFinish, Math::Vector2(0, 0), &kWhiteColor, "Finish!", TextAlign::Center);
+
+		//ターゲット戻す
+		KdDirect3D::Instance().WorkDevContext()->OMSetRenderTargets(1, KdDirect3D::Instance().WorkBackBuffer()->WorkRTViewAddress(), KdDirect3D::Instance().WorkZBuffer()->WorkDSView());
+
+		//tmpTexを位置を変えて描画
+		KdShaderManager::Instance().m_spriteShader.DrawTex(tmpTex, 0.0f, 0.0f, renderBase.x, renderBase.y * m_windowSize_stageFinish);
+	}
 }
 
 void GameUIObjects::SpawnThrowStartText(int frameNo, int throwNo, bool* endCheck)
@@ -214,9 +244,8 @@ void GameUIObjects::SpawnMiddleResult()
 	m_wpButton = spButton;
 }
 
-void GameUIObjects::SpawnStageFinishText(bool isClear)
+void GameUIObjects::SpawnStageFinishText()
 {
-	m_isStageClear = isClear;
 	m_isStageFinishTextDraw = true;
 	m_windowSize_stageFinish = 0.0f;
 }

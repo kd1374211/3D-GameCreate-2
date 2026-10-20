@@ -25,7 +25,7 @@ void GameScene::Event()
 		UpdateWaiting();
 		break;
 	case SceneState::Playing:
-		UpdatePlaying2();
+		UpdatePlaying();
 		break;
 	case SceneState::CheckAndClean:
 		UpdateCheckAndClean();
@@ -79,7 +79,7 @@ void GameScene::UpdateWaiting()
 	}
 }
 
-void GameScene::UpdatePlaying2()
+void GameScene::UpdatePlaying()
 {
 	// 投球開始テキストの消滅確認
 	if (m_isThrowStartTextEnd)
@@ -130,8 +130,6 @@ void GameScene::UpdatePlaying2()
 
 				// ステート更新
 				m_currentSceneState = SceneState::CheckAndClean;
-
-				//SOUNDMGR.Play(SoundType::SE_HitPin);
 
 				// リターン
 				return;
@@ -264,6 +262,10 @@ void GameScene::UpdateCheckAndClean()
 				// リザルト移行準備
 				m_currentSceneState = SceneState::End;
 				m_countdownTimer = GameSceneConsts::CountDownOnClear;
+				// 終了演出召喚
+				m_wpUI.lock()->SpawnStageFinishText();
+				// 効果音も召喚
+				SOUNDMGR.Play(SoundType::SE_Finish);
 				break;
 			}
 		}
@@ -338,9 +340,6 @@ void GameScene::UpdateEnd()
 	{
 		FADEMGR.StartFadeOut(&m_isSceneChangeReady);
 	}
-
-	//仮表示
-	KdDebugGUI::Instance().AddLog("CountDown : %.2f\n", m_countdownTimer);
 }
 
 void GameScene::EndRolling()
@@ -357,10 +356,26 @@ void GameScene::EndRolling()
 		m_wpUI.lock()->SpawnThrowResultText(fallenPins, mark);
 	}
 
-	// ストライクかスペアならスポナー召喚
+	// ストライクかスペア
 	if (mark == FrameMark::Strike || mark == FrameMark::Spare)
 	{
+		// 四角召喚
 		EFFECTMGR.SpawnEffect(Math::Vector3::Zero, Math::Vector3::Zero, 0.0f, EffectType::Confetti);
+
+		// 効果音
+		SOUNDMGR.Play(SoundType::SE_Throw_AllPinFallen);
+	}
+	// ミス
+	else if (fallenPins == 0)
+	{
+		// 効果音
+		SOUNDMGR.Play(SoundType::SE_Throw_Miss);
+	}
+	// 通常
+	else
+	{
+		// 効果音
+		SOUNDMGR.Play(SoundType::SE_Throw_Normal);
 	}
 
 	// ハンドラー経由でプレイヤーの終了時処理を呼ぶ
