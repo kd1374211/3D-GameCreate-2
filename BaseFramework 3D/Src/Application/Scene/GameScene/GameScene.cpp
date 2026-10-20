@@ -69,10 +69,9 @@ void GameScene::UpdateWaiting()
 	if (m_isFadeInEnd)
 	{
 		// 投球開始テキスト召喚
-		auto ui = m_wpUI.lock();
-		if (ui)
+		if (const auto spUI = m_wpUI.lock())
 		{
-			ui->SpawnThrowStartText(m_cScoreHandler->GetCurrentFrame(), m_cScoreHandler->GetCurrentThrow(), &m_isThrowStartTextEnd);
+			spUI->SpawnThrowStartText(m_cScoreHandler->GetCurrentFrame(), m_cScoreHandler->GetCurrentThrow(), &m_isThrowStartTextEnd);
 		}
 
 		m_currentSceneState = SceneState::Playing;
@@ -219,9 +218,9 @@ void GameScene::UpdateCheckAndClean()
 	Reset();
 
 	// UIのリザルトが消滅するまで待機
-	if (!m_wpUI.expired())
+	if (const auto& spUI = m_wpUI.lock())
 	{
-		if (!m_wpUI.lock()->GetIsThrowRecordTextActive())
+		if (!spUI->GetIsThrowRecordTextActive())
 		{
 			// 現在は次への確認だけ
 			switch (m_cScoreHandler->GetNextAction())
@@ -230,29 +229,35 @@ void GameScene::UpdateCheckAndClean()
 				// 同じレーンの再配置
 				STAGEMGR.RespawnStageObjects(m_cScoreHandler->GetCurrentFrame());
 				// 投球開始テキスト召喚
-				m_wpUI.lock()->SpawnThrowStartText(m_cScoreHandler->GetCurrentFrame(), m_cScoreHandler->GetCurrentThrow(), &m_isThrowStartTextEnd);
+				spUI->SpawnThrowStartText(m_cScoreHandler->GetCurrentFrame(), m_cScoreHandler->GetCurrentThrow(), &m_isThrowStartTextEnd);
 				m_currentSceneState = SceneState::Playing;
+				// ガイドモード変更
+				spUI->ChangeGuideMode(MouseGuideMode::Default);
 				// エフェクト全削除
 				EFFECTMGR.ClearActiveEffect();
 				break;
 			case NextActions::NextFrame:
 				// 中間リザルト召喚
-				m_wpUI.lock()->SpawnMiddleResult();
+				spUI->SpawnMiddleResult();
 				// 中間リザルト確認に移行
 				m_currentSceneState = SceneState::MiddleResult;
 				// カーソル固定を解除
 				CURSOR.UnlockCursor();
 				// カーソル表示
 				CURSOR.SetIsShowCursor(true);
+				// ガイド変更
+				spUI->ChangeGuideMode(MouseGuideMode::MidResult);
 				break;
 			case NextActions::BonusThrow:
 				// 未定
 				STAGEMGR.BonusStage(m_cScoreHandler->GetCurrentFrame());
 				// 投球開始テキスト召喚
-				m_wpUI.lock()->SpawnThrowStartText(m_cScoreHandler->GetCurrentFrame(), m_cScoreHandler->GetCurrentThrow(), &m_isThrowStartTextEnd);
+				spUI->SpawnThrowStartText(m_cScoreHandler->GetCurrentFrame(), m_cScoreHandler->GetCurrentThrow(), &m_isThrowStartTextEnd);
 				m_currentSceneState = SceneState::Playing;
 				// エフェクト全削除
 				EFFECTMGR.ClearActiveEffect();
+				// ガイドモード変更
+				spUI->ChangeGuideMode(MouseGuideMode::Default);
 				break;
 			case NextActions::GameEnd:
 				// リザルトを作成しシーンマネージャーに送る
@@ -263,7 +268,7 @@ void GameScene::UpdateCheckAndClean()
 				m_currentSceneState = SceneState::End;
 				m_countdownTimer = GameSceneConsts::CountDownOnClear;
 				// 終了演出召喚
-				m_wpUI.lock()->SpawnStageFinishText();
+				spUI->SpawnStageFinishText();
 				// 効果音も召喚
 				SOUNDMGR.Play(SoundType::SE_Finish);
 				break;
@@ -294,6 +299,12 @@ void GameScene::UpdateMiddleResult()
 
 		// エフェクト全削除
 		EFFECTMGR.ClearActiveEffect();
+
+		// ガイドモード変更
+		if (const auto& spUI = m_wpUI.lock())
+		{
+			spUI->ChangeGuideMode(MouseGuideMode::Default);
+		}
 
 		// 撤退
 		return;
@@ -441,6 +452,8 @@ void GameScene::Init()
 	m_wpUI = UIObj;
 	UIObj->RegistScoreHandler(m_cScoreHandler);
 	AddObject(UIObj);
+	// プレイヤーに設定
+	m_cCharaHandler->GetPlayerBall()->SetGameUI(UIObj);
 
 	//フェードイン
 	FADEMGR.StartFadeIn(&m_isFadeInEnd);

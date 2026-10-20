@@ -10,6 +10,7 @@
 #include "../../../Cursor/CursorManager.h"
 #include "../../Effect/EffectManager.h"
 #include "../../../Sound/SoundManager.h"
+#include "../../UI/SceneUIObjects/Game/GameUIObjects.h"
 
 BowlingBall::BowlingBall()
 {
@@ -95,6 +96,11 @@ void BowlingBall::Update()
 					// 平均をリセット
 					m_speedStoreData.clear();
 					m_totalStoredTime = 0.0f;
+					// UIに通知
+					if (const auto& spUI = m_wpGameUI.lock())
+					{
+						spUI->ChangeGuideMode(MouseGuideMode::ReadyThrow);
+					}
 
 					// カメラの回転を固定
 					if (auto gameCam = m_wpCamera.lock())
@@ -158,6 +164,12 @@ void BowlingBall::Update()
 
 						// 操作不可に
 						m_isInputEnabled = false;
+
+						// UIに通知
+						if (const auto& spUI = m_wpGameUI.lock())
+						{
+							spUI->ChangeGuideMode(MouseGuideMode::AfterThrow);
+						}
 					}
 					else
 					{
@@ -165,6 +177,12 @@ void BowlingBall::Update()
 						if (auto gameCam = m_wpCamera.lock())
 						{
 							gameCam->SetIsCamLocked(false);
+						}
+
+						// UIに通知
+						if (const auto& spUI = m_wpGameUI.lock())
+						{
+							spUI->ChangeGuideMode(MouseGuideMode::Default);
 						}
 					}
 					

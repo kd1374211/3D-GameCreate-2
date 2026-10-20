@@ -20,17 +20,20 @@ enum class TextAlign
 // テキスト種
 struct FontTypeConst
 {
+	// Title
+	static constexpr int Title_Guide = 4;
+
 	//StageSelect	
 	static constexpr int StageSelect_StageListName = 2;
 	static constexpr int StageSelect_StageName = 4;
-	static constexpr int StageSelect_KeyGuide = 3;
+	static constexpr int StageSelect_Guide = 4;
 	static constexpr int StageSelect_BestScore = 4;
 
 	// Game
 	static constexpr int Game_ThrowStart = 8;
 	static constexpr int Game_ThrowResult = 9;
 	static constexpr int Game_StageFinish = 9;
-	static constexpr int Game_KeyGuide = 4;
+	static constexpr int Game_Guide = 4;
 	static constexpr int Game_MiddleResultFrameNo = 0;
 	static constexpr int Game_MiddleResultThrowRecord = 3;
 	static constexpr int Game_MiddleResultFrameScore = 3;
@@ -42,6 +45,7 @@ struct FontTypeConst
 	static constexpr int Result_PinCount = 5;
 	static constexpr int Result_ButtonIndex = 6;
 	static constexpr int Result_Buttom = 4;
+	static constexpr int Result_Guide = 4;
 
 	// その他
 	static constexpr int Other_ButtonText = 1;

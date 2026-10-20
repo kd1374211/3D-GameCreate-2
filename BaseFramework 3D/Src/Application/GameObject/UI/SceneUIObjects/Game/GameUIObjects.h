@@ -14,6 +14,14 @@ struct MovingText
 	bool* m_endChecker = nullptr;	// 終了を受け取るための変数
 };
 
+enum class MouseGuideMode
+{
+	Default,
+	ReadyThrow,
+	AfterThrow,
+	MidResult
+};
+
 class GameUIObjects :public KdGameObject
 {
 public:
@@ -45,6 +53,9 @@ public:
 	// スコアハンドラー登録
 	void RegistScoreHandler(std::shared_ptr<ScoreHandler> spScoreHandler) { m_wpScoreHandler = spScoreHandler; }
 
+	// マウスガイド変更用
+	void ChangeGuideMode(MouseGuideMode mode) { m_guideMode = mode; }
+
 private:
 
 	// 各アップデート
@@ -54,6 +65,7 @@ private:
 
 	// 描画
 	void DrawScoreTexts();
+	void DrawMouseGuides();
 
 	// GameUI内の仮定義
 	struct GameUIConsts
@@ -105,7 +117,20 @@ private:
 		static constexpr float WindowAlpha_StageFinish = 0.95f;
 
 		// 操作ガイド
-		static constexpr Math::Vector2 KeyGuideTextPos = Math::Vector2(-635.0f, -330.0f);
+		static constexpr Math::Vector2 GuideIconPos_Default_CamMove = Math::Vector2(340.0f, -330.0f);
+		static constexpr Math::Vector2 GuideTextPos_Default_CamMove = Math::Vector2(620.0f, -330.0f);
+		static constexpr Math::Vector2 GuideIconPos_Default_Hold = Math::Vector2(340.0f, -250.0f);
+		static constexpr Math::Vector2 GuideTextPos_Default_Hold = Math::Vector2(620.0f, -250.0f);
+		static constexpr Math::Vector2 GuideIconPos_Ready_Throw = Math::Vector2(340.0f, -250.0f);
+		static constexpr Math::Vector2 GuideTextPos_Ready_Throw = Math::Vector2(620.0f, -250.0f);
+		static constexpr Math::Vector2 GuideIconPos_Ready_Cancel = Math::Vector2(340.0f, -330.0f);
+		static constexpr Math::Vector2 GuideTextPos_Ready_Cancel = Math::Vector2(620.0f, -330.0f);
+		static constexpr Math::Vector2 GuideIconPos_AfterThrow_CamMove = Math::Vector2(340.0f, -330.0f);
+		static constexpr Math::Vector2 GuideTextPos_AfterThrow_CamMove = Math::Vector2(620.0f, -330.0f);
+		static constexpr Math::Vector2 GuideIconPos_AfterThrow_Skip = Math::Vector2(340.0f, -250.0f);
+		static constexpr Math::Vector2 GuideTextPos_AfterThrow_Skip = Math::Vector2(620.0f, -250.0f);
+		static constexpr Math::Vector2 GuideIconPos_MidResult_Select = Math::Vector2(340.0f, -330.0f);
+		static constexpr Math::Vector2 GuideTextPos_MidResult_Select = Math::Vector2(620.0f, -330.0f);
 	};
 
 	void Init()override;
@@ -139,4 +164,14 @@ private:
 
 	// スコアハンドラー保持
 	std::weak_ptr<ScoreHandler> m_wpScoreHandler;
+
+	// マウスガイド用アイコン
+	std::shared_ptr<KdTexture> m_mouseGuideTex_Move = nullptr;
+	std::shared_ptr<KdTexture> m_mouseGuideTex_CamMove = nullptr;
+	std::shared_ptr<KdTexture> m_mouseGuideTex_HoldAndSelect = nullptr;
+	std::shared_ptr<KdTexture> m_mouseGuideTex_Throw = nullptr;
+	std::shared_ptr<KdTexture> m_mouseGuideTex_Cancel = nullptr;
+
+	// マウスガイドの状態
+	MouseGuideMode m_guideMode = MouseGuideMode::Default;
 };

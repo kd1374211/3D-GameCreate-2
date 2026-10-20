@@ -13,6 +13,7 @@ enum class RollEndReason
 class TPSCamera;
 class ShotCursor;
 class ShotPowerBar;
+class GameUIObjects;
 
 class BowlingBall :public KdGameObject
 {
@@ -67,6 +68,9 @@ public:
 
 	// カメラ設定
 	void SetCamera(const std::shared_ptr<TPSCamera>& camera) { m_wpCamera = camera; }
+
+	// ゲームUI設定
+	void SetGameUI(const std::shared_ptr<GameUIObjects>& gameUI) { m_wpGameUI = gameUI; }
 
 private:
 
@@ -249,4 +253,7 @@ private:
 
 	// バー
 	std::weak_ptr<ShotPowerBar> m_wpPowerBar;
+
+	// ゲームUI
+	std::weak_ptr<GameUIObjects> m_wpGameUI;
 };

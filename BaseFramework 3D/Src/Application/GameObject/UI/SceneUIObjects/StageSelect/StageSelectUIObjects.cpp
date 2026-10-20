@@ -3,6 +3,7 @@
 #include "../../../../UserSave/UserSaveManager.h"
 #include "../../../../Scene/SceneManager.h"
 #include "StageListBox/StageListBox.h"
+#include "../../../../Const/MouseTexturesConst.h"
 
 void StageSelectUIObject::Update()
 {
@@ -59,15 +60,19 @@ void StageSelectUIObject::DrawSprite()
 	KdShaderManager::Instance().m_spriteShader.DrawFont(FontTypeConst::StageSelect_BestScore, StageSelectUIConsts::BestScoreTextPos, &kWhiteColor, bestScoreText.c_str(), TextAlign::Center);
 
 	// 操作キーヘルプ
-	std::string keyHelpText = "[MOUSE] 選択   [LCLICK] 決定";
+	std::string mouseHelpText = "      : 選択       : 決定";
 
 	KdShaderManager::Instance().m_spriteShader.DrawFont(
-		FontTypeConst::StageSelect_KeyGuide,
-		StageSelectUIConsts::KeyHelpPos,
+		FontTypeConst::StageSelect_Guide,
+		StageSelectUIConsts::MouseGuideTextPos,
 		&kWhiteColor,
-		keyHelpText.c_str(),
+		mouseHelpText.c_str(),
 		TextAlign::Center
 	);
+
+	// アイコン
+	KdShaderManager::Instance().m_spriteShader.DrawTex(m_mouseGuideTex_Move, StageSelectUIConsts::MouseGuideIconPos_Move.x, StageSelectUIConsts::MouseGuideIconPos_Move.y);
+	KdShaderManager::Instance().m_spriteShader.DrawTex(m_mouseGuideTex_Select, StageSelectUIConsts::MouseGuideIconPos_Select.x, StageSelectUIConsts::MouseGuideIconPos_Select.y);
 
 	// 各ステージの描画を呼ぶ
 	for (const auto& list : m_spList)
@@ -112,8 +117,11 @@ void StageSelectUIObject::Init()
 	m_stageThumbTex = std::make_shared<KdTexture>();
 	ChangeThumbTex();
 
-	m_pinTex = std::make_shared<KdTexture>();
-	m_pinTex->Load("Asset/Textures/UI/SceneUI/PinIcon.png");
+	m_mouseGuideTex_Move = std::make_shared<KdTexture>();
+	m_mouseGuideTex_Move->Load(GetMouseTexPath(MouseTexturesConsts::MouseTexType::Move));
+
+	m_mouseGuideTex_Select = std::make_shared<KdTexture>();
+	m_mouseGuideTex_Select->Load(GetMouseTexPath(MouseTexturesConsts::MouseTexType::LeftClick));
 }
 
 void StageSelectUIObject::ChangeThumbTex()

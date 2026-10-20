@@ -4,6 +4,7 @@
 #include "../../../../StageManager/StageManager.h"
 #include "../../Button/Button.h"
 #include "../../../../Cursor/CursorManager.h"
+#include "../../../../Const/MouseTexturesConst.h"
 
 void ResultUIObject::Update()
 {
@@ -97,6 +98,10 @@ void ResultUIObject::DrawSprite()
 	//tmpTexをサイズ変えて描画
 	float drawSizeY = renderBase.y * m_windowSizeMulti;
 	KdShaderManager::Instance().m_spriteShader.DrawTex(tmpTex, 0, 0, renderBase.x, drawSizeY);
+
+	// 操作ガイド
+	KdShaderManager::Instance().m_spriteShader.DrawTex(m_mouseIconTex_Select, ResultUIConsts::MouseGuideIconPos_Select.x, ResultUIConsts::MouseGuideIconPos_Select.y);
+	KdShaderManager::Instance().m_spriteShader.DrawFont(FontTypeConst::Result_Guide, ResultUIConsts::MouseGuideTextPos_Select, &kWhiteColor, ": 選択", TextAlign::Right);
 }
 
 void ResultUIObject::Init()
@@ -108,4 +113,8 @@ void ResultUIObject::Init()
 	m_spButton->SetIsEnable(false); // 初期状態では無効化
 	m_spButton->SetDrawScale(ResultUIConsts::ButtonScale);
 	m_spButton->SetDrawPos(ResultUIConsts::ButtonPosOfs);
+
+	// 画像
+	m_mouseIconTex_Select = std::make_shared<KdTexture>();
+	m_mouseIconTex_Select->Load(GetMouseTexPath(MouseTexturesConsts::MouseTexType::LeftClick));
 }

@@ -8,7 +8,7 @@ struct ResultUIConsts
 {
 	// ウィンドウ本体
 	static constexpr float WindowExpandSpeed = 4.0f;
-	static constexpr Math::Vector2 WindowSize = Math::Vector2(500.0f, 300.0f);
+	static constexpr Math::Vector2 WindowSize = Math::Vector2(480.0f, 280.0f);
 
 	// テキスト
 	static constexpr Math::Vector2 ResultTopTextPos = Math::Vector2(0.0f, 230.0f);
@@ -18,6 +18,10 @@ struct ResultUIConsts
 	// ボタン
 	static constexpr Math::Vector2 ButtonScale = Math::Vector2(2.5f, 2.5f);
 	static constexpr Math::Vector2 ButtonPosOfs = Math::Vector2(0.0f, -200.0f);
+
+	// マウスガイド
+	static constexpr Math::Vector2 MouseGuideIconPos_Select = Math::Vector2(465.0f, -320.0f);
+	static constexpr Math::Vector2 MouseGuideTextPos_Select = Math::Vector2(620.0f, -320.0f);
 };
 
 class ResultUIObject :public KdGameObject
@@ -57,4 +61,7 @@ private:
 
 	// ボタンを押したことを確認するためのフラグ
 	bool m_isButtonPressed = false;
+
+	// マウスアイコン
+	std::shared_ptr<KdTexture> m_mouseIconTex_Select = nullptr;
 };

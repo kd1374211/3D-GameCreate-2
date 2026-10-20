@@ -19,7 +19,9 @@ struct StageSelectUIConsts
 	static constexpr Math::Vector2 BestScoreTextPos = { 310.0f,-160.0f };
 
 	// 操作ガイド
-	static constexpr Math::Vector2 KeyHelpPos = { 0.0f, -330.0f }; // 画面最下部・中央
+	static constexpr Math::Vector2 MouseGuideTextPos = { 0.0f, -330.0f }; 
+	static constexpr Math::Vector2 MouseGuideIconPos_Move = Math::Vector2(-165.0f, -330.0f);
+	static constexpr Math::Vector2 MouseGuideIconPos_Select = Math::Vector2(90.0f, -330.0f);
 };
 
 class StageListBox;
@@ -52,9 +54,6 @@ private:
 	//ステージサムネイル
 	std::shared_ptr<KdTexture> m_stageThumbTex = nullptr;
 
-	// ピンアイコン
-	std::shared_ptr<KdTexture> m_pinTex = nullptr;
-
 	//現在の選択ステージ番号
 	int m_selectStageNo = 0;
 
@@ -63,4 +62,8 @@ private:
 
 	// このフレームでいずれかのステージにカーソルがあるか
 	bool m_isCursorOnAnyStage = false;
+
+	// ガイド用画像
+	std::shared_ptr<KdTexture> m_mouseGuideTex_Move = nullptr;
+	std::shared_ptr<KdTexture> m_mouseGuideTex_Select = nullptr;
 };

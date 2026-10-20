@@ -6,6 +6,7 @@
 #include "../../../../Component/ScoreHandler/ScoreHandler.h"
 #include "../../Button/Button.h"
 #include "../../../../Scene/SceneManager.h"
+#include "../../../../Const/MouseTexturesConst.h"
 
 void GameUIObjects::Update()
 {
@@ -76,6 +77,9 @@ void GameUIObjects::DrawSprite()
 		Math::Vector2 drawSize = renderBase * m_throwResultTextScale;
 		KdShaderManager::Instance().m_spriteShader.DrawTex(tmpTex, 0, 0, drawSize.x, drawSize.y);
 	}
+
+	// ガイド
+	DrawMouseGuides();
 
 	// 中間リザルトウィンドウ
 	if (m_isMiddleResultActive)
@@ -432,11 +436,67 @@ void GameUIObjects::DrawScoreTexts()
 	}
 }
 
+void GameUIObjects::DrawMouseGuides()
+{
+	// ガイドモードを確認
+	switch (m_guideMode)
+	{
+	// 通常時
+	case MouseGuideMode::Default:
+		// 投球準備
+		KdShaderManager::Instance().m_spriteShader.DrawTex(m_mouseGuideTex_HoldAndSelect, GameUIConsts::GuideIconPos_Default_Hold.x, GameUIConsts::GuideIconPos_Default_Hold.y);
+		KdShaderManager::Instance().m_spriteShader.DrawFont(FontTypeConst::Game_Guide, GameUIConsts::GuideTextPos_Default_Hold, &kWhiteColor, ": 投球準備", TextAlign::Right);
+		// カメラ移動
+		KdShaderManager::Instance().m_spriteShader.DrawTex(m_mouseGuideTex_CamMove, GameUIConsts::GuideIconPos_Default_CamMove.x, GameUIConsts::GuideIconPos_Default_CamMove.y);
+		KdShaderManager::Instance().m_spriteShader.DrawFont(FontTypeConst::Game_Guide, GameUIConsts::GuideTextPos_Default_CamMove, &kWhiteColor, ": 方向決め", TextAlign::Right);
+		break;
+	// 投球準備時
+	case MouseGuideMode::ReadyThrow:
+		// キャンセル
+		KdShaderManager::Instance().m_spriteShader.DrawTex(m_mouseGuideTex_Cancel, GameUIConsts::GuideIconPos_Ready_Cancel.x, GameUIConsts::GuideIconPos_Ready_Cancel.y);
+		KdShaderManager::Instance().m_spriteShader.DrawFont(FontTypeConst::Game_Guide, GameUIConsts::GuideTextPos_Ready_Cancel, &kWhiteColor, ": キャンセル", TextAlign::Right);
+		// 投球
+		KdShaderManager::Instance().m_spriteShader.DrawTex(m_mouseGuideTex_Throw, GameUIConsts::GuideIconPos_Ready_Throw.x, GameUIConsts::GuideIconPos_Ready_Throw.y);
+		KdShaderManager::Instance().m_spriteShader.DrawFont(FontTypeConst::Game_Guide, GameUIConsts::GuideTextPos_Ready_Throw, &kWhiteColor, ": 投球", TextAlign::Right);
+		break;
+	// 投球後
+	case MouseGuideMode::AfterThrow:
+		// スキップ
+		KdShaderManager::Instance().m_spriteShader.DrawFont(FontTypeConst::Game_Guide, GameUIConsts::GuideTextPos_AfterThrow_Skip, &kWhiteColor, "S      : 終了", TextAlign::Right);
+		// カメラ移動
+		KdShaderManager::Instance().m_spriteShader.DrawTex(m_mouseGuideTex_CamMove, GameUIConsts::GuideIconPos_AfterThrow_CamMove.x, GameUIConsts::GuideIconPos_AfterThrow_CamMove.y);
+		KdShaderManager::Instance().m_spriteShader.DrawFont(FontTypeConst::Game_Guide, GameUIConsts::GuideTextPos_AfterThrow_CamMove, &kWhiteColor, ": カメラ移動", TextAlign::Right);
+		break;
+	// 中間リザルト
+	case MouseGuideMode::MidResult:
+		// 決定
+		KdShaderManager::Instance().m_spriteShader.DrawTex(m_mouseGuideTex_HoldAndSelect, GameUIConsts::GuideIconPos_MidResult_Select.x, GameUIConsts::GuideIconPos_MidResult_Select.y);
+		KdShaderManager::Instance().m_spriteShader.DrawFont(FontTypeConst::Game_Guide, GameUIConsts::GuideTextPos_MidResult_Select, &kWhiteColor, ": 決定", TextAlign::Right);
+		break;
+	}
+}
+
 void GameUIObjects::Init()
 {
+	// 画像
 	m_pinTex = std::make_shared<KdTexture>();
 	m_pinTex->Load("Asset/Textures/UI/SceneUI/PinIcon.png");
 
 	m_ResultWindowFrameTex = std::make_shared<KdTexture>();
 	m_ResultWindowFrameTex->Load("Asset/Textures/UI/SceneUI/ResultWindowFrame.png");
+
+	m_mouseGuideTex_Move = std::make_shared<KdTexture>();
+	m_mouseGuideTex_Move->Load(GetMouseTexPath(MouseTexturesConsts::MouseTexType::Move));
+
+	m_mouseGuideTex_CamMove = std::make_shared<KdTexture>();
+	m_mouseGuideTex_CamMove->Load(GetMouseTexPath(MouseTexturesConsts::MouseTexType::Move_Horizonal));
+
+	m_mouseGuideTex_HoldAndSelect = std::make_shared<KdTexture>();
+	m_mouseGuideTex_HoldAndSelect->Load(GetMouseTexPath(MouseTexturesConsts::MouseTexType::LeftClick));
+
+	m_mouseGuideTex_Throw = std::make_shared<KdTexture>();
+	m_mouseGuideTex_Throw->Load(GetMouseTexPath(MouseTexturesConsts::MouseTexType::UpAndRightClickRelease));
+
+	m_mouseGuideTex_Cancel = std::make_shared<KdTexture>();
+	m_mouseGuideTex_Cancel->Load(GetMouseTexPath(MouseTexturesConsts::MouseTexType::LeftClickRelease));
 }
