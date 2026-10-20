@@ -104,15 +104,28 @@ public:
 	//初期化
 	void Init();
 
-	//地形生成
-	//void BuildStage(StageBuildMode mode = StageBuildMode::Full);
-	void BuildStage(int laneNumber = BowlingSystemConsts::StartFrame, StageBuildMode mode = StageBuildMode::Full);
-	// 同じステージでピンなどを再配置
-	void RespawnStage(int laneNumber = BowlingSystemConsts::StartFrame);
-	void BonusStage(int laneNumber = BowlingSystemConsts::StartFrame);
+	// 全体の生成
+	void BuildAllObjects(int laneNumber = BowlingSystemConsts::StartFrame, StageBuildMode mode = StageBuildMode::Full);
 
-	//リセット
-	void ResetStage();
+	// 空と島の生成
+	void BuildSkyAndIsland();
+
+	// 空と島の生成(分割)
+	void BuildSky();
+	void BuildIsland();
+
+	// ステージの生成
+	void BuildStageObjects(int laneNumber = BowlingSystemConsts::StartFrame, StageBuildMode mode = StageBuildMode::Full);
+
+	// ステージの生成(分割)
+	void BuildTerrain(int laneNumber = BowlingSystemConsts::StartFrame);
+	void BuildGimmicks(int laneNumber = BowlingSystemConsts::StartFrame);
+	void BuildPins(int laneNumber = BowlingSystemConsts::StartFrame);
+	void BuildPlayer(int laneNumber = BowlingSystemConsts::StartFrame);
+
+	// 同じステージでピンなどを再配置
+	void RespawnStageObjects(int laneNumber = BowlingSystemConsts::StartFrame);
+	void BonusStage(int laneNumber = BowlingSystemConsts::StartFrame);
 
 	// ステージデータの保存・読み込み
 	bool SaveStage(const std::string& filePath);
@@ -120,24 +133,10 @@ public:
 	bool LoadStage(const std::string& filePath);
 
 	// デバッグ用
-	void BuildStage_D(int laneNumber = BowlingSystemConsts::StartFrame, StageBuildMode mode = StageBuildMode::Full);
-	void RespawnStage_D(int laneNumber = BowlingSystemConsts::StartFrame);
-
-	// ゲッター(操作用)
-	//std::string& GetTerrainPath() { return ; }
-	//std::vector<LaneObjectData>& GetStageObjects() { return m_stageGimmicks; }
+	void BuildStageObjects_D(int laneNumber = BowlingSystemConsts::StartFrame, StageBuildMode mode = StageBuildMode::Full);
 
 	//ゲッター（カメラ用）
 	std::weak_ptr<KdGameObject>& GetTerrain() { return m_wpMainTerrain; }
-
-	//void AddStageObject(const LaneObjectData& objectData) { m_stageGimmicks.push_back(objectData); }
-	//void RemoveStageObject(size_t index)
-	//{
-	//	if (index < m_stageGimmicks.size())
-	//	{
-	//		m_stageGimmicks.erase(m_stageGimmicks.begin() + index);
-	//	}
-	//}
 
 	// モード切り替え関連
 	void SetMode(StageMode mode);
@@ -186,6 +185,12 @@ private:
 	bool LoadStageMasterData();
 
 	void Release();
+
+	// 地形のリセット関連
+	void ResetSky();
+	void ResetIsland();
+	void ResetTerrain();
+	void ResetGimmicks();
 
 	//ステージパス生成
 	std::string GetStagePath(int stageNo)
@@ -257,14 +262,9 @@ private:
 
 	//デバッグ用
 	std::unique_ptr<KdDebugWireFrame> m_debugWireFrame;
-	int m_score;
-
+	
 	// stageNo をキーにしたマスタデータ保持用マップ
 	std::unordered_map<int, StageInfo> m_stageTable;
-
-	// リザルト用データ
-	//GameResult m_lastGameResult = {};
-	//int   m_lastStarCount = 0;
 
 	// ピンハンドラーweak
 	std::weak_ptr<PinHandler> m_wpPinHandler;

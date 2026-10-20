@@ -102,7 +102,7 @@ void KdDebugGUI::GuiProcess()
 				{
 					STAGEMGR.SetMode(StageMode::Play);
 					// プレイヤーの操作を有効に
-					STAGEMGR.BuildStage_D(currentLaneNo);
+					STAGEMGR.BuildStageObjects_D(currentLaneNo);
 					CAMERAMGR.SetDefaultCamera(CameraType::Game);
 
 					// カーソルの固定を再開
@@ -147,7 +147,7 @@ void KdDebugGUI::GuiProcess()
 					// ★ LoadStage(int stageNo) を使用
 					if (STAGEMGR.LoadStage(currentStageNo))
 					{
-						STAGEMGR.BuildStage(currentLaneNo);
+						STAGEMGR.BuildStageObjects(currentLaneNo);
 					}
 				}
 			}
@@ -267,7 +267,7 @@ void KdDebugGUI::GuiProcess()
 					if (STAGEMGR.LoadStage(currentStageNo))
 					{
 						// 内部インデックス(0〜9)をそのまま渡す
-						STAGEMGR.BuildStage(currentLaneNo);
+						STAGEMGR.BuildAllObjects(currentLaneNo);
 
 						// PTカメラの位置をプレイヤー位置へ
 						// カメラ取得
@@ -323,7 +323,7 @@ void KdDebugGUI::GuiProcess()
 					if (STAGEMGR.LoadStage(currentStageNo))
 					{
 						// 計算不要でそのままインデックスを渡す
-						STAGEMGR.BuildStage(currentLaneNo);
+						STAGEMGR.BuildAllObjects(currentLaneNo);
 
 						// PTカメラの位置をプレイヤー位置へ
 						// カメラ取得
@@ -383,7 +383,7 @@ void KdDebugGUI::GuiProcess()
 				if (STAGEMGR.LoadStage(currentStageNo))
 				{
 					// 内部インデックス(0〜9)をそのまま渡す
-					STAGEMGR.BuildStage(currentLaneNo);
+					STAGEMGR.BuildAllObjects(currentLaneNo);
 				}
 			}
 
@@ -514,8 +514,8 @@ void KdDebugGUI::GuiProcess()
 						isSkyError = false;
 						stageData.m_skyPath = skyPathInput;
 
-						// 構造変更のため BuildStage
-						STAGEMGR.BuildStage(currentLaneNo);
+						// 空の再生成
+						STAGEMGR.BuildSky();
 					}
 					else
 					{
@@ -533,6 +533,7 @@ void KdDebugGUI::GuiProcess()
 			if (ImGui::TreeNode("Decoration Management"))
 			{
 				auto& decorations = stageData.m_decorationData;
+				bool isDecorationChanged = false;
 
 				// --- 追加ボタンエリア ---
 				if (ImGui::Button("+ Add Decoration", ImVec2(140, 0)))
@@ -547,7 +548,8 @@ void KdDebugGUI::GuiProcess()
 					selectedCategory = SelectedTargetCategory::Decoration;
 					selectedIndex = static_cast<int>(decorations.size()) - 1;
 
-					STAGEMGR.BuildStage(currentLaneNo);
+					// 変更を取得
+					isDecorationChanged = true;
 				}
 
 				ImGui::Spacing();
@@ -606,7 +608,6 @@ void KdDebugGUI::GuiProcess()
 					ImGui::Text("Edit Deco [%d]", selectedIndex + 1);
 
 					auto& decoration = decorations[selectedIndex];
-					bool isChanged = false;
 
 					ImGui::Text("Current Model Path: %s", decoration.m_modelPath.c_str());
 					ImGui::InputText("Model Path##DecoInput", &decoModelPathInput);
@@ -623,8 +624,8 @@ void KdDebugGUI::GuiProcess()
 							isDecoModelError = false;
 							decoration.m_modelPath = decoModelPathInput;
 
-							// 構造変更のため BuildStage
-							STAGEMGR.BuildStage(currentLaneNo);
+							// 変更を取得
+							isDecorationChanged = true;
 						}
 						else
 						{
@@ -633,15 +634,9 @@ void KdDebugGUI::GuiProcess()
 					}
 
 					// SRT編集
-					if (ImGui::DragFloat3("Position", &decoration.m_srtData.m_position.x, 0.01f)) isChanged = true;
-					if (ImGui::DragFloat3("Rotation", &decoration.m_srtData.m_rotation.x, 0.1f, 0.0f, 0.0f, "%.1f deg"))isChanged = true;
-					if (ImGui::DragFloat3("Scale", &decoration.m_srtData.m_scale.x, 0.01f)) isChanged = true;
-
-					// 値が更新された場合のみ再構築
-					if (isChanged)
-					{
-						STAGEMGR.BuildStage(currentLaneNo);
-					}
+					if (ImGui::DragFloat3("Position", &decoration.m_srtData.m_position.x, 0.01f)) isDecorationChanged = true;
+					if (ImGui::DragFloat3("Rotation", &decoration.m_srtData.m_rotation.x, 0.1f, 0.0f, 0.0f, "%.1f deg"))isDecorationChanged = true;
+					if (ImGui::DragFloat3("Scale", &decoration.m_srtData.m_scale.x, 0.01f)) isDecorationChanged = true;
 
 					ImGui::Separator();
 
@@ -665,8 +660,8 @@ void KdDebugGUI::GuiProcess()
 						isDecoModelError = false;
 						decoModelPathInput = decorations[selectedIndex].m_modelPath;
 
-						// 構造変更のため物理ワールド・ステージを再構築
-						STAGEMGR.BuildStage(currentLaneNo);
+						// 変更を取得
+						isDecorationChanged = true;
 					}
 
 					ImGui::SameLine();
@@ -676,11 +671,19 @@ void KdDebugGUI::GuiProcess()
 					{
 						decorations.erase(decorations.begin() + selectedIndex);
 						selectedIndex = -1; // 選択解除
-						STAGEMGR.BuildStage(currentLaneNo);
+						
+						// 変更を取得
+						isDecorationChanged = true;
 					}
 				}
 
 				ImGui::TreePop();
+
+				// 値が更新された場合のみ再構築
+				if (isDecorationChanged)
+				{
+					STAGEMGR.BuildIsland();
+				}
 			}
 
 			ImGui::Separator();
@@ -711,8 +714,8 @@ void KdDebugGUI::GuiProcess()
 							isTerrainError = false;
 							currentFrame.m_terrainPath = terrainPathInput;
 
-							// 構造変更のため BuildStage
-							STAGEMGR.BuildStage(currentLaneNo);
+							// 地形再生成
+							STAGEMGR.BuildTerrain(currentLaneNo);
 						}
 						else
 						{
@@ -732,6 +735,7 @@ void KdDebugGUI::GuiProcess()
 				if (ImGui::TreeNode("Gimmick Management"))
 				{
 					auto& gimmicks = currentFrame.m_laneGimmickData;
+					bool isGimmickChanged = false;
 
 					// --- 追加ボタンエリア ---
 					if (ImGui::Button("+ Add Finish Area", ImVec2(140, 0)))
@@ -746,7 +750,8 @@ void KdDebugGUI::GuiProcess()
 						selectedCategory = SelectedTargetCategory::Gimmick;
 						selectedIndex = static_cast<int>(gimmicks.size()) - 1;
 
-						STAGEMGR.BuildStage(currentLaneNo);
+						// 変更を取得
+						isGimmickChanged = true;
 					}
 
 					ImGui::SameLine();
@@ -766,7 +771,8 @@ void KdDebugGUI::GuiProcess()
 						selectedCategory = SelectedTargetCategory::Gimmick;
 						selectedIndex = static_cast<int>(gimmicks.size()) - 1;
 
-						STAGEMGR.BuildStage(currentLaneNo);
+						// 変更を取得
+						isGimmickChanged = true;
 					}
 
 					if (ImGui::Button("+ Add Moving Terrain", ImVec2(160, 0)))
@@ -784,7 +790,8 @@ void KdDebugGUI::GuiProcess()
 						selectedCategory = SelectedTargetCategory::Gimmick;
 						selectedIndex = static_cast<int>(gimmicks.size()) - 1;
 
-						STAGEMGR.BuildStage(currentLaneNo);
+						// 変更を取得
+						isGimmickChanged = true;
 					}
 
 					ImGui::Spacing();
@@ -852,12 +859,11 @@ void KdDebugGUI::GuiProcess()
 						ImGui::Text("Edit Gimmick [%d] (%s)", selectedIndex + 1, gimmicks[selectedIndex].m_type.c_str());
 
 						auto& gimmick = gimmicks[selectedIndex];
-						bool isChanged = false;
 
 						// 共通：Transform編集
-						if (ImGui::DragFloat3("Position", &gimmick.m_data.m_position.x, 0.01f)) isChanged = true;						
-						if (ImGui::DragFloat3("Rotation", &gimmick.m_data.m_rotation.x, 0.1f, 0.0f, 0.0f, "%.1f deg"))isChanged = true;
-						if (ImGui::DragFloat3("Scale", &gimmick.m_data.m_scale.x, 0.01f)) isChanged = true;
+						if (ImGui::DragFloat3("Position", &gimmick.m_data.m_position.x, 0.01f)) isGimmickChanged = true;
+						if (ImGui::DragFloat3("Rotation", &gimmick.m_data.m_rotation.x, 0.1f, 0.0f, 0.0f, "%.1f deg"))isGimmickChanged = true;
+						if (ImGui::DragFloat3("Scale", &gimmick.m_data.m_scale.x, 0.01f)) isGimmickChanged = true;
 
 						ImGui::Separator();
 
@@ -881,7 +887,7 @@ void KdDebugGUI::GuiProcess()
 								{
 									isGimmickModelError = false;
 									rot->m_modelPath = gimmickModelPathInput;
-									isChanged = true; // 適用されたのでステージ再構築フラグを立てる
+									isGimmickChanged = true;
 								}
 								else
 								{
@@ -892,7 +898,7 @@ void KdDebugGUI::GuiProcess()
 							// 回転速度（リアルタイム反映）
 							if (ImGui::DragFloat("Rotate Speed", &rot->m_rotateSpeed, 0.05f, -100.0f, 100.0f))
 							{
-								isChanged = true;
+								isGimmickChanged = true;
 							}
 						}
 						else if (auto* mov = std::get_if<MovingParams>(&gimmick.m_param))
@@ -914,7 +920,7 @@ void KdDebugGUI::GuiProcess()
 								{
 									isGimmickModelError = false;
 									mov->m_modelPath = gimmickModelPathInput;
-									isChanged = true; // 適用されたのでステージ再構築フラグを立てる
+									isGimmickChanged = true;
 								}
 								else
 								{
@@ -925,7 +931,7 @@ void KdDebugGUI::GuiProcess()
 							// 移動速度（リアルタイム反映）
 							if (ImGui::DragFloat("Move Speed", &mov->m_speed, 0.05f, -100.0f, 100.0f))
 							{
-								isChanged = true;
+								isGimmickChanged = true;
 							}
 
 							// 移動方法
@@ -937,25 +943,25 @@ void KdDebugGUI::GuiProcess()
 							{
 								mov->m_movePattern = MovingParams::MovePattern::Linear;
 								ModeText = "Linear";
-								isChanged = true;
+								isGimmickChanged = true;
 							}
 							ImGui::SameLine();
 							if (ImGui::Button("Easing", ImVec2(70, 0)))
 							{
 								mov->m_movePattern = MovingParams::MovePattern::Easing;
 								ModeText = "Easing";
-								isChanged = true;
+								isGimmickChanged = true;
 							}
 						
 							// 停止時間
 							if (ImGui::DragFloat("Stop Time", &mov->m_stopTime, 0.05f, 0.0f, 10.0f))
 							{
-								isChanged = true;
+								isGimmickChanged = true;
 							}
 
 							// スタートとゴールの位置
-							if (ImGui::DragFloat3("Start Position", &mov->m_startPos.x, 0.01f)) isChanged = true;
-							if (ImGui::DragFloat3("Goal Position", &mov->m_goalPos.x, 0.01f)) isChanged = true;
+							if (ImGui::DragFloat3("Start Position", &mov->m_startPos.x, 0.01f)) isGimmickChanged = true;
+							if (ImGui::DragFloat3("Goal Position", &mov->m_goalPos.x, 0.01f)) isGimmickChanged = true;
 
 							// -------------------------------------------------------------
 							// ウェイポイント（Waypoints）リスト管理処理
@@ -976,7 +982,7 @@ void KdDebugGUI::GuiProcess()
 								newPoint.x += 1.0f; // 少しずらして配置
 
 								mov->m_waypoints.push_back(newPoint);
-								isChanged = true;
+								isGimmickChanged = true;
 							}
 
 							// 2. ウェイポイント一覧の表示・編集
@@ -990,7 +996,7 @@ void KdDebugGUI::GuiProcess()
 								std::string wpLabel = "WP [" + std::to_string(wpIdx + 1) + "]";
 								if (ImGui::DragFloat3(wpLabel.c_str(), &mov->m_waypoints[wpIdx].x, 0.01f))
 								{
-									isChanged = true;
+									isGimmickChanged = true;
 								}
 
 								// 削除ボタン
@@ -1007,18 +1013,12 @@ void KdDebugGUI::GuiProcess()
 							if (removeIndex != -1)
 							{
 								mov->m_waypoints.erase(mov->m_waypoints.begin() + removeIndex);
-								isChanged = true;
+								isGimmickChanged = true;
 							}
 						}
 						else if (auto* finish = std::get_if<FinishAreaParams>(&gimmick.m_param))
 						{
 							// ここは何もない
-						}
-
-						// 値が更新された場合のみ再構築
-						if (isChanged)
-						{
-							STAGEMGR.BuildStage(currentLaneNo);
 						}
 
 						ImGui::Separator();
@@ -1027,7 +1027,7 @@ void KdDebugGUI::GuiProcess()
 						if (ImGui::Button("Duplicate Selected Gimmick", ImVec2(200, 0)))
 						{
 							// 選択中のギミックデータを深層コピー
-							auto duplicateGimmick = gimmicks[selectedIndex];
+							auto& duplicateGimmick = gimmicks[selectedIndex];
 
 							// （任意）重なって見づらくなるのを防ぐため座標を少しだけずらす
 							duplicateGimmick.m_data.m_position.x += 0.5f;
@@ -1050,8 +1050,8 @@ void KdDebugGUI::GuiProcess()
 								gimmickModelPathInput = mov->m_modelPath;
 							}
 
-							// 構造変更のため物理ワールド・ステージを再構築
-							STAGEMGR.BuildStage(currentLaneNo);
+							// 変更を取得
+							isGimmickChanged = true;
 						}
 
 						ImGui::SameLine();
@@ -1061,11 +1061,19 @@ void KdDebugGUI::GuiProcess()
 						{
 							gimmicks.erase(gimmicks.begin() + selectedIndex);
 							selectedIndex = -1; // 選択解除
-							STAGEMGR.BuildStage(currentLaneNo);
+
+							// 変更を取得
+							isGimmickChanged = true;
 						}
 					}
 
 					ImGui::TreePop();
+
+					// 値が更新された場合のみ再構築
+					if (isGimmickChanged)
+					{
+						STAGEMGR.BuildGimmicks(currentLaneNo);
+					}
 				}
 
 				ImGui::Separator();
@@ -1076,6 +1084,7 @@ void KdDebugGUI::GuiProcess()
 				if (ImGui::TreeNode("Pin List (10 Pins)"))
 				{
 					auto& pins = currentFrame.m_lanePinData;
+					bool isPinChanged = false;
 
 					// 1. ピン一覧リストボックス
 					ImGui::BeginChild("PinListChild", ImVec2(0, 120), true);
@@ -1116,19 +1125,19 @@ void KdDebugGUI::GuiProcess()
 						ImGui::Text("Edit Pin [%d]", selectedIndex + 1);
 
 						auto& pin = pins[selectedIndex];
-						bool isChanged = false;
 
-						if (ImGui::DragFloat3("Position", &pin.m_data.m_position.x, 0.01f)) isChanged = true;
-						if (ImGui::DragFloat3("Rotation", &pin.m_data.m_rotation.x, 0.1f))  isChanged = true;
-						if (ImGui::DragFloat3("Scale", &pin.m_data.m_scale.x, 0.01f)) isChanged = true;
-
-						if (isChanged)
-						{
-							STAGEMGR.RespawnStage(currentLaneNo);
-						}
+						if (ImGui::DragFloat3("Position", &pin.m_data.m_position.x, 0.01f)) isPinChanged = true;
+						if (ImGui::DragFloat3("Rotation", &pin.m_data.m_rotation.x, 0.1f))  isPinChanged = true;
+						if (ImGui::DragFloat3("Scale", &pin.m_data.m_scale.x, 0.01f)) isPinChanged = true;
 					}
 
 					ImGui::TreePop();
+
+					// 変更を確認
+					if (isPinChanged)
+					{
+						STAGEMGR.BuildPins(currentLaneNo);
+					}
 				}
 
 				ImGui::Separator();
@@ -1139,6 +1148,7 @@ void KdDebugGUI::GuiProcess()
 				if (ImGui::TreeNode("Player Transform Settings"))
 				{
 					auto& player = currentFrame.m_playerData;
+					bool isPlayerChanged = false;
 
 					// 1. サイズ 1 の選択リストボックス（高さ 35px 程度で固定）
 					ImGui::BeginChild("PlayerListChild", ImVec2(0, 35), true);
@@ -1157,18 +1167,16 @@ void KdDebugGUI::GuiProcess()
 						ImGui::Separator();
 						ImGui::Text("Edit Player Transform");
 
-						bool isChanged = false;
-
-						if (ImGui::DragFloat3("Position", &player.m_position.x, 0.01f)) isChanged = true;
-						if (ImGui::DragFloat3("Rotation", &player.m_rotation.x, 0.1f))  isChanged = true;
-
-						if (isChanged)
-						{
-							STAGEMGR.RespawnStage(currentLaneNo);
-						}
+						if (ImGui::DragFloat3("Position", &player.m_position.x, 0.01f)) isPlayerChanged = true;
+						if (ImGui::DragFloat3("Rotation", &player.m_rotation.x, 0.1f))  isPlayerChanged = true;
 					}
 
 					ImGui::TreePop();
+
+					if (isPlayerChanged)
+					{
+						STAGEMGR.BuildPlayer();
+					}
 				}
 
 				ImGui::TreePop(); // Lane Placement Settings (※1) の TreePop
@@ -1288,7 +1296,8 @@ void KdDebugGUI::GuiProcess()
 								auto& deco = stageData.m_decorationData[selectedIndex];
 								deco.m_srtData.m_position = Math::Vector3(hitVec3Pos.x, hitVec3Pos.y, hitVec3Pos.z);
 
-								STAGEMGR.BuildStage(currentLaneNo);
+								// 島の再生成
+								STAGEMGR.BuildIsland();
 							}
 						}
 						if (selectedCategory == SelectedTargetCategory::Gimmick)
@@ -1298,7 +1307,8 @@ void KdDebugGUI::GuiProcess()
 								auto& gimmick = currentFrame.m_laneGimmickData[selectedIndex];
 								gimmick.m_data.m_position = Math::Vector3(hitVec3Pos.x, hitVec3Pos.y, hitVec3Pos.z);
 
-								STAGEMGR.BuildStage(currentLaneNo);
+								// ギミックの再生成
+								STAGEMGR.BuildGimmicks(currentLaneNo);
 							}
 						}
 						else if (selectedCategory == SelectedTargetCategory::Pin)
@@ -1308,7 +1318,8 @@ void KdDebugGUI::GuiProcess()
 								auto& pin = currentFrame.m_lanePinData[selectedIndex];
 								pin.m_data.m_position = Math::Vector3(hitVec3Pos.x, hitVec3Pos.y, hitVec3Pos.z);
 
-								STAGEMGR.RespawnStage(currentLaneNo);
+								// ピンの再生成
+								STAGEMGR.BuildPins(currentLaneNo);
 							}
 						}
 						else if (selectedCategory == SelectedTargetCategory::Player)
@@ -1316,7 +1327,8 @@ void KdDebugGUI::GuiProcess()
 							auto& player = currentFrame.m_playerData;
 							player.m_position = Math::Vector3(hitVec3Pos.x, hitVec3Pos.y, hitVec3Pos.z);
 
-							STAGEMGR.RespawnStage(currentLaneNo);
+							// プレイヤーの再生成
+							STAGEMGR.BuildPlayer(currentLaneNo);
 						}
 					}
 				}

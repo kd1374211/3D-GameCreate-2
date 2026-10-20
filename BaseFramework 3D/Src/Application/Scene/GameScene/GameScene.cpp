@@ -42,7 +42,7 @@ void GameScene::Event()
 void GameScene::SetUpLane()
 {
 	//ステージ生成
-	STAGEMGR.BuildStage(m_cScoreHandler->GetCurrentFrame());
+	STAGEMGR.BuildStageObjects(m_cScoreHandler->GetCurrentFrame());
 }
 
 void GameScene::ReadyThrow()
@@ -228,7 +228,7 @@ void GameScene::UpdateCheckAndClean()
 			{
 			case NextActions::NextThrow:
 				// 同じレーンの再配置
-				STAGEMGR.RespawnStage(m_cScoreHandler->GetCurrentFrame());
+				STAGEMGR.RespawnStageObjects(m_cScoreHandler->GetCurrentFrame());
 				// 投球開始テキスト召喚
 				m_wpUI.lock()->SpawnThrowStartText(m_cScoreHandler->GetCurrentFrame(), m_cScoreHandler->GetCurrentThrow(), &m_isThrowStartTextEnd);
 				m_currentSceneState = SceneState::Playing;
@@ -415,6 +415,8 @@ void GameScene::Init()
 	}
 	// ピンプール用意
 	STAGEMGR.CreatePinPool();
+	// 空と島の作成
+	STAGEMGR.BuildSkyAndIsland();
 
 	//カメラとプレイヤー生成
 	std::shared_ptr<TPSCamera> camera = std::make_shared<TPSCamera>();

@@ -6,36 +6,17 @@
 
 #include "../GameObject/Chara/BowlingBall/BowlingBall.h"
 
-void StageManager::ResetStage()
+void StageManager::ResetTerrain()
 {
 	//地形削除
 	if (!m_wpMainTerrain.expired())
 	{
 		m_wpMainTerrain.lock()->SetExpire();
 	}
+}
 
-	// 島削除
-	if (!m_wpIsland.expired())
-	{
-		m_wpIsland.lock()->SetExpire();
-	}
-
-	// デコレーション削除
-	for (auto& obj : m_wpIslandDecorations)
-	{
-		if (obj.expired())continue;
-
-		//削除
-		obj.lock()->SetExpire();
-	}
-	m_wpIslandDecorations.clear();
-
-	//天球削除
-	if (!m_wpSkySphere.expired())
-	{
-		m_wpSkySphere.lock()->SetExpire();
-	}
-
+void StageManager::ResetGimmicks()
+{
 	//オブジェクトリセット
 	for (auto& obj : m_wpStageGimmicks)
 	{
@@ -353,19 +334,10 @@ bool StageManager::LoadStage(const std::string& filePath)
 	return true;
 }
 
-void StageManager::BuildStage_D(int laneNumber, StageBuildMode mode)
+void StageManager::BuildStageObjects_D(int laneNumber, StageBuildMode mode)
 {
 	// 本体を呼ぶ
-	BuildStage(laneNumber, mode);
-
-	// デバッグ用で操作を有効に
-	m_wpCharaHandler.lock()->GetPlayerBall()->SetIsInputEnabled(true);
-}
-
-void StageManager::RespawnStage_D(int laneNumber)
-{
-	// 本体を呼ぶ
-	RespawnStage(laneNumber);
+	BuildStageObjects(laneNumber, mode);
 
 	// デバッグ用で操作を有効に
 	m_wpCharaHandler.lock()->GetPlayerBall()->SetIsInputEnabled(true);
@@ -386,17 +358,28 @@ void StageManager::Init()
 	}
 }
 
-void StageManager::BuildStage(int laneNumber, StageBuildMode mode)
+void StageManager::BuildAllObjects(int laneNumber, StageBuildMode mode)
 {
-	// 一応レーン番号確認
-	if (laneNumber > BowlingSystemConsts::FrameCount)return;
-	if (laneNumber < BowlingSystemConsts::StartFrame)return;
+	// 空と島
+	BuildSkyAndIsland();
 
-	// レーンデータ
-	const StageLaneData& laneData = m_stageOverallData.m_stageLaneData[laneNumber];
+	// ステージ
+	BuildStageObjects(laneNumber, mode);
+}
 
-	//リセット
-	ResetStage();
+void StageManager::BuildSkyAndIsland()
+{
+	// 天球
+	BuildSky();
+
+	// 島
+	BuildIsland();
+}
+
+void StageManager::BuildSky()
+{
+	// リセット
+	ResetSky();
 
 	// 天球生成
 	std::shared_ptr<SkySphere> sky = std::make_shared<SkySphere>(m_stageOverallData.m_skyPath);
@@ -404,6 +387,12 @@ void StageManager::BuildStage(int laneNumber, StageBuildMode mode)
 	SCENEMGR.AddObject(sky);
 	// 後で消せるようにWP持ち
 	m_wpSkySphere = sky;
+}
+
+void StageManager::BuildIsland()
+{
+	// リセット
+	ResetIsland();
 
 	// 島の生成
 	std::shared_ptr<Island> island = std::make_shared<Island>(m_stageOverallData.m_islandPath, m_stageOverallData.m_islandPos);
@@ -421,6 +410,65 @@ void StageManager::BuildStage(int laneNumber, StageBuildMode mode)
 		// 後で消せるようにWP持ち
 		m_wpIslandDecorations.push_back(islandDeco);
 	}
+}
+
+void StageManager::ResetSky()
+{
+	//天球削除
+	if (!m_wpSkySphere.expired())
+	{
+		m_wpSkySphere.lock()->SetExpire();
+	}
+}
+
+void StageManager::ResetIsland()
+{
+	// 島削除
+	if (!m_wpIsland.expired())
+	{
+		m_wpIsland.lock()->SetExpire();
+	}
+
+	// デコレーション削除
+	for (auto& obj : m_wpIslandDecorations)
+	{
+		if (obj.expired())continue;
+
+		//削除
+		obj.lock()->SetExpire();
+	}
+	m_wpIslandDecorations.clear();
+}
+
+void StageManager::BuildStageObjects(int laneNumber, StageBuildMode mode)
+{
+	// 一応レーン番号確認
+	if (laneNumber > BowlingSystemConsts::FrameCount)return;
+	if (laneNumber < BowlingSystemConsts::StartFrame)return;
+
+	// 地形
+	BuildTerrain(laneNumber);
+
+	// ギミック
+	BuildGimmicks(laneNumber);
+
+	// 背景モードの場合この先は使わない
+	if (mode == StageBuildMode::Background)return;
+
+	// ピン
+	BuildPins(laneNumber);
+
+	// プレイヤー
+	BuildPlayer(laneNumber);
+}
+
+void StageManager::BuildTerrain(int laneNumber)
+{
+	// リセット
+	ResetTerrain();
+
+	// レーンデータ
+	const StageLaneData& laneData = m_stageOverallData.m_stageLaneData[laneNumber];
 
 	// 地形生成
 	std::shared_ptr<MainTerrain> mainTerrain = std::make_shared<MainTerrain>(laneData.m_terrainPath, Math::Vector3::Zero, Math::Quaternion::Identity);
@@ -428,6 +476,15 @@ void StageManager::BuildStage(int laneNumber, StageBuildMode mode)
 	SCENEMGR.AddObject(mainTerrain);
 	// 後で消せるようにWP持ち
 	m_wpMainTerrain = mainTerrain;
+}
+
+void StageManager::BuildGimmicks(int laneNumber)
+{
+	// リセット
+	ResetGimmicks();
+
+	// レーンデータ
+	const StageLaneData& laneData = m_stageOverallData.m_stageLaneData[laneNumber];
 
 	// ギミック生成
 	for (const auto& gimmickData : laneData.m_laneGimmickData)
@@ -474,15 +531,24 @@ void StageManager::BuildStage(int laneNumber, StageBuildMode mode)
 			m_wpStageGimmicks.push_back(gimmickObj);
 		}
 	}
+}
 
-	// 背景モードの場合この先は使わない
-	if (mode == StageBuildMode::Background)return;
+void StageManager::BuildPins(int laneNumber)
+{
+	// レーンデータ
+	const StageLaneData& laneData = m_stageOverallData.m_stageLaneData[laneNumber];
 
 	// ピン生成（ハンドラー）
 	if (!m_wpPinHandler.expired())
 	{
 		m_wpPinHandler.lock()->SpawnPinsForThisFrame(laneData.m_lanePinData);
 	}
+}
+
+void StageManager::BuildPlayer(int laneNumber)
+{
+	// レーンデータ
+	const StageLaneData& laneData = m_stageOverallData.m_stageLaneData[laneNumber];
 
 	// プレイヤー配置
 	if (!m_wpCharaHandler.expired())
@@ -491,7 +557,7 @@ void StageManager::BuildStage(int laneNumber, StageBuildMode mode)
 	}
 }
 
-void StageManager::RespawnStage(int laneNumber)
+void StageManager::RespawnStageObjects(int laneNumber)
 {
 	// 一応レーン番号確認
 	if (laneNumber > BowlingSystemConsts::FrameCount)return;
@@ -521,12 +587,12 @@ void StageManager::BonusStage(int laneNumber)
 		// 全倒れ
 		if (spPinHandler->CheckIsAllPinsFallen())
 		{
-			BuildStage(laneNumber);
+			BuildStageObjects(laneNumber);
 		}
 		// 残りあり
 		else
 		{
-			RespawnStage(laneNumber);
+			RespawnStageObjects(laneNumber);
 		}
 	}
 }
