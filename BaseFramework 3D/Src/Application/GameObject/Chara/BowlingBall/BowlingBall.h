@@ -61,6 +61,9 @@ public:
 	// 島に乗っていることを通知
 	void OnIsland();
 
+	// 減速を通知
+	void UpdateRollingResistance(float resistPower);
+
 	// 地面に触れたかどうかのフラグをオンにする
 	void OnGround() { m_isOnGroundThisFrame = true; }
 
@@ -83,7 +86,7 @@ private:
 		static constexpr float RollEndTime = 1.5f;
 		
 		// 発射速度
-		static constexpr float ThrowPowerMulti = 9.0f;
+		static constexpr float ThrowPowerMulti = 10.0f;
 
 		// 重さ
 		static constexpr float BallMass = 7.0f;
@@ -133,7 +136,11 @@ private:
 	// 停止確認
 	void CheckIsStop();
 
+	// 減速の更新
+	void CheckRollingResistance();
+
 	// 転がる音の管理
+	void StartRollingSound();
 	void UpdateRollingSound();
 
 	//モデル
@@ -146,6 +153,9 @@ private:
 
 	// 連続停止時間
 	float m_stopTimer = 0.0f;
+
+	// このフレームで接触した一番大きい値の速度抵抗値
+	float  m_rollingResistance = 0.0f;
 
 	// 転がり中か
 	bool m_isRolling = false;

@@ -15,7 +15,7 @@
 		{
 			"name": "Ingame",
 			"filePath": "Asset/Sounds/BGM/Ingame.wav",
-			"defaultVolume": 0.03,
+			"defaultVolume": 0.018,
 			"loop": true
 		},
 		{

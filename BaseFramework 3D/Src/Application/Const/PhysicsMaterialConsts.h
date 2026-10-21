@@ -16,6 +16,7 @@ struct MatPhysicsConst
 {
 	static constexpr float Friction[(size_t)ModelMaterialType::Number] = { 0.05f,0.05f,0.05f,0.05f,2.4f };
 	static constexpr float Restitution[(size_t)ModelMaterialType::Number] = { 0.0f,0.9f,0.0f,0.0f,0.0f };
+	static constexpr float RollingResistance[(size_t)ModelMaterialType::Number] = { -1.0f,-1.0f,1.2f,1.2f,4.0f };
 };
 
 static std::string PhysicMaterialName[(size_t)ModelMaterialType::Number] =

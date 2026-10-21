@@ -26,7 +26,8 @@ bool PhysicsComponent::InitTerrainModel(const std::string& path, PhysicsInitData
 			PhysicMaterialName[matType],
 			JPH::Color::sGreen,
 			MatPhysicsConst::Restitution[matType],
-			MatPhysicsConst::Friction[matType]
+			MatPhysicsConst::Friction[matType],
+			MatPhysicsConst::RollingResistance[matType]
 		);
 		jphMaterials.push_back(materialMat);
 	}
@@ -668,6 +669,13 @@ JPH::Vec3 PhysicsComponent::GetLinearVelocity() const
 	auto& bodyInterface = PHYSICSMGR.GetBodyInterface();
 
 	return bodyInterface.GetLinearVelocity(m_bodyID);
+}
+
+JPH::Vec3 PhysicsComponent::GetAngularVelocity() const
+{
+	auto& bodyInterface = PHYSICSMGR.GetBodyInterface();
+
+	return bodyInterface.GetAngularVelocity(m_bodyID);
 }
 
 void PhysicsComponent::Release()

@@ -30,18 +30,21 @@ struct PhysicsInitData {
 class TerrainPhysicsMaterial : public JPH::PhysicsMaterialSimple
 {
 public:
-	TerrainPhysicsMaterial(const std::string& inName, JPH::ColorArg inColor, float inRestitution, float inFriction)
+	TerrainPhysicsMaterial(const std::string& inName, JPH::ColorArg inColor, float inRestitution, float inFriction, float inRollingResitance)
 		: JPH::PhysicsMaterialSimple(inName, inColor)
 		, m_restitution(inRestitution)
 		, m_friction(inFriction)
+		, m_rollingResistance(inRollingResitance)
 	{}
 
 	float GetRestitution() const { return m_restitution; }
 	float GetFriction() const { return m_friction; }
+	float GetRollingResistance()const { return m_rollingResistance; }
 
 private:
 	float m_restitution = 0.0f;
 	float m_friction = 0.2f;
+	float m_rollingResistance = 0.0f;
 };
 
 class PhysicsComponent {
@@ -88,6 +91,7 @@ public:
 	JPH::Vec3 GetPos()const;
 	JPH::Quat GetRotation()const;
 	JPH::Vec3 GetLinearVelocity()const;
+	JPH::Vec3 GetAngularVelocity()const;
 	const JPH::BodyID& GetBodyID()const { return m_bodyID; }
 
 private:

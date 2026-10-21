@@ -34,7 +34,7 @@
 		},
 		{
 			"doubleSided":true,
-			"name":"Grass_GutterGround",
+			"name":"Grass_IslandGround",
 			"normalTexture":{
 				"index":2
 			},
@@ -47,7 +47,7 @@
 		},
 		{
 			"doubleSided":true,
-			"name":"Grass_GutterWall",
+			"name":"Grass_NormalWall",
 			"normalTexture":{
 				"index":4
 			},

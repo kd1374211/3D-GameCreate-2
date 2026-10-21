@@ -41,5 +41,4 @@ private:
 		// 3. MeshShape または通常の Shape からマテリアルを取得
 		return leafShape->GetMaterial(remainderID);
 	}
-
 };

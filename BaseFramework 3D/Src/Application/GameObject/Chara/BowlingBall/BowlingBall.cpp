@@ -72,8 +72,14 @@ void BowlingBall::Update()
 	// 接地フラグリセット前に音の更新
 	UpdateRollingSound();
 
+	// 回転抵抗リセット前に適応
+	CheckRollingResistance();
+
 	// 接地フラグリセット
 	m_isOnGroundThisFrame = false;
+
+	// 回転抵抗リセット
+	m_rollingResistance = -1.0f;
 
 	// 転がっていないとき
 	if (!m_isRolling)
@@ -382,9 +388,7 @@ void BowlingBall::Throw(const Math::Vector3& startPos, const Math::Vector3& dire
 	m_cPhysics->AddImpulse(impulse);
 
 	// 5. 音の再生＆管理用に受け取る
-	m_wpStoredSound = SOUNDMGR.PlayAndGetInst(SoundType::SE_Throw);
-	// ステート更新
-	m_soundState = RollingSoundState::Throw;
+	StartRollingSound();
 }
 
 void BowlingBall::EndThrow()
@@ -576,6 +580,15 @@ void BowlingBall::OnIsland()
 	}
 }
 
+void BowlingBall::UpdateRollingResistance(float resistPower)
+{
+	// 0以上かつこのフレームの最大を超えているなら更新
+	if (resistPower > 0.0f && resistPower > m_rollingResistance)
+	{
+		m_rollingResistance = resistPower;
+	}
+}
+
 void BowlingBall::ActivateBody()
 {
 	// 有効ならリターン
@@ -620,6 +633,34 @@ void BowlingBall::CheckIsStop()
 		// 連続停止時間リセット
 		m_stopTimer = 0.0f;
 	}
+}
+
+void BowlingBall::CheckRollingResistance()
+{
+	// 0以上なら適応
+	if (m_rollingResistance > 0.0f)
+	{
+		// ゲームdt取得
+		float gameDt = SCENEMGR.GetDeltaGameTime();
+
+		JPH::Vec3 angVel = m_cPhysics->GetAngularVelocity();
+		float dampingFactor = std::exp(-m_rollingResistance * gameDt);
+		m_cPhysics->SetAngularVelocity(angVel * dampingFactor);
+	}
+}
+
+void BowlingBall::StartRollingSound()
+{
+	// もし残っていたら削除
+	if (const auto& spSound = m_wpStoredSound.lock())
+	{
+		spSound->Stop();
+	}
+
+	// 新しく格納
+	m_wpStoredSound = SOUNDMGR.PlayAndGetInst(SoundType::SE_Throw);
+	// ステート更新
+	m_soundState = RollingSoundState::Throw;
 }
 
 void BowlingBall::UpdateRollingSound()

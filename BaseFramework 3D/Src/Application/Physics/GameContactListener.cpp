@@ -59,6 +59,13 @@ void GameContactListener::OnContactAdded(const JPH::Body& inBody1, const JPH::Bo
 			{
 				ioSettings.mCombinedRestitution = terrainMat->GetRestitution();
 				ioSettings.mCombinedFriction = terrainMat->GetFriction();
+
+				// UserData から プレイヤーオブジェクトのポインタを復元
+				if (auto* ball = dynamic_cast<BowlingBall*>(gameObj2))
+				{
+					// 回転減速を通知
+					ball->UpdateRollingResistance(terrainMat->GetRollingResistance());
+				}
 			}
 
 			// マテリアル名からマテリアルを確認
@@ -81,8 +88,7 @@ void GameContactListener::OnContactAdded(const JPH::Body& inBody1, const JPH::Bo
 				{
 					// 速度を取得
 					JPH::Vec3 velV3 = body2->GetLinearVelocity();
-					velV3.Normalized();
-					float velFloat = fabs(velV3.Length());
+					float velFloat = velV3.Length();
 
 					// 壁接触を通知
 					ball->HitWall(hitMaterial->GetDebugName(), velFloat, worldContactPoint, normal);
@@ -104,6 +110,13 @@ void GameContactListener::OnContactAdded(const JPH::Body& inBody1, const JPH::Bo
 			{
 				ioSettings.mCombinedRestitution = terrainMat->GetRestitution();
 				ioSettings.mCombinedFriction = terrainMat->GetFriction();
+
+				// UserData から プレイヤーオブジェクトのポインタを復元
+				if (auto* ball = dynamic_cast<BowlingBall*>(gameObj2))
+				{
+					// 回転減速を通知
+					ball->UpdateRollingResistance(terrainMat->GetRollingResistance());
+				}
 			}
 
 			// UserData から プレイヤーオブジェクトのポインタを復元
@@ -111,13 +124,9 @@ void GameContactListener::OnContactAdded(const JPH::Body& inBody1, const JPH::Bo
 			{
 				// 速度を取得
 				JPH::Vec3 velV3 = body2->GetLinearVelocity();
-				velV3.Normalized();
-				float velFloat = fabs(velV3.Length());
+				float velFloat = velV3.Length();
 
-				if (auto ball = dynamic_cast<BowlingBall*>(gameObj2))
-				{
-					ball->HitIsland(hitMaterial->GetDebugName(), velFloat, worldContactPoint, normal);
-				}
+				ball->HitIsland(hitMaterial->GetDebugName(), velFloat, worldContactPoint, normal);
 			}
 		}
 	}
@@ -234,6 +243,13 @@ void GameContactListener::OnContactPersisted(const JPH::Body& inBody1, const JPH
 			{
 				ioSettings.mCombinedRestitution = terrainMat->GetRestitution();
 				ioSettings.mCombinedFriction = terrainMat->GetFriction();
+
+				// UserData から プレイヤーオブジェクトのポインタを復元
+				if (auto* ball = dynamic_cast<BowlingBall*>(gameObj2))
+				{
+					// 回転減速を通知
+					ball->UpdateRollingResistance(terrainMat->GetRollingResistance());
+				}
 			}
 
 			// Groundと接触したなら通知する
@@ -261,6 +277,13 @@ void GameContactListener::OnContactPersisted(const JPH::Body& inBody1, const JPH
 			{
 				ioSettings.mCombinedRestitution = terrainMat->GetRestitution();
 				ioSettings.mCombinedFriction = terrainMat->GetFriction();
+
+				// UserData から プレイヤーオブジェクトのポインタを復元
+				if (auto* ball = dynamic_cast<BowlingBall*>(gameObj2))
+				{
+					// 回転減速を通知
+					ball->UpdateRollingResistance(terrainMat->GetRollingResistance());
+				}
 			}
 
 			// UserData から プレイヤーオブジェクトのポインタを復元
