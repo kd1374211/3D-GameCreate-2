@@ -170,6 +170,7 @@ private:
 	std::shared_ptr<KdTexture> m_mouseGuideTex_CamMove = nullptr;
 	std::shared_ptr<KdTexture> m_mouseGuideTex_HoldAndSelect = nullptr;
 	std::shared_ptr<KdTexture> m_mouseGuideTex_Throw = nullptr;
+	std::shared_ptr<KdTexture> m_mouseGuideTex_Skip = nullptr;
 	std::shared_ptr<KdTexture> m_mouseGuideTex_Cancel = nullptr;
 
 	// マウスガイドの状態

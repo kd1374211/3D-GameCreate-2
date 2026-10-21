@@ -44,17 +44,8 @@ void PinBase::PostUpdate()
 	//同期
 	m_cPhysics->Sync(m_pos, m_rot);
 
-	// 落下チェック
-	if (m_pos.y < STAGEMGR.GetStageInfo()->m_fallOutLine)
-	{
-		m_isFallen = true;
-	}
-
-	// 一定距離以上離れたら倒れた扱いにする
-	if (Math::Vector3::Distance(m_pos, m_spawnPos) > PinBaseConsts::DistanceCountAsFallen)
-	{
-		m_isFallen = true;
-	}
+	// ここで位置関連の倒れチェック
+	CheckIsFallen_PostUpdate();
 
 	// Matrix更新
 	Math::Matrix trans = Math::Matrix::CreateTranslation(m_pos);
@@ -134,7 +125,10 @@ void PinBase::Spawn(Math::Vector3 pos, Math::Quaternion rot, int index)
 	// 3.使用状態を活性化にする
 	m_isActive = true;
 
-	// 4.ピンに管理番号を付与
+	// 4.倒れ確認判定をオンにする
+	m_isCheckFallen = true;
+
+	// 5.ピンに管理番号を付与
 	m_pinIndex = index;
 }
 
@@ -153,7 +147,10 @@ void PinBase::Despawn()
 	m_isActive = false;
 	DeactivateBody();
 
-	// 3.ピンの管理番号を無効値に
+	// 3.倒れ確認判定を一応オフに
+	m_isCheckFallen = false;
+
+	// 4.ピンの管理番号を無効値に
 	m_pinIndex = -1;
 }
 
@@ -236,11 +233,14 @@ void PinBase::Init()
 
 bool PinBase::CheckIsFallen()
 {
-	// 既に倒れていると判定済みなら更新しない（必要に応じて）
+	// 既に倒れていると判定済みなら更新しない
 	if (m_isFallen) return true;
 
 	// 非アクティブ（画面上に存在しない等）なら判定しない
 	if (!m_isActive) return false;
+
+	// 倒れ確認を行わない場合もスキップ(現在の値を返す)
+	if (!m_isCheckFallen) return m_isFallen;
 
 	// 1. ピンの現在の回転（Quaternion）からワールドでの「上方向ベクトル」を取得
 	// ※お使いの Math クラス（DirectXMath等）に合わせてベクトル変換を行ってください
@@ -262,4 +262,28 @@ bool PinBase::CheckIsFallen()
 	}
 
 	return m_isFallen;
+}
+
+bool PinBase::CheckIsFallen_PostUpdate()
+{
+	// 既に倒れていると判定済みなら更新しない
+	if (m_isFallen) return true;
+
+	// 非アクティブ（画面上に存在しない等）なら判定しない
+	if (!m_isActive) return false;
+
+	// 倒れ確認を行わない場合もスキップ(現在の値を返す)
+	if (!m_isCheckFallen) return m_isFallen;
+
+	// 落下チェック
+	if (m_pos.y < STAGEMGR.GetStageInfo()->m_fallOutLine)
+	{
+		m_isFallen = true;
+	}
+
+	// 一定距離以上離れたら倒れた扱いにする
+	if (Math::Vector3::Distance(m_pos, m_spawnPos) > PinBaseConsts::DistanceCountAsFallen)
+	{
+		m_isFallen = true;
+	}
 }

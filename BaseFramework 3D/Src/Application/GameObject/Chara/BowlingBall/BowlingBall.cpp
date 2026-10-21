@@ -11,6 +11,7 @@
 #include "../../Effect/EffectManager.h"
 #include "../../../Sound/SoundManager.h"
 #include "../../UI/SceneUIObjects/Game/GameUIObjects.h"
+#include "../../../Const/DeviceAndKey.h"
 
 BowlingBall::BowlingBall()
 {
@@ -196,6 +197,13 @@ void BowlingBall::Update()
 	{
 		// 停止チェック
 		CheckIsStop();
+
+		// 途中終了
+		if (KdInputManager::Instance().IsPress(GetKeyRegistName(VK_RBUTTON)))
+		{
+			m_isRolling = false;
+			m_reason = RollEndReason::Skip;
+		}
 	}
 
 	// カーソルの描画フラグを更新

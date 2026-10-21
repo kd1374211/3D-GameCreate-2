@@ -6,6 +6,7 @@ struct MouseTexturesConsts
 	{
 		LeftClick,
 		LeftClickRelease,
+		RightClick,
 		Move,
 		Move_Horizonal,
 		UpAndRightClickRelease,
@@ -16,6 +17,7 @@ struct MouseTexturesConsts
 	{
 		{MouseTexType::LeftClick,"Asset/Textures/UI/Mouse/MouseLeftClick.png"},
 		{MouseTexType::LeftClickRelease,"Asset/Textures/UI/Mouse/MouseLeftRelease.png"},
+		{MouseTexType::RightClick,"Asset/Textures/UI/Mouse/MouseRightClick.png"},
 		{MouseTexType::Move,"Asset/Textures/UI/Mouse/MouseMove.png"},
 		{MouseTexType::Move_Horizonal,"Asset/Textures/UI/Mouse/MouseMoveHorizonal.png"},
 		{MouseTexType::UpAndRightClickRelease,"Asset/Textures/UI/Mouse/MouseUpAndRelease.png"},

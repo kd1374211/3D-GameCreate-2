@@ -152,6 +152,19 @@ void PinHandler::ActivateBody()
 	}
 }
 
+void PinHandler::SetIsCheckFallen(bool flg)
+{
+	// 各ピンに倒れ判定を行うかどうかのフラグを通知
+	for (const auto& wpPin : m_activePins)
+	{
+		auto pin = wpPin.lock();
+		if (pin)
+		{
+			pin->SetIsCheckFallen(flg);
+		}
+	}
+}
+
 void PinHandler::SpawnPin(PinType type, Math::Vector3 startPos, int pinIndex)
 {
 	std::shared_ptr<PinBase> pin = GetUnusedPin(type);

@@ -106,7 +106,7 @@ void GameScene::UpdatePlaying()
 		}
 	}
 	static bool isSkipKey = true;
-	if (GetAsyncKeyState('S') & 0x8000)
+	if (GetAsyncKeyState('S') & 0x8000 && GetAsyncKeyState(VK_SPACE) & 0x8000)
 	{
 		if (!isSkipKey)
 		{
@@ -115,17 +115,8 @@ void GameScene::UpdatePlaying()
 
 			if (!STAGEMGR.IsEditMode())
 			{
-				// SPキーも押していればフレームごとスキップ
-				if (GetAsyncKeyState(VK_SPACE) & 0x8000)
-				{
-					// フレームをスキップ
-					m_cScoreHandler->EndCurrentFrame(true);
-				}
-				else
-				{
-					// 投球終了
-					EndRolling();
-				}
+				// フレームをスキップ
+				m_cScoreHandler->EndCurrentFrame(true);
 
 				// ステート更新
 				m_currentSceneState = SceneState::CheckAndClean;
@@ -197,6 +188,9 @@ void GameScene::UpdatePlaying()
 					// 当たっていなかったら落下扱いで短縮
 					m_countdownTimer = GameSceneConsts::CountDownOnRollEnd_NoHit;
 				}
+				break;
+			case RollEndReason::Skip: // スキップ
+				m_countdownTimer = GameSceneConsts::CountDownOnRollEnd_Skip;
 				break;
 			default:	// エラー
 				m_countdownTimer = 0.0f;
@@ -357,6 +351,9 @@ void GameScene::EndRolling()
 {
 	// 倒れたピン数を取得
 	int fallenPins = m_cPinHandler->GetFallenPinCount();
+
+	// これより後にピンが倒れたフラグを拾わないように通知
+	m_cPinHandler->SetIsCheckFallen(false);
 
 	// スコア通知＆マーク受け取り
 	FrameMark mark = m_cScoreHandler->RecordThrow(fallenPins);

@@ -7,6 +7,7 @@ enum class RollEndReason
 	None,
 	Stop,
 	Fall,
+	Skip,
 	Finish
 };
 

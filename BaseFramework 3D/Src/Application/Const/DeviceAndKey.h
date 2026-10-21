@@ -9,7 +9,8 @@ struct DeviceAndKeyConsts
 	static inline const std::unordered_map<int, std::string> KeyRegistNames =
 	{
 		{VK_SPACE,"SpaceKey"},
-		{VK_LBUTTON,"LeftClick"}
+		{VK_LBUTTON,"LeftClick"},
+		{VK_RBUTTON,"RightClick"}
 	};
 };
 

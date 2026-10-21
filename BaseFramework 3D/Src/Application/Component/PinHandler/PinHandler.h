@@ -35,6 +35,9 @@ public:
 	// 現在使用中のピンの物理挙動をオン
 	void ActivateBody();
 
+	// 各ピンの倒れチェックフラグ切り替え
+	void SetIsCheckFallen(bool flg);
+
 private:
 
 	// 特定の位置に特定のピンを召喚
@@ -48,5 +51,4 @@ private:
 
 	// 現在アクティブなピンのリスト
 	std::vector<std::weak_ptr<PinBase>> m_activePins;
-
 };

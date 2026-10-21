@@ -36,8 +36,8 @@ private:
 		static constexpr float ScaleMultiChangeSpeed = 0.7f;
 
 		// パーティクル召喚数
-		static constexpr int HitParticleSpawnMin = 9;
-		static constexpr int HitParticleSpawnMax = 17;
+		static constexpr int HitParticleSpawnMin = 15;
+		static constexpr int HitParticleSpawnMax = 30;
 
 		// パーティクルの速度
 		static constexpr float HitParticleSpeedMin = 0.75f;

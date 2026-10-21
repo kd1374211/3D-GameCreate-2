@@ -48,6 +48,9 @@ public:
 	void OnHitByPlayer(JPH::Vec3 vel);
 	void OnHitByPin(JPH::Vec3 vel);
 
+	// 倒れ判定の確認をするか
+	void SetIsCheckFallen(bool flg) { m_isCheckFallen = flg; }
+
 protected:
 
 	struct PinBaseConsts
@@ -68,6 +71,7 @@ protected:
 
 	// 倒れたかを確認
 	bool CheckIsFallen();
+	bool CheckIsFallen_PostUpdate();
 
 	//物理コンポーネント
 	std::shared_ptr<PhysicsComponent> m_cPhysics;
@@ -94,6 +98,9 @@ protected:
 
 	// 倒れているか
 	bool m_isFallen = false;
+
+	// 倒れ判定の確認をするか
+	bool m_isCheckFallen = true;
 
 	// ピンの管理番号
 	int m_pinIndex = -1;
