@@ -2,8 +2,8 @@
 	{
 		"stageNo": 1,
 		"stageListName": "ステージ１",
-		"stageName": "ステージ１ : ステージ名",
-		"thumbnail": "Asset/Textures/StageThumbnail/Stage01_K.png",
+		"stageName": "ステージ１ : 平野",
+		"thumbnail": "Asset/Textures/StageThumbnail/Stage01_K2.png",
 		"fallOutLine": -7.5
 	},
 	{

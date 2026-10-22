@@ -63,7 +63,7 @@
 		{
 			"name": "Normal",
 			"filePath": "Asset/Sounds/SE/ThrowResult_Normal.wav",
-			"defaultVolume": 0.3,
+			"defaultVolume": 0.2,
 			"loop": false
 		},
 		{
