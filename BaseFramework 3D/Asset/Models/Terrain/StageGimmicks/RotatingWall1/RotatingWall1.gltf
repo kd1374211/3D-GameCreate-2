@@ -105,7 +105,7 @@
 		{
 			"bufferView":0,
 			"componentType":5126,
-			"count":68,
+			"count":26,
 			"max":[
 				0.5,
 				0.20000004768371582,
@@ -121,29 +121,29 @@
 		{
 			"bufferView":1,
 			"componentType":5126,
-			"count":68,
+			"count":26,
 			"type":"VEC3"
 		},
 		{
 			"bufferView":2,
 			"componentType":5126,
-			"count":68,
+			"count":26,
 			"type":"VEC2"
 		},
 		{
 			"bufferView":3,
 			"componentType":5123,
-			"count":180,
+			"count":66,
 			"type":"SCALAR"
 		},
 		{
 			"bufferView":4,
 			"componentType":5126,
-			"count":48,
+			"count":64,
 			"max":[
-				0.5,
+				0.5012320876121521,
 				0.20000004768371582,
-				0.4999999701976776
+				0.5004869103431702
 			],
 			"min":[
 				-0.5,
@@ -155,69 +155,69 @@
 		{
 			"bufferView":5,
 			"componentType":5126,
-			"count":48,
+			"count":64,
 			"type":"VEC3"
 		},
 		{
 			"bufferView":6,
 			"componentType":5126,
-			"count":48,
+			"count":64,
 			"type":"VEC2"
 		},
 		{
 			"bufferView":7,
 			"componentType":5123,
-			"count":72,
+			"count":96,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":816,
+			"byteLength":312,
 			"byteOffset":0,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":816,
-			"byteOffset":816,
+			"byteLength":312,
+			"byteOffset":312,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":544,
-			"byteOffset":1632,
+			"byteLength":208,
+			"byteOffset":624,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":360,
-			"byteOffset":2176,
+			"byteLength":132,
+			"byteOffset":832,
 			"target":34963
 		},
 		{
 			"buffer":0,
-			"byteLength":576,
-			"byteOffset":2536,
+			"byteLength":768,
+			"byteOffset":964,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":576,
-			"byteOffset":3112,
+			"byteLength":768,
+			"byteOffset":1732,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":384,
-			"byteOffset":3688,
+			"byteLength":512,
+			"byteOffset":2500,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":144,
-			"byteOffset":4072,
+			"byteLength":192,
+			"byteOffset":3012,
 			"target":34963
 		}
 	],
@@ -229,7 +229,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":4216,
+			"byteLength":3204,
 			"uri":"RotatingWall1.bin"
 		}
 	]

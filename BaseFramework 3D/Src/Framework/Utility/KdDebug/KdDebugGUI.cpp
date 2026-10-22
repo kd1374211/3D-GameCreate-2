@@ -1175,7 +1175,7 @@ void KdDebugGUI::GuiProcess()
 
 					if (isPlayerChanged)
 					{
-						STAGEMGR.BuildPlayer();
+						STAGEMGR.BuildPlayer(currentLaneNo);
 					}
 				}
 
