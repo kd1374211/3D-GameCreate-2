@@ -84,7 +84,7 @@ private:
 		// 停止確認関連
 		static constexpr float StopCheckBorder = 0.01f;
 		static constexpr float RollEndTime = 1.5f;
-		
+
 		// 発射速度
 		static constexpr float ThrowPowerMulti = 10.0f;
 
@@ -127,6 +127,9 @@ private:
 		static constexpr float ShotArrowScale = 0.25f;
 		static constexpr float CursorPowerDiv = 3750.0f;
 		static constexpr float CursorPowerMax = 2.0f;
+
+		// 「浮いた」と判断するまでの時間
+		static constexpr float CountAsNotGroundedTime = 0.1f;
 	};
 
 	// 活性化・非活性化
@@ -165,6 +168,8 @@ private:
 	bool m_isHitPin = false;
 	// このフレームで着地判定を拾ったか
 	bool m_isOnGroundThisFrame = false;
+	// 地面判定を拾っていない時間
+	float m_notGroundedTime = 0.0f;
 
 	// 転がり開始か
 	bool m_canRoll = false;
@@ -199,7 +204,7 @@ private:
 	// 音切り替え用
 	std::weak_ptr<KdSoundInstance> m_wpStoredSound;
 	enum class RollingSoundState { None, Throw, Roll } m_soundState = RollingSoundState::None;
-	
+
 	//↓playerクラスから移行した
 
 	// 強さと方向の矢印

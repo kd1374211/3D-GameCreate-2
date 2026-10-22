@@ -274,6 +274,20 @@ void BowlingBall::PostUpdate()
 			DeactivateBody();
 			m_isDraw = false;
 		}		
+
+		// 空中時間更新
+		if (!m_isOnGroundThisFrame)
+		{
+			// ゲームdt分追加
+			float gameDt = SCENEMGR.GetDeltaGameTime();
+
+			m_notGroundedTime += gameDt;
+		}
+		else
+		{
+			// 着地していたら時間リセット
+			m_notGroundedTime = 0.0f;
+		}
 	}
 
 	// 1. 回転
@@ -351,6 +365,7 @@ void BowlingBall::DrawLit()
 
 	// アウトラインを切り替えて再度描画
 	KdShaderManager::Instance().m_StandardShader.SetOutLineEnable(true);
+	KdShaderManager::Instance().m_StandardShader.SetToonEnable(false);
 
 	// 描画
 	KdShaderManager::Instance().m_StandardShader.DrawModel(*m_model, m_mWorld);
@@ -372,6 +387,7 @@ void BowlingBall::Throw(const Math::Vector3& startPos, const Math::Vector3& dire
 	m_isRolling = true;
 	m_reason = RollEndReason::None;
 	m_stopTimer = 0.0f;
+	m_notGroundedTime = 0.0f;
 
 	// 1.物理を一度止める
 	DeactivateBody();
@@ -510,8 +526,8 @@ void BowlingBall::HitGround(const std::string& matName, float velocityY, JPH::Ve
 		// エフェクトの召喚（オイラー角を渡す）
 		EFFECTMGR.SpawnEffect(hitPos + hitNormal * 0.015f, rotAngles, scale * scaleMulti, EffectType::LandingAndWallHit);
 
-		// 衝突音が鳴る材質なら鳴らす
-		if (MaterialNameCheck::IsImpactSound(matName))
+		// 衝突音が鳴る材質かつ一定時間以上空中にいたなら鳴らす
+		if (MaterialNameCheck::IsImpactSound(matName) && m_notGroundedTime >= BowlingBallConsts::CountAsNotGroundedTime)
 		{
 			SOUNDMGR.Play(SoundType::SE_WallHitAndLanding, scaleMulti);
 		}

@@ -47,6 +47,9 @@ public:
 	void EndCurrentFrame(bool isRandom = false);
 	void EndCurrentGame(bool isRandom = false);
 
+	// デバッグ用(操作側)
+	void SetCurrentFrame(int frameNo);
+
 private:
 
 	// 得点計算の更新

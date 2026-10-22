@@ -66,6 +66,7 @@ void PinBase::DrawLit()
 
 	// アウトラインを切り替えて再度描画
 	KdShaderManager::Instance().m_StandardShader.SetOutLineEnable(true);
+	KdShaderManager::Instance().m_StandardShader.SetToonEnable(false);
 
 	// 描画
 	KdShaderManager::Instance().m_StandardShader.DrawModel(*m_model, m_mWorld);

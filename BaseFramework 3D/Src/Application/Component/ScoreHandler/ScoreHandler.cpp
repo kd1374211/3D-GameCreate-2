@@ -48,7 +48,7 @@ FrameMark ScoreHandler::RecordThrow(int fallenPins)
 	// 記録登録前のサイズをIDとして取得
 	int ID = m_throwRecord.size();
 	m_throwRecord.push_back(fallenPins);
-	
+
 	// IDをデータに追加
 	frameData->m_recordID[m_currentThrow] = ID;
 	// このフレーム最後のIDを更新
@@ -302,6 +302,62 @@ void ScoreHandler::EndCurrentGame(bool isRandom)
 			return;
 		}
 	}
+}
+
+void ScoreHandler::SetCurrentFrame(int frameNo)
+{
+	// 有効かの確認
+	if (frameNo > BowlingSystemConsts::LastFrame || frameNo < BowlingSystemConsts::StartFrame)return;
+
+	// 現在のフレーム番号を変更
+	m_currentFrame = frameNo;
+
+	// これ以降のフレームの記録を削除
+	for (int i = frameNo; i <= BowlingSystemConsts::LastFrame; i++)
+	{
+		// 記録があるなら
+		if (m_frameData[i].m_lastThrowID != ScoreHandlerConsts::EmptyDataID)
+		{
+			// まずは記録削除
+			for (auto& throwRec : m_frameData[i].m_recordID)
+			{
+				if (throwRec <= m_frameData[i].m_lastThrowID)
+				{
+					// 一時的に無効値に設定
+					m_throwRecord[throwRec] = 100;
+					throwRec = ScoreHandlerConsts::EmptyDataID;
+				}
+			}
+		}
+
+		// その後残りを削除
+		m_frameData[i].m_frameTotalScore = 0;
+		m_frameData[i].m_lastThrowID = ScoreHandlerConsts::EmptyDataID;
+		m_frameData[i].m_isCalcEnd = false;
+		m_frameData[i].m_mark = FrameMark::None;
+	}
+
+	// 無効値に設定された記録を破壊
+	for (int rec = 0; rec < m_throwRecord.size();)
+	{
+		if (m_throwRecord[rec] == 100)
+		{
+			m_throwRecord.erase(m_throwRecord.begin() + rec);
+		}
+		else
+		{
+			rec++;
+		}
+	}
+
+	// 全体の最終番号をデータサイズ-1に
+	m_lastThrowRecID = m_throwRecord.size() - 1;
+
+	// 投球番号リセット
+	m_currentThrow = 0;
+
+	// ピン数リセット
+	m_currentPinFallen = 0;
 }
 
 void ScoreHandler::UpdateScore()

@@ -128,6 +128,44 @@ void GameScene::UpdatePlaying()
 	}
 	else isSkipKey = false;
 
+	// DEBUG
+	for (int i = 1; i <= 10; i++)
+	{
+		// そのフレーム番号に変更
+		if (GetAsyncKeyState('0' + i) & 0x8000 && GetAsyncKeyState(VK_SPACE) & 0x8000)
+		{
+			m_cScoreHandler->SetCurrentFrame(i - 1);
+
+			// セットアップしなおし
+			// フェードイン召喚
+			FADEMGR.StartFadeIn(&m_isFadeInEnd);
+
+			// 新しいレーンを生成
+			SetUpLane();
+
+			// 待機ステートに移行
+			m_currentSceneState = SceneState::Waiting;
+
+			// マウス固定を再開
+			CURSOR.LockCursor();
+
+			// カーソル非表示
+			CURSOR.SetIsShowCursor(false);
+
+			// エフェクト全削除
+			EFFECTMGR.ClearActiveEffect();
+
+			// ガイドモード変更
+			if (const auto& spUI = m_wpUI.lock())
+			{
+				spUI->ChangeGuideMode(MouseGuideMode::Default);
+			}
+
+			// 撤退
+			return;
+		}
+	}
+
 	// ゲーム内時間
 	float gameDt = SCENEMGR.GetDeltaGameTime();
 
