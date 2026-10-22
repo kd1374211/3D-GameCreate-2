@@ -67,4 +67,23 @@ void StageSelectScene::Event()
 			}
 		}
 	}
+
+	// DEBUG
+	if (GetAsyncKeyState('T') & 0x8000)
+	{
+		//フェードインが終わっているかつステージ選択が終わっていないなら
+		if (m_isFadeInEnd && !m_isStageSelected)
+		{
+			// タイトルに
+			SceneManager::Instance().SetNextScene
+			(
+				SceneManager::SceneType::Title
+			);
+
+			// BGM停止
+			SOUNDMGR.Stop(SoundType::BGM_Select);
+
+			return;
+		}
+	}
 }
