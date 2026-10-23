@@ -14,6 +14,7 @@ NormalPin::NormalPin(Math::Vector3 startPos, Math::Quaternion startRot)
 	initData.pos = startPos;
 	initData.rot = startRot;
 	initData.motionType = JPH::EMotionType::Dynamic;
+	initData.motionQuality = JPH::EMotionQuality::LinearCast;
 	initData.isStatic = false;
 	initData.layer = Layers::BOWLINGPIN;
 	initData.mass = NormalPinConsts::PinMass;
