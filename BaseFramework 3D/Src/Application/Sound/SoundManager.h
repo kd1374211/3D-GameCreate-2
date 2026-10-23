@@ -71,6 +71,9 @@ private:
 	// 音インスタンス保持
 	std::map<SoundType, std::weak_ptr<KdSoundInstance>> m_storedSoundInstances;
 
+	// ミュート
+	bool m_isMute = false;
+
 public:
 
 	static SoundManager& Instance()

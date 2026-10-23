@@ -19,6 +19,32 @@ void SoundManager::Update()
 			++it;
 		}
 	}
+
+	// DEBUG
+	// ミュートチェック
+	static bool isMuteKey = false;
+	if (GetAsyncKeyState('M') & 0x8000)
+	{
+		if (!isMuteKey)
+		{
+			m_isMute = !m_isMute;
+
+			// 既存の音を停止
+			for (const auto& it : m_storedSoundInstances)
+			{
+				if (const auto& sound = it.second.lock())
+				{
+					sound->Stop();
+				}
+			}
+		}
+
+		isMuteKey = true;
+	}
+	else isMuteKey = false;
+
+	// DEBUG
+	KdDebugGUI::Instance().AddLog("IsMute : %d\n", m_isMute);
 }
 
 std::weak_ptr<KdSoundInstance> SoundManager::PlayAndGetInst(SoundType type, float volumeMulti)
@@ -34,6 +60,9 @@ std::weak_ptr<KdSoundInstance> SoundManager::PlayAndGetInst(SoundType type, floa
 	{
 		soundInstance->SetVolume(data.m_defaultVolume * volumeMulti);
 		m_storedSoundInstances.emplace(type, soundInstance);
+
+		// もしミュートなら音量０に
+		if (m_isMute)soundInstance->SetVolume(0.0f);
 	}
 
 	// インスタンスを返す
@@ -53,6 +82,9 @@ void SoundManager::Play(SoundType type, float volumeMulti)
 	{
 		soundInstance->SetVolume(data.m_defaultVolume * volumeMulti);
 		m_storedSoundInstances.emplace(type, soundInstance);
+
+		// もしミュートなら音量０に
+		if (m_isMute)soundInstance->SetVolume(0.0f);
 	}
 }
 
