@@ -56,6 +56,12 @@ public:
 	// マウスガイド変更用
 	void ChangeGuideMode(MouseGuideMode mode) { m_guideMode = mode; }
 
+	// 現在のフレーム・投球番号表示
+	void SetTopFrameAndThrow(int frameNo, int throwNo) { 
+		m_currentFrame_top = frameNo;
+		m_currentThrow_top = throwNo;
+	}
+
 private:
 
 	// 各アップデート
@@ -64,6 +70,7 @@ private:
 	void UpdateMiddleResult(float dt);
 
 	// 描画
+	void DrawFrameAndThrowNumber();
 	void DrawScoreTexts();
 	void DrawMouseGuides();
 
@@ -78,6 +85,11 @@ private:
 		static constexpr float SlowMoveStartSec = 0.2f;
 		static constexpr float SlowMoveEndSec = 0.7f;
 		static constexpr float ThrowStartTextPosY = 0.0f;
+
+		// フレーム番号表示位置
+		static constexpr Math::Vector2 FrameNumberDrawPos = Math::Vector2(-450.0f, 310.0f);
+		// 投球番号表示位置
+		static constexpr Math::Vector2 ThrowNumberDrawPos = Math::Vector2(-450.0f, 260.0f);
 
 		// ピン数
 		static constexpr float PinPosY = 318.0f;
@@ -140,6 +152,10 @@ private:
 
 	//ピン画像
 	std::shared_ptr<KdTexture> m_pinTex = nullptr;
+
+	// 現在の表示用フレーム・投球番号
+	int m_currentFrame_top = 0;
+	int m_currentThrow_top = 0;
 
 	// 投球リザルト演出用テキスト
 	bool m_isThrowResultTextActive = false;

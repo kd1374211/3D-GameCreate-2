@@ -30,6 +30,8 @@ struct FontTypeConst
 	static constexpr int StageSelect_BestScore = 4;
 
 	// Game
+	static constexpr int Game_TopFrameNo = 5;
+	static constexpr int Game_TopThrowNo = 3;
 	static constexpr int Game_ThrowStart = 8;
 	static constexpr int Game_ThrowResult = 9;
 	static constexpr int Game_StageFinish = 9;

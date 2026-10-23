@@ -45,6 +45,9 @@ void GameUIObjects::Update()
 
 void GameUIObjects::DrawSprite()
 {
+	// フレーム・投球番号
+	DrawFrameAndThrowNumber();
+
 	//流れテキスト
 	if (m_throwStartText.m_isActive)
 	{
@@ -397,6 +400,53 @@ void GameUIObjects::UpdateMiddleResult(float dt)
 	{
 		spButton->SetDrawPos(Math::Vector2(GameUIConsts::MiddleResultPosX, m_middleResultPosY) + GameUIConsts::MiddleResultButtonPosOfs);
 	}
+}
+
+void GameUIObjects::DrawFrameAndThrowNumber()
+{
+	const auto& scoreHandler = m_wpScoreHandler.lock();
+	if (!scoreHandler)return;
+
+	// 背景用意
+	Math::Color frameColor = Math::Color(0.0f, 0.0f, 0.0f, 0.9f);
+	KdShaderManager::Instance().m_spriteShader.DrawBox(-450.0f, 290.0f, 190.0f, 70.0f, &frameColor, true);
+
+	// フレーム番号表示
+	std::string text = "第";
+	if (m_currentFrame_top == BowlingSystemConsts::LastFrame)
+	{
+		text += "　　";
+	}
+	else
+	{
+		text += "　";
+	}
+	text += "フレーム";
+	std::string text_colored = "　" + std::to_string(m_currentFrame_top + 1) + "　　　　";
+	Math::Color textColor = kGreenColor;
+	KdShaderManager::Instance().m_spriteShader.DrawFont(FontTypeConst::Game_TopFrameNo, GameUIConsts::FrameNumberDrawPos, &kWhiteColor, text.c_str(), TextAlign::Center);
+	KdShaderManager::Instance().m_spriteShader.DrawFont(FontTypeConst::Game_TopFrameNo, GameUIConsts::FrameNumberDrawPos, &textColor, text_colored.c_str(), TextAlign::Center);
+
+	// 投球番号表示
+	text = "";
+	text_colored = "";
+	textColor = kBlackColor;
+
+	if (m_currentThrow_top == 2)
+	{
+		text = "　　　　投球";
+		text_colored = "ボーナス　　";
+		textColor = Math::Color(1.0f, 1.0f, 0.2f, 1.0f);
+	}
+	else
+	{
+		text = "第　投球";
+		text_colored = "　" + std::to_string(m_currentThrow_top + 1) + "　　";
+		textColor = kGreenColor;
+	}
+
+	KdShaderManager::Instance().m_spriteShader.DrawFont(FontTypeConst::Game_TopThrowNo, GameUIConsts::ThrowNumberDrawPos, &kWhiteColor, text.c_str(), TextAlign::Center);
+	KdShaderManager::Instance().m_spriteShader.DrawFont(FontTypeConst::Game_TopThrowNo, GameUIConsts::ThrowNumberDrawPos, &textColor, text_colored.c_str(), TextAlign::Center);
 }
 
 void GameUIObjects::DrawScoreTexts()

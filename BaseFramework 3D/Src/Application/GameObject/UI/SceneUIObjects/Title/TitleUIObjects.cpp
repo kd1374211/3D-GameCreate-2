@@ -11,7 +11,7 @@ void TitleUIObject::DrawSprite()
 
 	// 操作ガイド
 	KdShaderManager::Instance().m_spriteShader.DrawTex(m_mouseIconTex_Select, TitleUIConsts::MouseGuideIconPos_Select.x, TitleUIConsts::MouseGuideIconPos_Select.y);
-	KdShaderManager::Instance().m_spriteShader.DrawFont(FontTypeConst::Title_Guide, TitleUIConsts::MouseGuideTextPos_Select, &kWhiteColor, ": 選択", TextAlign::Right);
+	KdShaderManager::Instance().m_spriteShader.DrawFont(FontTypeConst::Title_Guide, TitleUIConsts::MouseGuideTextPos_Select, &kWhiteColor, ": 決定", TextAlign::Right);
 }
 
 void TitleUIObject::Init()

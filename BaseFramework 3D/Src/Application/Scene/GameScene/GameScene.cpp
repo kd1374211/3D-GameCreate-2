@@ -159,6 +159,9 @@ void GameScene::UpdatePlaying()
 			if (const auto& spUI = m_wpUI.lock())
 			{
 				spUI->ChangeGuideMode(MouseGuideMode::Default);
+
+				// 表示用番号変更
+				spUI->SetTopFrameAndThrow(m_cScoreHandler->GetCurrentFrame(), m_cScoreHandler->GetCurrentThrow());
 			}
 
 			// 撤退
@@ -265,6 +268,8 @@ void GameScene::UpdateCheckAndClean()
 				m_currentSceneState = SceneState::Playing;
 				// ガイドモード変更
 				spUI->ChangeGuideMode(MouseGuideMode::Default);
+				// 表示用番号変更
+				spUI->SetTopFrameAndThrow(m_cScoreHandler->GetCurrentFrame(), m_cScoreHandler->GetCurrentThrow());
 				// エフェクト全削除
 				EFFECTMGR.ClearActiveEffect();
 				break;
@@ -286,6 +291,8 @@ void GameScene::UpdateCheckAndClean()
 				// 投球開始テキスト召喚
 				spUI->SpawnThrowStartText(m_cScoreHandler->GetCurrentFrame(), m_cScoreHandler->GetCurrentThrow(), &m_isThrowStartTextEnd);
 				m_currentSceneState = SceneState::Playing;
+				// 表示用番号変更
+				spUI->SetTopFrameAndThrow(m_cScoreHandler->GetCurrentFrame(), m_cScoreHandler->GetCurrentThrow());
 				// エフェクト全削除
 				EFFECTMGR.ClearActiveEffect();
 				// ガイドモード変更
@@ -336,7 +343,11 @@ void GameScene::UpdateMiddleResult()
 		if (const auto& spUI = m_wpUI.lock())
 		{
 			spUI->ChangeGuideMode(MouseGuideMode::Default);
+
+			// 表示用番号変更
+			spUI->SetTopFrameAndThrow(m_cScoreHandler->GetCurrentFrame(), m_cScoreHandler->GetCurrentThrow());
 		}
+		
 
 		// 撤退
 		return;
