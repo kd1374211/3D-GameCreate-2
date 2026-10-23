@@ -3,8 +3,9 @@
 
 MainTerrain::MainTerrain(std::string modelPath, Math::Vector3 pos, Math::Quaternion rot)
 {
-	m_model = std::make_shared<KdModelData>();
-	m_model->Load(modelPath);
+	//m_model = std::make_shared<KdModelData>();
+	m_model = KdAssets::Instance().m_modeldatas.GetData(modelPath);
+	//m_model->Load(modelPath);
 
 	m_cPhysics = std::make_shared<PhysicsComponent>();
 

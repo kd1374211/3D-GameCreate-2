@@ -7,8 +7,9 @@ MovingTerrain::MovingTerrain(Math::Vector3 pos, Math::Vector3 rot, Math::Vector3
 {
 	Math::Quaternion quat = ConvertEulerVec3ToQuat(rot);
 
-	m_model = std::make_shared<KdModelData>();
-	m_model->Load(param.m_modelPath);
+	//m_model = std::make_shared<KdModelData>();
+	m_model = KdAssets::Instance().m_modeldatas.GetData(param.m_modelPath);
+	//m_model->Load(param.m_modelPath);
 	m_wayPointDotModel = std::make_shared<KdModelData>();
 	m_wayPointDotModel->Load("Asset/Models/Terrain/StageGimmicks/WayPoint/WayPointDot.gltf");
 

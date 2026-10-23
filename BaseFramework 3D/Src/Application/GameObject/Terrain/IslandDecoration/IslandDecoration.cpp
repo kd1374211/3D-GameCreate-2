@@ -5,8 +5,9 @@ IslandDecoration::IslandDecoration(const std::string& modelPath, const Math::Vec
 {
 	Math::Quaternion quat = ConvertEulerVec3ToQuat(rot);
 
-	m_model = std::make_shared<KdModelData>();
-	m_model->Load(modelPath);
+	//m_model = std::make_shared<KdModelData>();
+	m_model = KdAssets::Instance().m_modeldatas.GetData(modelPath);
+	//m_model->Load(modelPath);
 
 	m_cPhysics = std::make_shared<PhysicsComponent>();
 
