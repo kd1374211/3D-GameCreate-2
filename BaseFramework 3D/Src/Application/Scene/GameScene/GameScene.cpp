@@ -129,12 +129,20 @@ void GameScene::UpdatePlaying()
 	else isSkipKey = false;
 
 	// DEBUG
-	for (int i = 1; i <= 10; i++)
+	for (int i = BowlingSystemConsts::StartFrame; i <= BowlingSystemConsts::LastFrame; i++)
 	{
 		// そのフレーム番号に変更
 		if (GetAsyncKeyState('0' + i) & 0x8000 && GetAsyncKeyState(VK_SPACE) & 0x8000)
 		{
-			m_cScoreHandler->SetCurrentFrame(i - 1);
+			// 1～9はその番号・0は10番目に
+			if (i == BowlingSystemConsts::StartFrame)
+			{
+				m_cScoreHandler->SetCurrentFrame(BowlingSystemConsts::LastFrame);
+			}
+			else
+			{
+				m_cScoreHandler->SetCurrentFrame(i - 1);
+			}
 
 			// セットアップしなおし
 			// フェードイン召喚
@@ -462,6 +470,17 @@ void GameScene::Init()
 	STAGEMGR.RegistPinHandler(m_cPinHandler);
 	STAGEMGR.RegistCharaHandler(m_cCharaHandler);
 
+	//カメラ生成
+	std::shared_ptr<TPSCamera> camera = std::make_shared<TPSCamera>();
+	camera->Init();
+
+	//マネージャーに追加
+	CAMERAMGR.SetGameCamera(camera);
+	CAMERAMGR.SetDefaultCamera(CameraType::Game);
+
+	//追加
+	AddObject(camera);
+
 	//ステージ番号
 	int stageNumber = SCENEMGR.GetStageNo();
 
@@ -475,20 +494,9 @@ void GameScene::Init()
 	// 空と島の作成
 	STAGEMGR.BuildSkyAndIsland();
 
-	//カメラとプレイヤー生成
-	std::shared_ptr<TPSCamera> camera = std::make_shared<TPSCamera>();
-	camera->Init();
-
-	//マネージャーに追加
-	CAMERAMGR.SetGameCamera(camera);
-	CAMERAMGR.SetDefaultCamera(CameraType::Game);
-
 	//リンク
 	camera->SetTarget(m_cCharaHandler->GetPlayerBall());
 	m_cCharaHandler->GetPlayerBall()->SetCamera(camera);
-
-	//追加
-	AddObject(camera);
 
 	// レーン生成
 	SetUpLane();

@@ -35,4 +35,7 @@ IslandDecoration::IslandDecoration(const std::string& modelPath, const Math::Vec
 	Math::Matrix rotat = Math::Matrix::CreateFromQuaternion(m_rot);
 	Math::Matrix scaleMat = Math::Matrix::CreateScale(m_scale);
 	m_mWorld = scaleMat * rotat * trans;
+
+	// カメラに登録
+	RegistToCamera();
 }

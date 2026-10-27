@@ -55,6 +55,33 @@ public:
 	}
 };
 
+// ↓ボディーフィルタ
+
+// 追加型ボディーフィルタ
+class AdditionTypeBodyFilter :public JPH::BodyFilter
+{
+public:
+
+	AdditionTypeBodyFilter() {}
+
+	void AddBody(const JPH::BodyID& id) { bodyIDList.push_back(id); }
+	virtual bool ShouldCollide(const JPH::BodyID& inBodyID) const override
+	{
+		// リストを見て見つかればtrue
+		for (const auto& ID : bodyIDList)
+		{
+			if (ID == inBodyID)return true;
+		}
+
+		// 見つからなければfalse
+		return false;
+	}
+private:
+
+	std::vector<JPH::BodyID> bodyIDList;
+
+};
+
 // --- ② オブジェクトレイヤー同士の衝突判定フィルター ---
 // 「プレイヤー同士は当たるか？」「床と床は当たるか？」などを判定します。
 class ObjectLayerPairFilterImpl : public JPH::ObjectLayerPairFilter

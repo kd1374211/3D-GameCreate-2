@@ -1,4 +1,6 @@
 ﻿#include "TerrainBase.h"
+#include "../Camera/CameraManager.h"
+#include "../Camera/CameraBase.h"
 
 void TerrainBase::Update()
 {
@@ -28,4 +30,20 @@ void TerrainBase::GenerateDepthMapFromLight()
 
 	// 描画
 	KdShaderManager::Instance().m_StandardShader.DrawModel(*m_model, m_mWorld);
+}
+
+void TerrainBase::RegistToCamera()
+{
+	// GameCamもDebugCamもあれば登録する
+	const auto& gameCam = CAMERAMGR.GetGameCamera().lock();
+	if (gameCam)
+	{
+		gameCam->RegistHitObject(m_cPhysics->GetBodyID());
+	}
+
+	const auto& debugCam = CAMERAMGR.GetDebugCamera().lock();
+	if (debugCam)
+	{
+		debugCam->RegistHitObject(m_cPhysics->GetBodyID());
+	}
 }

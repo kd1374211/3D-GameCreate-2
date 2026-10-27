@@ -490,7 +490,7 @@ void StageManager::BuildGimmicks(int laneNumber)
 	for (const auto& gimmickData : laneData.m_laneGimmickData)
 	{
 		// ギミック生成
-		std::shared_ptr<KdGameObject> gimmickObj;
+		std::shared_ptr<TerrainBase> gimmickObj;
 		// 有効タイプ確認
 		bool isValidType = false;
 

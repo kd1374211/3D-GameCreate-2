@@ -37,13 +37,6 @@ void TitleScene::Event()
 
 void TitleScene::Init()
 {
-	//ランダムに背景ステージ読み込み
-	//読み込むステージをランダムで決定
-	int backStageNo = (int)(rand() / RAND_MAX * (STAGEMGR.GetMaxStageNo() - STAGEMGR.GetMinStageNo()) + STAGEMGR.GetMinStageNo());
-	STAGEMGR.LoadStage(backStageNo);
-	//背景モードで生成
-	STAGEMGR.BuildAllObjects(KdRandom::GetInt(BowlingSystemConsts::StartFrame, BowlingSystemConsts::LastFrame), StageBuildMode::Background);
-
 	//ステージ確認カメラ
 	std::shared_ptr<StageViewCamera> camera = std::make_shared<StageViewCamera>();
 	camera->Init();
@@ -53,14 +46,21 @@ void TitleScene::Init()
 	CAMERAMGR.SetGameCamera(camera);
 	CAMERAMGR.SetDefaultCamera(CameraType::Game);
 
+	//追加
+	AddObject(camera);
+
+	//ランダムに背景ステージ読み込み
+	//読み込むステージをランダムで決定
+	int backStageNo = (int)(rand() / RAND_MAX * (STAGEMGR.GetMaxStageNo() - STAGEMGR.GetMinStageNo()) + STAGEMGR.GetMinStageNo());
+	STAGEMGR.LoadStage(backStageNo);
+	//背景モードで生成
+	STAGEMGR.BuildAllObjects(KdRandom::GetInt(BowlingSystemConsts::StartFrame, BowlingSystemConsts::LastFrame), StageBuildMode::Background);
+
 	//さっき生成した地形をターゲットに
 	if (!STAGEMGR.GetTerrain().expired())
 	{
 		camera->SetTarget(STAGEMGR.GetTerrain().lock());
 	}
-
-	//追加
-	AddObject(camera);
 
 	//UI全般
 	std::shared_ptr<TitleUIObject> UIObj = std::make_shared<TitleUIObject>();

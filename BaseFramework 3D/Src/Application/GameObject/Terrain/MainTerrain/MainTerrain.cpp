@@ -30,5 +30,8 @@ MainTerrain::MainTerrain(std::string modelPath, Math::Vector3 pos, Math::Quatern
 	Math::Matrix trans = Math::Matrix::CreateTranslation(m_pos);
 	Math::Matrix rotat = Math::Matrix::CreateFromQuaternion(m_rot);
 	m_mWorld = rotat * trans;
+
+	// カメラに登録
+	RegistToCamera();
 }
 

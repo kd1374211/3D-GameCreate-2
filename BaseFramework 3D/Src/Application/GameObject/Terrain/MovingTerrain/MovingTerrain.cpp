@@ -53,6 +53,9 @@ MovingTerrain::MovingTerrain(Math::Vector3 pos, Math::Vector3 rot, Math::Vector3
 	Math::Matrix rotat = Math::Matrix::CreateFromQuaternion(m_rot);
 	Math::Matrix scale = Math::Matrix::CreateScale(m_scale);
 	m_mWorld = scale * rotat * trans;
+
+	// カメラに登録
+	RegistToCamera();
 }
 
 void MovingTerrain::Update()

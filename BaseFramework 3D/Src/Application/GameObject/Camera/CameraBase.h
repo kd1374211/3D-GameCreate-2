@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "../../Physics/PhysicsLayer.h"
 
 class CameraBase : public KdGameObject
 {
@@ -42,10 +43,14 @@ public:
 		m_mRotation = mRot;
 	}
 
-	void RegistHitObject(const std::shared_ptr<KdGameObject>& object)
-	{
-		m_wpHitObjectList.push_back(object);
-	}
+	//void RegistHitObject(const std::shared_ptr<KdGameObject>& object)
+	//{
+	//	m_wpHitObjectList.push_back(object);
+	//}
+
+	// 10/27
+	// リストに追加
+	void RegistHitObject(const JPH::BodyID& id) { m_hitObjList->AddBody(id); }
 
 	const void SetDegAng(Math::Vector3 degAng) { m_DegAng = degAng; }
 
@@ -66,7 +71,10 @@ protected:
 
 	std::shared_ptr<KdCamera>					m_spCamera		= nullptr;
 	std::weak_ptr<KdGameObject>					m_wpTarget;
-	std::vector<std::weak_ptr<KdGameObject>>	m_wpHitObjectList{};
+	// 10/27
+	// JoltFilter式オブジェクトリスト
+	std::shared_ptr<AdditionTypeBodyFilter> m_hitObjList;
+	//std::vector<std::weak_ptr<KdGameObject>>	m_wpHitObjectList{};
 
 	Math::Matrix								m_mLocalPos		= Math::Matrix::Identity;
 	Math::Matrix								m_mRotation		= Math::Matrix::Identity;

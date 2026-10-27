@@ -10,6 +10,9 @@ void CameraBase::Init()
 	// ↓画面中央座標
 	m_FixMousePos.x = 0;
 	m_FixMousePos.y = 0;
+
+	// HitObjList生成
+	m_hitObjList = std::make_shared<AdditionTypeBodyFilter>();
 }
 
 void CameraBase::PreDraw()

@@ -1208,10 +1208,6 @@ void KdDebugGUI::GuiProcess()
 					rayCast.mDirection = JPH::Vec3(rayDir.x, rayDir.y, rayDir.z) * range; // 飛ばす長さ
 					GroundObjectFilter groundFilter;
 
-					// DEBUG
-					AddLog("rayPos,%.2f,%.2f,%.2f\n", rayPos.x, rayPos.y, rayPos.z);
-					AddLog("rayDir,%.2f,%.2f,%.2f\n", rayDir.x, rayDir.y, rayDir.z);
-
 					// 選択中の種類と Index から直接データを特定して移動
 					Math::Vector3 selectedObjectPos;
 					if (selectedCategory == SelectedTargetCategory::Gimmick)

@@ -27,9 +27,6 @@ private:
 		static constexpr float GoalLineTexSize = 32.0f;
 	};
 
-	//物理コンポーネント
-	std::shared_ptr<PhysicsComponent> m_cPhysics;
-
 	//サイズ
 	Math::Vector3 m_scale = Math::Vector3::One;
 

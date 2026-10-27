@@ -433,6 +433,7 @@ void PhysicsComponent::Init(float radius, PhysicsInitData initData)
 void PhysicsComponent::Init(const Math::Vector3& halfExtents, const PhysicsInitData& initData)
 {
 	m_isStatic = initData.isStatic;
+	JPH::BodyInterface& bodyInterface = PHYSICSMGR.GetBodyInterface();
 
 	JPH::BoxShapeSettings boxSettings(JPH::Vec3(halfExtents.x, halfExtents.y, halfExtents.z));
 	JPH::ShapeRefC shape = boxSettings.Create().Get();
@@ -455,9 +456,6 @@ void PhysicsComponent::Init(const Math::Vector3& halfExtents, const PhysicsInitD
 	bodySettings.mUserData = initData.userData;
 	bodySettings.mIsSensor = initData.isSensor; // ★正しく反映されるよう修正
 
-	JPH::BodyInterface& bodyInterface = PHYSICSMGR.GetBodyInterface();
-
-	// ★設定済みの bodySettings をそのまま渡す
 	m_bodyID = bodyInterface.CreateAndAddBody(
 		bodySettings,
 		initData.isStatic ? JPH::EActivation::DontActivate : JPH::EActivation::Activate

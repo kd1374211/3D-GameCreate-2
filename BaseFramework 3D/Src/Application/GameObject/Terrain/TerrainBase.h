@@ -16,6 +16,9 @@ public:
 	//セッター
 	void SetPos(const Math::Vector3& a_pos) { m_pos = a_pos; }
 
+	// カメラに登録
+	void RegistToCamera();
+
 protected:
 
 	std::shared_ptr<KdModelData> m_model = nullptr;
