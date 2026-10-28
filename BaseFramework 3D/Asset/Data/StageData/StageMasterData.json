@@ -8,8 +8,8 @@
 	},
 	{
 		"stageNo": 2,
-		"stageListName": "ステージ２",
-		"stageName": "ステージ２ : ステージ名",
+		"stageListName": "ステージ２（未）",
+		"stageName": "ステージ２ : 未完成",
 		"thumbnail": "Asset/Textures/StageThumbnail/Stage02.png",
 		"fallOutLine": -7.5
 	}

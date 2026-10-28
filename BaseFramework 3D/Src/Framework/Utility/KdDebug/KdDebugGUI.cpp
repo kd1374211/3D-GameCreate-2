@@ -475,7 +475,8 @@ void KdDebugGUI::GuiProcess()
 			static std::string skyPathInput = "";
 			static bool isSkyError = false;
 
-			static std::string terrainPathInput = "";
+			static std::string terrainPathInput_Stage = "1";
+			static std::string terrainPathInput_Frame = "1";
 			static bool isTerrainError = false;
 
 			// --- C. ステージまたはレーンが切り替わった場合の一括同期処理 ---
@@ -484,7 +485,8 @@ void KdDebugGUI::GuiProcess()
 				skyPathInput = stageData.m_skyPath;
 				isSkyError = false;
 
-				terrainPathInput = currentFrame.m_terrainPath;
+				terrainPathInput_Stage = std::to_string(currentStageNo);
+				terrainPathInput_Frame = std::to_string(currentLaneNo + 1);
 				isTerrainError = false;
 
 				selectedCategory = SelectedTargetCategory::None;
@@ -699,8 +701,10 @@ void KdDebugGUI::GuiProcess()
 				// --- A. Lane Terrain Asset Path ---
 				if (ImGui::TreeNode("Lane Terrain Asset Path"))
 				{
-					ImGui::Text("Current Terrain Path: %s", currentFrame.m_terrainPath.c_str());
-					ImGui::InputText("Model Path##TerrainInput", &terrainPathInput);
+					ImGui::Text("Current Terrain Path:\n%s", currentFrame.m_terrainPath.c_str());
+					
+					ImGui::InputText("Stage##TerrainInput", &terrainPathInput_Stage);
+					ImGui::InputText("Frame##TerrainInput", &terrainPathInput_Frame);
 
 					if (isTerrainError)
 					{
@@ -709,10 +713,18 @@ void KdDebugGUI::GuiProcess()
 
 					if (ImGui::Button("Apply Terrain Path", ImVec2(150, 0)))
 					{
-						if (std::filesystem::exists(terrainPathInput))
+						// パスを作成
+						std::string BasePath = "Asset/Models/Terrain/MainTerrain/";
+						std::string StagePath = "Stage" + terrainPathInput_Stage;
+						// フレームの桁数チェック
+						bool m_isFrameOneDig = terrainPathInput_Frame.size() == 1;
+						std::string FramePath = StagePath + "-" + (m_isFrameOneDig ? "0" : "") + terrainPathInput_Frame;
+						std::string TerrainPath = BasePath + StagePath + "/" + FramePath + "/" + FramePath + ".gltf";
+
+						if (std::filesystem::exists(TerrainPath))
 						{
 							isTerrainError = false;
-							currentFrame.m_terrainPath = terrainPathInput;
+							currentFrame.m_terrainPath = TerrainPath;
 
 							// 地形再生成
 							STAGEMGR.BuildTerrain(currentLaneNo);

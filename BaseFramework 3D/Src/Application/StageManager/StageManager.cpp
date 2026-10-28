@@ -58,10 +58,11 @@ bool StageManager::SaveStage(const std::string& filePath)
 	// 3. フレーム（レーン）配列
 	nlohmann::json framesArray = nlohmann::json::array();
 
+	int frameNo = 1;
 	for (const auto& lane : m_stageOverallData.m_stageLaneData)
 	{
 		nlohmann::json frameJson;
-		frameJson["frameNumber"] = lane.m_frameNumber;
+		frameJson["frameNumber"] = frameNo;
 		frameJson["terrainPath"] = lane.m_terrainPath;
 
 		// プレイヤー (player)
@@ -140,6 +141,9 @@ bool StageManager::SaveStage(const std::string& filePath)
 		frameJson["pins"] = pinArray;
 
 		framesArray.push_back(frameJson);
+
+		// フレーム数追加
+		frameNo++;
 	}
 
 	rootJson["frames"] = framesArray;
