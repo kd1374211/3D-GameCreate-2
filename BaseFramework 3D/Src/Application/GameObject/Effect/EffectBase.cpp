@@ -31,9 +31,6 @@ void EffectBase::PreDraw()
 	// 消滅済みならストップ
 	if (m_isExpired)return;
 
-	// Rectを合わせる
-	m_data.m_polygon->SetUVRect((int)m_animCnt);
-
 	// マトリックス設定
 	Math::Matrix scale = Math::Matrix::CreateScale(m_data.m_scale * m_scaleMulti);
 	Math::Matrix rotat = Math::Matrix::CreateFromYawPitchRoll(m_rot);
@@ -46,8 +43,17 @@ void EffectBase::DrawEffect()
 	// 消滅済みならストップ
 	if (m_isExpired)return;
 
+	// Rect合わせ
+	SetUVRect();
+
 	// 描画
 	KdShaderManager::Instance().m_StandardShader.DrawPolygon(*m_data.m_polygon, m_mWorld);
+}
+
+void EffectBase::SetUVRect()
+{
+	// Rectを合わせる
+	m_data.m_polygon->SetUVRect((int)m_animCnt);
 }
 
 void EffectBase::Init()

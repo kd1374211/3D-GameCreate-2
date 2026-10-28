@@ -29,6 +29,16 @@
 			"scale": 0.2,
 			"animSpeed": 1.0,
 			"isLoop": true
+		},
+		{
+			"effectID": 3,
+			"texPath": "Asset/Textures/Effect/Smoke/Smoke.png",
+			"pivotType": 11,
+			"splitX": 5,
+			"splitY": 5,
+			"scale": 0.4,
+			"animSpeed": 10.0,
+			"isLoop": false
 		}
 	]
 }

@@ -257,6 +257,9 @@ void BowlingBall::PostUpdate()
 	// エディットモード中はプレイヤーの物理を停止
 	if (!STAGEMGR.IsEditMode())
 	{
+		// 移動前の位置を取得
+		Math::Vector3 basePos = m_pos;
+
 		// 1. 物理座標の同期（Joltから最新座標を反映）
 		m_cPhysics->Sync(m_pos, m_rot);
 
@@ -287,6 +290,27 @@ void BowlingBall::PostUpdate()
 		{
 			// 着地していたら時間リセット
 			m_notGroundedTime = 0.0f;
+
+			// 着地していたら移動距離分煙スポーンを減らす
+			m_distToSpawnSmoke -= Math::Vector3::Distance(basePos, m_pos);
+
+			// 煙召喚
+			if (m_isSmokeSpawn)
+			{
+				// 煙を出す
+				while (m_distToSpawnSmoke < 0.0f)
+				{
+					// 移動方向を取得
+					JPH::Vec3 moveDir = m_cPhysics->GetLinearVelocity().Normalized();
+					Math::Vector3 moveDirVec3 = Math::Vector3(moveDir.GetX(), moveDir.GetY(), moveDir.GetZ());
+
+					// 移動方向の後ろに召喚
+					EFFECTMGR.SpawnEffect(m_pos - moveDirVec3 * m_distToSpawnSmoke, Math::Vector3::Zero, 1.0f, EffectType::Smoke);
+
+					// 残り距離を更新
+					m_distToSpawnSmoke += BowlingBallConsts::SpawnSmokeDist;
+				}
+			}
 		}
 	}
 
@@ -344,12 +368,18 @@ void BowlingBall::PostUpdate()
 
 void BowlingBall::DrawUnLit()
 {
+	// 描画しないならスキップ
+	if (!m_isDraw)return;
+
 	// 左クリックホールド中のみ
 	if (m_isInputEnabled)
 	{
 		// 矢印
 		KdShaderManager::Instance().m_StandardShader.DrawModel(*m_arrowModel, m_arrowMat);
 	}
+
+	// トレイル表示
+	//KdShaderManager::Instance().m_StandardShader.DrawPolygon(*m_tPolygon, Math::Matrix::Identity);
 }
 
 void BowlingBall::DrawLit()
@@ -388,6 +418,7 @@ void BowlingBall::Throw(const Math::Vector3& startPos, const Math::Vector3& dire
 	m_reason = RollEndReason::None;
 	m_stopTimer = 0.0f;
 	m_notGroundedTime = 0.0f;
+	m_distToSpawnSmoke = BowlingBallConsts::SpawnSmokeDist;
 
 	// 1.物理を一度止める
 	DeactivateBody();
@@ -405,6 +436,9 @@ void BowlingBall::Throw(const Math::Vector3& startPos, const Math::Vector3& dire
 
 	// 5. 音の再生＆管理用に受け取る
 	StartRollingSound();
+
+	// 6. 煙を召喚開始
+	m_isSmokeSpawn = true;
 }
 
 void BowlingBall::EndThrow()
@@ -455,6 +489,9 @@ void BowlingBall::Reset()
 	{
 		powerBar->SetPower(0.0f);
 	}
+
+	// 煙のリセット
+	m_isSmokeSpawn = false;
 }
 
 void BowlingBall::Respawn(const Math::Vector3& pos, const Math::Vector3& rot)

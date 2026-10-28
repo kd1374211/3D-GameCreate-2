@@ -5,6 +5,7 @@ enum class EffectType
 	HitImpact,
 	LandingAndWallHit,
 	Confetti,
+	Smoke,
 	Number
 };
 

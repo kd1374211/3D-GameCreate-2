@@ -19,6 +19,9 @@ void Landing::DrawEffect()
 	// 消滅済みか
 	if (m_isExpired)return;
 
+	// Rect合わせ
+	SetUVRect();
+
 	// 深度情報が切り替えられたか
 	bool isDSSChanged = false;
 

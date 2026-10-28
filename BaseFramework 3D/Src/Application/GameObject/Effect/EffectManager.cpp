@@ -36,6 +36,9 @@ void EffectManager::SpawnEffect(const Math::Vector3& pos, const Math::Vector3& r
 		// これは別枠
 		SpawnConfettiSpawner();
 		return;
+	case EffectType::Smoke:
+		effectObj = std::make_shared<Smoke>();
+		break;
 	}
 
 	// 変換成功したならパラメータを設定して召喚

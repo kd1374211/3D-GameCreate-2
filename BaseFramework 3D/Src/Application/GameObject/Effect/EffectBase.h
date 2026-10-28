@@ -19,6 +19,9 @@ public:
 
 protected:
 
+	// 現在のデータにUVを更新
+	void SetUVRect();
+
 	// アニメーションカウント
 	float m_animCnt = 0.0f;
 

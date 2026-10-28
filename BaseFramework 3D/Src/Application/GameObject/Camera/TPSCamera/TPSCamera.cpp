@@ -61,14 +61,32 @@ void TPSCamera::PostUpdate()
 
 	if (hasHit)
 	{
-		// ★レイが何かに当たった！その「衝突点の3D座標」を取得
-		JPH::RVec3 hitPos = rayCast.GetPointOnRay(hit.mFraction);
-		Math::Vector3 hitVec3Pos = Math::Vector3(hitPos.GetX(), hitPos.GetY(), hitPos.GetZ());
+		// 3. 衝突ボディ（Body）を取得
+		JPH::BodyLockRead lock(PHYSICSMGR.GetSystem().GetBodyLockInterface(), hit.mBodyID);
+		if (lock.Succeeded()) {
+			const JPH::Body& body = lock.GetBody();
 
-		dir.Normalize();
+			// 衝突点の3D座標を取得
+			JPH::RVec3 hitPos = rayCast.GetPointOnRay(hit.mFraction);
+			Math::Vector3 hitVec3Pos = Math::Vector3(hitPos.GetX(), hitPos.GetY(), hitPos.GetZ());
 
-		hitVec3Pos += dir * 0.4f;
-		SetPos(hitVec3Pos);
+			// ワールド空間での法線（World Space Normal）を取得
+			JPH::Vec3 worldNormal = body.GetWorldSpaceSurfaceNormal(hit.mSubShapeID2, hitPos);
+
+			// 法線がカメラと同方向かの確認
+			JPH::Vec3 rayDir = rayCast.mDirection.Normalized();
+			JPH::Vec3 surfaceNormal = worldNormal.Normalized();
+
+			float dot = rayDir.Dot(surfaceNormal);
+
+			// 同じ方向ならカメラを補正する
+			if (dot > 0.0f)
+			{
+				dir.Normalize();
+				hitVec3Pos += dir * 0.4f;
+				SetPos(hitVec3Pos);
+			}
+		}
 	}
 
 	// ↓めり込み防止の為の座標補正計算↓

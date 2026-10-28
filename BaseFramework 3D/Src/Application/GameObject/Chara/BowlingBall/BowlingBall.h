@@ -130,6 +130,9 @@ private:
 
 		// 「浮いた」と判断するまでの時間
 		static constexpr float CountAsNotGroundedTime = 0.1f;
+
+		// 煙を出す移動距離
+		static constexpr float SpawnSmokeDist = 0.1f;
 	};
 
 	// 活性化・非活性化
@@ -204,6 +207,12 @@ private:
 	// 音切り替え用
 	std::weak_ptr<KdSoundInstance> m_wpStoredSound;
 	enum class RollingSoundState { None, Throw, Roll } m_soundState = RollingSoundState::None;
+
+	// 煙フラグ
+	bool m_isSmokeSpawn = false;
+
+	// 煙を出すための移動距離
+	float m_distToSpawnSmoke = 0.0f;
 
 	//↓playerクラスから移行した
 

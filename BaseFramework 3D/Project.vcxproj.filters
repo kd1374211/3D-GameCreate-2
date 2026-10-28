@@ -226,6 +226,9 @@
     <Filter Include="Src\Application\GameObject\Terrain\IslandDecoration">
       <UniqueIdentifier>{db2a27cc-9942-41bd-9bb2-509e9310bdd1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\GameObject\Effect\Smoke">
+      <UniqueIdentifier>{5db9c556-5fe8-46bb-b55b-9571e83f65ed}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -1671,6 +1674,9 @@
     <ClInclude Include="Src\Application\Const\MouseTexturesConst.h">
       <Filter>Src\Application\Const</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\Effect\Smoke\Smoke.h">
+      <Filter>Src\Application\GameObject\Effect\Smoke</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -2410,6 +2416,9 @@
     </ClCompile>
     <ClCompile Include="Src\Application\GameObject\Terrain\IslandDecoration\IslandDecoration.cpp">
       <Filter>Src\Application\GameObject\Terrain\IslandDecoration</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\Effect\Smoke\Smoke.cpp">
+      <Filter>Src\Application\GameObject\Effect\Smoke</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
