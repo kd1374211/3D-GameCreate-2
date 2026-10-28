@@ -2390,9 +2390,6 @@
     <ClCompile Include="Src\Application\GameObject\UI\Button\Button.cpp">
       <Filter>Src\Application\GameObject\UI\Button</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Application\GameObject\Effect\EffectBase.cpp">
-      <Filter>Src\Application\GameObject\Effect</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Application\GameObject\Effect\PinHit\PinHit.cpp">
       <Filter>Src\Application\GameObject\Effect\PinHit</Filter>
     </ClCompile>
@@ -2419,6 +2416,9 @@
     </ClCompile>
     <ClCompile Include="Src\Application\GameObject\Effect\Smoke\Smoke.cpp">
       <Filter>Src\Application\GameObject\Effect\Smoke</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\Effect\EffectBase.cpp">
+      <Filter>Src\Application\GameObject\Effect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

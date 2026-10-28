@@ -18,12 +18,9 @@ void Smoke::PreDraw()
 	// 消滅済みならストップ
 	if (m_isExpired)return;
 
-	// Rectを合わせる
-	m_data.m_polygon->SetUVRect((int)m_animCnt);
-
 	// マトリックス設定
 	Math::Matrix scale = Math::Matrix::CreateScale(m_data.m_scale * m_scaleMulti);
-	Math::Matrix rotat = Math::Matrix::CreateFromYawPitchRoll(EffectBase::SetAllRotationToCamera() + m_rot);
+	Math::Matrix rotat = Math::Matrix::CreateFromYawPitchRoll(GetAllRotationToCamera() + m_rot);
 	Math::Matrix trans = Math::Matrix::CreateTranslation(m_pos);
 	m_mWorld = scale * rotat * trans;
 }

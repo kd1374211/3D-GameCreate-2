@@ -42,12 +42,12 @@ void TitleScene::Init()
 	camera->Init();
 	camera->SetViewDistance(30.0f);
 
+	//追加
+	AddObject(camera);
+
 	//マネージャー
 	CAMERAMGR.SetGameCamera(camera);
 	CAMERAMGR.SetDefaultCamera(CameraType::Game);
-
-	//追加
-	AddObject(camera);
 
 	//ランダムに背景ステージ読み込み
 	//読み込むステージをランダムで決定

@@ -474,12 +474,12 @@ void GameScene::Init()
 	std::shared_ptr<TPSCamera> camera = std::make_shared<TPSCamera>();
 	camera->Init();
 
+	//追加
+	AddObject(camera);
+
 	//マネージャーに追加
 	CAMERAMGR.SetGameCamera(camera);
 	CAMERAMGR.SetDefaultCamera(CameraType::Game);
-
-	//追加
-	AddObject(camera);
 
 	//ステージ番号
 	int stageNumber = SCENEMGR.GetStageNo();

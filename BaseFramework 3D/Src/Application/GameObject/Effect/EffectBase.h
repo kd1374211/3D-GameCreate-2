@@ -40,7 +40,7 @@ protected:
 	virtual void Init()override;
 
 	// カメラを向くように設定
-	const Math::Vector3& SetRotationYToCamera();
-	const Math::Vector3& SetAllRotationToCamera();
+	const Math::Vector3 GetRotationYToCamera();
+	const Math::Vector3 GetAllRotationToCamera();
 
 };

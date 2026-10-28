@@ -2,7 +2,9 @@
 #include "CameraBase.h"
 
 void CameraManager::Init()
-{}
+{
+	m_activeCamera = CameraType::Game;
+}
 
 void CameraManager::SetGameCamera(std::shared_ptr<CameraBase> camera)
 {
@@ -24,28 +26,31 @@ void CameraManager::SetDebugCamera(std::shared_ptr<CameraBase> camera)
 
 void CameraManager::SetDefaultCamera(CameraType type)
 {
+	const auto& gameCam = m_wpGameCamera.lock();
+	const auto& debugCam = m_wpDebugCamera.lock();
+
 	if (type == CameraType::Game)
 	{
-		if (!m_wpGameCamera.expired())
+		if (gameCam)
 		{
-			m_wpGameCamera.lock()->SetIsDefault(true);
+			gameCam->SetIsDefault(true);
 		}
 
-		if (!m_wpDebugCamera.expired())
+		if (debugCam)
 		{
-			m_wpDebugCamera.lock()->SetIsDefault(false);
+			debugCam->SetIsDefault(false);
 		}
 	}
 	else
 	{
-		if (!m_wpGameCamera.expired())
+		if (gameCam)
 		{
-			m_wpGameCamera.lock()->SetIsDefault(false);
+			gameCam->SetIsDefault(false);
 		}
 
-		if (!m_wpDebugCamera.expired())
+		if (debugCam)
 		{
-			m_wpDebugCamera.lock()->SetIsDefault(true);
+			debugCam->SetIsDefault(true);
 		}
 	}
 

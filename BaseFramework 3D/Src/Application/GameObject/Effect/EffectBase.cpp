@@ -60,7 +60,7 @@ void EffectBase::Init()
 {
 }
 
-const Math::Vector3& EffectBase::SetRotationYToCamera()
+const Math::Vector3 EffectBase::GetRotationYToCamera()
 {
 	Math::Vector3 rot = Math::Vector3(0.0f, 0.0f, 1.0f);
 
@@ -74,7 +74,7 @@ const Math::Vector3& EffectBase::SetRotationYToCamera()
 	return rot;
 }
 
-const Math::Vector3& EffectBase::SetAllRotationToCamera()
+const Math::Vector3 EffectBase::GetAllRotationToCamera()
 {
 	Math::Vector3 rot = Math::Vector3(0.0f, 0.0f, 1.0f);
 
