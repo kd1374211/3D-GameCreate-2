@@ -11,7 +11,7 @@ public:
 
 	void Update()override;
 	virtual void DrawLit()override;
-	virtual void GenerateDepthMapFromLight()override;
+	void GenerateDepthMapFromLight()override;
 
 	//セッター
 	void SetPos(const Math::Vector3& a_pos) { m_pos = a_pos; }
