@@ -133,6 +133,10 @@ private:
 
 		// 煙を出す移動距離
 		static constexpr float SpawnSmokeDist = 0.1f;
+
+		// 煙のサイズ	
+		static constexpr int SmokeSizeNum = 3;
+		static constexpr float SmokeSize[SmokeSizeNum] = { 1.0f,1.5f,2.0f };
 	};
 
 	// 活性化・非活性化

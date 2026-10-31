@@ -304,8 +304,11 @@ void BowlingBall::PostUpdate()
 					JPH::Vec3 moveDir = m_cPhysics->GetLinearVelocity().Normalized();
 					Math::Vector3 moveDirVec3 = Math::Vector3(moveDir.GetX(), moveDir.GetY(), moveDir.GetZ());
 
+					// サイズのランダム化
+					int randIdx = KdRandom::GetInt(1, BowlingBallConsts::SmokeSizeNum) - 1;
+
 					// 移動方向の後ろに召喚
-					EFFECTMGR.SpawnEffect(m_pos - moveDirVec3 * m_distToSpawnSmoke, Math::Vector3::Zero, 1.0f, EffectType::Smoke);
+					EFFECTMGR.SpawnEffect(m_pos - moveDirVec3 * m_distToSpawnSmoke, Math::Vector3::Zero, BowlingBallConsts::SmokeSize[randIdx], EffectType::Smoke);
 
 					// 残り距離を更新
 					m_distToSpawnSmoke += BowlingBallConsts::SpawnSmokeDist;

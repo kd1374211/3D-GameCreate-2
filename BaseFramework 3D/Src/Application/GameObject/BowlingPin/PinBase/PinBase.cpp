@@ -196,7 +196,8 @@ void PinBase::OnHitByPlayer(JPH::Vec3 vel)
 	}
 
 	// インパクト召喚
-	EFFECTMGR.SpawnEffect(effectSpawnPos, Math::Vector3(KdRandom::GetFloat(-0.6f, 0.6f), KdRandom::GetFloat(-0.6f, 0.6f), KdRandom::GetFloat(-0.6f, 0.6f)), PinBaseConsts::PinHitEffectScaleMultiStart, EffectType::HitImpact);
+	int randIdx = KdRandom::GetInt(1, PinBaseConsts::PinHitEffectScaleRandNum) - 1;
+	EFFECTMGR.SpawnEffect(effectSpawnPos, Math::Vector3(KdRandom::GetFloat(-0.6f, 0.6f), KdRandom::GetFloat(-0.6f, 0.6f), KdRandom::GetFloat(-0.6f, 0.6f)), PinBaseConsts::PinHitEffectScaleMulti[randIdx], EffectType::HitImpact);
 	// 音召喚
 	SOUNDMGR.Play(SoundType::SE_HitPin);
 }
@@ -220,7 +221,8 @@ void PinBase::OnHitByPin(JPH::Vec3 vel)
 	}
 
 	// インパクト召喚
-	EFFECTMGR.SpawnEffect(effectSpawnPos, Math::Vector3(KdRandom::GetFloat(-0.6f, 0.6f), KdRandom::GetFloat(-0.6f, 0.6f), KdRandom::GetFloat(-0.6f, 0.6f)), PinBaseConsts::PinHitEffectScaleMultiStart, EffectType::HitImpact);
+	int randIdx = KdRandom::GetInt(1, PinBaseConsts::PinHitEffectScaleRandNum) - 1;
+	EFFECTMGR.SpawnEffect(effectSpawnPos, Math::Vector3(KdRandom::GetFloat(-0.6f, 0.6f), KdRandom::GetFloat(-0.6f, 0.6f), KdRandom::GetFloat(-0.6f, 0.6f)), PinBaseConsts::PinHitEffectScaleMulti[randIdx], EffectType::HitImpact);
 	// 音召喚
 	SOUNDMGR.Play(SoundType::SE_HitPin);
 }

@@ -61,7 +61,7 @@ void PinHit::DrawEffect()
 	{
 		Math::Matrix trans = Math::Matrix::CreateTranslation(m_pos + particle.m_localPos);
 		Math::Matrix rotat = Math::Matrix::CreateFromYawPitchRoll(m_mWorld.Backward());
-		Math::Matrix scale = Math::Matrix::CreateScale(PinHitConsts::HitParticleScale * m_scaleMulti);
+		Math::Matrix scale = Math::Matrix::CreateScale(particle.m_scale * m_scaleMulti);
 		Math::Matrix mat = scale * rotat * trans;
 
 		// UV変更
@@ -106,6 +106,10 @@ void PinHit::Init()
 
 		// 色ランダム
 		data.m_type = (ParticleData::ColorType)KdRandom::GetInt(0, ParticleData::ColorType::Number);
+
+		// サイズランダム
+		int randIdx = KdRandom::GetInt(1, PinHitConsts::HitParticleScaleRandNum) - 1;
+		data.m_scale = PinHitConsts::HitParticleScale[randIdx];
 
 		// 格納
 		m_particles.push_back(data);

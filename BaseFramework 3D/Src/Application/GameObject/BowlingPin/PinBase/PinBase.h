@@ -64,7 +64,8 @@ protected:
 		static constexpr Math::Vector3 InactivePinPos = Math::Vector3(0.0f, 100.0f, 0.0f);
 
 		// エフェクト初期スケール
-		static constexpr float PinHitEffectScaleMultiStart = 1.0f;
+		static constexpr int PinHitEffectScaleRandNum = 3;
+		static constexpr float PinHitEffectScaleMulti[PinHitEffectScaleRandNum] = { 1.0f,1.25f,1.5f };
 	};
 
 	virtual void Init()override;

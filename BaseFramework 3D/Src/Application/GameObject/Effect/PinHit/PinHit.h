@@ -11,6 +11,9 @@ struct ParticleData
 	
 	// 速度
 	Math::Vector3 m_moveSpeed = Math::Vector3::Zero;
+
+	// スケール
+	float m_scale = 0.0f;
 };
 
 class PinHit :public EffectBase
@@ -44,7 +47,8 @@ private:
 		static constexpr float HitParticleSpeedMax = 3.5f;
 
 		// パーティクルスケール
-		static constexpr float HitParticleScale = 0.05f;
+		static constexpr int HitParticleScaleRandNum = 3;
+		static constexpr float HitParticleScale[HitParticleScaleRandNum] = { 0.05f,0.075f,0.1f };
 	};
 
 	void Init()override;
