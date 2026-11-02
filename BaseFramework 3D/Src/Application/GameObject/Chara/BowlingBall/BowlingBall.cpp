@@ -549,7 +549,12 @@ void BowlingBall::Respawn(const Math::Vector3& pos, const Math::Vector3& rot)
 
 void BowlingBall::HitFinishArea()
 {
-	
+	// もしピンに当たっていなければ止まったことにする
+	if (!m_isHitPin)
+	{
+		m_isRolling = false;
+		m_isCheckRolling = false;
+	}
 }
 
 void BowlingBall::HitGround(const std::string& matName, float velocityY, JPH::Vec3 pos, JPH::Vec3 normal)
