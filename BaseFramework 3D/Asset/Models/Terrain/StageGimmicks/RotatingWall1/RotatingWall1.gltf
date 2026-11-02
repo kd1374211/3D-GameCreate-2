@@ -15,7 +15,7 @@
 	"nodes":[
 		{
 			"mesh":0,
-			"name":"Cube.002"
+			"name":"Cube"
 		}
 	],
 	"materials":[
@@ -31,24 +31,11 @@
 				},
 				"metallicFactor":0
 			}
-		},
-		{
-			"doubleSided":true,
-			"name":"Wood_NormalWall",
-			"normalTexture":{
-				"index":2
-			},
-			"pbrMetallicRoughness":{
-				"baseColorTexture":{
-					"index":3
-				},
-				"metallicFactor":0
-			}
 		}
 	],
 	"meshes":[
 		{
-			"name":"Cube",
+			"name":"Cube.001",
 			"primitives":[
 				{
 					"attributes":{
@@ -58,28 +45,11 @@
 					},
 					"indices":3,
 					"material":0
-				},
-				{
-					"attributes":{
-						"POSITION":4,
-						"NORMAL":5,
-						"TEXCOORD_0":6
-					},
-					"indices":7,
-					"material":1
 				}
 			]
 		}
 	],
 	"textures":[
-		{
-			"sampler":0,
-			"source":0
-		},
-		{
-			"sampler":0,
-			"source":1
-		},
 		{
 			"sampler":0,
 			"source":0
@@ -105,11 +75,11 @@
 		{
 			"bufferView":0,
 			"componentType":5126,
-			"count":26,
+			"count":72,
 			"max":[
 				2,
-				0.20000004768371582,
-				1.9999998807907104
+				0.19999998807907104,
+				2
 			],
 			"min":[
 				-2,
@@ -121,103 +91,45 @@
 		{
 			"bufferView":1,
 			"componentType":5126,
-			"count":26,
+			"count":72,
 			"type":"VEC3"
 		},
 		{
 			"bufferView":2,
 			"componentType":5126,
-			"count":26,
+			"count":72,
 			"type":"VEC2"
 		},
 		{
 			"bufferView":3,
 			"componentType":5123,
-			"count":66,
-			"type":"SCALAR"
-		},
-		{
-			"bufferView":4,
-			"componentType":5126,
-			"count":64,
-			"max":[
-				2.0049283504486084,
-				0.20000004768371582,
-				2.0019476413726807
-			],
-			"min":[
-				-2,
-				0,
-				-2
-			],
-			"type":"VEC3"
-		},
-		{
-			"bufferView":5,
-			"componentType":5126,
-			"count":64,
-			"type":"VEC3"
-		},
-		{
-			"bufferView":6,
-			"componentType":5126,
-			"count":64,
-			"type":"VEC2"
-		},
-		{
-			"bufferView":7,
-			"componentType":5123,
-			"count":96,
+			"count":132,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":312,
+			"byteLength":864,
 			"byteOffset":0,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":312,
-			"byteOffset":312,
+			"byteLength":864,
+			"byteOffset":864,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":208,
-			"byteOffset":624,
+			"byteLength":576,
+			"byteOffset":1728,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":132,
-			"byteOffset":832,
-			"target":34963
-		},
-		{
-			"buffer":0,
-			"byteLength":768,
-			"byteOffset":964,
-			"target":34962
-		},
-		{
-			"buffer":0,
-			"byteLength":768,
-			"byteOffset":1732,
-			"target":34962
-		},
-		{
-			"buffer":0,
-			"byteLength":512,
-			"byteOffset":2500,
-			"target":34962
-		},
-		{
-			"buffer":0,
-			"byteLength":192,
-			"byteOffset":3012,
+			"byteLength":264,
+			"byteOffset":2304,
 			"target":34963
 		}
 	],
@@ -229,7 +141,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":3204,
+			"byteLength":2568,
 			"uri":"RotatingWall1.bin"
 		}
 	]
