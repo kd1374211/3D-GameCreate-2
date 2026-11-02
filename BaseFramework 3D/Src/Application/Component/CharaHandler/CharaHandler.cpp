@@ -14,8 +14,21 @@ void CharaHandler::StartNextThrow(const Math::Vector3& pos, const Math::Vector3&
 	// ボールリスポーン
 	RespawnPlayerBall(pos, rot);
 
-	// 投球状態リセット
-	m_rollingState = RollingState::NotRolling;
+	// 投球後フラグをリセット
+	m_isBallThrown = false;
+}
+
+void CharaHandler::CheckBallThrow()
+{
+	// 投球後フラグがオンならリターン
+	if (m_isBallThrown)return;
+
+	// ボールが投げられたかを確認
+	if (m_playerBall->IsThrown())
+	{
+		// 投球後フラグをオンにする
+		m_isBallThrown = true;
+	}
 }
 
 void CharaHandler::ResetPlayerBall()
@@ -28,30 +41,12 @@ void CharaHandler::RespawnPlayerBall(const Math::Vector3& pos, const Math::Vecto
 	m_playerBall->Respawn(pos, rot);
 }
 
-void CharaHandler::CheckRollingState()
+bool CharaHandler::IsBallRolling() const
 {
-	// 現在の投球状態を確認
-	switch (m_rollingState)
-	{
-	// 開始前
-	case RollingState::NotRolling:
-		// 投げ始めたかを確認する
-		if (m_playerBall->IsRolling())
-		{
-			// ステート変更
-			m_rollingState = RollingState::Rolling;
-		}
-		break;
-	// 開始後
-	case RollingState::Rolling:
-		// 投げ終わりを確認
-		if (!m_playerBall->IsRolling())
-		{
-			// ステート変更
-			m_rollingState = RollingState::RollEnd;
-		}
-		break;
-	}
+	// DEBUG
+	KdDebugGUI::Instance().AddLog("IsRolling: %d\n", m_playerBall->IsRolling());
+
+	return m_playerBall->IsRolling();
 }
 
 void CharaHandler::StartThrow()

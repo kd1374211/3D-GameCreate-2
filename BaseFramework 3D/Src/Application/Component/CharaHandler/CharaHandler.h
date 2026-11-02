@@ -1,12 +1,5 @@
 ﻿#pragma once
 
-enum class RollingState
-{
-	NotRolling, // 投球前
-	Rolling,    // 投球中
-	RollEnd    // 投球終了
-};
-
 class BowlingBall;
 
 class CharaHandler
@@ -25,11 +18,14 @@ public:
 	//プレイヤー取得
 	std::shared_ptr <BowlingBall> GetPlayerBall() { return m_playerBall; }
 
-	// ボールの投球状態フラグを確認する
-	void CheckRollingState();
+	// ボール投球確認
+	void CheckBallThrow();
 
-	// ボールの投球状態フラグを取得する
-	RollingState GetRollingState()const { return m_rollingState; }
+	// ボール投球後か
+	bool IsBallThrown()const { return m_isBallThrown; }
+
+	// ボールが動いているかの確認
+	bool IsBallRolling()const;
 
 	// ボールの投球可能フラグをオン
 	void StartThrow();
@@ -50,6 +46,6 @@ private:
 	// ボール保持
 	std::shared_ptr<BowlingBall> m_playerBall;
 
-	// 投球状態
-	RollingState m_rollingState = RollingState::NotRolling;
+	// ボール投球後フラグ
+	bool m_isBallThrown = false;
 };

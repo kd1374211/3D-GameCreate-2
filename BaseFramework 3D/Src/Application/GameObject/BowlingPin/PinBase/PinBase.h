@@ -44,6 +44,9 @@ public:
 	// ピンが当てられたか
 	bool GetIsHit()const { return m_isHit; }
 
+	// ピンが動いているか
+	bool GetIsMoving()const { return m_isMoving; }
+
 	// 当たられたとき
 	void OnHitByPlayer(JPH::Vec3 vel);
 	void OnHitByPin(JPH::Vec3 vel);
@@ -63,9 +66,16 @@ protected:
 		// デスポーン時に遠くに配置しておく
 		static constexpr Math::Vector3 InactivePinPos = Math::Vector3(0.0f, 100.0f, 0.0f);
 
+		// 非活性状態にする座標
+		static constexpr float InactivePosUpY = 12.0f;
+		static constexpr float InactivePosDownY = -8.0f;
+
 		// エフェクト初期スケール
 		static constexpr int PinHitEffectScaleRandNum = 3;
 		static constexpr float PinHitEffectScaleMulti[PinHitEffectScaleRandNum] = { 1.0f,1.25f,1.5f };
+
+		// 動いていると判別する移動距離(１秒換算)
+		static constexpr float MovingDistanceBorder = 2.0f;
 	};
 
 	virtual void Init()override;
@@ -73,6 +83,12 @@ protected:
 	// 倒れたかを確認
 	bool CheckIsFallen();
 	bool CheckIsFallen_PostUpdate();
+
+	// 移動中かを確認
+	bool CheckIsMoving();
+
+	// Y座標のボーダーラインをチェック
+	void CheckYBorder();
 
 	//物理コンポーネント
 	std::shared_ptr<PhysicsComponent> m_cPhysics;
@@ -90,6 +106,9 @@ protected:
 	bool m_isActive = false;
 	bool m_isBodyActive = false;
 
+	// 描画をするか
+	bool m_isDraw = true;
+
 	// 当たられたか
 	bool m_isHit = false;
 
@@ -102,6 +121,12 @@ protected:
 
 	// 倒れ判定の確認をするか
 	bool m_isCheckFallen = true;
+
+	// 動いているか
+	bool m_isMoving = false;
+
+	// 前のフレームの位置
+	Math::Vector3 m_prevPos = Math::Vector3::Zero;
 
 	// ピンの管理番号
 	int m_pinIndex = -1;

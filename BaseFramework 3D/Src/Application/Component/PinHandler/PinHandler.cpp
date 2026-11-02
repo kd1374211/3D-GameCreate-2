@@ -139,6 +139,26 @@ bool PinHandler::CheckIsAllPinsFallen() const
 	return true;
 }
 
+bool PinHandler::CheckIsAnyPinMoving() const
+{
+	// 現在のピンをめぐる
+	for (const auto& pin : m_activePins)
+	{
+		// shared_ptr に変換
+		if (auto spPin = pin.lock())
+		{
+			// 有効かつ動いているピンが見つかったらtrue
+			if (spPin->GetIsActive() && spPin->GetIsMoving()) 
+			{
+				return true;
+			}
+		}
+	}
+
+	// 見つからずにループを抜けたらfalse
+	return false;
+}
+
 void PinHandler::ActivateBody()
 {
 	// 全てのアクティブなピンを見て物理をオンに

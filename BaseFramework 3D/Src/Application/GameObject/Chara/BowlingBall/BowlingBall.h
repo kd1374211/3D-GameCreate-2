@@ -1,16 +1,6 @@
 ﻿#pragma once
 #include "../../../Component/PhysicsComponent/PhysicsComponent.h"
 
-// 投球終了の理由
-enum class RollEndReason
-{
-	None,
-	Stop,
-	Fall,
-	Skip,
-	Finish
-};
-
 class TPSCamera;
 class ShotCursor;
 class ShotPowerBar;
@@ -38,9 +28,10 @@ public:
 	// リセット
 	void Reset();
 
-	// 停止・原因確認用
+	// 投球確認用
+	bool IsThrown() const { return m_isThrown; }
+	// 転がっているか
 	bool IsRolling() const { return m_isRolling; }
-	RollEndReason GetRollEndReason()const { return m_reason; }
 
 	// 位置・回転セット
 	void Respawn(const Math::Vector3& pos, const Math::Vector3& rot);
@@ -144,7 +135,7 @@ private:
 	void DeactivateBody();
 
 	// 停止確認
-	void CheckIsStop();
+	void CheckIsRolling();
 
 	// 減速の更新
 	void CheckRollingResistance();
@@ -161,16 +152,16 @@ private:
 	//回転
 	Math::Quaternion m_rot;
 
-	// 連続停止時間
-	float m_stopTimer = 0.0f;
-
 	// このフレームで接触した一番大きい値の速度抵抗値
 	float  m_rollingResistance = 0.0f;
 
-	// 転がり中か
+	// 投げられたか
+	bool m_isThrown = false;
+	// 転がっているか
 	bool m_isRolling = false;
-	// 転がり終了した原因
-	RollEndReason m_reason = RollEndReason::None;
+	// 転がっているかの確認をするか
+	bool m_isCheckRolling = false;
+
 	// 一度でもピンに当たったか
 	bool m_isHitPin = false;
 	// このフレームで着地判定を拾ったか
@@ -217,6 +208,9 @@ private:
 
 	// 煙を出すための移動距離
 	float m_distToSpawnSmoke = 0.0f;
+
+	// 壁に当たったのでAngVelの補正が必要
+	bool m_isHitWall = false;
 
 	//↓playerクラスから移行した
 

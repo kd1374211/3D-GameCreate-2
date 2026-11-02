@@ -7,6 +7,7 @@ class GameUIObjects;
 class PinHandler;
 class ScoreHandler;
 class CharaHandler;
+class ThrowEndChecker;
 
 //シーン状況
 enum class SceneState
@@ -22,12 +23,9 @@ enum class SceneState
 struct GameSceneConsts
 {
 	// カウントダウン
-	static constexpr float CountDownOnRollEnd = 2.0f;
-	static constexpr float CountDownOnRollEnd_Stopped = 0.2f;
-	static constexpr float CountDownOnRollEnd_NoHit = 0.5f;
-	static constexpr float CountDownOnRollEnd_Skip = 0.1f;
-	static constexpr float CountDownOnClear = 2.0f;
-	static constexpr float CountDownOnFail = 2.0f;
+	static constexpr float CountDownOnRollEnd_Strike = 1.0f;	// 投球終了後のカウントダウン(ストライク時)
+	static constexpr float CountDownOnRollEnd = 0.2f;	// 投球終了後のカウントダウン
+	static constexpr float CountDownOnFinish = 2.0f;	// F10終了後のカウントダウン
 
 	//流れるテキスト
 	static constexpr int MovingTextCount = 4;
@@ -99,4 +97,7 @@ private:
 
 	// プレイヤー制御用
 	std::shared_ptr<CharaHandler> m_cCharaHandler = nullptr;
+
+	// 投球終了確認用
+	std::shared_ptr<ThrowEndChecker> m_cThrowEndChecker = nullptr;
 };

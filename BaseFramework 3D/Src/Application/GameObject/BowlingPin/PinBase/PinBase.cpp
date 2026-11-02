@@ -33,7 +33,7 @@ void PinBase::Update()
 void PinBase::PostUpdate()
 {
 	// DEBUG 
-	KdDebugGUI::Instance().AddLog("Pin ID : %d, IsFallen : %d, Pos : %.2f,%.2f,%.2f\n", m_pinIndex, m_isFallen, m_pos.x, m_pos.y, m_pos.z);
+	KdDebugGUI::Instance().AddLog("Pin ID : %d, IsFallen : %d, IsMoving : %d\n", m_pinIndex, m_isFallen, m_isMoving);
 
 	// 非活性状態ならリターン
 	if (!m_isActive) return;
@@ -41,11 +41,20 @@ void PinBase::PostUpdate()
 	// 物理コンポーネントおよび BodyID の生存確認
 	if (!m_cPhysics || m_cPhysics->GetBodyID().IsInvalid()) return;
 
+	// 今の座標を記録
+	m_prevPos = m_pos;
+
 	//同期
 	m_cPhysics->Sync(m_pos, m_rot);
 
+	// Y座標のボーダーラインをチェック
+	CheckYBorder();
+
 	// ここで位置関連の倒れチェック
-	CheckIsFallen_PostUpdate();
+	m_isFallen = CheckIsFallen_PostUpdate();
+
+	// 移動中かの判定
+	m_isMoving = CheckIsMoving();
 
 	// Matrix更新
 	Math::Matrix trans = Math::Matrix::CreateTranslation(m_pos);
@@ -57,6 +66,8 @@ void PinBase::DrawLit()
 {
 	// 非活性状態ならリターン
 	if (!m_isActive) return;
+	// 描画しないならリターン
+	if (!m_isDraw) return;
 
 	// トゥーン切り替え
 	KdShaderManager::Instance().m_StandardShader.SetToonEnable(true);
@@ -76,6 +87,8 @@ void PinBase::GenerateDepthMapFromLight()
 {
 	// 非活性状態ならリターン
 	if (!m_isActive) return;
+	// 描画しないならリターン
+	if (!m_isDraw) return;
 
 	// 描画
 	KdShaderManager::Instance().m_StandardShader.DrawModel(*m_model, m_mWorld);
@@ -107,6 +120,8 @@ void PinBase::Reset()
 	m_isHit = false;
 	m_isHitPending = false;
 	m_pendingVelocity = JPH::Vec3::sZero();
+	m_isMoving = false;
+	m_prevPos = Math::Vector3::Zero;
 }
 
 void PinBase::Spawn(Math::Vector3 pos, Math::Quaternion rot, int index)
@@ -125,6 +140,7 @@ void PinBase::Spawn(Math::Vector3 pos, Math::Quaternion rot, int index)
 
 	// 3.使用状態を活性化にする
 	m_isActive = true;
+	m_isDraw = true;
 
 	// 4.倒れ確認判定をオンにする
 	m_isCheckFallen = true;
@@ -146,6 +162,7 @@ void PinBase::Despawn()
 
 	// 2.使用状態を非活性にする
 	m_isActive = false;
+	m_isDraw = false;
 	DeactivateBody();
 
 	// 3.倒れ確認判定を一応オフに
@@ -261,10 +278,11 @@ bool PinBase::CheckIsFallen()
 
 	if (dot < fallenThreshold)
 	{
-		m_isFallen = true;
+		return true;
 	}
 
-	return m_isFallen;
+	// 4. 上の条件を満たさなければ倒れていない
+	return false;
 }
 
 bool PinBase::CheckIsFallen_PostUpdate()
@@ -281,12 +299,66 @@ bool PinBase::CheckIsFallen_PostUpdate()
 	// 落下チェック
 	if (m_pos.y < STAGEMGR.GetStageInfo()->m_fallOutLine)
 	{
-		m_isFallen = true;
+		return true;
 	}
 
 	// 一定距離以上離れたら倒れた扱いにする
 	if (Math::Vector3::Distance(m_pos, m_spawnPos) > PinBaseConsts::DistanceCountAsFallen)
 	{
-		m_isFallen = true;
+		return true;
+	}
+
+	// 上の条件を満たさなければ倒れていない
+	return false;
+}
+
+bool PinBase::CheckIsMoving()
+{
+	// 非アクティブ（画面上に存在しない等）なら判定しない
+	if (!m_isActive) return false;
+
+	// gdt取得
+	float gdt = SCENEMGR.GetDeltaGameTime();
+
+	// 前のフレームの位置との差分を計算
+	Math::Vector3 deltaPos = m_pos - m_prevPos;
+
+	// 1秒換算の移動距離を計算
+	float distancePerSecond = deltaPos.Length() / gdt;
+
+	// 移動距離が一定以上なら移動中と判定
+	if (distancePerSecond > PinBaseConsts::MovingDistanceBorder)
+	{
+		return true;
+	}
+
+	// 上の条件を満たさなければ移動していない
+	return false;
+}
+
+void PinBase::CheckYBorder()
+{
+	// 非アクティブ（画面上に存在しない等）なら判定しない
+	if (!m_isActive) return;
+	// Y座標がボーダーラインを超えていたら強制的に非活性化する
+	if (m_pos.y > PinBaseConsts::InactivePosUpY || m_pos.y < PinBaseConsts::InactivePosDownY)
+	{
+		// 1. 描画オフ
+		m_isDraw = false;
+
+		// 2. 使用状態を非活性にする
+		m_isActive = false;
+
+		// 3. 物理を非活性にする
+		DeactivateBody();
+
+		// 4. 倒れ確認判定を一応オフに
+		m_isCheckFallen = false;
+
+		// 5.もし倒れ確認が有効なら倒れた扱いにする(念のため)
+		if (m_isCheckFallen)
+		{
+			m_isFallen = true;
+		}
 	}
 }

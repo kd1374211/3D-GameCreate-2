@@ -32,6 +32,9 @@ public:
 	// 全部のピンが倒れたかを確認
 	bool CheckIsAllPinsFallen()const;
 
+	// 動いているピンがあるかの確認
+	bool CheckIsAnyPinMoving()const;
+
 	// 現在使用中のピンの物理挙動をオン
 	void ActivateBody();
 

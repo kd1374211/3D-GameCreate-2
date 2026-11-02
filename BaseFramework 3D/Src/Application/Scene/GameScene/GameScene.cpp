@@ -15,6 +15,7 @@
 #include "../../Cursor/CursorManager.h"
 #include "../../GameObject/Effect/EffectManager.h"
 #include "../../Sound/SoundManager.h"
+#include "../../Component/ThrowEndChecker/ThrowEndChecker.h"
 
 void GameScene::Event()
 {
@@ -196,62 +197,36 @@ void GameScene::UpdatePlaying()
 	}
 	else
 	{
-		// 全ピンが倒れたかの確認
-		if (m_cPinHandler->CheckIsAllPinsFallen())
+		// 投球後かの確認
+		if (m_cCharaHandler->IsBallThrown())
 		{
-			// 投球終了待ちフラグ
-			m_isRollEndWaiting = true;
-
-			// カウントダウン設定
-			m_countdownTimer = GameSceneConsts::CountDownOnRollEnd;
-		}
-
-		// ステート更新
-		m_cCharaHandler->CheckRollingState();
-
-		// ステート取得
-		switch (m_cCharaHandler->GetRollingState())
-		{
-		case RollingState::NotRolling:
-			break;
-		case RollingState::Rolling:
-			break;
-		case RollingState::RollEnd:
-			// 原因を確認
-			switch (m_cCharaHandler->GetPlayerBall()->GetRollEndReason())
+			// 全ピンが倒れたかの確認
+			if (m_cPinHandler->CheckIsAllPinsFallen())
 			{
-			case RollEndReason::Stop: // 停止
-				m_countdownTimer = GameSceneConsts::CountDownOnRollEnd_Stopped;
-				break;
-			case RollEndReason::Fall: // 落下
-			case RollEndReason::Finish: // ゴール
+				// 投球終了待ちフラグ
+				m_isRollEndWaiting = true;
 
-				// プレイヤーが一度でもピンに当たったかを確認
-				if (m_cCharaHandler->GetPlayerBall()->GetIsHitPin())
+				// カウントダウン設定
+				m_countdownTimer = GameSceneConsts::CountDownOnRollEnd_Strike;
+			}
+			// 全ピンが倒れていない場合はチェッカーで終了チェック
+			else
+			{
+				if (m_cThrowEndChecker->CheckThrowEnd())
 				{
-					// 当たっていたら通常のカウントダウン
+					// 投球終了待ちフラグ
+					m_isRollEndWaiting = true;
+
+					// カウントダウン設定
 					m_countdownTimer = GameSceneConsts::CountDownOnRollEnd;
 				}
-				else
-				{
-					// 当たっていなかったら落下扱いで短縮
-					m_countdownTimer = GameSceneConsts::CountDownOnRollEnd_NoHit;
-				}
-				break;
-			case RollEndReason::Skip: // スキップ
-				m_countdownTimer = GameSceneConsts::CountDownOnRollEnd_Skip;
-				break;
-			default:	// エラー
-				m_countdownTimer = 0.0f;
-				break;
 			}
-			// 投球終了フラグ
-			m_isRollEndWaiting = true;
-			break;
 		}
-
-		// デバッグ
-		KdDebugGUI::Instance().AddLog("RollingState : %d\n", static_cast<int>(m_cCharaHandler->GetRollingState()));
+		else
+		{
+			// 投球スタートチェック
+			m_cCharaHandler->CheckBallThrow();
+		}
 	}
 }
 
@@ -313,7 +288,7 @@ void GameScene::UpdateCheckAndClean()
 				SCENEMGR.SetGameResult(result);
 				// リザルト移行準備
 				m_currentSceneState = SceneState::End;
-				m_countdownTimer = GameSceneConsts::CountDownOnClear;
+				m_countdownTimer = GameSceneConsts::CountDownOnFinish;
 				// 終了演出召喚
 				spUI->SpawnStageFinishText();
 				// 効果音も召喚
@@ -465,6 +440,13 @@ void GameScene::Init()
 	// キャラハンドラー生成
 	m_cCharaHandler = std::make_shared<CharaHandler>();
 	m_cCharaHandler->Init();
+
+	// 投球終了チェッカー生成
+	m_cThrowEndChecker = std::make_shared<ThrowEndChecker>();
+
+	// チェッカーにハンドラーを設定
+	m_cThrowEndChecker->RegistCharaHandler(m_cCharaHandler);
+	m_cThrowEndChecker->RegistPinHandler(m_cPinHandler);
 
 	// ステージマネージャーにハンドラー設定
 	STAGEMGR.RegistPinHandler(m_cPinHandler);

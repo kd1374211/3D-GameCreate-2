@@ -229,6 +229,9 @@
     <Filter Include="Src\Application\GameObject\Effect\Smoke">
       <UniqueIdentifier>{5db9c556-5fe8-46bb-b55b-9571e83f65ed}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\Component\ThrowEndChecker">
+      <UniqueIdentifier>{94f98501-6069-4fe2-a0a0-cba6a021a592}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -1677,6 +1680,9 @@
     <ClInclude Include="Src\Application\GameObject\Effect\Smoke\Smoke.h">
       <Filter>Src\Application\GameObject\Effect\Smoke</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\Component\ThrowEndChecker\ThrowEndChecker.h">
+      <Filter>Src\Application\Component\ThrowEndChecker</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -2419,6 +2425,9 @@
     </ClCompile>
     <ClCompile Include="Src\Application\GameObject\Effect\EffectBase.cpp">
       <Filter>Src\Application\GameObject\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Component\ThrowEndChecker\ThrowEndChecker.cpp">
+      <Filter>Src\Application\Component\ThrowEndChecker</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

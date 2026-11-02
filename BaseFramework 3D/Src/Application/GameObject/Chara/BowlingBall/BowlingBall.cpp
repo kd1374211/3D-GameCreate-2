@@ -81,8 +81,8 @@ void BowlingBall::Update()
 	// 回転抵抗リセット
 	m_rollingResistance = -1.0f;
 
-	// 転がっていないとき
-	if (!m_isRolling)
+	// 投げられていないとき
+	if (!m_isThrown)
 	{
 		//移動不可ならリターン
 		if (!m_canRoll)return;
@@ -201,15 +201,8 @@ void BowlingBall::Update()
 	}
 	else
 	{
-		// 停止チェック
-		CheckIsStop();
-
-		// 途中終了
-		if (KdInputManager::Instance().IsPress(GetKeyRegistName(VK_RBUTTON)))
-		{
-			m_isRolling = false;
-			m_reason = RollEndReason::Skip;
-		}
+		// 転がりチェック
+		CheckIsRolling();
 	}
 
 	// カーソルの描画フラグを更新
@@ -267,7 +260,7 @@ void BowlingBall::PostUpdate()
 		if (m_pos.y < STAGEMGR.GetStageInfo()->m_fallOutLine)
 		{
 			m_isRolling = false;
-			m_reason = RollEndReason::Fall;
+			m_isCheckRolling = false;
 		}
 
 		// 消滅チェック
@@ -276,6 +269,8 @@ void BowlingBall::PostUpdate()
 			// Stop
 			DeactivateBody();
 			m_isDraw = false;
+			m_isRolling = false;
+			m_isCheckRolling = false;
 		}		
 
 		// 空中時間更新
@@ -314,6 +309,36 @@ void BowlingBall::PostUpdate()
 					m_distToSpawnSmoke += BowlingBallConsts::SpawnSmokeDist;
 				}
 			}
+		}
+
+		// 壁に当たったのでAngVelの補正が必要
+		if (m_isHitWall)
+		{
+			// 1. 最新の線形速度（進行方向）を取得
+			JPH::Vec3 linearVel = m_cPhysics->GetLinearVelocity();
+			JPH::Vec3 planarVel = JPH::Vec3(linearVel.GetX(), 0.0f, linearVel.GetZ());
+			float moveSpeed = planarVel.Length();
+
+			// 2. 現在の「角速度の大きさ（回転速度）」を取得
+			JPH::Vec3 currentAngVel = m_cPhysics->GetAngularVelocity();
+			float currentAngSpeed = currentAngVel.Length();
+
+			// 移動中かつ回転がある場合のみ補正
+			if (moveSpeed > 0.001f && currentAngSpeed > 0.001f)
+			{
+				// 進行方向の単位ベクトル
+				JPH::Vec3 moveDir = planarVel / moveSpeed;
+
+				// 進行方向に直交する「新しい前進回転の軸」を算出
+				JPH::Vec3 forwardSpinAxis = JPH::Vec3::sAxisY().Cross(moveDir).Normalized();
+
+				// ★ 回転速度（currentAngSpeed）はそのまま引き継ぎ、向きだけ上書き
+				JPH::Vec3 newAngVel = forwardSpinAxis * currentAngSpeed;
+
+				m_cPhysics->SetAngularVelocity(newAngVel);
+			}
+
+			m_isHitWall = false;
 		}
 	}
 
@@ -380,9 +405,6 @@ void BowlingBall::DrawUnLit()
 		// 矢印
 		KdShaderManager::Instance().m_StandardShader.DrawModel(*m_arrowModel, m_arrowMat);
 	}
-
-	// トレイル表示
-	//KdShaderManager::Instance().m_StandardShader.DrawPolygon(*m_tPolygon, Math::Matrix::Identity);
 }
 
 void BowlingBall::DrawLit()
@@ -415,11 +437,11 @@ void BowlingBall::GenerateDepthMapFromLight()
 
 void BowlingBall::Throw(const Math::Vector3& startPos, const Math::Vector3& direction, float power)
 {
-	if (m_isRolling) return;
+	if (m_isThrown) return;
 
+	m_isThrown = true;
 	m_isRolling = true;
-	m_reason = RollEndReason::None;
-	m_stopTimer = 0.0f;
+	m_isCheckRolling = true;
 	m_notGroundedTime = 0.0f;
 	m_distToSpawnSmoke = BowlingBallConsts::SpawnSmokeDist;
 
@@ -465,13 +487,14 @@ void BowlingBall::Reset()
 		m_cPhysics->SetAngularVelocity(JPH::Vec3::sZero());
 	}
 	// 状態のリセット
+	m_isThrown = false;
 	m_isRolling = false;
+	m_isCheckRolling = false;
 	m_isHitPin = false;
 	m_canRoll = true;
 	m_isInputEnabled = false;
-	m_reason = RollEndReason::None;
-	m_stopTimer = 0.0f;
 	m_isDraw = true;
+	m_isHitWall = false;
 
 	// マウス関連のリセット
 	m_isShootStart = false;
@@ -526,10 +549,7 @@ void BowlingBall::Respawn(const Math::Vector3& pos, const Math::Vector3& rot)
 
 void BowlingBall::HitFinishArea()
 {
-	if (!m_isRolling)return;
-
-	m_isRolling = false;
-	m_reason = RollEndReason::Finish;
+	
 }
 
 void BowlingBall::HitGround(const std::string& matName, float velocityY, JPH::Vec3 pos, JPH::Vec3 normal)
@@ -576,6 +596,9 @@ void BowlingBall::HitGround(const std::string& matName, float velocityY, JPH::Ve
 
 void BowlingBall::HitWall(const std::string& matName, float velocity, JPH::Vec3 pos, JPH::Vec3 normal)
 {
+	// 接壁フラグをオン
+	m_isHitWall = true;
+
 	// gdt取得
 	float gameDt = SCENEMGR.GetDeltaGameTime();
 
@@ -600,7 +623,6 @@ void BowlingBall::HitWall(const std::string& matName, float velocity, JPH::Vec3 
 
 		// 2. クォータニオンをオイラー角(Vector3)に変換
 		Math::Vector3 rotAngles = rot.ToEuler();
-		// ※ライブラリによっては degrees(度数法) への変換が必要な場合があります
 
 		// エフェクトの召喚（オイラー角を渡す）
 		EFFECTMGR.SpawnEffect(hitPos + hitNormal * 0.015f, rotAngles, scale * scaleMulti, EffectType::LandingAndWallHit);
@@ -626,14 +648,6 @@ void BowlingBall::OnIsland()
 {
 	// 仮に地面扱い確定とする
 	OnGround();
-
-	// まだフラグが立っていないなら立てる
-	if (m_isRolling)
-	{
-		// 落下判定
-		m_isRolling = false;
-		m_reason = RollEndReason::Fall;
-	}
 }
 
 void BowlingBall::UpdateRollingResistance(float resistPower)
@@ -663,10 +677,14 @@ void BowlingBall::DeactivateBody()
 	m_isActive = false;
 }
 
-void BowlingBall::CheckIsStop()
+void BowlingBall::CheckIsRolling()
 {
-	// ゲームデルタ
-	float gameDt = SCENEMGR.GetDeltaGameTime();
+	// チェック無しならスキップ
+	if (!m_isCheckRolling)
+	{
+		m_isRolling = false;
+		return;
+	}
 
 	// 速度チェック
 	JPH::Vec3 linearVelocity = PHYSICSMGR.GetBodyInterface().GetLinearVelocity(m_cPhysics->GetBodyID());
@@ -674,20 +692,11 @@ void BowlingBall::CheckIsStop()
 	// 速度の２乗が一定値以下かを確認
 	if (linearVelocity.LengthSq() < BowlingBallConsts::StopCheckBorder)
 	{
-		// 連続停止時間増加
-		m_stopTimer += gameDt;
-
-		// もし一定時間以上止まっていたら終了フラグ
-		if (m_stopTimer > BowlingBallConsts::RollEndTime)
-		{
-			m_isRolling = false;
-			m_reason = RollEndReason::Stop;
-		}
+		m_isRolling = false;
 	}
 	else
 	{
-		// 連続停止時間リセット
-		m_stopTimer = 0.0f;
+		m_isRolling = true;
 	}
 }
 
