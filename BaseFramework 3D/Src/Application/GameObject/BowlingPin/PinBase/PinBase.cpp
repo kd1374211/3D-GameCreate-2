@@ -47,9 +47,6 @@ void PinBase::PostUpdate()
 	//同期
 	m_cPhysics->Sync(m_pos, m_rot);
 
-	// Y座標のボーダーラインをチェック
-	CheckYBorder();
-
 	// ここで位置関連の倒れチェック
 	m_isFallen = CheckIsFallen_PostUpdate();
 
@@ -198,8 +195,6 @@ void PinBase::OnHitByPlayer(JPH::Vec3 vel)
 	// 吹っ飛び待機
 	m_isHitPending = true;
 	m_isHit = true;
-
-	// プレイヤーからの当たりは強めにする
 	m_pendingVelocity = vel * PinBaseConsts::OnHitVelocityMulti;
 
 	// 召喚位置を取得
@@ -226,7 +221,8 @@ void PinBase::OnHitByPin(JPH::Vec3 vel)
 	// 吹っ飛び待機
 	m_isHitPending = true;
 	m_isHit = true;
-	m_pendingVelocity = vel;
+	m_pendingVelocity = vel * PinBaseConsts::OnHitVelocityMulti;
+
 	// 召喚位置を取得
 	Math::Vector3 effectSpawnPos = m_pos;
 	const auto& node = m_model->FindNode("EffectSpawnPos");
@@ -317,6 +313,12 @@ bool PinBase::CheckIsMoving()
 	// 非アクティブ（画面上に存在しない等）なら判定しない
 	if (!m_isActive) return false;
 
+	// ボーダーを超えていたら動いていないと判定する
+	if (m_pos.y > PinBaseConsts::InactivePosUpY || m_pos.y < PinBaseConsts::InactivePosDownY)
+	{
+		return false;
+	}
+
 	// gdt取得
 	float gdt = SCENEMGR.GetDeltaGameTime();
 
@@ -334,31 +336,4 @@ bool PinBase::CheckIsMoving()
 
 	// 上の条件を満たさなければ移動していない
 	return false;
-}
-
-void PinBase::CheckYBorder()
-{
-	// 非アクティブ（画面上に存在しない等）なら判定しない
-	if (!m_isActive) return;
-	// Y座標がボーダーラインを超えていたら強制的に非活性化する
-	if (m_pos.y > PinBaseConsts::InactivePosUpY || m_pos.y < PinBaseConsts::InactivePosDownY)
-	{
-		// 1. 描画オフ
-		m_isDraw = false;
-
-		// 2. 使用状態を非活性にする
-		m_isActive = false;
-
-		// 3. 物理を非活性にする
-		DeactivateBody();
-
-		// 4. 倒れ確認判定を一応オフに
-		m_isCheckFallen = false;
-
-		// 5.もし倒れ確認が有効なら倒れた扱いにする(念のため)
-		if (m_isCheckFallen)
-		{
-			m_isFallen = true;
-		}
-	}
 }

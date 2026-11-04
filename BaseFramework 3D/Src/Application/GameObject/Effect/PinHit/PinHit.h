@@ -25,7 +25,8 @@ public:
 
 	void Update()override;
 	void PreDraw()override;
-	void DrawEffect()override;
+	void DrawEffect()override {};
+	void DrawBright()override;
 
 private:
 
@@ -39,12 +40,12 @@ private:
 		static constexpr float ScaleMultiChangeSpeed = 0.7f;
 
 		// パーティクル召喚数
-		static constexpr int HitParticleSpawnMin = 70;
-		static constexpr int HitParticleSpawnMax = 130;
+		static constexpr int HitParticleSpawnMin = 15;
+		static constexpr int HitParticleSpawnMax = 30;
 
 		// パーティクルの速度
 		static constexpr float HitParticleSpeedMin = 1.5f;
-		static constexpr float HitParticleSpeedMax = 3.5f;
+		static constexpr float HitParticleSpeedMax = 15.0f;
 
 		// パーティクルスケール
 		static constexpr int HitParticleScaleRandNum = 3;

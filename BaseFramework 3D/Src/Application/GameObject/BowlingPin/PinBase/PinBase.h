@@ -87,9 +87,6 @@ protected:
 	// 移動中かを確認
 	bool CheckIsMoving();
 
-	// Y座標のボーダーラインをチェック
-	void CheckYBorder();
-
 	//物理コンポーネント
 	std::shared_ptr<PhysicsComponent> m_cPhysics;
 

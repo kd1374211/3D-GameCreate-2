@@ -36,7 +36,7 @@ void PinHit::PreDraw()
 	m_mWorld = scale * rotat * trans;
 }
 
-void PinHit::DrawEffect()
+void PinHit::DrawBright()
 {
 	// 消滅済みか
 	if (m_isExpired)return;
@@ -54,7 +54,8 @@ void PinHit::DrawEffect()
 		isDSSChanged = true;
 	}
 
-	KdShaderManager::Instance().m_StandardShader.DrawPolygon(*m_data.m_polygon, m_mWorld, Math::Color(1.0f, 1.0f, 1.0f, m_alpha));
+	static float alpha = KdRandom::GetInt(3, 7) / 10.0f;
+	KdShaderManager::Instance().m_StandardShader.DrawPolygon(*m_data.m_polygon, m_mWorld, Math::Color(alpha, alpha, alpha, m_alpha));
 
 	// パーティクルを表示する
 	for (const auto& particle : m_particles)
@@ -68,13 +69,14 @@ void PinHit::DrawEffect()
 		m_particleColorTex->SetUVRect(particle.m_type);
 
 		// 描画
-		KdShaderManager::Instance().m_StandardShader.DrawPolygon(*m_particleColorTex, mat, Math::Color(1.0f, 1.0f, 1.0f, m_alpha));
+		alpha = KdRandom::GetInt(3, 7) / 10.0f;
+		KdShaderManager::Instance().m_StandardShader.DrawPolygon(*m_particleColorTex, mat, Math::Color(alpha, alpha, alpha, m_alpha));
 	}
 
 	// 切り替えられていたら戻す
 	if (isDSSChanged)
 	{
-		KdShaderManager::Instance().ChangeDepthStencilState(KdDepthStencilState::ZEnable);
+		KdShaderManager::Instance().UndoDepthStencilState();
 	}
 }
 
