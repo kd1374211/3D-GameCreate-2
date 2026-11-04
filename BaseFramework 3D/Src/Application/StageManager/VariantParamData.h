@@ -7,6 +7,11 @@ struct FinishAreaParams
 	// 位置・サイズ・回転のみなので固有パラメータは空でOK
 };
 
+struct SpeedUpAreaParams
+{
+	// 位置・サイズ・回転のみなので固有パラメータは空でOK
+};
+
 struct RotatingParams
 {
 	std::string m_modelPath = "Asset/Models/Terrain/StageGimmicks/RotatingWall1/RotatingWall1.gltf";
@@ -28,4 +33,4 @@ struct MovingParams
 };
 
 // 3. バリアント型の定義
-using GimmickParam = std::variant<FinishAreaParams, RotatingParams, MovingParams>;
+using GimmickParam = std::variant<FinishAreaParams, SpeedUpAreaParams, RotatingParams, MovingParams>;

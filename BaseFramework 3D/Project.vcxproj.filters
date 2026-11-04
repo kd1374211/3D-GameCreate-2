@@ -142,17 +142,11 @@
     <Filter Include="Src\Application\GameObject\UI\SceneUIObjects\Game">
       <UniqueIdentifier>{9fa9667a-6dfc-4be7-8c94-b793920180a5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Src\Application\GameObject\SkySphere">
-      <UniqueIdentifier>{4e5ff77b-897d-4bd0-b02b-2c6ee8ee7c45}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Src\Application\GameObject\Camera\StageViewCamera">
       <UniqueIdentifier>{d75b1193-1036-48d8-9753-9daaa77bc08a}</UniqueIdentifier>
     </Filter>
     <Filter Include="Src\Application\FadeManager">
       <UniqueIdentifier>{f78b039e-913d-40ff-945f-de3c2dbeff14}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src\Application\GameObject\Terrain\FinishArea">
-      <UniqueIdentifier>{49912c77-120c-452a-b8d9-ddfa0b607f65}</UniqueIdentifier>
     </Filter>
     <Filter Include="Src\Application\GameObject\Camera\PointTargetCamera">
       <UniqueIdentifier>{27017a5a-89a0-454c-855f-4b8a95646228}</UniqueIdentifier>
@@ -174,12 +168,6 @@
     </Filter>
     <Filter Include="Src\Application\Component\CharaHandler">
       <UniqueIdentifier>{44afc1d6-86a3-435a-9ead-0d1424019bd3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src\Application\GameObject\Terrain\MovingTerrain">
-      <UniqueIdentifier>{c79457ae-6440-42b7-b597-739a7aa98538}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src\Application\GameObject\Terrain\RotatingTerrain">
-      <UniqueIdentifier>{2dd8dc59-b4a0-48a3-9f0e-e4ba3f671281}</UniqueIdentifier>
     </Filter>
     <Filter Include="Src\Application\GameObject\UI\ShotUI">
       <UniqueIdentifier>{607abea6-2bf0-4254-8291-396fd40cbe7c}</UniqueIdentifier>
@@ -231,6 +219,27 @@
     </Filter>
     <Filter Include="Src\Application\Component\ThrowEndChecker">
       <UniqueIdentifier>{94f98501-6069-4fe2-a0a0-cba6a021a592}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\GameObject\Terrain\Gimmicks">
+      <UniqueIdentifier>{2300d3ed-1b13-4edf-bd61-a65f5e867405}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\GameObject\Terrain\Gimmicks\MovingTerrain">
+      <UniqueIdentifier>{c79457ae-6440-42b7-b597-739a7aa98538}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\GameObject\Terrain\Gimmicks\RotatingTerrain">
+      <UniqueIdentifier>{2dd8dc59-b4a0-48a3-9f0e-e4ba3f671281}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\GameObject\Terrain\Gimmicks\FinishArea">
+      <UniqueIdentifier>{49912c77-120c-452a-b8d9-ddfa0b607f65}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\GameObject\Terrain\SkySphere">
+      <UniqueIdentifier>{4e5ff77b-897d-4bd0-b02b-2c6ee8ee7c45}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\GameObject\Terrain\Gimmicks\SpeedUpArea">
+      <UniqueIdentifier>{a3cae168-462d-4b28-b683-8ba1f2318e3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\GameObject\Effect\PinHitParticle">
+      <UniqueIdentifier>{f904a861-63b4-4111-8bcd-a87a32fe9665}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1542,9 +1551,6 @@
     <ClInclude Include="Src\Application\StageManager\StageManager.h">
       <Filter>Src\Application\StageManager</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Application\StageManager\StageObjectInclude.h">
-      <Filter>Src\Application\StageManager</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Application\Scene\StageSelectScene\StageSelectScene.h">
       <Filter>Src\Application\Scene\StageSelectScene</Filter>
     </ClInclude>
@@ -1563,17 +1569,11 @@
     <ClInclude Include="Src\Application\GameObject\UI\SceneUIObjects\Game\GameUIObjects.h">
       <Filter>Src\Application\GameObject\UI\SceneUIObjects\Game</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Application\GameObject\SkySphere\SkySphere.h">
-      <Filter>Src\Application\GameObject\SkySphere</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Application\GameObject\Camera\StageViewCamera\StageViewCamera.h">
       <Filter>Src\Application\GameObject\Camera\StageViewCamera</Filter>
     </ClInclude>
     <ClInclude Include="Src\Application\FadeManager\FadeManager.h">
       <Filter>Src\Application\FadeManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Application\GameObject\Terrain\FinishArea\FinishArea.h">
-      <Filter>Src\Application\GameObject\Terrain\FinishArea</Filter>
     </ClInclude>
     <ClInclude Include="Src\Application\GameObject\Camera\PointTargetCamera\PointTargetCamera.h">
       <Filter>Src\Application\GameObject\Camera\PointTargetCamera</Filter>
@@ -1607,12 +1607,6 @@
     </ClInclude>
     <ClInclude Include="Src\Application\Const\DeviceAndKey.h">
       <Filter>Src\Application\Const</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Application\GameObject\Terrain\MovingTerrain\MovingTerrain.h">
-      <Filter>Src\Application\GameObject\Terrain\MovingTerrain</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Application\GameObject\Terrain\RotatingTerrain\RotatingTerrain.h">
-      <Filter>Src\Application\GameObject\Terrain\RotatingTerrain</Filter>
     </ClInclude>
     <ClInclude Include="Src\Application\StageManager\VariantParamData.h">
       <Filter>Src\Application\StageManager</Filter>
@@ -1682,6 +1676,27 @@
     </ClInclude>
     <ClInclude Include="Src\Application\Component\ThrowEndChecker\ThrowEndChecker.h">
       <Filter>Src\Application\Component\ThrowEndChecker</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\Terrain\Gimmicks\FinishArea\FinishArea.h">
+      <Filter>Src\Application\GameObject\Terrain\Gimmicks\FinishArea</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\Terrain\Gimmicks\MovingTerrain\MovingTerrain.h">
+      <Filter>Src\Application\GameObject\Terrain\Gimmicks\MovingTerrain</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\Terrain\Gimmicks\RotatingTerrain\RotatingTerrain.h">
+      <Filter>Src\Application\GameObject\Terrain\Gimmicks\RotatingTerrain</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\Terrain\StageObjectInclude.h">
+      <Filter>Src\Application\GameObject\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\Terrain\SkySphere\SkySphere.h">
+      <Filter>Src\Application\GameObject\Terrain\SkySphere</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\Terrain\Gimmicks\SpeedUpArea\SpeedUpArea.h">
+      <Filter>Src\Application\GameObject\Terrain\Gimmicks\SpeedUpArea</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\Effect\PinHitParticle\PinHitParticle.h">
+      <Filter>Src\Application\GameObject\Effect\PinHitParticle</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -2336,17 +2351,11 @@
     <ClCompile Include="Src\Application\GameObject\UI\SceneUIObjects\Game\GameUIObjects.cpp">
       <Filter>Src\Application\GameObject\UI\SceneUIObjects\Game</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Application\GameObject\SkySphere\SkySphere.cpp">
-      <Filter>Src\Application\GameObject\SkySphere</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Application\GameObject\Camera\StageViewCamera\StageViewCamera.cpp">
       <Filter>Src\Application\GameObject\Camera\StageViewCamera</Filter>
     </ClCompile>
     <ClCompile Include="Src\Application\FadeManager\FadeManager.cpp">
       <Filter>Src\Application\FadeManager</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Application\GameObject\Terrain\FinishArea\FinishArea.cpp">
-      <Filter>Src\Application\GameObject\Terrain\FinishArea</Filter>
     </ClCompile>
     <ClCompile Include="Src\Application\GameObject\Camera\PointTargetCamera\PointTargetCamera.cpp">
       <Filter>Src\Application\GameObject\Camera\PointTargetCamera</Filter>
@@ -2368,12 +2377,6 @@
     </ClCompile>
     <ClCompile Include="Src\Application\Component\CharaHandler\CharaHandler.cpp">
       <Filter>Src\Application\Component\CharaHandler</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Application\GameObject\Terrain\MovingTerrain\MovingTerrain.cpp">
-      <Filter>Src\Application\GameObject\Terrain\MovingTerrain</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Application\GameObject\Terrain\RotatingTerrain\RotatingTerrain.cpp">
-      <Filter>Src\Application\GameObject\Terrain\RotatingTerrain</Filter>
     </ClCompile>
     <ClCompile Include="Src\Application\GameObject\UI\ShotUI\ShotCursor\ShotCursor.cpp">
       <Filter>Src\Application\GameObject\UI\ShotUI\ShotCursor</Filter>
@@ -2428,6 +2431,24 @@
     </ClCompile>
     <ClCompile Include="Src\Application\Component\ThrowEndChecker\ThrowEndChecker.cpp">
       <Filter>Src\Application\Component\ThrowEndChecker</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\Terrain\Gimmicks\FinishArea\FinishArea.cpp">
+      <Filter>Src\Application\GameObject\Terrain\Gimmicks\FinishArea</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\Terrain\Gimmicks\MovingTerrain\MovingTerrain.cpp">
+      <Filter>Src\Application\GameObject\Terrain\Gimmicks\MovingTerrain</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\Terrain\Gimmicks\RotatingTerrain\RotatingTerrain.cpp">
+      <Filter>Src\Application\GameObject\Terrain\Gimmicks\RotatingTerrain</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\Terrain\SkySphere\SkySphere.cpp">
+      <Filter>Src\Application\GameObject\Terrain\SkySphere</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\Terrain\Gimmicks\SpeedUpArea\SpeedUpArea.cpp">
+      <Filter>Src\Application\GameObject\Terrain\Gimmicks\SpeedUpArea</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\Effect\PinHitParticle\PinHitParticle.cpp">
+      <Filter>Src\Application\GameObject\Effect\PinHitParticle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

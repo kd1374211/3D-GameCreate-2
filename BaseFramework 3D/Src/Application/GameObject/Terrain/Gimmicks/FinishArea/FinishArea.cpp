@@ -1,7 +1,7 @@
 ﻿#include "FinishArea.h"
-#include "../../../StageManager/StageManager.h"
-#include "../../../Scene/SceneManager.h"
-#include "../../../Const/Function.h"
+#include "../../../../StageManager/StageManager.h"
+#include "../../../../Scene/SceneManager.h"
+#include "../../../../Const/Function.h"
 
 FinishArea::FinishArea(Math::Vector3 pos, Math::Vector3 rot, Math::Vector3 size)
 {

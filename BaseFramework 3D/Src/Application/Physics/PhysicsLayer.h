@@ -7,9 +7,10 @@ namespace Layers
 	static constexpr JPH::ObjectLayer TERRAIN = 0;
 	static constexpr JPH::ObjectLayer TERRAIN_ISLAND = 1;
 	static constexpr JPH::ObjectLayer FINISHAREA = 2;
-	static constexpr JPH::ObjectLayer BOWLINGBALL = 3;
-	static constexpr JPH::ObjectLayer BOWLINGPIN = 4;
-	static constexpr JPH::ObjectLayer NUM_LAYERS = 5;
+	static constexpr JPH::ObjectLayer SPEEDUPAREA = 3;
+	static constexpr JPH::ObjectLayer BOWLINGBALL = 4;
+	static constexpr JPH::ObjectLayer BOWLINGPIN = 5;
+	static constexpr JPH::ObjectLayer NUM_LAYERS = 6;
 
 	// ブロードフェーズレイヤー（大雑把な分類）
 	static constexpr JPH::BroadPhaseLayer BP_NON_MOVING(0);
@@ -51,7 +52,7 @@ class SolidOnlyObjectFilter : public JPH::ObjectLayerFilter
 public:
 	virtual bool ShouldCollide(JPH::ObjectLayer inLayer) const override
 	{
-		return inLayer != Layers::FINISHAREA;
+		return inLayer != Layers::FINISHAREA && inLayer != Layers::SPEEDUPAREA;
 	}
 };
 
@@ -95,11 +96,12 @@ public:
 		case Layers::TERRAIN_ISLAND:
 			return inObject2 == Layers::BOWLINGBALL||inObject2 == Layers::BOWLINGPIN; // 地形は動くものと当たる
 		case Layers::FINISHAREA:
+		case Layers::SPEEDUPAREA:
 			return inObject2 == Layers::BOWLINGBALL;
 		case Layers::BOWLINGBALL:
 			return true; // プレイヤーはそのまま
 		case Layers::BOWLINGPIN:
-			return inObject2 != Layers::FINISHAREA;
+			return inObject2 != Layers::FINISHAREA && inObject2 != Layers::SPEEDUPAREA;
 		default:
 			return false;
 		}
@@ -117,6 +119,7 @@ public:
 		mObjectToBroadPhase[Layers::TERRAIN] = Layers::BP_NON_MOVING;
 		mObjectToBroadPhase[Layers::TERRAIN_ISLAND] = Layers::BP_NON_MOVING;
 		mObjectToBroadPhase[Layers::FINISHAREA] = Layers::BP_NON_MOVING;
+		mObjectToBroadPhase[Layers::SPEEDUPAREA] = Layers::BP_NON_MOVING;
 		mObjectToBroadPhase[Layers::BOWLINGBALL] = Layers::BP_MOVING;
 		mObjectToBroadPhase[Layers::BOWLINGPIN] = Layers::BP_MOVING;
 	}
@@ -159,6 +162,7 @@ public:
 		case Layers::TERRAIN:
 		case Layers::TERRAIN_ISLAND:
 		case Layers::FINISHAREA:
+		case Layers::SPEEDUPAREA:
 			return inLayer2 == Layers::BP_MOVING; // 動かないグループは、動くグループとだけ衝突する
 		case Layers::BOWLINGBALL:
 		case Layers::BOWLINGPIN:

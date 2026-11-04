@@ -1,6 +1,6 @@
 ﻿#include "RotatingTerrain.h"
-#include "../../../StageManager/StageManager.h"
-#include "../../../Const/Function.h"
+#include "../../../../StageManager/StageManager.h"
+#include "../../../../Const/Function.h"
 
 RotatingTerrain::RotatingTerrain(std::string modelPath, Math::Vector3 pos, Math::Vector3 rot, Math::Vector3 sca, float degPerSec)
 {

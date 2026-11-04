@@ -1,6 +1,6 @@
 ﻿#pragma once
-#include "../TerrainBase.h"
-#include "../../../StageManager/VariantParamData.h"
+#include "../../TerrainBase.h"
+#include "../../../../StageManager/VariantParamData.h"
 
 class MovingTerrain :public TerrainBase
 {

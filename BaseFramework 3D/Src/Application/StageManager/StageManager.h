@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "StageObjectInclude.h"
+#include "../GameObject/Terrain/StageObjectInclude.h"
 #include "../Const/BowlingSystemConst.h"
 #include "../Const/PinTypes.h"
 #include "VariantParamData.h"
@@ -66,6 +66,7 @@ struct StageOverallData
 enum class GimmickType
 {
 	FinishArea,
+	SpeedUpArea,
 	RotatingTerrain,
 	MovingTerrain,
 	Error = 999

@@ -17,6 +17,9 @@ public:
 	void SetRot(const Math::Vector3& rot) { m_rot = rot; }
 	void SetScaleMulti(float scale) { m_scaleMulti = scale; }
 
+	// セット後に行う処理
+	virtual void PostSetInit() {};
+
 protected:
 
 	// 現在のデータにUVを更新

@@ -448,9 +448,12 @@ void BowlingBall::Throw(const Math::Vector3& startPos, const Math::Vector3& dire
 	// 1.物理を一度止める
 	DeactivateBody();
 
+	Math::Quaternion quat = ConvertEulerVec3ToQuat(direction);
+	JPH::Quat joltQuat = JPH::Quat(quat.x, quat.y, quat.z, quat.w);
+
 	// 2. 受け取った投球位置へ移動
 	m_cPhysics->SetPosition(JPH::Vec3(startPos.x, startPos.y, startPos.z));
-	m_cPhysics->SetRotation(JPH::Quat::sIdentity());
+	m_cPhysics->SetRotation(joltQuat);
 
 	// 3. 物理ボディをアクティブ化（描画フラグ等があればそれもON）
 	ActivateBody();

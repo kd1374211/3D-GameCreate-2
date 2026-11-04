@@ -21,7 +21,7 @@ void EffectManager::PreUpdate()
 	KdDebugGUI::Instance().AddLog("EffectListSize : %d\n", m_wpEffectList.size());
 }
 
-void EffectManager::SpawnEffect(const Math::Vector3& pos, const Math::Vector3& rot, float scaleMulti, EffectType type)
+std::shared_ptr<EffectBase> EffectManager::SpawnEffect(const Math::Vector3& pos, const Math::Vector3& rot, float scaleMulti, EffectType type)
 {
 	std::shared_ptr<EffectBase> effectObj;
 	switch (type)
@@ -29,13 +29,16 @@ void EffectManager::SpawnEffect(const Math::Vector3& pos, const Math::Vector3& r
 	case EffectType::HitImpact:
 		effectObj = std::make_shared<PinHit>();
 		break;
+	case EffectType::HitParticle:
+		effectObj = std::make_shared<PinHitParticle>();
+		break;
 	case EffectType::LandingAndWallHit:
 		effectObj = std::make_shared<Landing>();
 		break;
 	case EffectType::Confetti:
 		// これは別枠
 		SpawnConfettiSpawner();
-		return;
+		return nullptr;
 	case EffectType::Smoke:
 		effectObj = std::make_shared<Smoke>();
 		break;
@@ -47,11 +50,18 @@ void EffectManager::SpawnEffect(const Math::Vector3& pos, const Math::Vector3& r
 		effectObj->SetPos(pos);
 		effectObj->SetRot(rot);
 		effectObj->SetScaleMulti(scaleMulti);
+
+		// セット後Init
+		effectObj->PostSetInit();
+
 		SCENEMGR.AddObject(effectObj);
 
 		// リストに追加
 		m_wpEffectList.push_back(effectObj);
 	}
+
+	// 生成したオブジェクトをリターン
+	return effectObj;
 }
 
 void EffectManager::ClearActiveEffect()

@@ -88,6 +88,12 @@ bool StageManager::SaveStage(const std::string& filePath)
 
 				}
 				break;
+			case GimmickType::SpeedUpArea:
+				if (auto* param = std::get_if<SpeedUpAreaParams>(&gimmick.m_param))
+				{
+
+				}
+				break;
 			case GimmickType::RotatingTerrain:
 				// データ確認
 				if (auto* param = std::get_if<RotatingParams>(&gimmick.m_param))

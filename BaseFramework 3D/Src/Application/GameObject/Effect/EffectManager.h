@@ -3,6 +3,7 @@
 enum class EffectType
 {
 	HitImpact,
+	HitParticle,
 	LandingAndWallHit,
 	Confetti,
 	Smoke,
@@ -33,7 +34,7 @@ public:
 	void PreUpdate();
 
 	// エフェクト召喚
-	void SpawnEffect(const Math::Vector3& pos, const Math::Vector3& rot, float scaleMulti, EffectType type);
+	std::shared_ptr<EffectBase> SpawnEffect(const Math::Vector3& pos, const Math::Vector3& rot, float scaleMulti, EffectType type);
 
 	// エフェクト全削除
 	void ClearActiveEffect();

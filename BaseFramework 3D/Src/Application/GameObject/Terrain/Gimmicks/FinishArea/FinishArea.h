@@ -1,6 +1,6 @@
 ﻿#pragma once
-#include "../TerrainBase.h"
-#include "../../../Component/PhysicsComponent/PhysicsComponent.h"
+#include "../../TerrainBase.h"
+#include "../../../../Component/PhysicsComponent/PhysicsComponent.h"
 
 class FinishArea :public TerrainBase
 {

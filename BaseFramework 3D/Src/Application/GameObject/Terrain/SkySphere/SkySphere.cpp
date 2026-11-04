@@ -1,5 +1,5 @@
 ﻿#include "SkySphere.h"
-#include "../../Scene/SceneManager.h"
+#include "../../../Scene/SceneManager.h"
 
 SkySphere::SkySphere(std::string modelPath)
 {

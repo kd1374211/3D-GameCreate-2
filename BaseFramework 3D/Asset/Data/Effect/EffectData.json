@@ -7,11 +7,21 @@
 			"splitX": 1,
 			"splitY": 1,
 			"scale": 1.5,
-			"animSpeed": 0.5,
+			"animSpeed": 20.0,
 			"isLoop": false
 		},
 		{
 			"effectID": 1,
+			"texPath": "Asset/Textures/Effect/PinHit/PinHitParticles.png",
+			"pivotType": 11,
+			"splitX": 2,
+			"splitY": 1,
+			"scale": 0.1,
+			"animSpeed": 1.0,
+			"isLoop": false
+		},
+		{
+			"effectID": 2,
 			"texPath": "Asset/Textures/Effect/Landing/LandingSmoke.png",
 			"pivotType": 11,
 			"splitX": 6,
@@ -21,7 +31,7 @@
 			"isLoop": false
 		},
 		{
-			"effectID": 2,
+			"effectID": 3,
 			"texPath": "Asset/Textures/Effect/Confetti/RandomColoredSquare.png",
 			"pivotType": 11,
 			"splitX": 1,
@@ -31,7 +41,7 @@
 			"isLoop": true
 		},
 		{
-			"effectID": 3,
+			"effectID": 4,
 			"texPath": "Asset/Textures/Effect/Smoke/Smoke.png",
 			"pivotType": 11,
 			"splitX": 5,

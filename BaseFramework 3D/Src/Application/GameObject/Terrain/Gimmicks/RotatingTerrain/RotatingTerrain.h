@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "../TerrainBase.h"
+#include "../../TerrainBase.h"
 
 class RotatingTerrain :public TerrainBase
 {

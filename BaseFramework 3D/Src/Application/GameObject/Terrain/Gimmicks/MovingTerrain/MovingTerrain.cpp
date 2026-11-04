@@ -1,7 +1,7 @@
 ﻿#include "MovingTerrain.h"
-#include "../../../StageManager/StageManager.h"
-#include "../../../Const/Function.h"
-#include "../../../Scene/SceneManager.h"
+#include "../../../../StageManager/StageManager.h"
+#include "../../../../Const/Function.h"
+#include "../../../../Scene/SceneManager.h"
 
 MovingTerrain::MovingTerrain(Math::Vector3 pos, Math::Vector3 rot, Math::Vector3 sca, MovingParams param)
 {

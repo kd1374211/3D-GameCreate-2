@@ -1,28 +1,7 @@
 ﻿#include "PinHit.h"
 #include "../../../Scene/SceneManager.h"
-
-void PinHit::Update()
-{
-	// 本体のUpdateを呼ぶ
-	EffectBase::Update();
-
-	// gdt取得
-	float gameDt = SCENEMGR.GetDeltaGameTime();
-
-	// アルファ減少
-	m_alpha += gameDt * PinHitConsts::AlphaChangeSpeed;
-	m_alpha = std::clamp(m_alpha, 0.0f, 1.0f);
-
-	// サイズ拡大
-	m_scaleMulti += gameDt * PinHitConsts::ScaleMultiChangeSpeed;
-
-	// パーティクル更新
-	for (auto& particle : m_particles)
-	{
-		// 移動
-		particle.m_localPos += gameDt * particle.m_moveSpeed;
-	}
-}
+#include "../EffectManager.h"
+#include "../PinHitParticle/PinHitParticle.h"
 
 void PinHit::PreDraw()
 {
@@ -44,57 +23,18 @@ void PinHit::DrawBright()
 	// Rect合わせ
 	SetUVRect();
 
-	// 深度情報が切り替えられたか
-	bool isDSSChanged = false;
-
-	// Z描画計算無効化
-	if (m_alpha < 0.9f)
-	{
-		KdShaderManager::Instance().ChangeDepthStencilState(KdDepthStencilState::ZWriteDisable);
-		isDSSChanged = true;
-	}
-
 	static float alpha = KdRandom::GetInt(3, 7) / 10.0f;
-	KdShaderManager::Instance().m_StandardShader.DrawPolygon(*m_data.m_polygon, m_mWorld, Math::Color(alpha, alpha, alpha, m_alpha));
-
-	// パーティクルを表示する
-	for (const auto& particle : m_particles)
-	{
-		Math::Matrix trans = Math::Matrix::CreateTranslation(m_pos + particle.m_localPos);
-		Math::Matrix rotat = Math::Matrix::CreateFromYawPitchRoll(m_mWorld.Backward());
-		Math::Matrix scale = Math::Matrix::CreateScale(particle.m_scale * m_scaleMulti);
-		Math::Matrix mat = scale * rotat * trans;
-
-		// UV変更
-		m_particleColorTex->SetUVRect(particle.m_type);
-
-		// 描画
-		alpha = KdRandom::GetInt(3, 7) / 10.0f;
-		KdShaderManager::Instance().m_StandardShader.DrawPolygon(*m_particleColorTex, mat, Math::Color(alpha, alpha, alpha, m_alpha));
-	}
-
-	// 切り替えられていたら戻す
-	if (isDSSChanged)
-	{
-		KdShaderManager::Instance().UndoDepthStencilState();
-	}
+	KdShaderManager::Instance().m_StandardShader.DrawPolygon(*m_data.m_polygon, m_mWorld, Math::Color(alpha, alpha, alpha, 1.0f));
 }
 
-void PinHit::Init()
+void PinHit::PostSetInit()
 {
-	// マネージャー経由でデータ取得
-	m_data = EFFECTMGR.GetEffectData(EffectType::HitImpact);
-
-	// 本体のInitを呼ぶ
-	EffectBase::Init();
-
 	// ランダムにパーティクル召喚
 	const int ParticleSpawnCnt = KdRandom::GetInt(PinHitConsts::HitParticleSpawnMin, PinHitConsts::HitParticleSpawnMax);
 	for (int i = 0; i < ParticleSpawnCnt; i++)
 	{
 		// データ
 		ParticleData data = {};
-		data.m_localPos = Math::Vector3::Zero;
 
 		// 速度ランダム
 		const float MoveSpeed = KdRandom::GetFloat(PinHitConsts::HitParticleSpeedMin, PinHitConsts::HitParticleSpeedMax);
@@ -111,14 +51,23 @@ void PinHit::Init()
 
 		// サイズランダム
 		int randIdx = KdRandom::GetInt(1, PinHitConsts::HitParticleScaleRandNum) - 1;
-		data.m_scale = PinHitConsts::HitParticleScale[randIdx];
+		float scale = PinHitConsts::HitParticleScale[randIdx];
 
-		// 格納
-		m_particles.push_back(data);
+		// 召喚とインスタンス回収
+		const std::shared_ptr<PinHitParticle> particle = std::dynamic_pointer_cast<PinHitParticle>(EFFECTMGR.SpawnEffect(m_pos, m_rot, scale, EffectType::HitParticle));
+		if (particle)
+		{
+			// 他の値を入れる
+			particle->SetParticleData(data);
+		}
 	}
+}
 
-	// パーティクル用
-	m_particleColorTex = std::make_shared<KdSquarePolygon>();
-	m_particleColorTex->SetMaterial("Asset/Textures/Effect/PinHit/PinHitParticles.png");
-	m_particleColorTex->SetSplit(2, 1);
+void PinHit::Init()
+{
+	// マネージャー経由でデータ取得
+	m_data = EFFECTMGR.GetEffectData(EffectType::HitImpact);
+
+	// 本体のInitを呼ぶ
+	EffectBase::Init();
 }
