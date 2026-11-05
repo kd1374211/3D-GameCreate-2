@@ -3,6 +3,9 @@
 // --- ① レイヤーの定義 ---
 namespace Layers
 {
+	// memo
+	// island消す
+
 	// オブジェクトレイヤー（細かな分類）
 	static constexpr JPH::ObjectLayer TERRAIN = 0;
 	static constexpr JPH::ObjectLayer TERRAIN_ISLAND = 1;

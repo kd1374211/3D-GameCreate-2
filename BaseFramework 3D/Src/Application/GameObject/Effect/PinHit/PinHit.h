@@ -21,12 +21,12 @@ private:
 	struct PinHitConsts
 	{
 		// パーティクル召喚数
-		static constexpr int HitParticleSpawnMin = 15;
-		static constexpr int HitParticleSpawnMax = 30;
+		static constexpr int HitParticleSpawnMin = 5;
+		static constexpr int HitParticleSpawnMax = 15;
 
 		// パーティクルの速度
 		static constexpr float HitParticleSpeedMin = 1.5f;
-		static constexpr float HitParticleSpeedMax = 15.0f;
+		static constexpr float HitParticleSpeedMax = 5.0f;
 
 		// パーティクルスケール
 		static constexpr int HitParticleScaleRandNum = 3;

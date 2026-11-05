@@ -12,6 +12,7 @@
 #include "../../../Sound/SoundManager.h"
 #include "../../UI/SceneUIObjects/Game/GameUIObjects.h"
 #include "../../../Const/DeviceAndKey.h"
+#include "../../../Const/PhysicsMaterialConsts.h"
 
 BowlingBall::BowlingBall()
 {
@@ -680,6 +681,43 @@ void BowlingBall::UpdateRollingResistance(float resistPower)
 	if (resistPower > 0.0f && resistPower > m_rollingResistance)
 	{
 		m_rollingResistance = resistPower;
+	}
+}
+
+void BowlingBall::OnContactAdded(JPH::ObjectLayer layer, const std::string& matName, JPH::Vec3 velocity, JPH::Vec3 pos, JPH::Vec3 normal)
+{
+	// 速度の更新等はコンタクトリスナー側でやっている
+
+	// レイヤーごとの処理
+	switch (layer)
+	{
+	case Layers::TERRAIN:
+		// マテリアル名を確認
+		if (MaterialNameCheck::IsGround(matName))
+		{
+			// Y方向の速度を取得
+			float velY = velocity.GetY();
+
+			// 接地処理
+			HitGround(matName, velY, pos, normal);
+		}
+		else if(MaterialNameCheck::IsWall(matName))
+		{
+			// 壁に当たった
+			HitWall(matName, velocity.Length(), pos, normal);
+		}
+		break;
+	case Layers::TERRAIN_ISLAND:
+		break;
+	case Layers::FINISHAREA:
+		break;
+	case Layers::SPEEDUPAREA:
+		break;
+	case Layers::BOWLINGPIN:
+		break;
+	// その他のレイヤーは無視
+	default:
+		return;
 	}
 }
 

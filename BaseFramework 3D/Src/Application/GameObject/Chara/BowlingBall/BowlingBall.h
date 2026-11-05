@@ -6,6 +6,7 @@ class ShotCursor;
 class ShotPowerBar;
 class GameUIObjects;
 
+
 class BowlingBall :public KdGameObject
 {
 public:
@@ -68,6 +69,9 @@ public:
 
 	// ゲームUI設定
 	void SetGameUI(const std::shared_ptr<GameUIObjects>& gameUI) { m_wpGameUI = gameUI; }
+
+	// 当たり処理をまとめる
+	void OnContactAdded(JPH::ObjectLayer layer, const std::string& matName, JPH::Vec3 velocity, JPH::Vec3 pos, JPH::Vec3 normal);
 
 private:
 
