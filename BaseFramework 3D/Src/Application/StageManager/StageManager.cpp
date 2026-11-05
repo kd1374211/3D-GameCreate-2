@@ -274,6 +274,12 @@ bool StageManager::LoadStage(const std::string& filePath)
 							gimmickData.m_param = param;
 							break;
 						}	
+					case GimmickType::SpeedUpArea:
+						{
+							SpeedUpAreaParams param;
+							gimmickData.m_param = param;
+							break;
+						}
 					case GimmickType::RotatingTerrain:
 						{
 							RotatingParams param;
@@ -511,6 +517,13 @@ void StageManager::BuildGimmicks(int laneNumber)
 			if (auto* param = std::get_if<FinishAreaParams>(&gimmickData.m_param))
 			{
 				gimmickObj = std::make_shared<FinishArea>(gimmickData.m_data.m_position, gimmickData.m_data.m_rotation, gimmickData.m_data.m_scale);
+				isValidType = true;
+			}
+			break;
+		case GimmickType::SpeedUpArea:
+			if (auto* param = std::get_if<SpeedUpAreaParams>(&gimmickData.m_param))
+			{
+				gimmickObj = std::make_shared<SpeedUpArea>(gimmickData.m_data.m_position, gimmickData.m_data.m_rotation, gimmickData.m_data.m_scale);
 				isValidType = true;
 			}
 			break;

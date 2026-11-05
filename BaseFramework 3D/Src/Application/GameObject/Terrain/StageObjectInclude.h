@@ -9,6 +9,7 @@
 #include "Gimmicks/RotatingTerrain/RotatingTerrain.h"
 #include "Gimmicks/MovingTerrain/MovingTerrain.h"
 #include "Gimmicks/FinishArea/FinishArea.h"
+#include "Gimmicks/SpeedUpArea/SpeedUpArea.h"
 
 //天球
 #include "SkySphere/SkySphere.h"

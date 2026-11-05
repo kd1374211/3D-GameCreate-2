@@ -140,6 +140,15 @@ void GameContactListener::OnContactAdded(const JPH::Body& inBody1, const JPH::Bo
 		}
 	}
 
+	// SpeedUp & Player
+	if (layer1 == Layers::SPEEDUPAREA && layer2 == Layers::BOWLINGBALL)
+	{
+		if (auto ball = dynamic_cast<BowlingBall*>(gameObj2))
+		{
+			ball->HitSpeedUpArea();
+		}
+	}
+
 	// Player & Pin
 	if (layer1 == Layers::BOWLINGBALL && layer2 == Layers::BOWLINGPIN)
 	{
@@ -301,6 +310,15 @@ void GameContactListener::OnContactPersisted(const JPH::Body& inBody1, const JPH
 		if (auto ball = dynamic_cast<BowlingBall*>(gameObj2))
 		{
 			ball->HitFinishArea();
+		}
+	}
+
+	// SpeedUp & Player
+	if (layer1 == Layers::SPEEDUPAREA && layer2 == Layers::BOWLINGBALL)
+	{
+		if (auto ball = dynamic_cast<BowlingBall*>(gameObj2))
+		{
+			ball->HitSpeedUpArea();
 		}
 	}
 

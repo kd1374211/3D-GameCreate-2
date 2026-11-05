@@ -43,6 +43,8 @@ public:
 
 	// ゴールに触れた
 	void HitFinishArea();
+	// 加速エリアに触れた
+	void HitSpeedUpArea();
 	// 地面に触れた
 	void HitGround(const std::string& matName, float velocityY, JPH::Vec3 pos, JPH::Vec3 normal);
 	// 壁に触れた
@@ -128,6 +130,12 @@ private:
 		// 煙のサイズ	
 		static constexpr int SmokeSizeNum = 3;
 		static constexpr float SmokeSize[SmokeSizeNum] = { 1.0f,1.5f,2.0f };
+
+		// 加速床の加速倍率
+		static constexpr float SpeedUpAreaMulti = 5.0f;
+
+		// 加速床の最大速度
+		static constexpr float SpeedUpAreaMaxSpeed = 20.0f;
 	};
 
 	// 活性化・非活性化
@@ -139,6 +147,9 @@ private:
 
 	// 減速の更新
 	void CheckRollingResistance();
+
+	// 加速床の処理
+	void CheckSpeedUpArea();
 
 	// 転がる音の管理
 	void StartRollingSound();
@@ -211,6 +222,9 @@ private:
 
 	// 壁に当たったのでAngVelの補正が必要
 	bool m_isHitWall = false;
+
+	// このフレームで加速エリアに触れたか
+	bool m_isHitSpeedUpAreaThisFrame = false;
 
 	//↓playerクラスから移行した
 

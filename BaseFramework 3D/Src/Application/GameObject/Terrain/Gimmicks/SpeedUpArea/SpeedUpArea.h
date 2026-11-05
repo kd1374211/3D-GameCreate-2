@@ -10,10 +10,15 @@ public:
 	~SpeedUpArea()override {}
 
 	void Init()override;
+	void DrawLit()override;
+	void DrawUnLit()override;
 
 private:
 
 	//サイズ
 	Math::Vector3 m_scale = Math::Vector3::One;
+
+	// デバッグ用フレームモデル
+	std::shared_ptr<KdModelData> m_frameModel = nullptr;
 
 };

@@ -768,14 +768,11 @@ void KdDebugGUI::GuiProcess()
 
 					ImGui::SameLine();
 
-					if (ImGui::Button("+ Add Rotating Terrain", ImVec2(160, 0)))
+					if (ImGui::Button("+ Add SpeedUp Area", ImVec2(160, 0)))
 					{
 						LaneGimmickData newGimmick;
-						newGimmick.m_type = "RotatingTerrain";
-
-						// デフォルトの回転パラメータを設定
-						RotatingParams rotParam;
-						newGimmick.m_param = rotParam;
+						newGimmick.m_type = "SpeedUp";
+						newGimmick.m_param = SpeedUpAreaParams{}; // FinishArea 用パラメータ
 
 						gimmicks.push_back(newGimmick);
 
@@ -795,6 +792,27 @@ void KdDebugGUI::GuiProcess()
 						// デフォルトの移動パラメータを設定
 						MovingParams moveParam;
 						newGimmick.m_param = moveParam;
+
+						gimmicks.push_back(newGimmick);
+
+						// 追加したギミックを選択状態にする
+						selectedCategory = SelectedTargetCategory::Gimmick;
+						selectedIndex = static_cast<int>(gimmicks.size()) - 1;
+
+						// 変更を取得
+						isGimmickChanged = true;
+					}
+
+					ImGui::SameLine();
+
+					if (ImGui::Button("+ Add Rotating Terrain", ImVec2(160, 0)))
+					{
+						LaneGimmickData newGimmick;
+						newGimmick.m_type = "RotatingTerrain";
+
+						// デフォルトの回転パラメータを設定
+						RotatingParams rotParam;
+						newGimmick.m_param = rotParam;
 
 						gimmicks.push_back(newGimmick);
 

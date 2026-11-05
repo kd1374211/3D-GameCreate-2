@@ -236,6 +236,7 @@ private:
 	const std::list<GimmickTypeName> GimmickTypeNameData =
 	{
 		GimmickTypeName("Goal",GimmickType::FinishArea),
+		GimmickTypeName("SpeedUp",GimmickType::SpeedUpArea),
 		GimmickTypeName("RotatingTerrain",GimmickType::RotatingTerrain),
 		GimmickTypeName("MovingTerrain",GimmickType::MovingTerrain)
 	};

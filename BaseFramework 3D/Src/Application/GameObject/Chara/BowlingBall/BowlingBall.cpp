@@ -75,11 +75,17 @@ void BowlingBall::Update()
 	// 回転抵抗リセット前に適応
 	CheckRollingResistance();
 
+	// 加速床の処理
+	CheckSpeedUpArea();
+
 	// 接地フラグリセット
 	m_isOnGroundThisFrame = false;
 
 	// 回転抵抗リセット
 	m_rollingResistance = -1.0f;
+
+	// 加速エリアフラグリセット
+	m_isHitSpeedUpAreaThisFrame = false;
 
 	// 投げられていないとき
 	if (!m_isThrown)
@@ -351,6 +357,10 @@ void BowlingBall::PostUpdate()
 	// 3. ワールド行列の合成（旋回 → 移動)
 	m_mWorld = rotat * trans;
 
+	// DEBUG
+	KdDebugGUI::Instance().AddLog("Linear Velocity: %.2f,%.2f,%.2f\n", m_cPhysics->GetLinearVelocity().GetX(), m_cPhysics->GetLinearVelocity().GetY(), m_cPhysics->GetLinearVelocity().GetZ());
+	KdDebugGUI::Instance().AddLog("Angular Velocity: %.2f,%.2f,%.2f\n", m_cPhysics->GetAngularVelocity().GetX(), m_cPhysics->GetAngularVelocity().GetY(), m_cPhysics->GetAngularVelocity().GetZ());
+
 	// 矢印配置
 	if (m_isInputEnabled)
 	{
@@ -560,6 +570,12 @@ void BowlingBall::HitFinishArea()
 	}
 }
 
+void BowlingBall::HitSpeedUpArea()
+{
+	// このフレームで加速エリアに触れたことを通知
+	m_isHitSpeedUpAreaThisFrame = true;
+}
+
 void BowlingBall::HitGround(const std::string& matName, float velocityY, JPH::Vec3 pos, JPH::Vec3 normal)
 {
 	// 接地フラグをオン
@@ -719,6 +735,44 @@ void BowlingBall::CheckRollingResistance()
 		JPH::Vec3 angVel = m_cPhysics->GetAngularVelocity();
 		float dampingFactor = std::exp(-m_rollingResistance * gameDt);
 		m_cPhysics->SetAngularVelocity(angVel * dampingFactor);
+	}
+}
+
+void BowlingBall::CheckSpeedUpArea()
+{
+	// もし前のフレームで触れていたら
+	if (m_isHitSpeedUpAreaThisFrame)
+	{
+		// ゲームdt取得
+		float gameDt = SCENEMGR.GetDeltaGameTime();
+		// 速度を加速
+		JPH::Vec3 linearVel = m_cPhysics->GetLinearVelocity();
+		// 長さを取得
+		float speed = linearVel.Length();
+
+		// もし既に最大速度を超えていたら加速しない
+		if (speed > BowlingBallConsts::SpeedUpAreaMaxSpeed)return;
+		// 速度が少しでもなければ加速しない
+		if (speed < 0.001f)return;
+
+		// 長さを制限して加速
+		speed = std::min(speed * std::pow(BowlingBallConsts::SpeedUpAreaMulti, gameDt), BowlingBallConsts::SpeedUpAreaMaxSpeed);
+		JPH::Vec3 speedUpVel = linearVel.Normalized() * speed;
+		m_cPhysics->SetLinearVelocity(speedUpVel);
+
+		// 回転も加速
+		JPH::Vec3 angVel = m_cPhysics->GetAngularVelocity();
+		// 速度と同じく
+		float angSpeed = angVel.Length();
+
+		// もし既に最大速度を超えていたら加速しない
+		if (angSpeed > BowlingBallConsts::SpeedUpAreaMaxSpeed)return;
+		// 速度が少しでもなければ加速しない
+		if (angSpeed < 0.001f)return;
+
+		angSpeed = std::min(angSpeed * std::pow(BowlingBallConsts::SpeedUpAreaMulti, gameDt), BowlingBallConsts::SpeedUpAreaMaxSpeed);
+		JPH::Vec3 speedUpAngVel = angVel.Normalized() * angSpeed;
+		m_cPhysics->SetAngularVelocity(speedUpAngVel);
 	}
 }
 
