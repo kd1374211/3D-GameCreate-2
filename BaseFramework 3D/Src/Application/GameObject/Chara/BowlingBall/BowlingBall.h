@@ -42,24 +42,8 @@ public:
 	// ピンに触れたか
 	bool GetIsHitPin()const { return m_isHitPin; }
 
-	// ゴールに触れた
-	void HitFinishArea();
-	// 加速エリアに触れた
-	void HitSpeedUpArea();
-	// 地面に触れた
-	void HitGround(const std::string& matName, float velocityY, JPH::Vec3 pos, JPH::Vec3 normal);
-	// 壁に触れた
-	void HitWall(const std::string& matName, float velocity, JPH::Vec3 pos, JPH::Vec3 normal);
-	// 島に触れた
-	void HitIsland(const std::string& matName, float velocity, JPH::Vec3 pos, JPH::Vec3 normal);
-	// 島に乗っていることを通知
-	void OnIsland();
-
 	// 減速を通知
 	void UpdateRollingResistance(float resistPower);
-
-	// 地面に触れたかどうかのフラグをオンにする
-	void OnGround() { m_isOnGroundThisFrame = true; }
 
 	//操作可能フラグ切り替え
 	void SetIsInputEnabled(bool flg) { m_isInputEnabled = flg; }
@@ -72,6 +56,7 @@ public:
 
 	// 当たり処理をまとめる
 	void OnContactAdded(JPH::ObjectLayer layer, const std::string& matName, JPH::Vec3 velocity, JPH::Vec3 pos, JPH::Vec3 normal);
+	void OnContactPersisted(JPH::ObjectLayer layer, const std::string& matName);
 
 private:
 
@@ -158,6 +143,21 @@ private:
 	// 転がる音の管理
 	void StartRollingSound();
 	void UpdateRollingSound();
+
+	// ゴールに触れた
+	void HitFinishArea();
+	// 加速エリアに触れた
+	void HitSpeedUpArea();
+	// 地面に触れた
+	void HitGround(const std::string& matName, float velocityY, JPH::Vec3 pos, JPH::Vec3 normal);
+	// 壁に触れた
+	void HitWall(const std::string& matName, float velocity, JPH::Vec3 pos, JPH::Vec3 normal);
+	// 島に触れた
+	void HitIsland(const std::string& matName, JPH::Vec3 velocity, JPH::Vec3 pos, JPH::Vec3 normal);
+	// 島に乗っていることを通知
+	void OnIsland();
+	// 地面に触れたかどうかのフラグをオンにする
+	void OnGround() { m_isOnGroundThisFrame = true; }
 
 	//モデル
 	std::shared_ptr<KdModelData> m_model;

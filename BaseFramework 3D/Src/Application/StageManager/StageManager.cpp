@@ -191,7 +191,7 @@ bool StageManager::LoadStage(const std::string& filePath)
 	// 2.ステージ島を読み込む
 	if (rootJson.contains("islandModelPath"))
 	{
-		m_stageOverallData.m_islandPath = rootJson.value("islandPath", "Asset/Models/Terrain/Island/Island.gltf");
+		m_stageOverallData.m_islandPath = rootJson.value("islandModelPath", "Asset/Models/Terrain/Island/Island.gltf");
 	}
 	if (rootJson.contains("islandPos"))
 	{

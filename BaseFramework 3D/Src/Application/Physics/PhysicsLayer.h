@@ -3,17 +3,13 @@
 // --- ① レイヤーの定義 ---
 namespace Layers
 {
-	// memo
-	// island消す
-
 	// オブジェクトレイヤー（細かな分類）
 	static constexpr JPH::ObjectLayer TERRAIN = 0;
-	static constexpr JPH::ObjectLayer TERRAIN_ISLAND = 1;
-	static constexpr JPH::ObjectLayer FINISHAREA = 2;
-	static constexpr JPH::ObjectLayer SPEEDUPAREA = 3;
-	static constexpr JPH::ObjectLayer BOWLINGBALL = 4;
-	static constexpr JPH::ObjectLayer BOWLINGPIN = 5;
-	static constexpr JPH::ObjectLayer NUM_LAYERS = 6;
+	static constexpr JPH::ObjectLayer FINISHAREA = 1;
+	static constexpr JPH::ObjectLayer SPEEDUPAREA = 2;
+	static constexpr JPH::ObjectLayer BOWLINGBALL = 3;
+	static constexpr JPH::ObjectLayer BOWLINGPIN = 4;
+	static constexpr JPH::ObjectLayer NUM_LAYERS = 5;
 
 	// ブロードフェーズレイヤー（大雑把な分類）
 	static constexpr JPH::BroadPhaseLayer BP_NON_MOVING(0);
@@ -32,7 +28,7 @@ public:
 	virtual bool ShouldCollide(JPH::ObjectLayer inLayer) const override
 	{
 		// 地形判定に含めたいレイヤーを追加・管理する
-		return inLayer == Layers::TERRAIN || inLayer == Layers::TERRAIN_ISLAND;
+		return inLayer == Layers::TERRAIN;
 		// 将来例: || inLayer == Layers::MOVING_FLOOR;
 	}
 };
@@ -44,7 +40,7 @@ public:
 	virtual bool ShouldCollide(JPH::ObjectLayer inLayer) const override
 	{
 		// 地形レイヤー以外のオブジェクト（ピン・ギミック・プレイヤー等）のみ true を返す
-		return inLayer != Layers::TERRAIN && inLayer != Layers::TERRAIN_ISLAND;
+		return inLayer != Layers::TERRAIN;
 	}
 
 };
@@ -96,7 +92,6 @@ public:
 		switch (inObject1)
 		{
 		case Layers::TERRAIN:
-		case Layers::TERRAIN_ISLAND:
 			return inObject2 == Layers::BOWLINGBALL||inObject2 == Layers::BOWLINGPIN; // 地形は動くものと当たる
 		case Layers::FINISHAREA:
 		case Layers::SPEEDUPAREA:
@@ -120,7 +115,6 @@ public:
 	{
 		// マッピングの登録
 		mObjectToBroadPhase[Layers::TERRAIN] = Layers::BP_NON_MOVING;
-		mObjectToBroadPhase[Layers::TERRAIN_ISLAND] = Layers::BP_NON_MOVING;
 		mObjectToBroadPhase[Layers::FINISHAREA] = Layers::BP_NON_MOVING;
 		mObjectToBroadPhase[Layers::SPEEDUPAREA] = Layers::BP_NON_MOVING;
 		mObjectToBroadPhase[Layers::BOWLINGBALL] = Layers::BP_MOVING;
@@ -163,7 +157,6 @@ public:
 		switch (inLayer1)
 		{
 		case Layers::TERRAIN:
-		case Layers::TERRAIN_ISLAND:
 		case Layers::FINISHAREA:
 		case Layers::SPEEDUPAREA:
 			return inLayer2 == Layers::BP_MOVING; // 動かないグループは、動くグループとだけ衝突する

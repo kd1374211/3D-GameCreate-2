@@ -8,15 +8,16 @@ enum class ModelMaterialType
 	GutterGround,
 	GutterWall,
 	IslandGround,
+	IslandWall,
 	Number
 };
 
 // マテリアル毎の物理ステータス
 struct MatPhysicsConst
 {
-	static constexpr float Friction[(size_t)ModelMaterialType::Number] = { 0.05f,0.0f,0.8f,0.0f,2.4f };
-	static constexpr float Restitution[(size_t)ModelMaterialType::Number] = { 0.0f,1.0f,0.0f,0.0f,0.0f };
-	static constexpr float RollingResistance[(size_t)ModelMaterialType::Number] = { -1.0f,-1.0f,6.0f,6.0f,6.0f };
+	static constexpr float Friction[(size_t)ModelMaterialType::Number] = { 0.05f,0.0f,0.8f,0.0f,2.4f,0.0f };
+	static constexpr float Restitution[(size_t)ModelMaterialType::Number] = { 0.0f,1.0f,0.0f,0.0f,0.0f,0.0f };
+	static constexpr float RollingResistance[(size_t)ModelMaterialType::Number] = { -1.0f,-1.0f,6.0f,6.0f,6.0f,6.0f };
 };
 
 static std::string PhysicMaterialName[(size_t)ModelMaterialType::Number] =
@@ -25,7 +26,8 @@ static std::string PhysicMaterialName[(size_t)ModelMaterialType::Number] =
 	"NormalWall",
 	"GutterGround",
 	"GutterWall",
-	"IslandGround"
+	"IslandGround",
+	"IslandWall"
 };
 
 static std::string PhysicMaterialKeyWord[(size_t)ModelMaterialType::Number] =
@@ -34,7 +36,8 @@ static std::string PhysicMaterialKeyWord[(size_t)ModelMaterialType::Number] =
 	"normalwall",
 	"gutterground",
 	"gutterwall",
-	"islandground"
+	"islandground",
+	"islandwall"
 };
 
 struct MaterialNameCheck
@@ -53,6 +56,13 @@ struct MaterialNameCheck
 
 		// 見つからなかったら通常地面を返す
 		return ModelMaterialType::NormalGround;
+	}
+
+	// 島チェック
+	static inline const bool IsIsland(const std::string& name)
+	{
+		return name == PhysicMaterialName[(size_t)ModelMaterialType::IslandGround]
+			|| name == PhysicMaterialName[(size_t)ModelMaterialType::IslandWall];
 	}
 
 	// 地面チェック

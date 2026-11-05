@@ -68,84 +68,23 @@ void GameContactListener::OnContactAdded(const JPH::Body& inBody1, const JPH::Bo
 				}
 			}
 
-			// マテリアル名からマテリアルを確認
-			if (MaterialNameCheck::IsGround(hitMaterial->GetDebugName()))
-			{
-				// UserData から プレイヤーオブジェクトのポインタを復元
-				if (auto* ball = dynamic_cast<BowlingBall*>(gameObj2))
-				{
-					// Y方向への速度を取得
-					float velY = body2->GetLinearVelocity().GetY();
-
-					// 着地を通知
-					ball->HitGround(hitMaterial->GetDebugName(), velY, worldContactPoint, normal);
-				}
-			}
-			else if (MaterialNameCheck::IsWall(hitMaterial->GetDebugName()))
-			{
-				// UserData から プレイヤーオブジェクトのポインタを復元
-				if (auto* ball = dynamic_cast<BowlingBall*>(gameObj2))
-				{
-					// 速度を取得
-					JPH::Vec3 velV3 = body2->GetLinearVelocity();
-					float velFloat = velV3.Length();
-
-					// 壁接触を通知
-					ball->HitWall(hitMaterial->GetDebugName(), velFloat, worldContactPoint, normal);
-				}
-			}
-		}
-	}
-
-	// Island & Player
-	if (layer1 == Layers::TERRAIN_ISLAND && layer2 == Layers::BOWLINGBALL)
-	{
-		// 地形（body1）と確定したため、swap対応済みの subShapeID1 から安全にマテリアルを取得
-		const JPH::PhysicsMaterial* hitMaterial = GetMaterialRecursively(body1->GetShape(), subShapeID1);
-
-		if (hitMaterial)
-		{
-			// カスタムマテリアルにキャストして物理係数（反発・摩擦）を上書き設定
-			if (auto* terrainMat = dynamic_cast<const TerrainPhysicsMaterial*>(hitMaterial))
-			{
-				ioSettings.mCombinedRestitution = terrainMat->GetRestitution();
-				ioSettings.mCombinedFriction = terrainMat->GetFriction();
-
-				// UserData から プレイヤーオブジェクトのポインタを復元
-				if (auto* ball = dynamic_cast<BowlingBall*>(gameObj2))
-				{
-					// 回転減速を通知
-					ball->UpdateRollingResistance(terrainMat->GetRollingResistance());
-				}
-			}
-
+			// 当たったことを通知
 			// UserData から プレイヤーオブジェクトのポインタを復元
 			if (auto* ball = dynamic_cast<BowlingBall*>(gameObj2))
 			{
-				// 速度を取得
-				JPH::Vec3 velV3 = body2->GetLinearVelocity();
-				float velFloat = velV3.Length();
-
-				ball->HitIsland(hitMaterial->GetDebugName(), velFloat, worldContactPoint, normal);
+				ball->OnContactAdded(layer1, hitMaterial->GetDebugName(), body2->GetLinearVelocity(), worldContactPoint, normal);
 			}
 		}
 	}
 
-	// Finish & Player
-	if (layer1 == Layers::FINISHAREA && layer2 == Layers::BOWLINGBALL)
+	// Finish-SpeedUP & Player
+	if ((layer1 == Layers::FINISHAREA || layer1 == Layers::SPEEDUPAREA) && layer2 == Layers::BOWLINGBALL)
 	{
-		if (auto ball = dynamic_cast<BowlingBall*>(gameObj2))
+		// 当たったことを通知
+		// UserData から プレイヤーオブジェクトのポインタを復元
+		if (auto* ball = dynamic_cast<BowlingBall*>(gameObj2))
 		{
-			ball->HitFinishArea();
-		}
-	}
-
-	// SpeedUp & Player
-	if (layer1 == Layers::SPEEDUPAREA && layer2 == Layers::BOWLINGBALL)
-	{
-		if (auto ball = dynamic_cast<BowlingBall*>(gameObj2))
-		{
-			ball->HitSpeedUpArea();
+			ball->OnContactAdded(layer1, "None", body2->GetLinearVelocity(), worldContactPoint, normal);
 		}
 	}
 
@@ -261,64 +200,23 @@ void GameContactListener::OnContactPersisted(const JPH::Body& inBody1, const JPH
 				}
 			}
 
-			// Groundと接触したなら通知する
-			if (MaterialNameCheck::IsGround(hitMaterial->GetDebugName()))
-			{
-				// UserData から プレイヤーオブジェクトのポインタを復元
-				if (auto* ball = dynamic_cast<BowlingBall*>(gameObj2))
-				{
-					ball->OnGround();
-				}
-			}
-		}
-	}
-
-	// Island & Player
-	if (layer1 == Layers::TERRAIN_ISLAND && layer2 == Layers::BOWLINGBALL)
-	{
-		// 地形（body1）と確定したため、swap対応済みの subShapeID1 から安全にマテリアルを取得
-		const JPH::PhysicsMaterial* hitMaterial = GetMaterialRecursively(body1->GetShape(), subShapeID1);
-
-		if (hitMaterial)
-		{
-			// カスタムマテリアルにキャストして物理係数（反発・摩擦）を上書き設定
-			if (auto* terrainMat = dynamic_cast<const TerrainPhysicsMaterial*>(hitMaterial))
-			{
-				ioSettings.mCombinedRestitution = terrainMat->GetRestitution();
-				ioSettings.mCombinedFriction = terrainMat->GetFriction();
-
-				// UserData から プレイヤーオブジェクトのポインタを復元
-				if (auto* ball = dynamic_cast<BowlingBall*>(gameObj2))
-				{
-					// 回転減速を通知
-					ball->UpdateRollingResistance(terrainMat->GetRollingResistance());
-				}
-			}
-
+			// 接触を通知する
 			// UserData から プレイヤーオブジェクトのポインタを復元
 			if (auto* ball = dynamic_cast<BowlingBall*>(gameObj2))
 			{
-				// 島に乗っていることを通知
-				ball->OnIsland();
+				ball->OnContactPersisted(layer1, hitMaterial->GetDebugName());
 			}
 		}
 	}
 
-	// Finish & Player
-	if (layer1 == Layers::FINISHAREA && layer2 == Layers::BOWLINGBALL)
+	// Finish-SpeedUP & Player
+	if ((layer1 == Layers::FINISHAREA || layer1 == Layers::SPEEDUPAREA) && layer2 == Layers::BOWLINGBALL)
 	{
-		if (auto ball = dynamic_cast<BowlingBall*>(gameObj2))
+		// 当たったことを通知
+		// UserData から プレイヤーオブジェクトのポインタを復元
+		if (auto* ball = dynamic_cast<BowlingBall*>(gameObj2))
 		{
-			ball->HitFinishArea();
-		}
-	}
-
-	// SpeedUp & Player
-	if (layer1 == Layers::SPEEDUPAREA && layer2 == Layers::BOWLINGBALL)
-	{
-		if (auto ball = dynamic_cast<BowlingBall*>(gameObj2))
-		{
-			ball->HitSpeedUpArea();
+			ball->OnContactPersisted(layer1, "None");
 		}
 	}
 

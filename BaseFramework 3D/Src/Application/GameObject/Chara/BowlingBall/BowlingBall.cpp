@@ -660,19 +660,14 @@ void BowlingBall::HitWall(const std::string& matName, float velocity, JPH::Vec3 
 	}
 }
 
-void BowlingBall::HitIsland(const std::string& matName, float velocity, JPH::Vec3 pos, JPH::Vec3 normal)
+void BowlingBall::HitIsland(const std::string& matName, JPH::Vec3 velocity, JPH::Vec3 pos, JPH::Vec3 normal)
 {
-	// 島に乗った
-	OnIsland();
-
-	// 後は壁と同じ扱い()
-	HitWall(matName, velocity, pos, normal);
+	// ここはまだ何もない
 }
 
 void BowlingBall::OnIsland()
 {
-	// 仮に地面扱い確定とする
-	OnGround();
+	// 何もない
 }
 
 void BowlingBall::UpdateRollingResistance(float resistPower)
@@ -692,7 +687,7 @@ void BowlingBall::OnContactAdded(JPH::ObjectLayer layer, const std::string& matN
 	switch (layer)
 	{
 	case Layers::TERRAIN:
-		// マテリアル名を確認
+		// 地面と壁を分ける
 		if (MaterialNameCheck::IsGround(matName))
 		{
 			// Y方向の速度を取得
@@ -706,16 +701,52 @@ void BowlingBall::OnContactAdded(JPH::ObjectLayer layer, const std::string& matN
 			// 壁に当たった
 			HitWall(matName, velocity.Length(), pos, normal);
 		}
-		break;
-	case Layers::TERRAIN_ISLAND:
+		// 島専用の処理
+		if (MaterialNameCheck::IsIsland(matName))
+		{
+			// 島に乗った
+			HitIsland(matName, velocity, pos, normal);
+		}
 		break;
 	case Layers::FINISHAREA:
+		HitFinishArea();
 		break;
 	case Layers::SPEEDUPAREA:
-		break;
-	case Layers::BOWLINGPIN:
+		HitSpeedUpArea();
 		break;
 	// その他のレイヤーは無視
+	default:
+		return;
+	}
+}
+
+void BowlingBall::OnContactPersisted(JPH::ObjectLayer layer, const std::string& matName)
+{
+	// 速度等はやっている
+
+	// レイヤー分け
+	switch (layer)
+	{
+	case Layers::TERRAIN:
+		// マテリアルを確認
+		if (MaterialNameCheck::IsGround(matName))
+		{
+			// 乗っていることを通知
+			OnGround();
+		}
+		// 島専用
+		if (MaterialNameCheck::IsIsland(matName))
+		{
+			// 乗っていることを通知
+			OnIsland();
+		}
+		break;
+	case Layers::FINISHAREA:
+		HitFinishArea();
+		break;
+	case Layers::SPEEDUPAREA:
+		HitSpeedUpArea();
+		break;
 	default:
 		return;
 	}

@@ -2735,7 +2735,7 @@
 			"terrainPath": "Asset/Models/Terrain/MainTerrain/Stage1/Stage1-10/Stage1-10.gltf"
 		}
     ],
-    "islandModelPath": "Asset/Models/Terrain/Island/Island.gltf",
+    "islandModelPath": "Asset/Models/Terrain/Island/GrassIsland/GrassIsland.gltf",
     "islandPos": [
         0.0,
         -0.0,

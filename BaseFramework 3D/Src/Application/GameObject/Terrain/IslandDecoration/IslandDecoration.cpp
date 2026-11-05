@@ -18,7 +18,7 @@ IslandDecoration::IslandDecoration(const std::string& modelPath, const Math::Vec
 	initData.scale = scale;
 	initData.motionType = JPH::EMotionType::Static;
 	initData.isStatic = true;
-	initData.layer = Layers::TERRAIN_ISLAND;
+	initData.layer = Layers::TERRAIN;
 	initData.userData = reinterpret_cast<JPH::uint64>(this);
 
 	// 🚀 ファイルパスを渡すだけで、ロードから Jolt への地形登録まで完結！
