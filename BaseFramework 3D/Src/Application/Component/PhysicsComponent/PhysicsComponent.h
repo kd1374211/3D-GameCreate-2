@@ -83,6 +83,10 @@ public:
 	void ActivateBody();
 	void DeactivateBody();
 
+	// 当たり判定を世界から消したいとき・復活させたいとき
+	void RemoveBody()const;
+	void AddBody()const;
+
 	// Joltの物理座標を、ゲーム側の座標変数に同期させる
 	void Sync(Math::Vector3& outPos, Math::Quaternion& outRot);
 

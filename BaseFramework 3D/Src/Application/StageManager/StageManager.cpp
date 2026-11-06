@@ -28,6 +28,28 @@ void StageManager::ResetGimmicks()
 	m_wpStageGimmicks.clear();
 }
 
+void StageManager::CheckIslandDecoActive(int frameNo)
+{
+	for (const auto& deco : m_wpIslandDecorations)
+	{
+		// shared変換と型変更
+		std::shared_ptr<IslandDecoration> spDeco = std::dynamic_pointer_cast<IslandDecoration>(deco.lock());
+
+		// 成功していれば
+		if (spDeco)
+		{
+			// 管理番号取得
+			int index = spDeco->GetIndex();
+
+			// 有効な範囲か確認
+			if (index >= 0 && index < m_stageOverallData.m_decorationData.size());
+
+			// フラグ切り替え
+			spDeco->SetIsActive(m_stageOverallData.m_decorationData[index].m_isActive[frameNo]);
+		}
+	}
+}
+
 bool StageManager::SaveStage(const std::string& filePath)
 {
 	nlohmann::json rootJson;
@@ -50,6 +72,13 @@ bool StageManager::SaveStage(const std::string& filePath)
 		decoJson["position"] = { deco.m_srtData.m_position.x, deco.m_srtData.m_position.y, deco.m_srtData.m_position.z };
 		decoJson["rotation"] = { deco.m_srtData.m_rotation.x, deco.m_srtData.m_rotation.y, deco.m_srtData.m_rotation.z };
 		decoJson["scale"] = { deco.m_srtData.m_scale.x, deco.m_srtData.m_scale.y, deco.m_srtData.m_scale.z };
+
+		nlohmann::json visibleArray = nlohmann::json::array();
+		for (int i = 0; i < BowlingSystemConsts::FrameCount; ++i)
+		{
+			visibleArray.push_back(deco.m_isActive[i]);
+		}
+		decoJson["isVisible"] = visibleArray;
 
 		decorationsArray.push_back(decoJson);
 	}
@@ -214,6 +243,18 @@ bool StageManager::LoadStage(const std::string& filePath)
 			decoData.m_srtData.m_position = ParseVector3(deco, "position", { 0.0f,0.0f,0.0f });
 			decoData.m_srtData.m_rotation = ParseVector3(deco, "rotation", { 0.0f,0.0f,0.0f });
 			decoData.m_srtData.m_scale = ParseVector3(deco, "scale", { 1.0f,1.0f,1.0f });
+
+			// 各フレームの表示フラグを取得
+			if (deco.contains("isVisible"))
+			{
+				int i = 0;
+				for (const auto& isVisible : deco["isVisible"])
+				{
+					if (i >= BowlingSystemConsts::FrameCount) break;
+					decoData.m_isActive[i] = isVisible.get<bool>();
+					i++;
+				}
+			}
 
 			m_stageOverallData.m_decorationData.push_back(decoData);
 		}
@@ -423,6 +464,8 @@ void StageManager::BuildIsland()
 		std::shared_ptr<IslandDecoration> islandDeco = std::make_shared<IslandDecoration>(decoData.m_modelPath, decoData.m_srtData.m_position, decoData.m_srtData.m_rotation, decoData.m_srtData.m_scale);
 		// ゲームシーンの管理リストに追加
 		SCENEMGR.AddObject(islandDeco);
+		// 今のリストサイズをそのまま管理番号として付与
+		islandDeco->SetIndex(m_wpIslandDecorations.size());
 		// 後で消せるようにWP持ち
 		m_wpIslandDecorations.push_back(islandDeco);
 	}
@@ -461,6 +504,9 @@ void StageManager::BuildStageObjects(int laneNumber, StageBuildMode mode)
 	// 一応レーン番号確認
 	if (laneNumber > BowlingSystemConsts::FrameCount)return;
 	if (laneNumber < BowlingSystemConsts::StartFrame)return;
+
+	// 各デコレーションの表示オン・オフ
+	CheckIslandDecoActive(laneNumber);
 
 	// 地形
 	BuildTerrain(laneNumber);

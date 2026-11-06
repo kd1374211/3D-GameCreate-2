@@ -50,6 +50,7 @@ struct IslandDecorationData
 {
 	std::string m_modelPath;
 	LaneObjectData m_srtData;
+	bool m_isActive[BowlingSystemConsts::FrameCount] = { true };	// 各フレームに表示するかどうかのフラグ
 };
 
 // ステージ全体の情報
@@ -127,6 +128,9 @@ public:
 	// 同じステージでピンなどを再配置
 	void RespawnStageObjects(int laneNumber = BowlingSystemConsts::StartFrame);
 	void BonusStage(int laneNumber = BowlingSystemConsts::StartFrame);
+
+	// デコレーションの活性・非活性をチェックして反映
+	void CheckIslandDecoActive(int frameNo);
 
 	// ステージデータの保存・読み込み
 	bool SaveStage(const std::string& filePath);

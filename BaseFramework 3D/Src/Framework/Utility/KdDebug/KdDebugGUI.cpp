@@ -741,8 +741,70 @@ void KdDebugGUI::GuiProcess()
 				// ★ 各要素の区切り
 				ImGui::Separator();
 
+				// --- B. Island Decorations Active ---
+				if (ImGui::TreeNode("Island Decorations Active"))
+				{
+					// デコレーションデータ
+					auto& decorations = stageData.m_decorationData;
+
+					// 変更検知用
+					bool isDecorationChanged = false;
+
+					// 1. 全選択 / 全解除ボタン
+					if(ImGui::Button("Activate All"))
+					{
+						for (auto& decoration : decorations)
+						{
+							decoration.m_isActive[currentLaneNo] = true;
+						}
+						isDecorationChanged = true;
+					}
+
+					ImGui::SameLine();
+
+					if(ImGui::Button("Deactivate All"))
+					{
+						for (auto& decoration : decorations)
+						{
+							decoration.m_isActive[currentLaneNo] = false;
+						}
+						isDecorationChanged = true;
+					}
+
+					ImGui::Spacing();
+
+					// 2. デコレーション一覧リストボックス
+					ImGui::BeginChild("DecorationListChild", ImVec2(0, 120), true);
+					for (int i = 0; i < static_cast<int>(decorations.size()); ++i)
+					{
+						// 番号をラベルに
+						std::string label = "[" + std::to_string(i) + "] ";
+
+						// デコレーションタグ名
+						ImGui::Text(label.c_str());
+
+						ImGui::SameLine();
+
+						// チェックボックスの描画
+						std::string checkboxLabel = "Object Active##" + std::to_string(i);
+						if (ImGui::Checkbox(checkboxLabel.c_str(), &decorations[i].m_isActive[currentLaneNo]))isDecorationChanged = true;
+					}
+					ImGui::EndChild();
+
+					ImGui::TreePop();
+
+					// 値が更新された場合のみ再構築
+					if (isDecorationChanged)
+					{
+						STAGEMGR.CheckIslandDecoActive(currentLaneNo);
+					}
+				}
+
+				// ★ 各要素の区切り
+				ImGui::Separator();
+
 				// -------------------------------------------------------------
-				// --- B. Gimmick Management ---
+				// --- C. Gimmick Management ---
 				// -------------------------------------------------------------
 				if (ImGui::TreeNode("Gimmick Management"))
 				{
@@ -1109,7 +1171,7 @@ void KdDebugGUI::GuiProcess()
 				ImGui::Separator();
 
 				// -------------------------------------------------------------
-				// --- C. Pin List (10 Pins) ---
+				// --- D. Pin List (10 Pins) ---
 				// -------------------------------------------------------------
 				if (ImGui::TreeNode("Pin List (10 Pins)"))
 				{
@@ -1173,7 +1235,7 @@ void KdDebugGUI::GuiProcess()
 				ImGui::Separator();
 
 				// -------------------------------------------------------------
-				// --- D. Player Transform Settings ---
+				// --- E. Player Transform Settings ---
 				// -------------------------------------------------------------
 				if (ImGui::TreeNode("Player Transform Settings"))
 				{
@@ -1361,7 +1423,7 @@ void KdDebugGUI::GuiProcess()
 			}
 
 			// -------------------------------------------------------------
-			// E. 選択オブジェクトの位置を取得して DebugSphere に表示
+			// F. 選択オブジェクトの位置を取得して DebugSphere に表示
 			// -------------------------------------------------------------
 			Math::Vector3 debugPos = { 0.0f, 0.0f, 0.0f };
 			bool hasSelection = false;

@@ -39,3 +39,41 @@ IslandDecoration::IslandDecoration(const std::string& modelPath, const Math::Vec
 	// カメラに登録
 	RegistToCamera();
 }
+
+void IslandDecoration::DrawLit()
+{
+	// 描画フラグを確認
+	if (!m_isActive)return;
+
+	// 描画するなら本体のDrawLitを呼ぶ
+	TerrainBase::DrawLit();
+}
+
+void IslandDecoration::GenerateDepthMapFromLight()
+{
+	// 描画フラグを確認
+	if (!m_isActive)return;
+
+	// 描画するなら本体のGenerateを呼ぶ
+	TerrainBase::GenerateDepthMapFromLight();
+}
+
+void IslandDecoration::SetIsActive(bool flg)
+{
+	// フラグが変わった場合のみ処理
+	if (m_isActive != flg)
+	{
+		m_isActive = flg;
+		
+		// 世界に復活させる
+		if (flg)
+		{
+			m_cPhysics->AddBody();
+		}
+		// 世界から除外する
+		else
+		{
+			m_cPhysics->RemoveBody();
+		}
+	}
+}

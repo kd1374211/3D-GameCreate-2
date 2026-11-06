@@ -612,6 +612,22 @@ void PhysicsComponent::DeactivateBody()
 	bodyInterface.DeactivateBody(m_bodyID);
 }
 
+void PhysicsComponent::RemoveBody()const
+{
+	auto& bodyInterface = PHYSICSMGR.GetBodyInterface();
+
+	// Joltのワールドから取り除く
+	bodyInterface.RemoveBody(m_bodyID);
+}
+
+void PhysicsComponent::AddBody()const
+{
+	auto& bodyInterface = PHYSICSMGR.GetBodyInterface();
+
+	// Joltのワールドに追加
+	bodyInterface.AddBody(m_bodyID, m_isStatic ? JPH::EActivation::DontActivate : JPH::EActivation::Activate);
+}
+
 void PhysicsComponent::Sync(Math::Vector3& outPos, Math::Quaternion& outRot)
 {
 	if (m_isStatic) return; // 静的なものは同期不要
