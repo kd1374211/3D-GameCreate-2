@@ -539,46 +539,46 @@ void PhysicsComponent::AddImpulse(const JPH::Vec3& inForce)
 	}
 }
 
-void PhysicsComponent::SetSpeed(const float& newSpeed)
-{
-	auto& bodyInterface = PHYSICSMGR.GetBodyInterface();
-
-	// 1. 現在の速度ベクトルを取得
-	JPH::Vec3 currentVel = bodyInterface.GetLinearVelocity(m_bodyID);
-
-	// 速度がほぼゼロ（停止中）の場合は向きが計算できないので処理をスキップ
-	if (currentVel.LengthSq() < 0.0001f) {
-		return;
-	}
-
-	// 2. 正規化（長さ1の「向きベクトル」を取得）して、新しいスピードを掛ける
-	JPH::Vec3 newVel = currentVel.Normalized() * newSpeed;
-
-	// 3. 速度を再設定
-	bodyInterface.SetLinearVelocity(m_bodyID, newVel);
-}
-
-void PhysicsComponent::SetDirection(const Math::Vector3& newDir)
-{
-	auto& bodyInterface = PHYSICSMGR.GetBodyInterface();
-
-	// 1. 現在の速度ベクトルから「現在のスピード（長さ）」を取得
-	JPH::Vec3 currentVel = bodyInterface.GetLinearVelocity(m_bodyID);
-	float currentSpeed = currentVel.Length();
-
-	// 2. 新しい方向ベクトルの正規化（長さを1にする）
-	JPH::Vec3 joltDir(newDir.x, newDir.y, newDir.z);
-	if (joltDir.LengthSq() < 0.0001f) {
-		return; // 入力方向がゼロなら何もしない
-	}
-	JPH::Vec3 normalizedDir = joltDir.Normalized();
-
-	// 3. 「新しい向き」 × 「元のスピード」 で新しい速度ベクトルを作る
-	JPH::Vec3 newVel = normalizedDir * currentSpeed;
-
-	// 4. 速度を再設定
-	bodyInterface.SetLinearVelocity(m_bodyID, newVel);
-}
+//void PhysicsComponent::SetSpeed(const float& newSpeed)
+//{
+//	auto& bodyInterface = PHYSICSMGR.GetBodyInterface();
+//
+//	// 1. 現在の速度ベクトルを取得
+//	JPH::Vec3 currentVel = bodyInterface.GetLinearVelocity(m_bodyID);
+//
+//	// 速度がほぼゼロ（停止中）の場合は向きが計算できないので処理をスキップ
+//	if (currentVel.LengthSq() < 0.0001f) {
+//		return;
+//	}
+//
+//	// 2. 正規化（長さ1の「向きベクトル」を取得）して、新しいスピードを掛ける
+//	JPH::Vec3 newVel = currentVel.Normalized() * newSpeed;
+//
+//	// 3. 速度を再設定
+//	bodyInterface.SetLinearVelocity(m_bodyID, newVel);
+//}
+//
+//void PhysicsComponent::SetDirection(const Math::Vector3& newDir)
+//{
+//	auto& bodyInterface = PHYSICSMGR.GetBodyInterface();
+//
+//	// 1. 現在の速度ベクトルから「現在のスピード（長さ）」を取得
+//	JPH::Vec3 currentVel = bodyInterface.GetLinearVelocity(m_bodyID);
+//	float currentSpeed = currentVel.Length();
+//
+//	// 2. 新しい方向ベクトルの正規化（長さを1にする）
+//	JPH::Vec3 joltDir(newDir.x, newDir.y, newDir.z);
+//	if (joltDir.LengthSq() < 0.0001f) {
+//		return; // 入力方向がゼロなら何もしない
+//	}
+//	JPH::Vec3 normalizedDir = joltDir.Normalized();
+//
+//	// 3. 「新しい向き」 × 「元のスピード」 で新しい速度ベクトルを作る
+//	JPH::Vec3 newVel = normalizedDir * currentSpeed;
+//
+//	// 4. 速度を再設定
+//	bodyInterface.SetLinearVelocity(m_bodyID, newVel);
+//}
 
 void PhysicsComponent::SetLinearVelocity(const JPH::Vec3& newVel)
 {

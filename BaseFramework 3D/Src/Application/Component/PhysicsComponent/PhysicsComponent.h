@@ -53,50 +53,42 @@ public:
 	PhysicsComponent() : m_bodyID(), m_isStatic(false) {}
 	~PhysicsComponent() { Release(); }
 
-	//新Init
-	bool InitTerrainModel(const std::string& path, PhysicsInitData initData);
-	bool Init(const std::string& path, PhysicsInitData initData);
-	void Init(float radius, PhysicsInitData initData);
-	void Init(const Math::Vector3& a_halfExtents, const PhysicsInitData& a_initData);
+	// Init
+	bool InitTerrainModel(const std::string& path, PhysicsInitData initData);				// マテリアル付きのモデルInit
+	bool Init(const std::string& path, PhysicsInitData initData);							// マテリアル無しのモデルInit
+	void Init(float radius, PhysicsInitData initData);										// 球体型Init
+	void Init(const Math::Vector3& a_halfExtents, const PhysicsInitData& a_initData);		// 箱型Init
 
-	//ステータスの設定s
-	void SetFriction(float friction);		//摩擦力
-	void SetRestitution(float restitution);		//反発力
-	void SetDamping(float linearDamp, float angularDamp);		//抵抗
-	void SetPosition(const JPH::RVec3& pos);	//座標
-	void SetRotation(const JPH::Quat& rotation);//回転
+	// ステータスの設定
+	void SetFriction(float friction);														//摩擦力
+	void SetRestitution(float restitution);													//反発力
+	void SetDamping(float linearDamp, float angularDamp);									//抵抗
+	void SetPosition(const JPH::RVec3& pos);												//座標
+	void SetRotation(const JPH::Quat& rotation);											//回転
 
-	// 力を加える（転がす）
-	void AddImpulse(const JPH::Vec3& inForce);
+	// 物理な処理
+	void AddImpulse(const JPH::Vec3& inForce);												// 力を加える（転がす）
+	//void SetSpeed(const float& newSpeed);													// 方向を維持して速度を変更する
+	//void SetDirection(const Math::Vector3& newDir);										// 速度を維持して方向を変更する
+	void SetLinearVelocity(const JPH::Vec3& newVec);										// 線形速度を変更する
+	void SetAngularVelocity(const JPH::Vec3& newVec);										// 角速度を変更する
 
-	//速度を変更する
-	void SetSpeed(const float& newSpeed);
-
-	//方向を変更する
-	void SetDirection(const Math::Vector3& newDir);
-
-	//速度・方向を変更する
-	void SetLinearVelocity(const JPH::Vec3& newVec);
-	void SetAngularVelocity(const JPH::Vec3& newVec);
-
-	// アクティベート・デアクティベート
-	void ActivateBody();
-	void DeactivateBody();
-
-	// 当たり判定を世界から消したいとき・復活させたいとき
-	void RemoveBody()const;
-	void AddBody()const;
-
-	// Joltの物理座標を、ゲーム側の座標変数に同期させる
+	// Jolt世界の処理
+	void ActivateBody();																	// 活性化
+	void DeactivateBody();																	// 非活性化
+	// 当たり判定ごと操作したい時
+	void RemoveBody()const;																	// 世界から削除
+	void AddBody()const;																	// 世界に再追加
+	// 同期処理
 	void Sync(Math::Vector3& outPos, Math::Quaternion& outRot);
 
 	//ゲッター達
-	float GetMass()const;
-	JPH::Vec3 GetPos()const;
-	JPH::Quat GetRotation()const;
-	JPH::Vec3 GetLinearVelocity()const;
-	JPH::Vec3 GetAngularVelocity()const;
-	const JPH::BodyID& GetBodyID()const { return m_bodyID; }
+	float GetMass()const;																	// 重量
+	JPH::Vec3 GetPos()const;																// 座標
+	JPH::Quat GetRotation()const;															// 回転
+	JPH::Vec3 GetLinearVelocity()const;														// 線形速度
+	JPH::Vec3 GetAngularVelocity()const;													// 角速度
+	const JPH::BodyID& GetBodyID()const { return m_bodyID; }								// 物理BodyID
 
 private:
 

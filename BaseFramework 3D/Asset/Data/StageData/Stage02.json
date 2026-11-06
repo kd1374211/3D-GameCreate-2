@@ -1,6 +1,18 @@
 {
     "decorations": [
         {
+            "isVisible": [
+                true,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false
+            ],
             "modelPath": "Asset/Models/Terrain/Decoration/Stone1/Stone1.gltf",
             "position": [
                 7.567875862121582,
@@ -19,6 +31,18 @@
             ]
         },
         {
+            "isVisible": [
+                true,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false
+            ],
             "modelPath": "Asset/Models/Terrain/Decoration/Stone1/Stone1.gltf",
             "position": [
                 9.22429084777832,
@@ -37,6 +61,18 @@
             ]
         },
         {
+            "isVisible": [
+                true,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false
+            ],
             "modelPath": "Asset/Models/Terrain/Decoration/Stone2/Stone2.gltf",
             "position": [
                 -5.71890926361084,
@@ -55,6 +91,18 @@
             ]
         },
         {
+            "isVisible": [
+                true,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false
+            ],
             "modelPath": "Asset/Models/Terrain/Decoration/Stone2/Stone2.gltf",
             "position": [
                 -13.594025611877441,
@@ -73,6 +121,18 @@
             ]
         },
         {
+            "isVisible": [
+                true,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false
+            ],
             "modelPath": "Asset/Models/Terrain/Decoration/Stone1/Stone1.gltf",
             "position": [
                 -7.918039321899414,
@@ -91,6 +151,18 @@
             ]
         },
         {
+            "isVisible": [
+                true,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false
+            ],
             "modelPath": "Asset/Models/Terrain/Decoration/Stone3/Stone3.gltf",
             "position": [
                 -9.15262508392334,
@@ -109,6 +181,18 @@
             ]
         },
         {
+            "isVisible": [
+                true,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false
+            ],
             "modelPath": "Asset/Models/Terrain/Decoration/Tree1/Tree1.gltf",
             "position": [
                 12.133729934692383,
@@ -127,6 +211,18 @@
             ]
         },
         {
+            "isVisible": [
+                true,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false
+            ],
             "modelPath": "Asset/Models/Terrain/Decoration/Tree1/Tree1.gltf",
             "position": [
                 -0.8301963806152344,
@@ -145,6 +241,18 @@
             ]
         },
         {
+            "isVisible": [
+                true,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false
+            ],
             "modelPath": "Asset/Models/Terrain/Decoration/Tree1/Tree1.gltf",
             "position": [
                 -11.712838172912598,
@@ -163,6 +271,18 @@
             ]
         },
         {
+            "isVisible": [
+                true,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false
+            ],
             "modelPath": "Asset/Models/Terrain/Decoration/Tree2/Tree2.gltf",
             "position": [
                 -16.75199317932129,
@@ -181,6 +301,18 @@
             ]
         },
         {
+            "isVisible": [
+                true,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false
+            ],
             "modelPath": "Asset/Models/Terrain/Decoration/Tree2/Tree2.gltf",
             "position": [
                 -7.004532814025879,
@@ -199,6 +331,18 @@
             ]
         },
         {
+            "isVisible": [
+                true,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false
+            ],
             "modelPath": "Asset/Models/Terrain/Decoration/Tree1/Tree1.gltf",
             "position": [
                 14.076498031616211,
@@ -217,6 +361,18 @@
             ]
         },
         {
+            "isVisible": [
+                true,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false
+            ],
             "modelPath": "Asset/Models/Terrain/Decoration/Tree1/Tree1.gltf",
             "position": [
                 17.109390258789063,
@@ -235,6 +391,18 @@
             ]
         },
         {
+            "isVisible": [
+                true,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false
+            ],
             "modelPath": "Asset/Models/Terrain/Decoration/Tree2/Tree2.gltf",
             "position": [
                 5.1322922706604,
@@ -260,26 +428,8 @@
                 {
                     "position": [
                         0.0,
-                        -0.30000001192092896,
-                        9.300000190734863
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "scale": [
-                        2.0,
-                        0.5,
-                        1.0
-                    ],
-                    "type": "Goal"
-                },
-                {
-                    "position": [
-                        0.0,
-                        4.76837158203125e-07,
-                        -5.0
+                        -0.25,
+                        8.5
                     ],
                     "rotation": [
                         0.0,
@@ -288,10 +438,10 @@
                     ],
                     "scale": [
                         3.0,
-                        0.10000000149011612,
-                        20.0
+                        0.25,
+                        1.0
                     ],
-                    "type": "SpeedUp"
+                    "type": "Goal"
                 }
             ],
             "pins": [
@@ -300,7 +450,7 @@
                     "position": [
                         0.0,
                         0.0,
-                        7.75
+                        7.0
                     ],
                     "rotation": [
                         0.0,
@@ -319,7 +469,7 @@
                     "position": [
                         -0.14000000059604645,
                         0.0,
-                        8.0
+                        7.25
                     ],
                     "rotation": [
                         0.0,
@@ -338,7 +488,7 @@
                     "position": [
                         0.14000000059604645,
                         0.0,
-                        8.0
+                        7.25
                     ],
                     "rotation": [
                         0.0,
@@ -357,7 +507,7 @@
                     "position": [
                         -0.2800000011920929,
                         0.0,
-                        8.25
+                        7.5
                     ],
                     "rotation": [
                         0.0,
@@ -376,7 +526,7 @@
                     "position": [
                         0.0,
                         0.0,
-                        8.25
+                        7.5
                     ],
                     "rotation": [
                         0.0,
@@ -395,7 +545,7 @@
                     "position": [
                         0.2800000011920929,
                         0.0,
-                        8.25
+                        7.5
                     ],
                     "rotation": [
                         0.0,
@@ -414,7 +564,7 @@
                     "position": [
                         -0.41999998688697815,
                         0.0,
-                        8.5
+                        7.75
                     ],
                     "rotation": [
                         0.0,
@@ -433,7 +583,7 @@
                     "position": [
                         -0.14000000059604645,
                         0.0,
-                        8.5
+                        7.75
                     ],
                     "rotation": [
                         0.0,
@@ -452,7 +602,7 @@
                     "position": [
                         0.14000000059604645,
                         0.0,
-                        8.5
+                        7.75
                     ],
                     "rotation": [
                         0.0,
@@ -469,9 +619,9 @@
                 {
                     "index": 9,
                     "position": [
-                        0.41999998688697815,
-                        0.0,
-                        8.5
+                        0.4120849072933197,
+                        -2.384185791015625e-07,
+                        7.75
                     ],
                     "rotation": [
                         0.0,
@@ -754,9 +904,9 @@
                 {
                     "index": 0,
                     "position": [
-                        3.5,
-                        0.0,
-                        5.0
+                        -4.926942825317383,
+                        4.0,
+                        -1.2453370094299316
                     ],
                     "rotation": [
                         0.0,
