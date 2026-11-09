@@ -1119,7 +1119,7 @@ void KdDebugGUI::GuiProcess()
 						if (ImGui::Button("Duplicate Selected Gimmick", ImVec2(200, 0)))
 						{
 							// 選択中のギミックデータを深層コピー
-							auto& duplicateGimmick = gimmicks[selectedIndex];
+							auto duplicateGimmick = gimmicks[selectedIndex];
 
 							// （任意）重なって見づらくなるのを防ぐため座標を少しだけずらす
 							duplicateGimmick.m_data.m_position.x += 0.5f;

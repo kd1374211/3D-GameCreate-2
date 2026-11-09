@@ -55,7 +55,11 @@ void FinishArea::Init()
 
 		trans = Math::Matrix::CreateTranslation((m_trailCheckPoint[i] + m_trailCheckPoint[(i + 1) % 4]) / 2.0f);
 		rotat = Math::Matrix::CreateRotationY(DirectX::XMConvertToRadians(i * -90.0f));
+		scale = Math::Matrix::CreateScale(m_scale);
 		m_trailFaceMat[i] = scale * rotat * trans;
+
+		// scaleXとY入れ替え
+		std::swap(m_scale.x, m_scale.z);
 
 		m_trailFaceProgress[i] = length / m_lineLength;
 	}

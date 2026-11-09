@@ -80,7 +80,7 @@ public:
 	void RemoveBody()const;																	// 世界から削除
 	void AddBody()const;																	// 世界に再追加
 	// 同期処理
-	void Sync(Math::Vector3& outPos, Math::Quaternion& outRot);
+	void Sync(Math::Vector3& outPos, Math::Quaternion& outRot);								// Jolt世界の物理・回転を、ゲーム側に同期させる
 
 	//ゲッター達
 	float GetMass()const;																	// 重量
