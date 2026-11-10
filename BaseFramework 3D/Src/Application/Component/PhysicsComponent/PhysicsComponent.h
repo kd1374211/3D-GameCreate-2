@@ -14,6 +14,9 @@ struct PhysicsInitData {
 	bool isStatic = false;					//静的かどうか
 	bool isSensor = false;					//センサーのみかどうか（当たり判定があるか）
 
+	// 回転ギミック用
+	Math::Vector3 rotPivotOffset = Math::Vector3::Zero;	// 回転軸のモデルからの距離
+
 	//物理
 	float mass = 1.0f;							//質量
 	float friction = 0.5f;						//摩擦力
@@ -60,11 +63,11 @@ public:
 	void Init(const Math::Vector3& a_halfExtents, const PhysicsInitData& a_initData);		// 箱型Init
 
 	// ステータスの設定
-	void SetFriction(float friction);														//摩擦力
-	void SetRestitution(float restitution);													//反発力
-	void SetDamping(float linearDamp, float angularDamp);									//抵抗
-	void SetPosition(const JPH::RVec3& pos);												//座標
-	void SetRotation(const JPH::Quat& rotation);											//回転
+	void SetFriction(float friction);														// 摩擦力
+	void SetRestitution(float restitution);													// 反発力
+	void SetDamping(float linearDamp, float angularDamp);									// 抵抗
+	void SetPosition(const JPH::RVec3& pos);												// 座標
+	void SetRotation(const JPH::Quat& rotation);											// 回転
 
 	// 物理な処理
 	void AddImpulse(const JPH::Vec3& inForce);												// 力を加える（転がす）

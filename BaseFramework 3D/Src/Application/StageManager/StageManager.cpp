@@ -129,6 +129,7 @@ bool StageManager::SaveStage(const std::string& filePath)
 				{
 					gJson["modelPath"] = param->m_modelPath;
 					gJson["rotateSpeed"] = param->m_rotateSpeed;
+					gJson["rotatePivot"] = { param->m_rotPivotPosOfs.x,param->m_rotPivotPosOfs.y,param->m_rotPivotPosOfs.z };
 				}
 				break;
 			case GimmickType::MovingTerrain:
@@ -326,7 +327,7 @@ bool StageManager::LoadStage(const std::string& filePath)
 							RotatingParams param;
 							param.m_modelPath = Utf8ToMultiByte(gimmick.value("modelPath", "Error"));
 							param.m_rotateSpeed = gimmick.value("rotateSpeed", 1.0f);
-
+							param.m_rotPivotPosOfs = ParseVector3(gimmick, "rotatePivot", { 0.0f,0.0f,0.0f });
 							gimmickData.m_param = param;
 							break;
 						}
@@ -576,7 +577,7 @@ void StageManager::BuildGimmicks(int laneNumber)
 		case GimmickType::RotatingTerrain:
 			if (auto* param = std::get_if<RotatingParams>(&gimmickData.m_param))
 			{
-				gimmickObj = std::make_shared<RotatingTerrain>(param->m_modelPath, gimmickData.m_data.m_position, gimmickData.m_data.m_rotation, gimmickData.m_data.m_scale, param->m_rotateSpeed);
+				gimmickObj = std::make_shared<RotatingTerrain>(gimmickData.m_data.m_position, gimmickData.m_data.m_rotation, gimmickData.m_data.m_scale, *param);
 				isValidType = true;
 			}
 			break;

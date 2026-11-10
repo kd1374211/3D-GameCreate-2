@@ -98,58 +98,8 @@ void KdDebugGUI::GuiProcess()
 			{
 				isEditWindow = !isEditWindow;
 
-				if (STAGEMGR.IsEditMode())
-				{
-					STAGEMGR.SetMode(StageMode::Play);
-					// プレイヤーの操作を有効に
-					STAGEMGR.BuildStageObjects_D(currentLaneNo);
-					CAMERAMGR.SetDefaultCamera(CameraType::Game);
-
-					// カーソルの固定を再開
-					CURSOR.LockCursor();
-					// カーソル非表示
-					ShowCursor(false);
-				}
-				else
-				{
-					STAGEMGR.SetMode(StageMode::Edit);
-
-					//ポイントターゲットカメラ
-					//今のカメラのターゲット取得
-					std::weak_ptr<CameraBase> currentCamera = CAMERAMGR.GetGameCamera();
-					std::weak_ptr<KdGameObject> cameraTarget;
-					Math::Vector3 targetPos = Math::Vector3::Zero;
-					if (!currentCamera.expired())
-					{
-						cameraTarget = currentCamera.lock();
-						if (!cameraTarget.expired())
-						{
-							targetPos = cameraTarget.lock()->GetPos();
-						}
-					}
-
-					// カーソルの固定を解除
-					CURSOR.UnlockCursor();
-					// カーソルを表示
-					ShowCursor(true);
-
-					std::shared_ptr<PointTargetCamera> camera = std::make_shared<PointTargetCamera>();
-					camera->Init(targetPos);
-					SCENEMGR.AddObject(camera);
-
-					CAMERAMGR.SetDebugCamera(camera);
-					CAMERAMGR.SetDefaultCamera(CameraType::Debug);
-
-					// 選択中のindexを合わせる
-					currentStageNo = SCENEMGR.GetStageNo();
-					currentLaneNo = BowlingSystemConsts::StartFrame;
-
-					// ★ LoadStage(int stageNo) を使用
-					if (STAGEMGR.LoadStage(currentStageNo))
-					{
-						STAGEMGR.BuildStageObjects(currentLaneNo);
-					}
-				}
+				// エディター切り替え処理
+				ToggleStageEditor(currentStageNo, currentLaneNo);
 			}
 
 			isEditWindowKey = true;
@@ -177,1281 +127,29 @@ void KdDebugGUI::GuiProcess()
 		// カメラ取得
 		std::weak_ptr<CameraBase> parent = CAMERAMGR.GetDebugCamera();
 		std::shared_ptr<PointTargetCamera> camera;
-
-		// ステージデータ取得
-		auto& stageData = STAGEMGR.WorkStageData();
+		static bool camCastSuccess = false;
+		if (camera = std::dynamic_pointer_cast<PointTargetCamera>(parent.lock()))
+		{
+			camCastSuccess = true;
+		}
+		else camCastSuccess = false;
 
 		// 入力中はストップ
 		if (!ImGui::GetIO().WantCaptureKeyboard)
 		{
-			if (!parent.expired())
+			if (camCastSuccess)
 			{
-				camera = std::dynamic_pointer_cast<PointTargetCamera>(parent.lock());
-
-				//取得成功時
-				if (camera)
-				{
-					//カメラ移動
-					camera->MoveCamera();
-					
-					// シフトを押している間は視点のY軸回転を認める
-					static bool isShift = false;
-					if (GetAsyncKeyState(VK_SHIFT) & 0x8000)
-					{
-						// falseだった（このフレームで押された）場合カーソル非表示と固定
-						if (!isShift)
-						{
-							ShowCursor(false);
-							CURSOR.LockCursor();
-						}
-
-						// PTカメラ内で回転をしてもらう
-						camera->RotateCamera();
-
-						isShift = true;
-					}
-					else
-					{
-						// trueだった（このフレームで離された）場合カーソル表示と移動フラグ
-						if (isShift)
-						{
-							ShowCursor(true);
-							CURSOR.UnlockCursor();
-						}
-
-						isShift = false;
-					}
-				}
+				// カメラ更新
+				UpdateCamera(camera);
 			}
 
-			// ギミックの再生、停止
-			static bool isPKey = true;
-
-			if (GetAsyncKeyState('P') & 0x8000)
-			{
-				if (!isPKey)
-				{
-					// 反転
-					STAGEMGR.SetIsGimmickStop(!STAGEMGR.GetIsGimmickStop());
-
-					isPKey = true;
-				}
-			}
-			else isPKey = false;
+			// ギミックの停止・再生の切り替え
+			ToggleGimmickStop();
 		}
 
-		// 位置固定
-		ImGui::SetNextWindowPos(ImVec2(5.f, 5.f), ImGuiCond_Always);
-		if (ImGui::Begin("Stage Editor", nullptr, ImGuiWindowFlags_::ImGuiWindowFlags_NoMove | ImGuiWindowFlags_::ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_::ImGuiWindowFlags_NoResize))
-		{
-			// --- A. ステージ番号選択 ---
-			ImGui::Text("Stage Select:");
-
-			int maxStageNo = STAGEMGR.GetMaxStageNo();
-			for (int stage = STAGEMGR.GetMinStageNo(); stage <= maxStageNo; ++stage)
-			{
-				if (stage > STAGEMGR.GetMinStageNo()) ImGui::SameLine();
-
-				std::string stageLabel = std::to_string(stage) + "##stage";
-				bool isSelected = (currentStageNo == stage);
-
-				if (isSelected)
-				{
-					ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.6f, 0.2f, 1.0f));
-				}
-
-				if (ImGui::Button(stageLabel.c_str(), ImVec2(30, 0)))
-				{
-					currentStageNo = stage;
-
-					if (STAGEMGR.LoadStage(currentStageNo))
-					{
-						// 内部インデックス(0〜9)をそのまま渡す
-						STAGEMGR.BuildAllObjects(currentLaneNo);
-
-						// PTカメラの位置をプレイヤー位置へ
-						// カメラ取得
-						std::weak_ptr<CameraBase> parent = CAMERAMGR.GetDebugCamera();
-						std::shared_ptr<PointTargetCamera> camera;
-
-						if (!parent.expired())
-						{
-							camera = std::dynamic_pointer_cast<PointTargetCamera>(parent.lock());
-
-							//取得成功時
-							if (camera)
-							{
-								// プレイヤー座標取得
-								const auto playerPos = stageData.m_stageLaneData[currentLaneNo].m_playerData.m_position;
-
-								camera->MoveTargetPoint(playerPos);
-							}
-						}
-					}
-				}
-
-				if (isSelected)
-				{
-					ImGui::PopStyleColor();
-				}
-			}
-
-			// --- 仕切り ---
-			ImGui::Separator();
-
-			// --- B. レーン番号選択 (内部インデックス 0〜9 管理) ---
-			ImGui::Text("Lane Select (1 - 10):");
-
-			for (int lane = 0; lane < 10; ++lane)
-			{
-				// 0番目と5番目（UI上の1と6）以外は横に並べる
-				if (lane != 0 && lane != 5) ImGui::SameLine();
-
-				// ★ 表示テキストのみ +1（"1" 〜 "10"）
-				std::string laneLabel = std::to_string(lane + 1) + "##lane";
-				bool isSelected = (currentLaneNo == lane);
-
-				if (isSelected)
-				{
-					ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.6f, 0.2f, 1.0f));
-				}
-
-				if (ImGui::Button(laneLabel.c_str(), ImVec2(40, 0)))
-				{
-					currentLaneNo = lane; // 内部値は 0〜9
-
-					if (STAGEMGR.LoadStage(currentStageNo))
-					{
-						// 計算不要でそのままインデックスを渡す
-						STAGEMGR.BuildAllObjects(currentLaneNo);
-
-						// PTカメラの位置をプレイヤー位置へ
-						// カメラ取得
-						std::weak_ptr<CameraBase> parent = CAMERAMGR.GetDebugCamera();
-						std::shared_ptr<PointTargetCamera> camera;
-
-						if (!parent.expired())
-						{
-							camera = std::dynamic_pointer_cast<PointTargetCamera>(parent.lock());
-
-							//取得成功時
-							if (camera)
-							{
-								// プレイヤー座標取得
-								const auto playerPos = stageData.m_stageLaneData[currentLaneNo].m_playerData.m_position;
-
-								camera->MoveTargetPoint(playerPos);
-							}
-						}
-					}
-				}
-
-				if (isSelected)
-				{
-					ImGui::PopStyleColor();
-				}
-			}
-
-			// ★ 表示時のみ currentLaneNo + 1
-			ImGui::Spacing();
-			ImGui::TextDisabled("Current Target: Stage %d / Lane %d (Index: %d)",
-				currentStageNo, currentLaneNo + 1, currentLaneNo);
-		}
-
-		// -----------------------------------------------------------------
-		// 2. Save & Load 階層
-		// -----------------------------------------------------------------
-		if (ImGui::CollapsingHeader("Save & Load"))
-		{
-			ImGui::Text("Target Stage: Stage %02d", currentStageNo);
-			ImGui::Separator();
-
-			// --- A. セーブボタン ---
-			if (ImGui::Button("Save Stage", ImVec2(90, 30)))
-			{
-				char filePath[64];
-				snprintf(filePath, sizeof(filePath), "Asset/Data/StageData/Stage%02d.json", currentStageNo);
-
-				STAGEMGR.SaveStage(filePath);
-			}
-
-			ImGui::SameLine();
-
-			// --- B. ロード（リセット）ボタン ---
-			if (ImGui::Button("Load Stage", ImVec2(90, 30)))
-			{
-				if (STAGEMGR.LoadStage(currentStageNo))
-				{
-					// 内部インデックス(0〜9)をそのまま渡す
-					STAGEMGR.BuildAllObjects(currentLaneNo);
-				}
-			}
-
-			// --- 仕切り ---
-			ImGui::Separator();
-
-			// --- C. コピーメニュー ---
-			if (ImGui::TreeNode("Copy Stage"))
-			{
-				// 値持ち
-				static int copyLaneNo = 0;
-
-				// --- レーン番号選択 (内部インデックス 0〜9 管理) ---
-				ImGui::Text("Lane Select (1 - 10):");
-
-				for (int lane = 0; lane < 10; ++lane)
-				{
-					// 0番目と5番目（UI上の1と6）以外は横に並べる
-					if (lane != 0 && lane != 5) ImGui::SameLine();
-
-					// ★ 表示テキストのみ +1（"1" 〜 "10"）
-					std::string laneLabel = std::to_string(lane + 1) + "##laneCP";
-					bool isSelected = (copyLaneNo == lane);
-
-					if (isSelected)
-					{
-						ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.6f, 0.2f, 1.0f));
-					}
-
-					if (ImGui::Button(laneLabel.c_str(), ImVec2(40, 0)))
-					{
-						copyLaneNo = lane;
-					}
-
-					if (isSelected)
-					{
-						ImGui::PopStyleColor();
-					}
-				}
-
-				// --- 仕切り ---
-				ImGui::Separator();
-
-				// --- コピーボタン ---
-				std::string text = "Copy Lane " + std::to_string(currentLaneNo + 1) + " to Lane " + std::to_string(copyLaneNo + 1);
-				if (ImGui::Button(text.c_str(), ImVec2(180, 30)))
-				{
-					// コピペ
-					stageData.m_stageLaneData[copyLaneNo] = stageData.m_stageLaneData[currentLaneNo];
-
-					// セーブ
-					char filePath[64];
-					snprintf(filePath, sizeof(filePath), "Asset/Data/StageData/Stage%02d.json", currentStageNo);
-
-					STAGEMGR.SaveStage(filePath);
-				}
-
-				ImGui::TreePop();
-			}
-		}
+		// ステージエディタ本体
+		UpdateStageEditor(currentStageNo, currentLaneNo, camera);
 	
-		// -----------------------------------------------------------------
-		// 3. StageEdit 階層 (※new トップ階層)
-		// -----------------------------------------------------------------
-		if (ImGui::CollapsingHeader("StageEdit", ImGuiTreeNodeFlags_DefaultOpen))
-		{
-			// -------------------------------------------------------------
-			// A. 選択ターゲットの一元管理用定義（StageEdit 内または静的変数）
-			// -------------------------------------------------------------
-			enum class SelectedTargetCategory
-			{
-				None,
-				Decoration,
-				Gimmick,
-				Pin,
-				Player
-			};
-
-			static SelectedTargetCategory selectedCategory = SelectedTargetCategory::None;
-			static int selectedIndex = -1;
-
-			auto& currentFrame = stageData.m_stageLaneData[currentLaneNo];
-
-			// --- A. StageEdit 直下で選択状態の変化をまとめて監視する変数 ---
-			static int lastStageNo = -1;
-			static int lastLaneNo = -1;
-
-			// --- B. 各入力用バッファとエラー状態 ---
-			static std::string skyPathInput = "";
-			static bool isSkyError = false;
-
-			static std::string terrainPathInput_Stage = "1";
-			static std::string terrainPathInput_Frame = "1";
-			static bool isTerrainError = false;
-
-			// --- C. ステージまたはレーンが切り替わった場合の一括同期処理 ---
-			if (lastStageNo != currentStageNo || lastLaneNo != currentLaneNo)
-			{
-				skyPathInput = stageData.m_skyPath;
-				isSkyError = false;
-
-				terrainPathInput_Stage = std::to_string(currentStageNo);
-				terrainPathInput_Frame = std::to_string(currentLaneNo + 1);
-				isTerrainError = false;
-
-				selectedCategory = SelectedTargetCategory::None;
-				selectedIndex = -1;
-
-				lastStageNo = currentStageNo;
-				lastLaneNo = currentLaneNo;
-			}
-
-			// -------------------------------------------------------------
-			// 3-1. Sky Asset Settings (StageEdit 直下)
-			// -------------------------------------------------------------
-			if (ImGui::TreeNode("Sky Asset Settings"))
-			{
-				ImGui::Text("Current Sky Path: %s", stageData.m_skyPath.c_str());
-				ImGui::InputText("Model Path##SkyInput", &skyPathInput);
-
-				if (isSkyError)
-				{
-					ImGui::TextColored(ImVec4(1.0f, 0.2f, 0.2f, 1.0f), "[Error] File does not exist!");
-				}
-
-				if (ImGui::Button("Apply Sky Path", ImVec2(150, 0)))
-				{
-					if (std::filesystem::exists(skyPathInput))
-					{
-						isSkyError = false;
-						stageData.m_skyPath = skyPathInput;
-
-						// 空の再生成
-						STAGEMGR.BuildSky();
-					}
-					else
-					{
-						isSkyError = true;
-					}
-				}
-
-				ImGui::TreePop();
-			}
-
-			// ★ セクション間の区切り
-			ImGui::Separator();
-
-			// 島のデコレーション
-			if (ImGui::TreeNode("Decoration Management"))
-			{
-				auto& decorations = stageData.m_decorationData;
-				bool isDecorationChanged = false;
-
-				// --- 追加ボタンエリア ---
-				if (ImGui::Button("+ Add Decoration", ImVec2(140, 0)))
-				{
-					IslandDecorationData newDeco;
-					newDeco.m_modelPath = "Asset/Models/Terrain/Decoration/Stone1/Stone1.gltf";
-					newDeco.m_srtData = {};
-
-					decorations.push_back(newDeco);
-
-					// 追加したデコレーションを選択状態にする
-					selectedCategory = SelectedTargetCategory::Decoration;
-					selectedIndex = static_cast<int>(decorations.size()) - 1;
-
-					// 変更を取得
-					isDecorationChanged = true;
-				}
-
-				ImGui::Spacing();
-
-				// 1. デコレーション一覧リストボックス
-				ImGui::BeginChild("DecorationListChild", ImVec2(0, 120), true);
-				for (int i = 0; i < static_cast<int>(decorations.size()); ++i)
-				{
-					// 番号をラベルに
-					std::string label = "[" + std::to_string(i) + "] ";
-
-					// カテゴリとインデックスが両方一致している場合のみハイライト
-					bool isSelected = (selectedCategory == SelectedTargetCategory::Decoration && selectedIndex == i);
-
-					if (ImGui::Selectable(label.c_str(), isSelected))
-					{
-						// 選択カテゴリとインデックスを更新（他カテゴリの選択は自動解除）
-						selectedCategory = SelectedTargetCategory::Decoration;
-						selectedIndex = i;
-					}
-				}
-				ImGui::EndChild();
-
-				// 2. 範囲チェック（削除等でオーバーした場合の安全対策）
-				if (selectedCategory == SelectedTargetCategory::Decoration)
-				{
-					if (decorations.empty())
-					{
-						selectedCategory = SelectedTargetCategory::None;
-						selectedIndex = -1;
-					}
-					else if (selectedIndex >= static_cast<int>(decorations.size()))
-					{
-						selectedIndex = static_cast<int>(decorations.size()) - 1;
-					}
-
-				}
-
-				static std::string decoModelPathInput = "";
-				static bool isDecoModelError = false;
-				static int lastSelectedIndex = -1; // 選択切り替え検知用
-
-				// 3. 選択中デコレーションの編集UI
-				if (selectedCategory == SelectedTargetCategory::Decoration && selectedIndex >= 0 && selectedIndex < static_cast<int>(decorations.size()))
-				{
-					// 選択項目が切り替わったら入力バッファとエラー状態を同期・リセット
-					if (lastSelectedIndex != selectedIndex)
-					{
-						lastSelectedIndex = selectedIndex;
-						isDecoModelError = false;
-
-						decoModelPathInput = decorations[selectedIndex].m_modelPath;
-					}
-
-					ImGui::Separator();
-					ImGui::Text("Edit Deco [%d]", selectedIndex + 1);
-
-					auto& decoration = decorations[selectedIndex];
-
-					ImGui::Text("Current Model Path: %s", decoration.m_modelPath.c_str());
-					ImGui::InputText("Model Path##DecoInput", &decoModelPathInput);
-
-					if (isDecoModelError)
-					{
-						ImGui::TextColored(ImVec4(1.0f, 0.2f, 0.2f, 1.0f), "[Error] File does not exist!");
-					}
-
-					if (ImGui::Button("Apply Model Path", ImVec2(150, 0)))
-					{
-						if (std::filesystem::exists(decoModelPathInput))
-						{
-							isDecoModelError = false;
-							decoration.m_modelPath = decoModelPathInput;
-
-							// 変更を取得
-							isDecorationChanged = true;
-						}
-						else
-						{
-							isDecoModelError = true;
-						}
-					}
-
-					// SRT編集
-					if (ImGui::DragFloat3("Position", &decoration.m_srtData.m_position.x, 0.01f)) isDecorationChanged = true;
-					if (ImGui::DragFloat3("Rotation", &decoration.m_srtData.m_rotation.x, 0.1f, 0.0f, 0.0f, "%.1f deg"))isDecorationChanged = true;
-					if (ImGui::DragFloat3("Scale", &decoration.m_srtData.m_scale.x, 0.01f)) isDecorationChanged = true;
-
-					ImGui::Separator();
-
-					// 1. 複製ボタン（Duplicate / Copy）
-					if (ImGui::Button("Duplicate Selected", ImVec2(200, 0)))
-					{
-						// 選択中のギミックデータを深層コピー
-						auto duplicateDecoration = decorations[selectedIndex];
-
-						// （任意）重なって見づらくなるのを防ぐため座標を少しだけずらす
-						duplicateDecoration.m_srtData.m_position.x += 0.5f;
-
-						// 配列に追加
-						decorations.push_back(duplicateDecoration);
-
-						// 選択インデックスを新しく生成された末尾のギミックに変更
-						selectedIndex = static_cast<int>(decorations.size()) - 1;
-
-						// 入力バッファやエラー状態をリセット
-						lastSelectedIndex = selectedIndex;
-						isDecoModelError = false;
-						decoModelPathInput = decorations[selectedIndex].m_modelPath;
-
-						// 変更を取得
-						isDecorationChanged = true;
-					}
-
-					ImGui::SameLine();
-
-					// 2. 既存の削除ボタン
-					if (ImGui::Button("Delete Selected"))
-					{
-						decorations.erase(decorations.begin() + selectedIndex);
-						selectedIndex = -1; // 選択解除
-						
-						// 変更を取得
-						isDecorationChanged = true;
-					}
-				}
-
-				ImGui::TreePop();
-
-				// 値が更新された場合のみ再構築
-				if (isDecorationChanged)
-				{
-					STAGEMGR.BuildIsland();
-				}
-			}
-
-			ImGui::Separator();
-
-			// -------------------------------------------------------------
-			// 3-2. Lane Placement Settings (※1) (StageEdit 直下)
-			// -------------------------------------------------------------
-			if (ImGui::TreeNode("Lane Placement Settings (※1)"))
-			{
-				// ★ 各要素の区切り
-				ImGui::Separator();
-
-				// --- A. Lane Terrain Asset Path ---
-				if (ImGui::TreeNode("Lane Terrain Asset Path"))
-				{
-					ImGui::Text("Current Terrain Path:\n%s", currentFrame.m_terrainPath.c_str());
-					
-					ImGui::InputText("Stage##TerrainInput", &terrainPathInput_Stage);
-					ImGui::InputText("Frame##TerrainInput", &terrainPathInput_Frame);
-
-					if (isTerrainError)
-					{
-						ImGui::TextColored(ImVec4(1.0f, 0.2f, 0.2f, 1.0f), "[Error] File does not exist!");
-					}
-
-					if (ImGui::Button("Apply Terrain Path", ImVec2(150, 0)))
-					{
-						// パスを作成
-						std::string BasePath = "Asset/Models/Terrain/MainTerrain/";
-						std::string StagePath = "Stage" + terrainPathInput_Stage;
-						// フレームの桁数チェック
-						bool m_isFrameOneDig = terrainPathInput_Frame.size() == 1;
-						std::string FramePath = StagePath + "-" + (m_isFrameOneDig ? "0" : "") + terrainPathInput_Frame;
-						std::string TerrainPath = BasePath + StagePath + "/" + FramePath + "/" + FramePath + ".gltf";
-
-						if (std::filesystem::exists(TerrainPath))
-						{
-							isTerrainError = false;
-							currentFrame.m_terrainPath = TerrainPath;
-
-							// 地形再生成
-							STAGEMGR.BuildTerrain(currentLaneNo);
-						}
-						else
-						{
-							isTerrainError = true;
-						}
-					}
-
-					ImGui::TreePop();
-				}
-
-				// ★ 各要素の区切り
-				ImGui::Separator();
-
-				// --- B. Island Decorations Active ---
-				if (ImGui::TreeNode("Island Decorations Active"))
-				{
-					// デコレーションデータ
-					auto& decorations = stageData.m_decorationData;
-
-					// 変更検知用
-					bool isDecorationChanged = false;
-
-					// 1. 全選択 / 全解除ボタン
-					if(ImGui::Button("Activate All"))
-					{
-						for (auto& decoration : decorations)
-						{
-							decoration.m_isActive[currentLaneNo] = true;
-						}
-						isDecorationChanged = true;
-					}
-
-					ImGui::SameLine();
-
-					if(ImGui::Button("Deactivate All"))
-					{
-						for (auto& decoration : decorations)
-						{
-							decoration.m_isActive[currentLaneNo] = false;
-						}
-						isDecorationChanged = true;
-					}
-
-					ImGui::Spacing();
-
-					// 2. デコレーション一覧リストボックス
-					ImGui::BeginChild("DecorationListChild", ImVec2(0, 120), true);
-					for (int i = 0; i < static_cast<int>(decorations.size()); ++i)
-					{
-						// 番号をラベルに
-						std::string label = "[" + std::to_string(i) + "] ";
-
-						// デコレーションタグ名
-						ImGui::Text(label.c_str());
-
-						ImGui::SameLine();
-
-						// チェックボックスの描画
-						std::string checkboxLabel = "Object Active##" + std::to_string(i);
-						if (ImGui::Checkbox(checkboxLabel.c_str(), &decorations[i].m_isActive[currentLaneNo]))isDecorationChanged = true;
-					}
-					ImGui::EndChild();
-
-					ImGui::TreePop();
-
-					// 値が更新された場合のみ再構築
-					if (isDecorationChanged)
-					{
-						STAGEMGR.CheckIslandDecoActive(currentLaneNo);
-					}
-				}
-
-				// ★ 各要素の区切り
-				ImGui::Separator();
-
-				// -------------------------------------------------------------
-				// --- C. Gimmick Management ---
-				// -------------------------------------------------------------
-				if (ImGui::TreeNode("Gimmick Management"))
-				{
-					auto& gimmicks = currentFrame.m_laneGimmickData;
-					bool isGimmickChanged = false;
-
-					// --- 追加ボタンエリア ---
-					if (ImGui::Button("+ Add Finish Area", ImVec2(140, 0)))
-					{
-						LaneGimmickData newGimmick;
-						newGimmick.m_type = "Goal";
-						newGimmick.m_param = FinishAreaParams{}; // FinishArea 用パラメータ
-
-						gimmicks.push_back(newGimmick);
-
-						// 追加したギミックを選択状態にする
-						selectedCategory = SelectedTargetCategory::Gimmick;
-						selectedIndex = static_cast<int>(gimmicks.size()) - 1;
-
-						// 変更を取得
-						isGimmickChanged = true;
-					}
-
-					ImGui::SameLine();
-
-					if (ImGui::Button("+ Add SpeedUp Area", ImVec2(160, 0)))
-					{
-						LaneGimmickData newGimmick;
-						newGimmick.m_type = "SpeedUp";
-						newGimmick.m_param = SpeedUpAreaParams{}; // FinishArea 用パラメータ
-
-						gimmicks.push_back(newGimmick);
-
-						// 追加したギミックを選択状態にする
-						selectedCategory = SelectedTargetCategory::Gimmick;
-						selectedIndex = static_cast<int>(gimmicks.size()) - 1;
-
-						// 変更を取得
-						isGimmickChanged = true;
-					}
-
-					if (ImGui::Button("+ Add Moving Terrain", ImVec2(160, 0)))
-					{
-						LaneGimmickData newGimmick;
-						newGimmick.m_type = "MovingTerrain";
-
-						// デフォルトの移動パラメータを設定
-						MovingParams moveParam;
-						newGimmick.m_param = moveParam;
-
-						gimmicks.push_back(newGimmick);
-
-						// 追加したギミックを選択状態にする
-						selectedCategory = SelectedTargetCategory::Gimmick;
-						selectedIndex = static_cast<int>(gimmicks.size()) - 1;
-
-						// 変更を取得
-						isGimmickChanged = true;
-					}
-
-					ImGui::SameLine();
-
-					if (ImGui::Button("+ Add Rotating Terrain", ImVec2(160, 0)))
-					{
-						LaneGimmickData newGimmick;
-						newGimmick.m_type = "RotatingTerrain";
-
-						// デフォルトの回転パラメータを設定
-						RotatingParams rotParam;
-						newGimmick.m_param = rotParam;
-
-						gimmicks.push_back(newGimmick);
-
-						// 追加したギミックを選択状態にする
-						selectedCategory = SelectedTargetCategory::Gimmick;
-						selectedIndex = static_cast<int>(gimmicks.size()) - 1;
-
-						// 変更を取得
-						isGimmickChanged = true;
-					}
-
-					ImGui::Spacing();
-
-					// 1. ギミック一覧リストボックス
-					ImGui::BeginChild("GimmickListChild", ImVec2(0, 120), true);
-					for (int i = 0; i < static_cast<int>(gimmicks.size()); ++i)
-					{
-						// タイプ名もラベルに表示して見やすくする
-						std::string label = "[" + std::to_string(i) + "] " + gimmicks[i].m_type;
-
-						// カテゴリとインデックスが両方一致している場合のみハイライト
-						bool isSelected = (selectedCategory == SelectedTargetCategory::Gimmick && selectedIndex == i);
-
-						if (ImGui::Selectable(label.c_str(), isSelected))
-						{
-							// 選択カテゴリとインデックスを更新（他カテゴリの選択は自動解除）
-							selectedCategory = SelectedTargetCategory::Gimmick;
-							selectedIndex = i;
-						}
-					}
-					ImGui::EndChild();
-
-					// 2. 範囲チェック（ギミック削除等でオーバーした場合の安全対策）
-					if (selectedCategory == SelectedTargetCategory::Gimmick)
-					{
-						if (gimmicks.empty())
-						{
-							selectedCategory = SelectedTargetCategory::None;
-							selectedIndex = -1;
-						}
-						else if (selectedIndex >= static_cast<int>(gimmicks.size()))
-						{
-							selectedIndex = static_cast<int>(gimmicks.size()) - 1;
-						}
-					
-					}
-
-					static std::string gimmickModelPathInput = "";
-					static bool isGimmickModelError = false;
-					static int lastSelectedIndex = -1; // 選択切り替え検知用
-
-					// 3. 選択中ギミックの編集UI
-					if (selectedCategory == SelectedTargetCategory::Gimmick && selectedIndex >= 0 && selectedIndex < static_cast<int>(gimmicks.size()))
-					{
-						// 選択項目が切り替わったら入力バッファとエラー状態を同期・リセット
-						if (lastSelectedIndex != selectedIndex)
-						{
-							lastSelectedIndex = selectedIndex;
-							isGimmickModelError = false;
-
-							// 選択されたギミックから初期文字列を設定
-							if (auto* rot = std::get_if<RotatingParams>(&gimmicks[selectedIndex].m_param))
-							{
-								gimmickModelPathInput = rot->m_modelPath;
-							}
-
-							if (auto* mov = std::get_if<MovingParams>(&gimmicks[selectedIndex].m_param))
-							{
-								gimmickModelPathInput = mov->m_modelPath;
-							}
-						}
-
-						ImGui::Separator();
-						ImGui::Text("Edit Gimmick [%d] (%s)", selectedIndex + 1, gimmicks[selectedIndex].m_type.c_str());
-
-						auto& gimmick = gimmicks[selectedIndex];
-
-						// 共通：Transform編集
-						if (ImGui::DragFloat3("Position", &gimmick.m_data.m_position.x, 0.01f)) isGimmickChanged = true;
-						if (ImGui::DragFloat3("Rotation", &gimmick.m_data.m_rotation.x, 0.1f, 0.0f, 0.0f, "%.1f deg"))isGimmickChanged = true;
-						if (ImGui::DragFloat3("Scale", &gimmick.m_data.m_scale.x, 0.01f)) isGimmickChanged = true;
-
-						ImGui::Separator();
-
-						// 固有パラメータ編集
-						if (auto* rot = std::get_if<RotatingParams>(&gimmick.m_param))
-						{
-							ImGui::TextUnformatted("--- Rotating Settings ---");
-							ImGui::Text("Current Model Path: %s", rot->m_modelPath.c_str());
-
-							// Sky Asset Settings と同じスタイルでモデルパスを入力
-							ImGui::InputText("Model Path##GimmickModelInput", &gimmickModelPathInput);
-
-							if (isGimmickModelError)
-							{
-								ImGui::TextColored(ImVec4(1.0f, 0.2f, 0.2f, 1.0f), "[Error] File does not exist!");
-							}
-
-							if (ImGui::Button("Apply Model Path", ImVec2(150, 0)))
-							{
-								if (std::filesystem::exists(gimmickModelPathInput))
-								{
-									isGimmickModelError = false;
-									rot->m_modelPath = gimmickModelPathInput;
-									isGimmickChanged = true;
-								}
-								else
-								{
-									isGimmickModelError = true;
-								}
-							}
-
-							// 回転速度（リアルタイム反映）
-							if (ImGui::DragFloat("Rotate Speed", &rot->m_rotateSpeed, 0.05f, -100.0f, 100.0f))
-							{
-								isGimmickChanged = true;
-							}
-						}
-						else if (auto* mov = std::get_if<MovingParams>(&gimmick.m_param))
-						{
-							ImGui::TextUnformatted("--- Moving Settings ---");
-							ImGui::Text("Current Model Path: %s", mov->m_modelPath.c_str());
-
-							// Sky Asset Settings と同じスタイルでモデルパスを入力
-							ImGui::InputText("Model Path##GimmickModelInput", &gimmickModelPathInput);
-
-							if (isGimmickModelError)
-							{
-								ImGui::TextColored(ImVec4(1.0f, 0.2f, 0.2f, 1.0f), "[Error] File does not exist!");
-							}
-
-							if (ImGui::Button("Apply Model Path", ImVec2(150, 0)))
-							{
-								if (std::filesystem::exists(gimmickModelPathInput))
-								{
-									isGimmickModelError = false;
-									mov->m_modelPath = gimmickModelPathInput;
-									isGimmickChanged = true;
-								}
-								else
-								{
-									isGimmickModelError = true;
-								}
-							}
-
-							// 移動速度（リアルタイム反映）
-							if (ImGui::DragFloat("Move Speed", &mov->m_speed, 0.05f, -100.0f, 100.0f))
-							{
-								isGimmickChanged = true;
-							}
-
-							// 移動方法
-							static std::string ModeText;
-							ModeText = (mov->m_movePattern == MovingParams::MovePattern::Linear) ? "Linear" : "Easing";
-							ImGui::Text("Move Pattern Current : %s", ModeText.c_str());
-
-							if (ImGui::Button("Linear", ImVec2(70, 0)))
-							{
-								mov->m_movePattern = MovingParams::MovePattern::Linear;
-								ModeText = "Linear";
-								isGimmickChanged = true;
-							}
-							ImGui::SameLine();
-							if (ImGui::Button("Easing", ImVec2(70, 0)))
-							{
-								mov->m_movePattern = MovingParams::MovePattern::Easing;
-								ModeText = "Easing";
-								isGimmickChanged = true;
-							}
-						
-							// 停止時間
-							if (ImGui::DragFloat("Stop Time", &mov->m_stopTime, 0.05f, 0.0f, 10.0f))
-							{
-								isGimmickChanged = true;
-							}
-
-							// スタートとゴールの位置
-							if (ImGui::DragFloat3("Start Position", &mov->m_startPos.x, 0.01f)) isGimmickChanged = true;
-							if (ImGui::DragFloat3("Goal Position", &mov->m_goalPos.x, 0.01f)) isGimmickChanged = true;
-
-							// -------------------------------------------------------------
-							// ウェイポイント（Waypoints）リスト管理処理
-							// -------------------------------------------------------------
-							ImGui::Spacing();
-							ImGui::Separator();
-							ImGui::TextUnformatted("--- Waypoints Management ---");
-
-							// 1. ウェイポイント追加ボタン
-							if (ImGui::Button("+ Add Waypoint", ImVec2(130, 0)))
-							{
-								// 初期位置：最後のウェイポイントの位置、または Start Position の少し先
-								Math::Vector3 newPoint = mov->m_startPos;
-								if (!mov->m_waypoints.empty())
-								{
-									newPoint = mov->m_waypoints.back();
-								}
-								newPoint.x += 1.0f; // 少しずらして配置
-
-								mov->m_waypoints.push_back(newPoint);
-								isGimmickChanged = true;
-							}
-
-							// 2. ウェイポイント一覧の表示・編集
-							int removeIndex = -1; // 削除予約用インデックス
-
-							for (int wpIdx = 0; wpIdx < static_cast<int>(mov->m_waypoints.size()); ++wpIdx)
-							{
-								ImGui::PushID(wpIdx); // ループ内 ID の競合防止
-
-								// ドラッグ入力で各座標を編集
-								std::string wpLabel = "WP [" + std::to_string(wpIdx + 1) + "]";
-								if (ImGui::DragFloat3(wpLabel.c_str(), &mov->m_waypoints[wpIdx].x, 0.01f))
-								{
-									isGimmickChanged = true;
-								}
-
-								// 削除ボタン
-								ImGui::SameLine();
-								if (ImGui::Button("X"))
-								{
-									removeIndex = wpIdx;
-								}
-
-								ImGui::PopID();
-							}
-
-							// 削除処理（ループ外で安全に実行）
-							if (removeIndex != -1)
-							{
-								mov->m_waypoints.erase(mov->m_waypoints.begin() + removeIndex);
-								isGimmickChanged = true;
-							}
-						}
-						else if (auto* finish = std::get_if<FinishAreaParams>(&gimmick.m_param))
-						{
-							// ここは何もない
-						}
-
-						ImGui::Separator();
-
-						// 1. 複製ボタン（Duplicate / Copy）
-						if (ImGui::Button("Duplicate Selected Gimmick", ImVec2(200, 0)))
-						{
-							// 選択中のギミックデータを深層コピー
-							auto duplicateGimmick = gimmicks[selectedIndex];
-
-							// （任意）重なって見づらくなるのを防ぐため座標を少しだけずらす
-							duplicateGimmick.m_data.m_position.x += 0.5f;
-
-							// 配列に追加
-							gimmicks.push_back(duplicateGimmick);
-
-							// 選択インデックスを新しく生成された末尾のギミックに変更
-							selectedIndex = static_cast<int>(gimmicks.size()) - 1;
-
-							// 入力バッファやエラー状態を新ギミック用にリセット
-							lastSelectedIndex = selectedIndex;
-							isGimmickModelError = false;
-							if (auto* rot = std::get_if<RotatingParams>(&gimmicks[selectedIndex].m_param))
-							{
-								gimmickModelPathInput = rot->m_modelPath;
-							}
-							if (auto* mov = std::get_if<MovingParams>(&gimmicks[selectedIndex].m_param))
-							{
-								gimmickModelPathInput = mov->m_modelPath;
-							}
-
-							// 変更を取得
-							isGimmickChanged = true;
-						}
-
-						ImGui::SameLine();
-
-						// 2. 既存の削除ボタン
-						if (ImGui::Button("Delete Selected Gimmick"))
-						{
-							gimmicks.erase(gimmicks.begin() + selectedIndex);
-							selectedIndex = -1; // 選択解除
-
-							// 変更を取得
-							isGimmickChanged = true;
-						}
-					}
-
-					ImGui::TreePop();
-
-					// 値が更新された場合のみ再構築
-					if (isGimmickChanged)
-					{
-						STAGEMGR.BuildGimmicks(currentLaneNo);
-					}
-				}
-
-				ImGui::Separator();
-
-				// -------------------------------------------------------------
-				// --- D. Pin List (10 Pins) ---
-				// -------------------------------------------------------------
-				if (ImGui::TreeNode("Pin List (10 Pins)"))
-				{
-					auto& pins = currentFrame.m_lanePinData;
-					bool isPinChanged = false;
-
-					// 1. ピン一覧リストボックス
-					ImGui::BeginChild("PinListChild", ImVec2(0, 120), true);
-					for (int i = 0; i < static_cast<int>(pins.size()); ++i)
-					{
-						std::string label = "[" + std::to_string(i) + "] Pin " + std::to_string(i + 1);
-
-						// カテゴリとインデックスが両方一致している場合のみハイライト
-						bool isSelected = (selectedCategory == SelectedTargetCategory::Pin && selectedIndex == i);
-
-						if (ImGui::Selectable(label.c_str(), isSelected))
-						{
-							// 選択カテゴリとインデックスを更新（他カテゴリの選択は自動解除）
-							selectedCategory = SelectedTargetCategory::Pin;
-							selectedIndex = i;
-						}
-					}
-					ImGui::EndChild();
-
-					// 2. 範囲チェック
-					if (selectedCategory == SelectedTargetCategory::Pin)
-					{
-						if (pins.empty())
-						{
-							selectedCategory = SelectedTargetCategory::None;
-							selectedIndex = -1;
-						}
-						else if (selectedIndex >= static_cast<int>(pins.size()))
-						{
-							selectedIndex = static_cast<int>(pins.size()) - 1;
-						}
-					}
-
-					// 3. 選択中ピンの編集UI
-					if (selectedCategory == SelectedTargetCategory::Pin && selectedIndex >= 0 && selectedIndex < static_cast<int>(pins.size()))
-					{
-						ImGui::Separator();
-						ImGui::Text("Edit Pin [%d]", selectedIndex + 1);
-
-						auto& pin = pins[selectedIndex];
-
-						if (ImGui::DragFloat3("Position", &pin.m_data.m_position.x, 0.01f)) isPinChanged = true;
-						if (ImGui::DragFloat3("Rotation", &pin.m_data.m_rotation.x, 0.1f))  isPinChanged = true;
-						if (ImGui::DragFloat3("Scale", &pin.m_data.m_scale.x, 0.01f)) isPinChanged = true;
-					}
-
-					ImGui::TreePop();
-
-					// 変更を確認
-					if (isPinChanged)
-					{
-						STAGEMGR.BuildPins(currentLaneNo);
-					}
-				}
-
-				ImGui::Separator();
-
-				// -------------------------------------------------------------
-				// --- E. Player Transform Settings ---
-				// -------------------------------------------------------------
-				if (ImGui::TreeNode("Player Transform Settings"))
-				{
-					auto& player = currentFrame.m_playerData;
-					bool isPlayerChanged = false;
-
-					// 1. サイズ 1 の選択リストボックス（高さ 35px 程度で固定）
-					ImGui::BeginChild("PlayerListChild", ImVec2(0, 35), true);
-
-					bool isSelected = (selectedCategory == SelectedTargetCategory::Player);
-					if (ImGui::Selectable("[Player] Start Position", isSelected))
-					{
-						selectedCategory = SelectedTargetCategory::Player;
-						selectedIndex = 0; // プレイヤーは単一要素のため 0 固定
-					}
-					ImGui::EndChild();
-
-					// 2. 選択中プレイヤーの編集UI
-					if (selectedCategory == SelectedTargetCategory::Player)
-					{
-						ImGui::Separator();
-						ImGui::Text("Edit Player Transform");
-
-						if (ImGui::DragFloat3("Position", &player.m_position.x, 0.01f)) isPlayerChanged = true;
-						if (ImGui::DragFloat3("Rotation", &player.m_rotation.x, 0.1f))  isPlayerChanged = true;
-					}
-
-					ImGui::TreePop();
-
-					if (isPlayerChanged)
-					{
-						STAGEMGR.BuildPlayer(currentLaneNo);
-					}
-				}
-
-				ImGui::TreePop(); // Lane Placement Settings (※1) の TreePop
-			}
-
-
-			//右クリックで現在選択中のオブジェクトをカーソル位置に飛ばす
-			if (GetAsyncKeyState(VK_RBUTTON) & 0x8000)
-			{
-				// マウス座標(2D)を3D座標へ変換
-				if (camera)
-				{
-					// 手順①
-					// マウス座標を取得
-					POINT _mousePos;
-					GetCursorPos(&_mousePos);
-					ScreenToClient(Application::Instance().GetWindowHandle(), &_mousePos);
-
-					// 手順②
-					// マウスの2D座標を3D座標へ変換する
-					Math::Vector3	rayPos = camera->GetCurrentViewPoint();
-					Math::Vector3	rayDir = Math::Vector3::Zero;
-					float			range = 2000.f;
-					camera->WorkCamera()->GenerateRayInfoFromClientPos(_mousePos, rayPos, rayDir, range);
-
-					// Jolt Physics への RayCast
-					JPH::RRayCast rayCast;
-					rayCast.mOrigin = JPH::RVec3(rayPos.x, rayPos.y, rayPos.z);
-					rayCast.mDirection = JPH::Vec3(rayDir.x, rayDir.y, rayDir.z) * range; // 飛ばす長さ
-					GroundObjectFilter groundFilter;
-
-					// 選択中の種類と Index から直接データを特定して移動
-					Math::Vector3 selectedObjectPos;
-					if (selectedCategory == SelectedTargetCategory::Gimmick)
-					{
-						if (selectedIndex >= 0 && selectedIndex < static_cast<int>(currentFrame.m_laneGimmickData.size()))
-						{
-							selectedObjectPos = currentFrame.m_laneGimmickData[selectedIndex].m_data.m_position;
-						}
-					}
-					else if (selectedCategory == SelectedTargetCategory::Pin)
-					{
-						if (selectedIndex >= 0 && selectedIndex < static_cast<int>(currentFrame.m_lanePinData.size()))
-						{
-							selectedObjectPos = currentFrame.m_lanePinData[selectedIndex].m_data.m_position;
-						}
-					}
-					else if (selectedCategory == SelectedTargetCategory::Player)
-					{
-						selectedObjectPos = currentFrame.m_playerData.m_position;
-					}
-
-					JPH::BodyID targetBodyID;
-
-					// 選択中データの位置（Vector3）を Jolt Vec3 に変換
-					JPH::Vec3 pos(selectedObjectPos.x, selectedObjectPos.y, selectedObjectPos.z);
-
-					// 選択中の座標からわずかに広がった AABB（検索範囲）を作成
-					JPH::AABox searchBox(pos - JPH::Vec3::sReplicate(0.1f), pos + JPH::Vec3::sReplicate(0.1f));
-
-					// AABB内に含まれる BodyID を収集するコレクター
-					class SimpleCollector : public JPH::CollideShapeBodyCollector
-					{
-					public:
-						virtual void AddHit(const JPH::BodyID& inBodyID) override { m_hits.push_back(inBodyID); }
-						std::vector<JPH::BodyID> m_hits;
-					};
-
-					// 1. 新しい専用フィルターの生成
-					NonGroundObjectFilter nonGroundFilter; // 地形レイヤーを指定
-
-					// 2. AABB内での BodyID 検索実行
-					SimpleCollector collector;
-					PHYSICSMGR.GetSystem().GetBroadPhaseQuery().CollideAABox(
-						searchBox,
-						collector,
-						{},               // BroadPhaseLayerFilter（空でOK）
-						nonGroundFilter   // 作成した地形除外フィルター
-					);
-
-					// 3. 地形が除外された状態で安全に BodyID を取得
-					if (!collector.m_hits.empty())
-					{
-						targetBodyID = collector.m_hits[0];
-					}
-
-					// レイを飛ばす
-					bool hasHit = false;
-					JPH::RayCastResult hit;
-					if (!targetBodyID.IsInvalid())
-					{
-						// Jolt標準の単一Body除外フィルターをそのまま生成して渡す
-						JPH::IgnoreSingleBodyFilter selfFilter(targetBodyID);
-
-						hasHit = PHYSICSMGR.GetSystem().GetNarrowPhaseQuery().CastRay(rayCast, hit, {}, groundFilter, selfFilter);
-					}
-					else
-					{
-						hasHit = PHYSICSMGR.GetSystem().GetNarrowPhaseQuery().CastRay(rayCast, hit, {}, groundFilter);
-					}
-
-					if (hasHit)
-					{
-						// ★レイが何かに当たった！その「衝突点の3D座標」を取得
-						JPH::RVec3 hitPos = rayCast.GetPointOnRay(hit.mFraction);
-						Math::Vector3 hitVec3Pos = Math::Vector3(hitPos.GetX(), hitPos.GetY(), hitPos.GetZ());
-
-						// 選択中の種類と Index から直接データを特定して移動
-						if (selectedCategory == SelectedTargetCategory::Decoration)
-						{
-							if (selectedIndex >= 0 && selectedIndex < static_cast<int>(stageData.m_decorationData.size()))
-							{
-								auto& deco = stageData.m_decorationData[selectedIndex];
-								deco.m_srtData.m_position = Math::Vector3(hitVec3Pos.x, hitVec3Pos.y, hitVec3Pos.z);
-
-								// 島の再生成
-								STAGEMGR.BuildIsland();
-							}
-						}
-						if (selectedCategory == SelectedTargetCategory::Gimmick)
-						{
-							if (selectedIndex >= 0 && selectedIndex < static_cast<int>(currentFrame.m_laneGimmickData.size()))
-							{
-								auto& gimmick = currentFrame.m_laneGimmickData[selectedIndex];
-								gimmick.m_data.m_position = Math::Vector3(hitVec3Pos.x, hitVec3Pos.y, hitVec3Pos.z);
-
-								// ギミックの再生成
-								STAGEMGR.BuildGimmicks(currentLaneNo);
-							}
-						}
-						else if (selectedCategory == SelectedTargetCategory::Pin)
-						{
-							if (selectedIndex >= 0 && selectedIndex < static_cast<int>(currentFrame.m_lanePinData.size()))
-							{
-								auto& pin = currentFrame.m_lanePinData[selectedIndex];
-								pin.m_data.m_position = Math::Vector3(hitVec3Pos.x, hitVec3Pos.y, hitVec3Pos.z);
-
-								// ピンの再生成
-								STAGEMGR.BuildPins(currentLaneNo);
-							}
-						}
-						else if (selectedCategory == SelectedTargetCategory::Player)
-						{
-							auto& player = currentFrame.m_playerData;
-							player.m_position = Math::Vector3(hitVec3Pos.x, hitVec3Pos.y, hitVec3Pos.z);
-
-							// プレイヤーの再生成
-							STAGEMGR.BuildPlayer(currentLaneNo);
-						}
-					}
-				}
-			}
-
-			// -------------------------------------------------------------
-			// F. 選択オブジェクトの位置を取得して DebugSphere に表示
-			// -------------------------------------------------------------
-			Math::Vector3 debugPos = { 0.0f, 0.0f, 0.0f };
-			bool hasSelection = false;
-
-			if (selectedCategory == SelectedTargetCategory::Decoration && selectedIndex >= 0 && selectedIndex < static_cast<int>(stageData.m_decorationData.size()))
-			{
-				debugPos = stageData.m_decorationData[selectedIndex].m_srtData.m_position;
-				hasSelection = true;
-			}
-			if (selectedCategory == SelectedTargetCategory::Gimmick && selectedIndex >= 0 && selectedIndex < static_cast<int>(currentFrame.m_laneGimmickData.size()))
-			{
-				debugPos = currentFrame.m_laneGimmickData[selectedIndex].m_data.m_position;
-				hasSelection = true;
-			}
-			else if (selectedCategory == SelectedTargetCategory::Pin && selectedIndex >= 0 && selectedIndex < static_cast<int>(currentFrame.m_lanePinData.size()))
-			{
-				debugPos = currentFrame.m_lanePinData[selectedIndex].m_data.m_position;
-				hasSelection = true;
-			}
-			else if (selectedCategory == SelectedTargetCategory::Player)
-			{
-				debugPos = currentFrame.m_playerData.m_position;
-				hasSelection = true;
-			}
-
-			// STAGEMGR に選択中の座標を渡して DebugSphere を表示
-			STAGEMGR.SetDebugOutlinePos(hasSelection, debugPos);
-		}
 		ImGui::End();
 	}
 
@@ -1535,6 +233,1397 @@ void KdDebugGUI::ClearLog()
 	if (!m_uqLog) return;
 
 	m_uqLog->Clear();
+}
+
+void KdDebugGUI::ToggleStageEditor(int& currentStageNo, int& currentLaneNo)
+{
+	if (STAGEMGR.IsEditMode())
+	{
+		STAGEMGR.SetMode(StageMode::Play);
+		// プレイヤーの操作を有効に
+		STAGEMGR.BuildStageObjects_D(currentLaneNo);
+		CAMERAMGR.SetDefaultCamera(CameraType::Game);
+
+		// カーソルの固定を再開
+		CURSOR.LockCursor();
+		// カーソル非表示
+		ShowCursor(false);
+	}
+	else
+	{
+		STAGEMGR.SetMode(StageMode::Edit);
+
+		//ポイントターゲットカメラ
+		//今のカメラのターゲット取得
+		std::weak_ptr<CameraBase> currentCamera = CAMERAMGR.GetGameCamera();
+		std::weak_ptr<KdGameObject> cameraTarget;
+		Math::Vector3 targetPos = Math::Vector3::Zero;
+		if (!currentCamera.expired())
+		{
+			cameraTarget = currentCamera.lock();
+			if (!cameraTarget.expired())
+			{
+				targetPos = cameraTarget.lock()->GetPos();
+			}
+		}
+
+		// カーソルの固定を解除
+		CURSOR.UnlockCursor();
+		// カーソルを表示
+		ShowCursor(true);
+
+		std::shared_ptr<PointTargetCamera> camera = std::make_shared<PointTargetCamera>();
+		camera->Init(targetPos);
+		SCENEMGR.AddObject(camera);
+
+		CAMERAMGR.SetDebugCamera(camera);
+		CAMERAMGR.SetDefaultCamera(CameraType::Debug);
+
+		// 選択中のindexを合わせる
+		currentStageNo = SCENEMGR.GetStageNo();
+		currentLaneNo = BowlingSystemConsts::StartFrame;
+		if (auto spScoreHandler = m_wpScoreHandler.lock())
+		{
+			currentLaneNo = spScoreHandler->GetCurrentFrame();
+		}
+
+		// ★ LoadStage(int stageNo) を使用
+		if (STAGEMGR.LoadStage(currentStageNo))
+		{
+			STAGEMGR.BuildStageObjects(currentLaneNo);
+		}
+	}
+}
+
+void KdDebugGUI::UpdateCamera(std::shared_ptr<PointTargetCamera> camera)
+{
+	//カメラ移動
+	camera->MoveCamera();
+
+	// シフトを押している間は視点のY軸回転を認める
+	static bool isShift = false;
+	if (GetAsyncKeyState(VK_SHIFT) & 0x8000)
+	{
+		// falseだった（このフレームで押された）場合カーソル非表示と固定
+		if (!isShift)
+		{
+			ShowCursor(false);
+			CURSOR.LockCursor();
+		}
+
+		// PTカメラ内で回転をしてもらう
+		camera->RotateCamera();
+
+		isShift = true;
+	}
+	else
+	{
+		// trueだった（このフレームで離された）場合カーソル表示と移動フラグ
+		if (isShift)
+		{
+			ShowCursor(true);
+			CURSOR.UnlockCursor();
+		}
+
+		isShift = false;
+	}
+}
+
+void KdDebugGUI::ToggleGimmickStop()
+{
+	// ギミックの再生、停止
+	static bool isPKey = true;
+
+	if (GetAsyncKeyState('P') & 0x8000)
+	{
+		if (!isPKey)
+		{
+			// 反転
+			STAGEMGR.SetIsGimmickStop(!STAGEMGR.GetIsGimmickStop());
+
+			isPKey = true;
+		}
+	}
+	else isPKey = false;
+}
+
+void KdDebugGUI::UpdateStageEditor(int& currentStageNo, int& currentLaneNo, std::shared_ptr<PointTargetCamera> camera)
+{
+	// 位置固定
+	ImGui::SetNextWindowPos(ImVec2(5.f, 5.f), ImGuiCond_Always);
+	if (ImGui::Begin("Stage Editor", nullptr, ImGuiWindowFlags_::ImGuiWindowFlags_NoMove | ImGuiWindowFlags_::ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_::ImGuiWindowFlags_NoResize))
+	{
+		// ステージデータ取得
+		auto& stageData = STAGEMGR.WorkStageData();
+
+		// 編集ステージ・レーン切り替え
+		UpdateFrameSelection(currentStageNo, currentLaneNo, stageData, camera);
+
+		// セーブ・ロード・コピー
+		UpdateSaveAndLoad(currentStageNo, currentLaneNo, stageData);
+
+		// ステージ内Edit
+		UpdateStageEdit(currentStageNo, currentLaneNo, stageData);
+	}
+}
+
+void KdDebugGUI::UpdateFrameSelection(int& currentStageNo, int& currentLaneNo, StageOverallData& stageData,std::shared_ptr<PointTargetCamera> camera)
+{
+	// --- A. ステージ番号選択 ---
+	ImGui::Text("Stage Select:");
+
+	int maxStageNo = STAGEMGR.GetMaxStageNo();
+	for (int stage = STAGEMGR.GetMinStageNo(); stage <= maxStageNo; ++stage)
+	{
+		if (stage > STAGEMGR.GetMinStageNo()) ImGui::SameLine();
+
+		std::string stageLabel = std::to_string(stage) + "##stage";
+		bool isSelected = (currentStageNo == stage);
+
+		if (isSelected)
+		{
+			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.6f, 0.2f, 1.0f));
+		}
+
+		if (ImGui::Button(stageLabel.c_str(), ImVec2(30, 0)))
+		{
+			currentStageNo = stage;
+
+			if (STAGEMGR.LoadStage(currentStageNo))
+			{
+				// 内部インデックス(0〜9)をそのまま渡す
+				STAGEMGR.BuildAllObjects(currentLaneNo);
+
+				// PTカメラの位置をプレイヤー位置へ
+				if (camera)
+				{
+					// プレイヤー座標取得
+					const auto playerPos = stageData.m_stageLaneData[currentLaneNo].m_playerData.m_position;
+
+					camera->MoveTargetPoint(playerPos);
+				}
+			}
+		}
+
+		if (isSelected)
+		{
+			ImGui::PopStyleColor();
+		}
+	}
+
+	// --- 仕切り ---
+	ImGui::Separator();
+
+	// --- B. レーン番号選択 (内部インデックス 0〜9 管理) ---
+	ImGui::Text("Lane Select (1 - 10):");
+
+	for (int lane = 0; lane < 10; ++lane)
+	{
+		// 0番目と5番目（UI上の1と6）以外は横に並べる
+		if (lane != 0 && lane != 5) ImGui::SameLine();
+
+		// ★ 表示テキストのみ +1（"1" 〜 "10"）
+		std::string laneLabel = std::to_string(lane + 1) + "##lane";
+		bool isSelected = (currentLaneNo == lane);
+
+		if (isSelected)
+		{
+			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.6f, 0.2f, 1.0f));
+		}
+
+		if (ImGui::Button(laneLabel.c_str(), ImVec2(40, 0)))
+		{
+			currentLaneNo = lane; // 内部値は 0〜9
+
+			if (STAGEMGR.LoadStage(currentStageNo))
+			{
+				// 計算不要でそのままインデックスを渡す
+				STAGEMGR.BuildAllObjects(currentLaneNo);
+
+				// PTカメラの位置をプレイヤー位置へ
+				if (camera)
+				{
+					// プレイヤー座標取得
+					const auto playerPos = stageData.m_stageLaneData[currentLaneNo].m_playerData.m_position;
+
+					camera->MoveTargetPoint(playerPos);
+				}
+			}
+		}
+
+		if (isSelected)
+		{
+			ImGui::PopStyleColor();
+		}
+	}
+
+	// ★ 表示時のみ currentLaneNo + 1
+	ImGui::Spacing();
+	ImGui::TextDisabled("Current Target: Stage %d / Lane %d (Index: %d)",
+		currentStageNo, currentLaneNo + 1, currentLaneNo);
+}
+
+void KdDebugGUI::UpdateSaveAndLoad(int currentStageNo, int currentLaneNo, StageOverallData& stageData)
+{
+	if (ImGui::CollapsingHeader("Save & Load"))
+	{
+		ImGui::Text("Target Stage: Stage %02d", currentStageNo);
+		ImGui::Separator();
+
+		// --- A. セーブボタン ---
+		if (ImGui::Button("Save Stage", ImVec2(90, 30)))
+		{
+			char filePath[64];
+			snprintf(filePath, sizeof(filePath), "Asset/Data/StageData/Stage%02d.json", currentStageNo);
+
+			STAGEMGR.SaveStage(filePath);
+		}
+
+		ImGui::SameLine();
+
+		// --- B. ロード（リセット）ボタン ---
+		if (ImGui::Button("Load Stage", ImVec2(90, 30)))
+		{
+			if (STAGEMGR.LoadStage(currentStageNo))
+			{
+				// 内部インデックス(0〜9)をそのまま渡す
+				STAGEMGR.BuildAllObjects(currentLaneNo);
+			}
+		}
+
+		// --- 仕切り ---
+		ImGui::Separator();
+
+		// --- C. コピーメニュー ---
+		if (ImGui::TreeNode("Copy Stage"))
+		{
+			// 値持ち
+			static int copyLaneNo = 0;
+
+			// --- レーン番号選択 (内部インデックス 0〜9 管理) ---
+			ImGui::Text("Lane Select (1 - 10):");
+
+			for (int lane = 0; lane < 10; ++lane)
+			{
+				// 0番目と5番目（UI上の1と6）以外は横に並べる
+				if (lane != 0 && lane != 5) ImGui::SameLine();
+
+				// ★ 表示テキストのみ +1（"1" 〜 "10"）
+				std::string laneLabel = std::to_string(lane + 1) + "##laneCP";
+				bool isSelected = (copyLaneNo == lane);
+
+				if (isSelected)
+				{
+					ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.6f, 0.2f, 1.0f));
+				}
+
+				if (ImGui::Button(laneLabel.c_str(), ImVec2(40, 0)))
+				{
+					copyLaneNo = lane;
+				}
+
+				if (isSelected)
+				{
+					ImGui::PopStyleColor();
+				}
+			}
+
+			// --- 仕切り ---
+			ImGui::Separator();
+
+			// --- コピーボタン ---
+			std::string text = "Copy Lane " + std::to_string(currentLaneNo + 1) + " to Lane " + std::to_string(copyLaneNo + 1);
+			if (ImGui::Button(text.c_str(), ImVec2(180, 30)))
+			{
+				// コピペ
+				stageData.m_stageLaneData[copyLaneNo] = stageData.m_stageLaneData[currentLaneNo];
+
+				// セーブ
+				char filePath[64];
+				snprintf(filePath, sizeof(filePath), "Asset/Data/StageData/Stage%02d.json", currentStageNo);
+
+				STAGEMGR.SaveStage(filePath);
+			}
+
+			ImGui::TreePop();
+		}
+	}
+}
+
+void KdDebugGUI::UpdateStageEdit(int currentStageNo, int currentLaneNo, StageOverallData& stageData)
+{
+	if (ImGui::CollapsingHeader("StageEdit", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		// --- A. StageEdit 直下で選択状態の変化をまとめて監視する変数 ---
+		static int lastStageNo = -1;
+		static int lastLaneNo = -1;
+
+		// --- B. 各入力用バッファとエラー状態 ---
+		static std::string skyPathInput = "";
+		static bool isSkyError = false;
+
+		static std::string terrainPathInput_Stage = "1";
+		static std::string terrainPathInput_Frame = "1";
+		static bool isTerrainError = false;
+
+		// --- C. ステージまたはレーンが切り替わった場合の一括同期処理 ---
+		if (lastStageNo != currentStageNo || lastLaneNo != currentLaneNo)
+		{
+			skyPathInput = stageData.m_skyPath;
+			isSkyError = false;
+
+			terrainPathInput_Stage = std::to_string(currentStageNo);
+			terrainPathInput_Frame = std::to_string(currentLaneNo + 1);
+			isTerrainError = false;
+
+			// 初期値に戻す
+			ChangeSelectedObject();
+
+			lastStageNo = currentStageNo;
+			lastLaneNo = currentLaneNo;
+		}
+
+		// 天球
+		UpdateSkyAssetSettings(skyPathInput, isSkyError, stageData);
+
+		// 区切り
+		ImGui::Separator();
+
+		// 島のデコレーション
+		UpdateIslandAndDecorations(stageData);
+
+		ImGui::Separator();
+
+		// ステージ内編集
+		UpdateFrameObjectsSetting(currentLaneNo, terrainPathInput_Stage, terrainPathInput_Frame, isTerrainError, stageData);
+	}
+}
+
+void KdDebugGUI::UpdateSkyAssetSettings(std::string& skyAssetPathStr, bool& isError, StageOverallData& stageData)
+{
+	if (ImGui::TreeNode("Sky Asset Settings"))
+	{
+		ImGui::Text("Current Sky Path: %s", stageData.m_skyPath.c_str());
+		ImGui::InputText("Model Path##SkyInput", &skyAssetPathStr);
+
+		if (isError)
+		{
+			ImGui::TextColored(ImVec4(1.0f, 0.2f, 0.2f, 1.0f), "[Error] File does not exist!");
+		}
+
+		if (ImGui::Button("Apply Sky Path", ImVec2(150, 0)))
+		{
+			if (std::filesystem::exists(skyAssetPathStr))
+			{
+				isError = false;
+				stageData.m_skyPath = skyAssetPathStr;
+
+				// 空の再生成
+				STAGEMGR.BuildSky();
+			}
+			else
+			{
+				isError = true;
+			}
+		}
+
+		ImGui::TreePop();
+	}
+}
+
+void KdDebugGUI::UpdateIslandAndDecorations(StageOverallData& stageData)
+{
+	// カテゴリを定義
+	const SelectedTargetCategory category = SelectedTargetCategory::Decoration;
+
+	if (ImGui::TreeNode("Decoration Management"))
+	{
+		auto& decorations = stageData.m_decorationData;
+		bool isDecorationChanged = false;
+
+		// --- 追加ボタンエリア ---
+		if (ImGui::Button("+ Add Decoration", ImVec2(140, 0)))
+		{
+			IslandDecorationData newDeco;
+			newDeco.m_modelPath = "Asset/Models/Terrain/Decoration/Stone1/Stone1.gltf";
+			newDeco.m_srtData = {};
+
+			decorations.push_back(newDeco);
+
+			// 追加したデコレーションを選択状態にする
+			ChangeSelectedObject(category, decorations.size() - 1);
+			
+			// 変更を取得
+			isDecorationChanged = true;
+		}
+
+		ImGui::Spacing();
+
+		// 1. デコレーション一覧リストボックス
+		ImGui::BeginChild("DecorationListChild", ImVec2(0, 120), true);
+		for (int i = 0; i < static_cast<int>(decorations.size()); ++i)
+		{
+			// 番号をラベルに
+			std::string label = "[" + std::to_string(i) + "] ";
+
+			// カテゴリとインデックスが両方一致している場合のみハイライト
+			bool isSelected = CheckCategoryAndIndex(category, i);
+
+			if (ImGui::Selectable(label.c_str(), isSelected))
+			{
+				// 選択カテゴリとインデックスを更新（他カテゴリの選択は自動解除）
+				ChangeSelectedObject(category, i);
+			}
+		}
+		ImGui::EndChild();
+
+		// 2. 範囲チェック（削除等でオーバーした場合の安全対策）
+		if (CheckCategory(category))
+		{
+			if (decorations.empty())
+			{
+				// 選択オブジェクトを初期化
+				ChangeSelectedObject();
+			}
+			else if (m_selectedIndex >= static_cast<int>(decorations.size()))
+			{
+				m_selectedIndex = static_cast<int>(decorations.size()) - 1;
+			}
+
+		}
+
+		static std::string decoModelPathInput = "";
+		static bool isDecoModelError = false;
+		static int lastSelectedIndex = -1; // 選択切り替え検知用
+
+		// 3. 選択中デコレーションの編集UI
+		if (CheckCategory(category) && m_selectedIndex >= 0 && m_selectedIndex < static_cast<int>(decorations.size()))
+		{
+			// 選択項目が切り替わったら入力バッファとエラー状態を同期・リセット
+			if (lastSelectedIndex != m_selectedIndex)
+			{
+				lastSelectedIndex = m_selectedIndex;
+				isDecoModelError = false;
+
+				decoModelPathInput = decorations[m_selectedIndex].m_modelPath;
+			}
+
+			ImGui::Separator();
+			ImGui::Text("Edit Deco [%d]", m_selectedIndex + 1);
+
+			auto& decoration = decorations[m_selectedIndex];
+
+			ImGui::Text("Current Model Path: %s", decoration.m_modelPath.c_str());
+			ImGui::InputText("Model Path##DecoInput", &decoModelPathInput);
+
+			if (isDecoModelError)
+			{
+				ImGui::TextColored(ImVec4(1.0f, 0.2f, 0.2f, 1.0f), "[Error] File does not exist!");
+			}
+
+			if (ImGui::Button("Apply Model Path", ImVec2(150, 0)))
+			{
+				if (std::filesystem::exists(decoModelPathInput))
+				{
+					isDecoModelError = false;
+					decoration.m_modelPath = decoModelPathInput;
+
+					// 変更を取得
+					isDecorationChanged = true;
+				}
+				else
+				{
+					isDecoModelError = true;
+				}
+			}
+
+			// SRT編集
+			if (ImGui::DragFloat3("Position", &decoration.m_srtData.m_position.x, 0.01f)) isDecorationChanged = true;
+			if (ImGui::DragFloat3("Rotation", &decoration.m_srtData.m_rotation.x, 0.1f, 0.0f, 0.0f, "%.1f deg"))isDecorationChanged = true;
+			if (ImGui::DragFloat3("Scale", &decoration.m_srtData.m_scale.x, 0.01f)) isDecorationChanged = true;
+
+			ImGui::Separator();
+
+			// 1. 複製ボタン（Duplicate / Copy）
+			if (ImGui::Button("Duplicate Selected", ImVec2(200, 0)))
+			{
+				// 選択中のギミックデータを深層コピー
+				auto duplicateDecoration = decorations[m_selectedIndex];
+
+				// （任意）重なって見づらくなるのを防ぐため座標を少しだけずらす
+				duplicateDecoration.m_srtData.m_position.x += 0.5f;
+
+				// 配列に追加
+				decorations.push_back(duplicateDecoration);
+
+				// 選択インデックスを新しく生成された末尾のギミックに変更
+				ChangeSelectedObject(category, decorations.size() - 1);
+				
+				// 入力バッファやエラー状態をリセット
+				lastSelectedIndex = m_selectedIndex;
+				isDecoModelError = false;
+				decoModelPathInput = decorations[m_selectedIndex].m_modelPath;
+
+				// 変更を取得
+				isDecorationChanged = true;
+			}
+
+			ImGui::SameLine();
+
+			// 2. 既存の削除ボタン
+			if (ImGui::Button("Delete Selected"))
+			{
+				decorations.erase(decorations.begin() + m_selectedIndex);
+				ChangeSelectedObject(category);
+
+				// 変更を取得
+				isDecorationChanged = true;
+			}
+		}
+
+		ImGui::TreePop();
+
+		// 値が更新された場合のみ再構築
+		if (isDecorationChanged)
+		{
+			STAGEMGR.BuildIsland();
+		}
+	}
+}
+
+void KdDebugGUI::UpdateFrameObjectsSetting(int currentLaneNo, std::string& terrainPath_Stage, std::string& terrainPath_Frame, bool& isError, StageOverallData& stageData)
+{
+	if (ImGui::TreeNode("Lane Placement Settings (※1)"))
+	{
+		// レーンデータ
+		auto& frameData = stageData.m_stageLaneData[currentLaneNo];
+
+		// ★ 各要素の区切り
+		ImGui::Separator();
+
+		// メイン地形
+		if (UpdateLaneAssetPath(terrainPath_Stage, terrainPath_Frame, isError, frameData))
+		{
+			// 変更を確認したら地形再生成
+			STAGEMGR.BuildTerrain(currentLaneNo);
+		}
+
+		// ★ 各要素の区切り
+		ImGui::Separator();
+
+		// 島デコレーション
+		if (UpdateIslandDecorationsVisibility(currentLaneNo, stageData))
+		{
+			// 変更を確認したので再生成
+			STAGEMGR.CheckIslandDecoActive(currentLaneNo);
+		}
+
+		// ★ 各要素の区切り
+		ImGui::Separator();
+
+		// ギミック
+		if (UpdateGimmickSetting(frameData))
+		{
+			// 変更を確認したので再生成
+			STAGEMGR.BuildGimmicks(currentLaneNo);
+		}
+
+		ImGui::Separator();
+
+		// ピン
+		if (UpdatePinsSetting(frameData))
+		{
+			// 変更を確認したので再生成
+			STAGEMGR.BuildPins(currentLaneNo);
+		}
+		
+		ImGui::Separator();
+		
+		// プレイヤー
+		if (UpdatePlayerSetting(frameData))
+		{
+			// 変更を確認したので再生成
+			STAGEMGR.BuildPlayer(currentLaneNo);
+		}
+
+		ImGui::TreePop(); // Lane Placement Settings (※1) の TreePop
+	}
+
+	// 右クリックで現在選択中のオブジェクトをカーソル位置に飛ばす
+	if (GetAsyncKeyState(VK_RBUTTON) & 0x8000)
+	{
+		// 移動処理
+		MoveSelectedObjectToCursor(stageData, currentLaneNo);
+	}
+
+	// 選択中のオブジェクトにDebugOutlineを合わせる
+	SetDebugOutlineToSelected(stageData, currentLaneNo);
+}
+
+bool KdDebugGUI::UpdateLaneAssetPath(std::string& terrainPath_Stage, std::string& terrainPath_Frame, bool& isError, StageLaneData& frameData)
+{
+	bool isTerrainAssetChanged = false;
+
+	if (ImGui::TreeNode("Lane Terrain Asset Path"))
+	{
+		ImGui::Text("Current Terrain Path:\n%s", frameData.m_terrainPath.c_str());
+
+		ImGui::InputText("Stage##TerrainInput", &terrainPath_Stage);
+		ImGui::InputText("Frame##TerrainInput", &terrainPath_Frame);
+
+		if (isError)
+		{
+			ImGui::TextColored(ImVec4(1.0f, 0.2f, 0.2f, 1.0f), "[Error] File does not exist!");
+		}
+
+		if (ImGui::Button("Apply Terrain Path", ImVec2(150, 0)))
+		{
+			// パスを作成
+			std::string BasePath = "Asset/Models/Terrain/MainTerrain/";
+			std::string StagePath = "Stage" + terrainPath_Stage;
+			// フレームの桁数チェック
+			bool m_isFrameOneDig = terrainPath_Frame.size() == 1;
+			std::string FramePath = StagePath + "-" + (m_isFrameOneDig ? "0" : "") + terrainPath_Frame;
+			std::string TerrainPath = BasePath + StagePath + "/" + FramePath + "/" + FramePath + ".gltf";
+
+			if (std::filesystem::exists(TerrainPath))
+			{
+				isError = false;
+				frameData.m_terrainPath = TerrainPath;
+
+				// 変更した
+				isTerrainAssetChanged = true;
+			}
+			else
+			{
+				isError = true;
+			}
+		}
+
+		ImGui::TreePop();
+	}
+
+	// 変更したかを返す
+	return isTerrainAssetChanged;
+}
+
+bool KdDebugGUI::UpdateIslandDecorationsVisibility(int currentLaneNo, StageOverallData& stageData)
+{
+	// 変更検知用
+	bool isDecorationChanged = false;
+
+	if (ImGui::TreeNode("Island Decorations Active"))
+	{
+		// デコレーションデータ
+		auto& decorations = stageData.m_decorationData;
+
+		// 1. 全選択 / 全解除ボタン
+		if (ImGui::Button("Activate All"))
+		{
+			for (auto& decoration : decorations)
+			{
+				decoration.m_isActive[currentLaneNo] = true;
+			}
+			isDecorationChanged = true;
+		}
+
+		ImGui::SameLine();
+
+		if (ImGui::Button("Deactivate All"))
+		{
+			for (auto& decoration : decorations)
+			{
+				decoration.m_isActive[currentLaneNo] = false;
+			}
+			isDecorationChanged = true;
+		}
+
+		ImGui::Spacing();
+
+		// 2. デコレーション一覧リストボックス
+		ImGui::BeginChild("DecorationListChild", ImVec2(0, 120), true);
+		for (int i = 0; i < static_cast<int>(decorations.size()); ++i)
+		{
+			// 番号をラベルに
+			std::string label = "[" + std::to_string(i) + "] ";
+
+			// デコレーションタグ名
+			ImGui::Text(label.c_str());
+
+			ImGui::SameLine();
+
+			// チェックボックスの描画
+			std::string checkboxLabel = "Object Active##" + std::to_string(i);
+			if (ImGui::Checkbox(checkboxLabel.c_str(), &decorations[i].m_isActive[currentLaneNo]))isDecorationChanged = true;
+		}
+		ImGui::EndChild();
+
+		ImGui::TreePop();
+	}
+
+	// 変更したかを返す
+	return isDecorationChanged;
+}
+
+bool KdDebugGUI::UpdateGimmickSetting(StageLaneData& frameData)
+{
+	// カテゴリを定義
+	const SelectedTargetCategory category = SelectedTargetCategory::Gimmick;
+	bool isGimmickChanged = false;
+
+	if (ImGui::TreeNode("Gimmick Management"))
+	{
+		auto& gimmicks = frameData.m_laneGimmickData;
+
+		// --- 追加ボタンエリア ---
+		if (ImGui::Button("+ Add Finish Area", ImVec2(140, 0)))
+		{
+			LaneGimmickData newGimmick;
+			newGimmick.m_type = "Goal";
+			newGimmick.m_param = FinishAreaParams{}; // FinishArea 用パラメータ
+
+			gimmicks.push_back(newGimmick);
+
+			// 追加したギミックを選択状態にする
+			ChangeSelectedObject(category, (gimmicks.size()) - 1);
+
+			// 変更を取得
+			isGimmickChanged = true;
+		}
+
+		ImGui::SameLine();
+
+		if (ImGui::Button("+ Add SpeedUp Area", ImVec2(160, 0)))
+		{
+			LaneGimmickData newGimmick;
+			newGimmick.m_type = "SpeedUp";
+			newGimmick.m_param = SpeedUpAreaParams{}; // FinishArea 用パラメータ
+
+			gimmicks.push_back(newGimmick);
+
+			// 追加したギミックを選択状態にする
+			ChangeSelectedObject(category, (gimmicks.size()) - 1);
+
+			// 変更を取得
+			isGimmickChanged = true;
+		}
+
+		if (ImGui::Button("+ Add Moving Terrain", ImVec2(160, 0)))
+		{
+			LaneGimmickData newGimmick;
+			newGimmick.m_type = "MovingTerrain";
+
+			// デフォルトの移動パラメータを設定
+			MovingParams moveParam;
+			newGimmick.m_param = moveParam;
+
+			gimmicks.push_back(newGimmick);
+
+			// 追加したギミックを選択状態にする
+			ChangeSelectedObject(category, (gimmicks.size()) - 1);
+
+			// 変更を取得
+			isGimmickChanged = true;
+		}
+
+		ImGui::SameLine();
+
+		if (ImGui::Button("+ Add Rotating Terrain", ImVec2(160, 0)))
+		{
+			LaneGimmickData newGimmick;
+			newGimmick.m_type = "RotatingTerrain";
+
+			// デフォルトの回転パラメータを設定
+			RotatingParams rotParam;
+			newGimmick.m_param = rotParam;
+
+			gimmicks.push_back(newGimmick);
+
+			// 追加したギミックを選択状態にする
+			ChangeSelectedObject(category, (gimmicks.size()) - 1);
+
+			// 変更を取得
+			isGimmickChanged = true;
+		}
+
+		ImGui::Spacing();
+
+		// 1. ギミック一覧リストボックス
+		ImGui::BeginChild("GimmickListChild", ImVec2(0, 120), true);
+		for (int i = 0; i < static_cast<int>(gimmicks.size()); ++i)
+		{
+			// タイプ名もラベルに表示して見やすくする
+			std::string label = "[" + std::to_string(i) + "] " + gimmicks[i].m_type;
+
+			// カテゴリとインデックスが両方一致している場合のみハイライト
+			bool isSelected = CheckCategoryAndIndex(category, i);
+
+			if (ImGui::Selectable(label.c_str(), isSelected))
+			{
+				// 選択カテゴリとインデックスを更新（他カテゴリの選択は自動解除）
+				ChangeSelectedObject(category, i);
+			}
+		}
+
+		ImGui::EndChild();
+
+		// 2. 範囲チェック（ギミック削除等でオーバーした場合の安全対策）
+		if (CheckCategory(category))
+		{
+			if (gimmicks.empty())
+			{
+				// 選択リセット
+				ChangeSelectedObject();
+			}
+			else if (m_selectedIndex >= static_cast<int>(gimmicks.size()))
+			{
+				ChangeSelectedObject(category, (gimmicks.size()) - 1);
+			}
+		}
+
+		static std::string gimmickModelPathInput = "";
+		static bool isGimmickModelError = false;
+		static int lastSelectedIndex = -1; // 選択切り替え検知用
+
+		// 3. 選択中ギミックの編集UI
+		if (CheckCategory(category) && m_selectedIndex >= 0 && m_selectedIndex < static_cast<int>(gimmicks.size()))
+		{
+			// 選択項目が切り替わったら入力バッファとエラー状態を同期・リセット
+			if (lastSelectedIndex != m_selectedIndex)
+			{
+				lastSelectedIndex = m_selectedIndex;
+				isGimmickModelError = false;
+
+				// 選択されたギミックから初期文字列を設定
+				if (auto* rot = std::get_if<RotatingParams>(&gimmicks[m_selectedIndex].m_param))
+				{
+					gimmickModelPathInput = rot->m_modelPath;
+				}
+
+				if (auto* mov = std::get_if<MovingParams>(&gimmicks[m_selectedIndex].m_param))
+				{
+					gimmickModelPathInput = mov->m_modelPath;
+				}
+			}
+
+			ImGui::Separator();
+			ImGui::Text("Edit Gimmick [%d] (%s)", m_selectedIndex + 1, gimmicks[m_selectedIndex].m_type.c_str());
+
+			auto& gimmick = gimmicks[m_selectedIndex];
+
+			// 共通：Transform編集
+			if (ImGui::DragFloat3("Position", &gimmick.m_data.m_position.x, 0.01f)) isGimmickChanged = true;
+			if (ImGui::DragFloat3("Rotation", &gimmick.m_data.m_rotation.x, 0.1f, 0.0f, 0.0f, "%.1f deg"))isGimmickChanged = true;
+			if (ImGui::DragFloat3("Scale", &gimmick.m_data.m_scale.x, 0.01f)) isGimmickChanged = true;
+
+			ImGui::Separator();
+
+			// 固有パラメータ編集
+			if (auto* rot = std::get_if<RotatingParams>(&gimmick.m_param))
+			{
+				ImGui::TextUnformatted("--- Rotating Settings ---");
+				ImGui::Text("Current Model Path: %s", rot->m_modelPath.c_str());
+
+				// Sky Asset Settings と同じスタイルでモデルパスを入力
+				ImGui::InputText("Model Path##GimmickModelInput", &gimmickModelPathInput);
+
+				if (isGimmickModelError)
+				{
+					ImGui::TextColored(ImVec4(1.0f, 0.2f, 0.2f, 1.0f), "[Error] File does not exist!");
+				}
+
+				if (ImGui::Button("Apply Model Path", ImVec2(150, 0)))
+				{
+					if (std::filesystem::exists(gimmickModelPathInput))
+					{
+						isGimmickModelError = false;
+						rot->m_modelPath = gimmickModelPathInput;
+						isGimmickChanged = true;
+					}
+					else
+					{
+						isGimmickModelError = true;
+					}
+				}
+
+				// 回転のピボット
+				if (ImGui::DragFloat3("RotatePivot", &rot->m_rotPivotPosOfs.x, 0.01f)) isGimmickChanged = true;
+
+				// 回転速度（リアルタイム反映）
+				if (ImGui::DragFloat("Rotate Speed", &rot->m_rotateSpeed, 0.05f, -100.0f, 100.0f))
+				{
+					isGimmickChanged = true;
+				}
+			}
+			else if (auto* mov = std::get_if<MovingParams>(&gimmick.m_param))
+			{
+				ImGui::TextUnformatted("--- Moving Settings ---");
+				ImGui::Text("Current Model Path: %s", mov->m_modelPath.c_str());
+
+				// Sky Asset Settings と同じスタイルでモデルパスを入力
+				ImGui::InputText("Model Path##GimmickModelInput", &gimmickModelPathInput);
+
+				if (isGimmickModelError)
+				{
+					ImGui::TextColored(ImVec4(1.0f, 0.2f, 0.2f, 1.0f), "[Error] File does not exist!");
+				}
+
+				if (ImGui::Button("Apply Model Path", ImVec2(150, 0)))
+				{
+					if (std::filesystem::exists(gimmickModelPathInput))
+					{
+						isGimmickModelError = false;
+						mov->m_modelPath = gimmickModelPathInput;
+						isGimmickChanged = true;
+					}
+					else
+					{
+						isGimmickModelError = true;
+					}
+				}
+
+				// 移動速度（リアルタイム反映）
+				if (ImGui::DragFloat("Move Speed", &mov->m_speed, 0.05f, -100.0f, 100.0f))
+				{
+					isGimmickChanged = true;
+				}
+
+				// 移動方法
+				static std::string ModeText;
+				ModeText = (mov->m_movePattern == MovingParams::MovePattern::Linear) ? "Linear" : "Easing";
+				ImGui::Text("Move Pattern Current : %s", ModeText.c_str());
+
+				if (ImGui::Button("Linear", ImVec2(70, 0)))
+				{
+					mov->m_movePattern = MovingParams::MovePattern::Linear;
+					ModeText = "Linear";
+					isGimmickChanged = true;
+				}
+				ImGui::SameLine();
+				if (ImGui::Button("Easing", ImVec2(70, 0)))
+				{
+					mov->m_movePattern = MovingParams::MovePattern::Easing;
+					ModeText = "Easing";
+					isGimmickChanged = true;
+				}
+
+				// 停止時間
+				if (ImGui::DragFloat("Stop Time", &mov->m_stopTime, 0.05f, 0.0f, 10.0f))
+				{
+					isGimmickChanged = true;
+				}
+
+				// スタートとゴールの位置
+				if (ImGui::DragFloat3("Start Position", &mov->m_startPos.x, 0.01f)) isGimmickChanged = true;
+				if (ImGui::DragFloat3("Goal Position", &mov->m_goalPos.x, 0.01f)) isGimmickChanged = true;
+
+				// -------------------------------------------------------------
+				// ウェイポイント（Waypoints）リスト管理処理
+				// -------------------------------------------------------------
+				ImGui::Spacing();
+				ImGui::Separator();
+				ImGui::TextUnformatted("--- Waypoints Management ---");
+
+				// 1. ウェイポイント追加ボタン
+				if (ImGui::Button("+ Add Waypoint", ImVec2(130, 0)))
+				{
+					// 初期位置：最後のウェイポイントの位置、または Start Position の少し先
+					Math::Vector3 newPoint = mov->m_startPos;
+					if (!mov->m_waypoints.empty())
+					{
+						newPoint = mov->m_waypoints.back();
+					}
+					newPoint.x += 1.0f; // 少しずらして配置
+
+					mov->m_waypoints.push_back(newPoint);
+					isGimmickChanged = true;
+				}
+
+				// 2. ウェイポイント一覧の表示・編集
+				int removeIndex = -1; // 削除予約用インデックス
+
+				for (int wpIdx = 0; wpIdx < static_cast<int>(mov->m_waypoints.size()); ++wpIdx)
+				{
+					ImGui::PushID(wpIdx); // ループ内 ID の競合防止
+
+					// ドラッグ入力で各座標を編集
+					std::string wpLabel = "WP [" + std::to_string(wpIdx + 1) + "]";
+					if (ImGui::DragFloat3(wpLabel.c_str(), &mov->m_waypoints[wpIdx].x, 0.01f))
+					{
+						isGimmickChanged = true;
+					}
+
+					// 削除ボタン
+					ImGui::SameLine();
+					if (ImGui::Button("X"))
+					{
+						removeIndex = wpIdx;
+					}
+
+					ImGui::PopID();
+				}
+
+				// 削除処理（ループ外で安全に実行）
+				if (removeIndex != -1)
+				{
+					mov->m_waypoints.erase(mov->m_waypoints.begin() + removeIndex);
+					isGimmickChanged = true;
+				}
+			}
+			else if (auto* finish = std::get_if<FinishAreaParams>(&gimmick.m_param))
+			{
+				// ここは何もない
+			}
+
+			ImGui::Separator();
+
+			// 1. 複製ボタン（Duplicate / Copy）
+			if (ImGui::Button("Duplicate Selected Gimmick", ImVec2(200, 0)))
+			{
+				// 選択中のギミックデータを深層コピー
+				auto duplicateGimmick = gimmicks[m_selectedIndex];
+
+				// （任意）重なって見づらくなるのを防ぐため座標を少しだけずらす
+				duplicateGimmick.m_data.m_position.x += 0.5f;
+
+				// 配列に追加
+				gimmicks.push_back(duplicateGimmick);
+
+				// 選択インデックスを新しく生成された末尾のギミックに変更
+				ChangeSelectedObject(category, (gimmicks.size()) - 1);
+
+				// 入力バッファやエラー状態を新ギミック用にリセット
+				lastSelectedIndex = m_selectedIndex;
+				isGimmickModelError = false;
+				if (auto* rot = std::get_if<RotatingParams>(&gimmicks[m_selectedIndex].m_param))
+				{
+					gimmickModelPathInput = rot->m_modelPath;
+				}
+				if (auto* mov = std::get_if<MovingParams>(&gimmicks[m_selectedIndex].m_param))
+				{
+					gimmickModelPathInput = mov->m_modelPath;
+				}
+
+				// 変更を取得
+				isGimmickChanged = true;
+			}
+
+			ImGui::SameLine();
+
+			// 2. 既存の削除ボタン
+			if (ImGui::Button("Delete Selected Gimmick"))
+			{
+				gimmicks.erase(gimmicks.begin() + m_selectedIndex);
+				m_selectedIndex = -1; // 選択解除
+
+				// 変更を取得
+				isGimmickChanged = true;
+			}
+		}
+
+		ImGui::TreePop();
+	}
+
+	// 変更したかを返す
+	return isGimmickChanged;
+}
+
+bool KdDebugGUI::UpdatePinsSetting(StageLaneData& frameData)
+{
+	// カテゴリ定義
+	const SelectedTargetCategory category = SelectedTargetCategory::Pin;
+	// 変更確認用
+	bool isPinChanged = false;
+
+	if (ImGui::TreeNode("Pin List (10 Pins)"))
+	{
+		auto& pins = frameData.m_lanePinData;
+
+		// 1. ピン一覧リストボックス
+		ImGui::BeginChild("PinListChild", ImVec2(0, 120), true);
+		for (int i = 0; i < static_cast<int>(pins.size()); ++i)
+		{
+			std::string label = "[" + std::to_string(i) + "] Pin " + std::to_string(i + 1);
+
+			// カテゴリとインデックスが両方一致している場合のみハイライト
+			bool isSelected = (CheckCategoryAndIndex(category, i));
+
+			if (ImGui::Selectable(label.c_str(), isSelected))
+			{
+				// 選択カテゴリとインデックスを更新
+				ChangeSelectedObject(category, i);
+			}
+		}
+		ImGui::EndChild();
+
+		// 2. 範囲チェック
+		if (CheckCategory(category))
+		{
+			if (pins.empty())
+			{
+				// 選択中のオブジェクトをリセット
+				ChangeSelectedObject();
+			}
+			else if (m_selectedIndex >= static_cast<int>(pins.size()))
+			{
+				ChangeSelectedObject(category, pins.size() - 1);
+			}
+		}
+
+		// 3. 選択中ピンの編集UI
+		if (CheckCategory(category) && m_selectedIndex >= 0 && m_selectedIndex < static_cast<int>(pins.size()))
+		{
+			ImGui::Separator();
+			ImGui::Text("Edit Pin [%d]", m_selectedIndex + 1);
+
+			auto& pin = pins[m_selectedIndex];
+
+			if (ImGui::DragFloat3("Position", &pin.m_data.m_position.x, 0.01f)) isPinChanged = true;
+			if (ImGui::DragFloat3("Rotation", &pin.m_data.m_rotation.x, 0.1f))  isPinChanged = true;
+			if (ImGui::DragFloat3("Scale", &pin.m_data.m_scale.x, 0.01f)) isPinChanged = true;
+		}
+
+		ImGui::TreePop();
+	}
+
+	// 変更したかを返す
+	return isPinChanged;
+}
+
+bool KdDebugGUI::UpdatePlayerSetting(StageLaneData& frameData)
+{
+	// カテゴリ定義
+	const SelectedTargetCategory category = SelectedTargetCategory::Player;
+	// 変更検知用
+	bool isPlayerChanged = false;
+
+	if (ImGui::TreeNode("Player Transform Settings"))
+	{
+		auto& player = frameData.m_playerData;
+		
+		// 1. サイズ 1 の選択リストボックス（高さ 35px 程度で固定）
+		ImGui::BeginChild("PlayerListChild", ImVec2(0, 35), true);
+
+		bool isSelected = (CheckCategory(category));
+		if (ImGui::Selectable("[Player] Start Position", isSelected))
+		{
+			ChangeSelectedObject(category, 0);
+		}
+		ImGui::EndChild();
+
+		// 2. 選択中プレイヤーの編集UI
+		if (CheckCategory(category))
+		{
+			ImGui::Separator();
+			ImGui::Text("Edit Player Transform");
+
+			if (ImGui::DragFloat3("Position", &player.m_position.x, 0.01f)) isPlayerChanged = true;
+			if (ImGui::DragFloat3("Rotation", &player.m_rotation.x, 0.1f))  isPlayerChanged = true;
+		}
+
+		ImGui::TreePop();
+	}
+
+	// 変更したかを通知
+	return isPlayerChanged;
+}
+
+void KdDebugGUI::MoveSelectedObjectToCursor(StageOverallData& stageData, int currentLaneNo)const
+{
+	// レーンデータ
+	auto& frameData = stageData.m_stageLaneData[currentLaneNo];
+
+	// カメラ取得
+	std::weak_ptr<CameraBase> parent = CAMERAMGR.GetDebugCamera();
+	std::shared_ptr<PointTargetCamera> camera;
+	static bool camCastSuccess = false;
+	if (camera = std::dynamic_pointer_cast<PointTargetCamera>(parent.lock()))
+	{
+		camCastSuccess = true;
+	}
+	else camCastSuccess = false;
+
+	// マウス座標(2D)を3D座標へ変換
+	if (camera)
+	{
+		// 手順①
+		// マウス座標を取得
+		POINT _mousePos;
+		GetCursorPos(&_mousePos);
+		ScreenToClient(Application::Instance().GetWindowHandle(), &_mousePos);
+
+		// 手順②
+		// マウスの2D座標を3D座標へ変換する
+		Math::Vector3	rayPos = camera->GetCurrentViewPoint();
+		Math::Vector3	rayDir = Math::Vector3::Zero;
+		float			range = 2000.f;
+		camera->WorkCamera()->GenerateRayInfoFromClientPos(_mousePos, rayPos, rayDir, range);
+
+		// Jolt Physics への RayCast
+		JPH::RRayCast rayCast;
+		rayCast.mOrigin = JPH::RVec3(rayPos.x, rayPos.y, rayPos.z);
+		rayCast.mDirection = JPH::Vec3(rayDir.x, rayDir.y, rayDir.z) * range; // 飛ばす長さ
+		GroundObjectFilter groundFilter;
+
+		// 選択中の種類と Index から直接データを特定して移動
+		Math::Vector3 selectedObjectPos;
+		if (CheckCategory(SelectedTargetCategory::Gimmick))
+		{
+			if (m_selectedIndex >= 0 && m_selectedIndex < static_cast<int>(frameData.m_laneGimmickData.size()))
+			{
+				selectedObjectPos = frameData.m_laneGimmickData[m_selectedIndex].m_data.m_position;
+			}
+		}
+		else if (CheckCategory(SelectedTargetCategory::Pin))
+		{
+			if (m_selectedIndex >= 0 && m_selectedIndex < static_cast<int>(frameData.m_lanePinData.size()))
+			{
+				selectedObjectPos = frameData.m_lanePinData[m_selectedIndex].m_data.m_position;
+			}
+		}
+		else if (CheckCategory(SelectedTargetCategory::Player))
+		{
+			selectedObjectPos = frameData.m_playerData.m_position;
+		}
+
+		JPH::BodyID targetBodyID;
+
+		// 選択中データの位置（Vector3）を Jolt Vec3 に変換
+		JPH::Vec3 pos(selectedObjectPos.x, selectedObjectPos.y, selectedObjectPos.z);
+
+		// 選択中の座標からわずかに広がった AABB（検索範囲）を作成
+		JPH::AABox searchBox(pos - JPH::Vec3::sReplicate(0.1f), pos + JPH::Vec3::sReplicate(0.1f));
+
+		// AABB内に含まれる BodyID を収集するコレクター
+		class SimpleCollector : public JPH::CollideShapeBodyCollector
+		{
+		public:
+			virtual void AddHit(const JPH::BodyID& inBodyID) override { m_hits.push_back(inBodyID); }
+			std::vector<JPH::BodyID> m_hits;
+		};
+
+		// 1. 新しい専用フィルターの生成
+		NonGroundObjectFilter nonGroundFilter; // 地形レイヤーを指定
+
+		// 2. AABB内での BodyID 検索実行
+		SimpleCollector collector;
+		PHYSICSMGR.GetSystem().GetBroadPhaseQuery().CollideAABox(
+			searchBox,
+			collector,
+			{},               // BroadPhaseLayerFilter（空でOK）
+			nonGroundFilter   // 作成した地形除外フィルター
+		);
+
+		// 3. 地形が除外された状態で安全に BodyID を取得
+		if (!collector.m_hits.empty())
+		{
+			targetBodyID = collector.m_hits[0];
+		}
+
+		// レイを飛ばす
+		bool hasHit = false;
+		JPH::RayCastResult hit;
+		if (!targetBodyID.IsInvalid())
+		{
+			// Jolt標準の単一Body除外フィルターをそのまま生成して渡す
+			JPH::IgnoreSingleBodyFilter selfFilter(targetBodyID);
+
+			hasHit = PHYSICSMGR.GetSystem().GetNarrowPhaseQuery().CastRay(rayCast, hit, {}, groundFilter, selfFilter);
+		}
+		else
+		{
+			hasHit = PHYSICSMGR.GetSystem().GetNarrowPhaseQuery().CastRay(rayCast, hit, {}, groundFilter);
+		}
+
+		if (hasHit)
+		{
+			// ★レイが何かに当たった！その「衝突点の3D座標」を取得
+			JPH::RVec3 hitPos = rayCast.GetPointOnRay(hit.mFraction);
+			Math::Vector3 hitVec3Pos = Math::Vector3(hitPos.GetX(), hitPos.GetY(), hitPos.GetZ());
+
+			// 選択中の種類と Index から直接データを特定して移動
+			if (CheckCategory(SelectedTargetCategory::Decoration))
+			{
+				if (m_selectedIndex >= 0 && m_selectedIndex < static_cast<int>(stageData.m_decorationData.size()))
+				{
+					auto& deco = stageData.m_decorationData[m_selectedIndex];
+					deco.m_srtData.m_position = Math::Vector3(hitVec3Pos.x, hitVec3Pos.y, hitVec3Pos.z);
+
+					// 島の再生成
+					STAGEMGR.BuildIsland();
+				}
+			}
+			if (CheckCategory(SelectedTargetCategory::Gimmick))
+			{
+				if (m_selectedIndex >= 0 && m_selectedIndex < static_cast<int>(frameData.m_laneGimmickData.size()))
+				{
+					auto& gimmick = frameData.m_laneGimmickData[m_selectedIndex];
+					gimmick.m_data.m_position = Math::Vector3(hitVec3Pos.x, hitVec3Pos.y, hitVec3Pos.z);
+
+					// ギミックの再生成
+					STAGEMGR.BuildGimmicks(currentLaneNo);
+				}
+			}
+			else if (CheckCategory(SelectedTargetCategory::Pin))
+			{
+				if (m_selectedIndex >= 0 && m_selectedIndex < static_cast<int>(frameData.m_lanePinData.size()))
+				{
+					auto& pin = frameData.m_lanePinData[m_selectedIndex];
+					pin.m_data.m_position = Math::Vector3(hitVec3Pos.x, hitVec3Pos.y, hitVec3Pos.z);
+
+					// ピンの再生成
+					STAGEMGR.BuildPins(currentLaneNo);
+				}
+			}
+			else if (CheckCategory(SelectedTargetCategory::Player))
+			{
+				auto& player = frameData.m_playerData;
+				player.m_position = Math::Vector3(hitVec3Pos.x, hitVec3Pos.y, hitVec3Pos.z);
+
+				// プレイヤーの再生成
+				STAGEMGR.BuildPlayer(currentLaneNo);
+			}
+		}
+	}
+}
+
+void KdDebugGUI::SetDebugOutlineToSelected(const StageOverallData& stageData, int currentLaneNo) const
+{
+	// レーンデータ
+	const auto& frameData = stageData.m_stageLaneData[currentLaneNo];
+
+	Math::Vector3 debugPos = { 0.0f, 0.0f, 0.0f };
+	bool hasSelection = false;
+
+	if (CheckCategory(SelectedTargetCategory::Decoration) && m_selectedIndex >= 0 && m_selectedIndex < static_cast<int>(stageData.m_decorationData.size()))
+	{
+		debugPos = stageData.m_decorationData[m_selectedIndex].m_srtData.m_position;
+		hasSelection = true;
+	}
+	if (CheckCategory(SelectedTargetCategory::Gimmick) && m_selectedIndex >= 0 && m_selectedIndex < static_cast<int>(frameData.m_laneGimmickData.size()))
+	{
+		debugPos = frameData.m_laneGimmickData[m_selectedIndex].m_data.m_position;
+		hasSelection = true;
+	}
+	else if (CheckCategory(SelectedTargetCategory::Pin) && m_selectedIndex >= 0 && m_selectedIndex < static_cast<int>(frameData.m_lanePinData.size()))
+	{
+		debugPos = frameData.m_lanePinData[m_selectedIndex].m_data.m_position;
+		hasSelection = true;
+	}
+	else if (CheckCategory(SelectedTargetCategory::Player))
+	{
+		debugPos = frameData.m_playerData.m_position;
+		hasSelection = true;
+	}
+
+	// STAGEMGR に選択中の座標を渡して DebugSphere を表示
+	STAGEMGR.SetDebugOutlinePos(hasSelection, debugPos);
+}
+
+void KdDebugGUI::ChangeSelectedObject(SelectedTargetCategory category, int index)
+{
+	m_selectedCategory = category;
+	m_selectedIndex = index;
 }
 
 void KdDebugGUI::DrawDebugScoreGUI()

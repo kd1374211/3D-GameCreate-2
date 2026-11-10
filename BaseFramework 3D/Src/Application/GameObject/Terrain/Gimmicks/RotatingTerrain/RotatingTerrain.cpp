@@ -2,12 +2,12 @@
 #include "../../../../StageManager/StageManager.h"
 #include "../../../../Const/Function.h"
 
-RotatingTerrain::RotatingTerrain(std::string modelPath, Math::Vector3 pos, Math::Vector3 rot, Math::Vector3 sca, float degPerSec)
+RotatingTerrain::RotatingTerrain(Math::Vector3 pos, Math::Vector3 rot, Math::Vector3 sca, RotatingParams param)
 {
 	Math::Quaternion quat = ConvertEulerVec3ToQuat(rot);
 
 	//m_model = std::make_shared<KdModelData>();
-	m_model = KdAssets::Instance().m_modeldatas.GetData(modelPath);
+	m_model = KdAssets::Instance().m_modeldatas.GetData(param.m_modelPath);
 	//m_model->Load(modelPath);
 
 	m_cPhysics = std::make_shared<PhysicsComponent>();
@@ -17,18 +17,19 @@ RotatingTerrain::RotatingTerrain(std::string modelPath, Math::Vector3 pos, Math:
 	initData.pos = pos;
 	initData.rot = quat;
 	initData.scale = sca;
+	initData.rotPivotOffset = param.m_rotPivotPosOfs;
 	initData.motionType = JPH::EMotionType::Kinematic;
 	initData.isStatic = false;
 	initData.layer = Layers::TERRAIN;
 	initData.userData = reinterpret_cast<JPH::uint64>(this);
 
 	// 🚀 ファイルパスを渡すだけで、ロードから Jolt への地形登録まで完結！
-	if (!m_cPhysics->InitTerrainModel(modelPath, initData)) {
+	if (!m_cPhysics->InitTerrainModel(param.m_modelPath, initData)) {
 		// エラー処理
 	}
 
 	// 回転を加える
-	m_cPhysics->SetAngularVelocity(JPH::Vec3(0, DirectX::XMConvertToRadians(degPerSec), 0));
+	m_cPhysics->SetAngularVelocity(JPH::Vec3(0, DirectX::XMConvertToRadians(param.m_rotateSpeed), 0));
 
 	// 情報設定
 	m_pos = pos;

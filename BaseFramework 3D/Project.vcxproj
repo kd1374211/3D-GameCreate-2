@@ -653,6 +653,8 @@
     <ClInclude Include="Src\Application\Const\MouseTexturesConst.h" />
     <ClInclude Include="Src\Application\Const\PhysicsMaterialConsts.h" />
     <ClInclude Include="Src\Application\Const\PinTypes.h" />
+    <ClInclude Include="Src\Application\Const\StageDataConsts.h" />
+    <ClInclude Include="Src\Application\Const\VariantParamData.h" />
     <ClInclude Include="Src\Application\Const\WindowConsts.h" />
     <ClInclude Include="Src\Application\Cursor\CursorManager.h" />
     <ClInclude Include="Src\Application\FadeManager\FadeManager.h" />
@@ -705,7 +707,6 @@
     <ClInclude Include="Src\Application\Scene\TitleScene\TitleScene.h" />
     <ClInclude Include="Src\Application\Sound\SoundManager.h" />
     <ClInclude Include="Src\Application\StageManager\StageManager.h" />
-    <ClInclude Include="Src\Application\StageManager\VariantParamData.h" />
     <ClInclude Include="Src\Application\UserSave\UserSaveManager.h" />
     <ClInclude Include="Src\Framework\Direct3D\KdMaterial.h" />
     <ClInclude Include="Src\Framework\Direct3D\Polygon\KdPolygon.h" />

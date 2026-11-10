@@ -1608,9 +1608,6 @@
     <ClInclude Include="Src\Application\Const\DeviceAndKey.h">
       <Filter>Src\Application\Const</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Application\StageManager\VariantParamData.h">
-      <Filter>Src\Application\StageManager</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Application\GameObject\UI\ShotUI\ShotCursor\ShotCursor.h">
       <Filter>Src\Application\GameObject\UI\ShotUI\ShotCursor</Filter>
     </ClInclude>
@@ -1697,6 +1694,12 @@
     </ClInclude>
     <ClInclude Include="Src\Application\GameObject\Effect\PinHitParticle\PinHitParticle.h">
       <Filter>Src\Application\GameObject\Effect\PinHitParticle</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Const\StageDataConsts.h">
+      <Filter>Src\Application\Const</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Const\VariantParamData.h">
+      <Filter>Src\Application\Const</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
