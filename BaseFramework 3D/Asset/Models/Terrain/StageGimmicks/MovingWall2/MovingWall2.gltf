@@ -8,7 +8,8 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				0
+				0,
+				1
 			]
 		}
 	],
@@ -16,6 +17,14 @@
 		{
 			"mesh":0,
 			"name":"Cube.001"
+		},
+		{
+			"name":"ModelCenterPoint",
+			"translation":[
+				0,
+				0.10000000149011612,
+				0
+			]
 		}
 	],
 	"materials":[

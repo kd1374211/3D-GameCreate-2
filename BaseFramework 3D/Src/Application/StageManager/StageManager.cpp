@@ -130,6 +130,12 @@ bool StageManager::SaveStage(const std::string& filePath)
 					gJson["modelPath"] = param->m_modelPath;
 					gJson["rotateSpeed"] = param->m_rotateSpeed;
 					gJson["rotatePivot"] = { param->m_rotPivotPosOfs.x,param->m_rotPivotPosOfs.y,param->m_rotPivotPosOfs.z };
+					gJson["rotateMode"] = param->m_rotateMode;
+					// バウンスなら追加情報
+					if (param->m_rotateMode == RotatingParams::RotateMode::Bounce)
+					{
+						gJson["bounceDeg"] = param->m_bounceDeg;
+					}
 				}
 				break;
 			case GimmickType::MovingTerrain:
@@ -328,6 +334,12 @@ bool StageManager::LoadStage(const std::string& filePath)
 							param.m_modelPath = Utf8ToMultiByte(gimmick.value("modelPath", "Error"));
 							param.m_rotateSpeed = gimmick.value("rotateSpeed", 1.0f);
 							param.m_rotPivotPosOfs = ParseVector3(gimmick, "rotatePivot", { 0.0f,0.0f,0.0f });
+							param.m_rotateMode = gimmick.value("rotateMode", RotatingParams::RotateMode::Circle);
+							// バウンスなら追加情報
+							if (param.m_rotateMode == RotatingParams::RotateMode::Bounce)
+							{
+								param.m_bounceDeg = gimmick.value("bounceDeg", 0.1f);
+							}
 							gimmickData.m_param = param;
 							break;
 						}

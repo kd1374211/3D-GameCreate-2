@@ -1134,6 +1134,12 @@
                         0.0,
                         0.0
                     ],
+                    "rotateMode": 0,
+                    "rotatePivot": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
                     "rotateSpeed": 100.0,
                     "rotation": [
                         0.0,

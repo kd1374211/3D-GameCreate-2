@@ -7,11 +7,8 @@ MovingTerrain::MovingTerrain(Math::Vector3 pos, Math::Vector3 rot, Math::Vector3
 {
 	Math::Quaternion quat = ConvertEulerVec3ToQuat(rot);
 
-	//m_model = std::make_shared<KdModelData>();
 	m_model = KdAssets::Instance().m_modeldatas.GetData(param.m_modelPath);
-	//m_model->Load(param.m_modelPath);
-	m_wayPointDotModel = std::make_shared<KdModelData>();
-	m_wayPointDotModel->Load("Asset/Models/Terrain/StageGimmicks/WayPoint/WayPointDot.gltf");
+	m_wayPointDotModel = KdAssets::Instance().m_modeldatas.GetData("Asset/Models/Terrain/StageGimmicks/WayPoint/WayPointDot.gltf");
 
 	m_cPhysics = std::make_shared<PhysicsComponent>();
 
@@ -48,6 +45,9 @@ MovingTerrain::MovingTerrain(Math::Vector3 pos, Math::Vector3 rot, Math::Vector3
 	m_totalStopPoint = m_combinedWayPoints.size();
 	m_currentPointIndex = 0;
 	m_distToNextPoint = CalcDistToNextPoint();
+
+	// モデルの中心点を取得
+	m_modelCenterPos = m_model->FindNode("ModelCenterPoint")->m_worldTransform.Translation();
 
 	Math::Matrix trans = Math::Matrix::CreateTranslation(m_pos);
 	Math::Matrix rotat = Math::Matrix::CreateFromQuaternion(m_rot);
@@ -131,7 +131,7 @@ void MovingTerrain::DrawUnLit()
 	// 各ウェイポイント(スタートゴール含む)に点オブジェクトを配置
 	for (const auto& points : m_combinedWayPoints)
 	{
-		Math::Matrix trans = Math::Matrix::CreateTranslation(points);
+		Math::Matrix trans = Math::Matrix::CreateTranslation(points + m_modelCenterPos);
 		Math::Matrix wayPointWorld = trans;
 
 		KdShaderManager::Instance().m_StandardShader.DrawModel(*m_wayPointDotModel, wayPointWorld);

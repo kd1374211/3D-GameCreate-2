@@ -47,5 +47,6 @@ private:
 	float m_distToNextPoint = 0.0f;
 
 	// デバッグ用ウェイポイントドット
+	Math::Vector3 m_modelCenterPos = Math::Vector3::Zero;
 	std::shared_ptr<KdModelData> m_wayPointDotModel = nullptr;
 };

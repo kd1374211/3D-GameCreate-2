@@ -17,6 +17,10 @@ struct RotatingParams
 	std::string m_modelPath = "Asset/Models/Terrain/StageGimmicks/RotatingWall1/RotatingWall1.gltf";
 	float m_rotateSpeed = 1.0f;
 	Math::Vector3 m_rotPivotPosOfs = Math::Vector3::Zero;
+
+	// 移動モード
+	enum class RotateMode { Circle, Bounce }m_rotateMode = RotateMode::Circle;
+	float m_bounceDeg = 0.0f;
 };
 
 struct MovingParams

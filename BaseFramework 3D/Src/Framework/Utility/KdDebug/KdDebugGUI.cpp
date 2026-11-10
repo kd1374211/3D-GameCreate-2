@@ -1154,6 +1154,38 @@ bool KdDebugGUI::UpdateGimmickSetting(StageLaneData& frameData)
 				{
 					isGimmickChanged = true;
 				}
+
+				// 回転モード
+				static std::string ModeText;
+				ModeText = (rot->m_rotateMode == RotatingParams::RotateMode::Circle) ? "Circle" : "Bounce";
+				ImGui::Text("Move Pattern Current : %s", ModeText.c_str());
+
+				if (ImGui::Button("Circle", ImVec2(70, 0)))
+				{
+					rot->m_rotateMode = RotatingParams::RotateMode::Circle;
+					ModeText = "Circle";
+					isGimmickChanged = true;
+				}
+				ImGui::SameLine();
+				if (ImGui::Button("Bounce", ImVec2(70, 0)))
+				{
+					rot->m_rotateMode = RotatingParams::RotateMode::Bounce;
+					rot->m_bounceDeg = 60.0f;
+					ModeText = "Bounce";
+					isGimmickChanged = true;
+				}
+
+				// バウンスなら追加設定
+				if (rot->m_rotateMode == RotatingParams::RotateMode::Bounce)
+				{
+					if (ImGui::DragFloat("Bounce Deg", &rot->m_bounceDeg, 0.05f, 0.1f, 360.0f))
+					{
+						// 無限対策
+						if (rot->m_bounceDeg < 0.1f)rot->m_bounceDeg = 0.1f;
+
+						isGimmickChanged = true;
+					}
+				}
 			}
 			else if (auto* mov = std::get_if<MovingParams>(&gimmick.m_param))
 			{
