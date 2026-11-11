@@ -88,12 +88,6 @@
     <Filter Include="Src\Application\GameObject\Camera\FPSCamera">
       <UniqueIdentifier>{cd662ee1-c913-4e31-addc-42ef89e2668c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Src\Application\GameObject\Terrain">
-      <UniqueIdentifier>{7ceaf4f7-45ef-4649-97f7-a76c033965cc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src\Application\GameObject\Chara">
-      <UniqueIdentifier>{24a8cfb5-65b6-402a-bd0e-b1dd068ccc63}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Src\Application\Physics">
       <UniqueIdentifier>{1fac62c2-1657-48ae-b7b2-99fc9948513f}</UniqueIdentifier>
     </Filter>
@@ -105,15 +99,6 @@
     </Filter>
     <Filter Include="Src\Application\Component\PhysicsComponent">
       <UniqueIdentifier>{9981982f-0e99-4079-bd3d-8f86f7029c81}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src\Application\GameObject\BowlingPin">
-      <UniqueIdentifier>{5233518e-dbb5-4b2e-ac20-f0f70a15cad8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src\Application\GameObject\BowlingPin\PinBase">
-      <UniqueIdentifier>{c6da9d48-665e-4ef3-8271-066753893816}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src\Application\GameObject\BowlingPin\NormalPin">
-      <UniqueIdentifier>{ee23d941-af8a-4e63-b80a-c6da28702815}</UniqueIdentifier>
     </Filter>
     <Filter Include="Src\Application\StageManager">
       <UniqueIdentifier>{a6fae5d5-e7a1-4091-a0e8-0bb8b013630b}</UniqueIdentifier>
@@ -150,9 +135,6 @@
     </Filter>
     <Filter Include="Src\Application\GameObject\Camera\PointTargetCamera">
       <UniqueIdentifier>{27017a5a-89a0-454c-855f-4b8a95646228}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src\Application\GameObject\Chara\BowlingBall">
-      <UniqueIdentifier>{b47b76bb-ee7e-412c-9b62-b32ebe8bb14b}</UniqueIdentifier>
     </Filter>
     <Filter Include="Src\Application\Component\PinHandler">
       <UniqueIdentifier>{aae98fef-c810-448b-a458-0acdd5b0be6b}</UniqueIdentifier>
@@ -205,41 +187,56 @@
     <Filter Include="Src\Application\GameObject\Effect\Landing">
       <UniqueIdentifier>{379e0fbb-c8e0-4cb2-a1b9-64b48361ebbe}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Src\Application\GameObject\Terrain\Island">
-      <UniqueIdentifier>{86790a0e-9b70-410d-adc5-8663a3512c9b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src\Application\GameObject\Terrain\MainTerrain">
-      <UniqueIdentifier>{a5d9d1fc-d036-4a29-ba57-83eb0db30b00}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src\Application\GameObject\Terrain\IslandDecoration">
-      <UniqueIdentifier>{db2a27cc-9942-41bd-9bb2-509e9310bdd1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Src\Application\GameObject\Effect\Smoke">
       <UniqueIdentifier>{5db9c556-5fe8-46bb-b55b-9571e83f65ed}</UniqueIdentifier>
     </Filter>
     <Filter Include="Src\Application\Component\ThrowEndChecker">
       <UniqueIdentifier>{94f98501-6069-4fe2-a0a0-cba6a021a592}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Src\Application\GameObject\Terrain\Gimmicks">
-      <UniqueIdentifier>{2300d3ed-1b13-4edf-bd61-a65f5e867405}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src\Application\GameObject\Terrain\Gimmicks\MovingTerrain">
-      <UniqueIdentifier>{c79457ae-6440-42b7-b597-739a7aa98538}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src\Application\GameObject\Terrain\Gimmicks\RotatingTerrain">
-      <UniqueIdentifier>{2dd8dc59-b4a0-48a3-9f0e-e4ba3f671281}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src\Application\GameObject\Terrain\Gimmicks\FinishArea">
-      <UniqueIdentifier>{49912c77-120c-452a-b8d9-ddfa0b607f65}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src\Application\GameObject\Terrain\SkySphere">
-      <UniqueIdentifier>{4e5ff77b-897d-4bd0-b02b-2c6ee8ee7c45}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src\Application\GameObject\Terrain\Gimmicks\SpeedUpArea">
-      <UniqueIdentifier>{a3cae168-462d-4b28-b683-8ba1f2318e3c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Src\Application\GameObject\Effect\PinHitParticle">
       <UniqueIdentifier>{f904a861-63b4-4111-8bcd-a87a32fe9665}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\GameObject\BowlingBall">
+      <UniqueIdentifier>{b1f01a82-5122-4083-9a1d-f16379491aad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\GameObject\BowlingPin">
+      <UniqueIdentifier>{ad4a9f50-b1c3-4d65-ba6f-ece8f61a7d2c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\GameObject\BowlingPin\PinBase">
+      <UniqueIdentifier>{a5560330-ea9b-4b1c-bbbd-21bae42f70ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\GameObject\BowlingPin\NormalPin">
+      <UniqueIdentifier>{7b772a6f-c895-4530-a56c-f271b347d6d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\GameObject\Terrain">
+      <UniqueIdentifier>{c3d7e737-e072-4a2c-b7a1-cf47a82db09a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\GameObject\Terrain\Gimmicks">
+      <UniqueIdentifier>{8d9848b4-90ec-464b-a547-1032fda42694}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\GameObject\Terrain\Island">
+      <UniqueIdentifier>{d6c4a3a7-f992-4952-9f8e-3d62077ca428}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\GameObject\Terrain\IslandDecoration">
+      <UniqueIdentifier>{02cc5cc2-3bf8-4c92-a461-aa2fe987e2ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\GameObject\Terrain\MainTerrain">
+      <UniqueIdentifier>{d6d360bb-854a-4ff0-8f43-cc17a461a610}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\GameObject\Terrain\SkySphere">
+      <UniqueIdentifier>{5b737a9d-c2f8-4f76-8f67-dd9a384f7b13}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\GameObject\Terrain\Gimmicks\FinishArea">
+      <UniqueIdentifier>{bc8548f0-a71d-4406-92e2-c2e4af9fa029}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\GameObject\Terrain\Gimmicks\SpeedUpArea">
+      <UniqueIdentifier>{24e1d670-3c15-4655-a7e7-718f1afd39d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\GameObject\Terrain\Gimmicks\MovingTerrain">
+      <UniqueIdentifier>{7779f719-55c2-4d84-b1ed-93de4984f981}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\GameObject\Terrain\Gimmicks\RotatingTerrain">
+      <UniqueIdentifier>{71dfe3d1-92f0-45ce-92cd-47b575903f12}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -425,9 +422,6 @@
     </ClInclude>
     <ClInclude Include="Src\Application\GameObject\Camera\FPSCamera\FPSCamera.h">
       <Filter>Src\Application\GameObject\Camera\FPSCamera</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Application\GameObject\Terrain\TerrainBase.h">
-      <Filter>Src\Application\GameObject\Terrain</Filter>
     </ClInclude>
     <ClInclude Include="Src\Application\Physics\PhysicsLayer.h">
       <Filter>Src\Application\Physics</Filter>
@@ -1539,12 +1533,6 @@
     <ClInclude Include="Src\Application\Component\PhysicsComponent\PhysicsComponent.h">
       <Filter>Src\Application\Component\PhysicsComponent</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Application\GameObject\BowlingPin\PinBase\PinBase.h">
-      <Filter>Src\Application\GameObject\BowlingPin\PinBase</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Application\GameObject\BowlingPin\NormalPin\NormalPin.h">
-      <Filter>Src\Application\GameObject\BowlingPin\NormalPin</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Application\Physics\GameContactListener.h">
       <Filter>Src\Application\Physics</Filter>
     </ClInclude>
@@ -1580,9 +1568,6 @@
     </ClInclude>
     <ClInclude Include="Src\Application\GameObject\Camera\CameraManager.h">
       <Filter>Src\Application\GameObject\Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Application\GameObject\Chara\BowlingBall\BowlingBall.h">
-      <Filter>Src\Application\GameObject\Chara\BowlingBall</Filter>
     </ClInclude>
     <ClInclude Include="Src\Application\Component\PinHandler\PinHandler.h">
       <Filter>Src\Application\Component\PinHandler</Filter>
@@ -1656,15 +1641,6 @@
     <ClInclude Include="Src\Application\GameObject\Effect\Confetti\ConfettiSpawner.h">
       <Filter>Src\Application\GameObject\Effect\Confetti</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Application\GameObject\Terrain\MainTerrain\MainTerrain.h">
-      <Filter>Src\Application\GameObject\Terrain\MainTerrain</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Application\GameObject\Terrain\Island\Island.h">
-      <Filter>Src\Application\GameObject\Terrain\Island</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Application\GameObject\Terrain\IslandDecoration\IslandDecoration.h">
-      <Filter>Src\Application\GameObject\Terrain\IslandDecoration</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Application\Const\MouseTexturesConst.h">
       <Filter>Src\Application\Const</Filter>
     </ClInclude>
@@ -1673,6 +1649,42 @@
     </ClInclude>
     <ClInclude Include="Src\Application\Component\ThrowEndChecker\ThrowEndChecker.h">
       <Filter>Src\Application\Component\ThrowEndChecker</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\Effect\PinHitParticle\PinHitParticle.h">
+      <Filter>Src\Application\GameObject\Effect\PinHitParticle</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Const\StageDataConsts.h">
+      <Filter>Src\Application\Const</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Const\VariantParamData.h">
+      <Filter>Src\Application\Const</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\BowlingBall\BowlingBall.h">
+      <Filter>Src\Application\GameObject\BowlingBall</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\BowlingPin\NormalPin\NormalPin.h">
+      <Filter>Src\Application\GameObject\BowlingPin\NormalPin</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\BowlingPin\PinBase\PinBase.h">
+      <Filter>Src\Application\GameObject\BowlingPin\PinBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\Terrain\StageObjectInclude.h">
+      <Filter>Src\Application\GameObject\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\Terrain\TerrainBase.h">
+      <Filter>Src\Application\GameObject\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\Terrain\Island\Island.h">
+      <Filter>Src\Application\GameObject\Terrain\Island</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\Terrain\IslandDecoration\IslandDecoration.h">
+      <Filter>Src\Application\GameObject\Terrain\IslandDecoration</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\Terrain\MainTerrain\MainTerrain.h">
+      <Filter>Src\Application\GameObject\Terrain\MainTerrain</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\Terrain\SkySphere\SkySphere.h">
+      <Filter>Src\Application\GameObject\Terrain\SkySphere</Filter>
     </ClInclude>
     <ClInclude Include="Src\Application\GameObject\Terrain\Gimmicks\FinishArea\FinishArea.h">
       <Filter>Src\Application\GameObject\Terrain\Gimmicks\FinishArea</Filter>
@@ -1683,23 +1695,8 @@
     <ClInclude Include="Src\Application\GameObject\Terrain\Gimmicks\RotatingTerrain\RotatingTerrain.h">
       <Filter>Src\Application\GameObject\Terrain\Gimmicks\RotatingTerrain</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Application\GameObject\Terrain\StageObjectInclude.h">
-      <Filter>Src\Application\GameObject\Terrain</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Application\GameObject\Terrain\SkySphere\SkySphere.h">
-      <Filter>Src\Application\GameObject\Terrain\SkySphere</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Application\GameObject\Terrain\Gimmicks\SpeedUpArea\SpeedUpArea.h">
       <Filter>Src\Application\GameObject\Terrain\Gimmicks\SpeedUpArea</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Application\GameObject\Effect\PinHitParticle\PinHitParticle.h">
-      <Filter>Src\Application\GameObject\Effect\PinHitParticle</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Application\Const\StageDataConsts.h">
-      <Filter>Src\Application\Const</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Application\Const\VariantParamData.h">
-      <Filter>Src\Application\Const</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1855,9 +1852,6 @@
     </ClCompile>
     <ClCompile Include="Src\Application\GameObject\Camera\FPSCamera\FPSCamera.cpp">
       <Filter>Src\Application\GameObject\Camera\FPSCamera</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Application\GameObject\Terrain\TerrainBase.cpp">
-      <Filter>Src\Application\GameObject\Terrain</Filter>
     </ClCompile>
     <ClCompile Include="Src\Application\Physics\PhysicsManager.cpp">
       <Filter>Src\Application\Physics</Filter>
@@ -2324,12 +2318,6 @@
     <ClCompile Include="Src\Application\Component\PhysicsComponent\PhysicsComponent.cpp">
       <Filter>Src\Application\Component\PhysicsComponent</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Application\GameObject\BowlingPin\PinBase\PinBase.cpp">
-      <Filter>Src\Application\GameObject\BowlingPin\PinBase</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Application\GameObject\BowlingPin\NormalPin\NormalPin.cpp">
-      <Filter>Src\Application\GameObject\BowlingPin\NormalPin</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Application\Physics\GameContactListener.cpp">
       <Filter>Src\Application\Physics</Filter>
     </ClCompile>
@@ -2365,9 +2353,6 @@
     </ClCompile>
     <ClCompile Include="Src\Application\GameObject\Camera\CameraManager.cpp">
       <Filter>Src\Application\GameObject\Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Application\GameObject\Chara\BowlingBall\BowlingBall.cpp">
-      <Filter>Src\Application\GameObject\Chara\BowlingBall</Filter>
     </ClCompile>
     <ClCompile Include="Src\Application\Component\PinHandler\PinHandler.cpp">
       <Filter>Src\Application\Component\PinHandler</Filter>
@@ -2417,15 +2402,6 @@
     <ClCompile Include="Src\Application\GameObject\Effect\Confetti\ConfettiSpawner.cpp">
       <Filter>Src\Application\GameObject\Effect\Confetti</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Application\GameObject\Terrain\MainTerrain\MainTerrain.cpp">
-      <Filter>Src\Application\GameObject\Terrain\MainTerrain</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Application\GameObject\Terrain\Island\Island.cpp">
-      <Filter>Src\Application\GameObject\Terrain\Island</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Application\GameObject\Terrain\IslandDecoration\IslandDecoration.cpp">
-      <Filter>Src\Application\GameObject\Terrain\IslandDecoration</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Application\GameObject\Effect\Smoke\Smoke.cpp">
       <Filter>Src\Application\GameObject\Effect\Smoke</Filter>
     </ClCompile>
@@ -2434,6 +2410,33 @@
     </ClCompile>
     <ClCompile Include="Src\Application\Component\ThrowEndChecker\ThrowEndChecker.cpp">
       <Filter>Src\Application\Component\ThrowEndChecker</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\Effect\PinHitParticle\PinHitParticle.cpp">
+      <Filter>Src\Application\GameObject\Effect\PinHitParticle</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\BowlingBall\BowlingBall.cpp">
+      <Filter>Src\Application\GameObject\BowlingBall</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\BowlingPin\NormalPin\NormalPin.cpp">
+      <Filter>Src\Application\GameObject\BowlingPin\NormalPin</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\BowlingPin\PinBase\PinBase.cpp">
+      <Filter>Src\Application\GameObject\BowlingPin\PinBase</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\Terrain\TerrainBase.cpp">
+      <Filter>Src\Application\GameObject\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\Terrain\Island\Island.cpp">
+      <Filter>Src\Application\GameObject\Terrain\Island</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\Terrain\IslandDecoration\IslandDecoration.cpp">
+      <Filter>Src\Application\GameObject\Terrain\IslandDecoration</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\Terrain\MainTerrain\MainTerrain.cpp">
+      <Filter>Src\Application\GameObject\Terrain\MainTerrain</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\Terrain\SkySphere\SkySphere.cpp">
+      <Filter>Src\Application\GameObject\Terrain\SkySphere</Filter>
     </ClCompile>
     <ClCompile Include="Src\Application\GameObject\Terrain\Gimmicks\FinishArea\FinishArea.cpp">
       <Filter>Src\Application\GameObject\Terrain\Gimmicks\FinishArea</Filter>
@@ -2444,14 +2447,8 @@
     <ClCompile Include="Src\Application\GameObject\Terrain\Gimmicks\RotatingTerrain\RotatingTerrain.cpp">
       <Filter>Src\Application\GameObject\Terrain\Gimmicks\RotatingTerrain</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Application\GameObject\Terrain\SkySphere\SkySphere.cpp">
-      <Filter>Src\Application\GameObject\Terrain\SkySphere</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Application\GameObject\Terrain\Gimmicks\SpeedUpArea\SpeedUpArea.cpp">
       <Filter>Src\Application\GameObject\Terrain\Gimmicks\SpeedUpArea</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Application\GameObject\Effect\PinHitParticle\PinHitParticle.cpp">
-      <Filter>Src\Application\GameObject\Effect\PinHitParticle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

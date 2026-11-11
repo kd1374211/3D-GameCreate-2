@@ -185,6 +185,18 @@ void PinHandler::SetIsCheckFallen(bool flg)
 	}
 }
 
+const JPH::BodyID& PinHandler::GetBodyID(int index)const
+{
+	// オブジェクト取得
+	if (const auto& spPin = m_activePins[index].lock())
+	{
+		return spPin->GetBodyID();
+	}
+
+	// 見つからなかった
+	return JPH::BodyID();
+}
+
 void PinHandler::SpawnPin(PinType type, Math::Vector3 startPos, int pinIndex)
 {
 	std::shared_ptr<PinBase> pin = GetUnusedPin(type);

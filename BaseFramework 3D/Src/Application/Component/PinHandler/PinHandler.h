@@ -41,6 +41,9 @@ public:
 	// 各ピンの倒れチェックフラグ切り替え
 	void SetIsCheckFallen(bool flg);
 
+	// BodyID取得
+	const JPH::BodyID& GetBodyID(int index)const;
+
 private:
 
 	// 特定の位置に特定のピンを召喚

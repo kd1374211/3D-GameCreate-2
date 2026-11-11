@@ -54,6 +54,9 @@ public:
 	// 倒れ判定の確認をするか
 	void SetIsCheckFallen(bool flg) { m_isCheckFallen = flg; }
 
+	// BodyID取得
+	const JPH::BodyID& GetBodyID()const { return m_cPhysics->GetBodyID(); }
+
 protected:
 
 	struct PinBaseConsts

@@ -29,6 +29,7 @@ struct StageInfo
 class PinHandler;
 class CharaHandler;
 enum class PinType;
+class TerrainBase;
 
 class StageManager
 {
@@ -111,6 +112,10 @@ public:
 	// エディター用
 	StageOverallData& WorkStageData() { return m_stageOverallData; }
 
+	// エディター用
+	// 選択中のオブジェクトのBodyIDを取得
+	const JPH::BodyID& GetBodyID(SelectedTargetCategory category, int index);
+
 private:
 
 	//いつもの
@@ -186,8 +191,8 @@ private:
 	std::weak_ptr<KdGameObject> m_wpSkySphere;
 	std::weak_ptr<KdGameObject> m_wpIsland;
 	std::weak_ptr<KdGameObject> m_wpMainTerrain;
-	std::vector<std::weak_ptr<KdGameObject>> m_wpIslandDecorations;
-	std::vector<std::weak_ptr<KdGameObject>> m_wpStageGimmicks;
+	std::vector<std::weak_ptr<TerrainBase>> m_wpIslandDecorations;
+	std::vector<std::weak_ptr<TerrainBase>> m_wpStageGimmicks;
 
 	// ステージデータ
 	StageOverallData m_stageOverallData;

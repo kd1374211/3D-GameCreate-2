@@ -4,7 +4,7 @@
 #include "../GameObject/Camera/CameraBase.h"
 #include "../Component/PinHandler/PinHandler.h"
 
-#include "../GameObject/Chara/BowlingBall/BowlingBall.h"
+#include "../GameObject/BowlingBall/BowlingBall.h"
 
 void StageManager::ResetTerrain()
 {
@@ -746,6 +746,61 @@ void StageManager::CreatePinPool()
 	{
 		pinHandler->CreatePinPool(type, count);
 	}
+}
+
+const JPH::BodyID& StageManager::GetBodyID(SelectedTargetCategory category, int index)
+{
+	// カテゴリ分け
+	switch (category)
+	{
+	case SelectedTargetCategory::Decoration:
+		// 有効値確認
+		if (index >= 0 && index < m_wpIslandDecorations.size())
+		{
+			// 取得
+			if (const auto& spIslandDecoration = m_wpIslandDecorations[index].lock())
+			{
+				// ID返却
+				return spIslandDecoration->GetBodyID();
+			}
+		}
+		break;
+	case SelectedTargetCategory::Gimmick:
+		// 有効値確認
+		if (index >= 0 && index < m_wpStageGimmicks.size())
+		{
+			// 取得
+			if (const auto& spStageGimmick = m_wpStageGimmicks[index].lock())
+			{
+				// ID返却
+				return spStageGimmick->GetBodyID();
+			}
+		}
+		break;
+	case SelectedTargetCategory::Pin:
+		// 有効確認
+		if (index >= 0 && index < BowlingSystemConsts::PinCount)
+		{
+			// ハンドラー確認
+			if (const auto& spPinHandler = m_wpPinHandler.lock())
+			{
+				// ハンドラーに投げる
+				return spPinHandler->GetBodyID(index);
+			}
+		}
+		break;
+	case SelectedTargetCategory::Player:
+		// ハンドラー確認
+		if (const auto& spCharaHandler = m_wpCharaHandler.lock())
+		{
+			// ハンドラーに投げる
+			return spCharaHandler->GetBodyID();
+		}
+		break;
+	}
+
+	// 見つからない
+	return JPH::BodyID();
 }
 
 bool StageManager::LoadStageMasterData()

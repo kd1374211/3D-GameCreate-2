@@ -1,6 +1,6 @@
 ﻿#include "CharaHandler.h"
 #include "../../Scene/SceneManager.h"
-#include "../../GameObject/Chara/BowlingBall/BowlingBall.h"
+#include "../../GameObject/BowlingBall/BowlingBall.h"
 #include "../../GameObject/Camera/CameraBase.h"
 #include "../../GameObject/Camera/CameraManager.h"
 
@@ -59,6 +59,11 @@ void CharaHandler::EndThrow()
 {
 	// 終了時処理(音を止める)
 	m_playerBall->EndThrow();
+}
+
+const JPH::BodyID& CharaHandler::GetBodyID() const
+{
+	return m_playerBall->GetBodyID();
 }
 
 void CharaHandler::InitPlayerBall()

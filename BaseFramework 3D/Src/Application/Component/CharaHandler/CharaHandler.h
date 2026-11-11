@@ -33,6 +33,9 @@ public:
 	// ボールの終了時処理
 	void EndThrow();
 
+	// BodyID取得
+	const JPH::BodyID& GetBodyID()const;
+
 private:
 
 	// プレイヤー召喚

@@ -793,7 +793,7 @@ void KdDebugGUI::UpdateIslandAndDecorations(StageOverallData& stageData)
 
 void KdDebugGUI::UpdateFrameObjectsSetting(int currentLaneNo, std::string& terrainPath_Stage, std::string& terrainPath_Frame, bool& isError, StageOverallData& stageData)
 {
-	if (ImGui::TreeNode("Lane Placement Settings (※1)"))
+	if (ImGui::TreeNode("Lane Placement Settings"))
 	{
 		// レーンデータ
 		auto& frameData = stageData.m_stageLaneData[currentLaneNo];
@@ -1497,60 +1497,8 @@ void KdDebugGUI::MoveSelectedObjectToCursor(StageOverallData& stageData, int cur
 		rayCast.mDirection = JPH::Vec3(rayDir.x, rayDir.y, rayDir.z) * range; // 飛ばす長さ
 		GroundObjectFilter groundFilter;
 
-		// 選択中の種類と Index から直接データを特定して移動
-		Math::Vector3 selectedObjectPos;
-		if (CheckCategory(SelectedTargetCategory::Gimmick))
-		{
-			if (m_selectedIndex >= 0 && m_selectedIndex < static_cast<int>(frameData.m_laneGimmickData.size()))
-			{
-				selectedObjectPos = frameData.m_laneGimmickData[m_selectedIndex].m_data.m_position;
-			}
-		}
-		else if (CheckCategory(SelectedTargetCategory::Pin))
-		{
-			if (m_selectedIndex >= 0 && m_selectedIndex < static_cast<int>(frameData.m_lanePinData.size()))
-			{
-				selectedObjectPos = frameData.m_lanePinData[m_selectedIndex].m_data.m_position;
-			}
-		}
-		else if (CheckCategory(SelectedTargetCategory::Player))
-		{
-			selectedObjectPos = frameData.m_playerData.m_position;
-		}
-
-		JPH::BodyID targetBodyID;
-
-		// 選択中データの位置（Vector3）を Jolt Vec3 に変換
-		JPH::Vec3 pos(selectedObjectPos.x, selectedObjectPos.y, selectedObjectPos.z);
-
-		// 選択中の座標からわずかに広がった AABB（検索範囲）を作成
-		JPH::AABox searchBox(pos - JPH::Vec3::sReplicate(0.1f), pos + JPH::Vec3::sReplicate(0.1f));
-
-		// AABB内に含まれる BodyID を収集するコレクター
-		class SimpleCollector : public JPH::CollideShapeBodyCollector
-		{
-		public:
-			virtual void AddHit(const JPH::BodyID& inBodyID) override { m_hits.push_back(inBodyID); }
-			std::vector<JPH::BodyID> m_hits;
-		};
-
-		// 1. 新しい専用フィルターの生成
-		NonGroundObjectFilter nonGroundFilter; // 地形レイヤーを指定
-
-		// 2. AABB内での BodyID 検索実行
-		SimpleCollector collector;
-		PHYSICSMGR.GetSystem().GetBroadPhaseQuery().CollideAABox(
-			searchBox,
-			collector,
-			{},               // BroadPhaseLayerFilter（空でOK）
-			nonGroundFilter   // 作成した地形除外フィルター
-		);
-
-		// 3. 地形が除外された状態で安全に BodyID を取得
-		if (!collector.m_hits.empty())
-		{
-			targetBodyID = collector.m_hits[0];
-		}
+		// 選択中の種類と Index から直接データを特定
+		const JPH::BodyID& targetBodyID = STAGEMGR.GetBodyID(m_selectedCategory, m_selectedIndex);
 
 		// レイを飛ばす
 		bool hasHit = false;

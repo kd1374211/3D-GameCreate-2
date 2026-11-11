@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "../../../Component/PhysicsComponent/PhysicsComponent.h"
+#include "../../Component/PhysicsComponent/PhysicsComponent.h"
 
 class TPSCamera;
 class ShotCursor;
@@ -57,6 +57,9 @@ public:
 	// 当たり処理をまとめる
 	void OnContactAdded(JPH::ObjectLayer layer, const std::string& matName, JPH::Vec3 velocity, JPH::Vec3 pos, JPH::Vec3 normal);
 	void OnContactPersisted(JPH::ObjectLayer layer, const std::string& matName);
+
+	// BodyID取得
+	const JPH::BodyID& GetBodyID()const { return m_cPhysics->GetBodyID(); }
 
 private:
 

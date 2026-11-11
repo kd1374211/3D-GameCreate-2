@@ -4,7 +4,7 @@
 
 #include "../../StageManager/StageManager.h"
 #include "../../GameObject/Camera/TPSCamera/TPSCamera.h"
-#include "../../GameObject/Chara/BowlingBall/BowlingBall.h"
+#include "../../GameObject/BowlingBall/BowlingBall.h"
 #include "../../Component/CharaHandler/CharaHandler.h"
 #include "../../GameObject/UI/SceneUIObjects/Game/GameUIObjects.h"
 #include "../../FadeManager/FadeManager.h"

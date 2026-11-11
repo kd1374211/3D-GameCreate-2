@@ -19,6 +19,9 @@ public:
 	// カメラに登録
 	void RegistToCamera();
 
+	// BodyID取得
+	const JPH::BodyID& GetBodyID()const { return m_cPhysics->GetBodyID(); }
+
 protected:
 
 	std::shared_ptr<KdModelData> m_model = nullptr;
