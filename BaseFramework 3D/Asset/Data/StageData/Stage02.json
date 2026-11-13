@@ -1129,9 +1129,9 @@
             "gimmicks": [
                 {
                     "position": [
-                        0.015139125287532806,
-                        -0.20000000298023224,
-                        8.449999809265137
+                        0.0,
+                        1.7000007629394531,
+                        0.4000000059604645
                     ],
                     "rotation": [
                         0.0,
@@ -1139,20 +1139,44 @@
                         0.0
                     ],
                     "scale": [
-                        2.25,
-                        0.20000000298023224,
-                        0.699999988079071
+                        3.0,
+                        0.10000000149011612,
+                        1.0
                     ],
                     "type": "Goal"
                 },
                 {
-                    "modelPath": "Asset/Models/Terrain/StageGimmicks/RotatingWall1/RotatingWall1.gltf",
                     "position": [
+                        0.0,
+                        1.1920928955078125e-06,
+                        1.0
+                    ],
+                    "rotation": [
                         0.0,
                         0.0,
                         0.0
                     ],
-                    "rotateSpeed": 100.0,
+                    "scale": [
+                        3.0,
+                        0.20000000298023224,
+                        9.0
+                    ],
+                    "type": "SpeedUp"
+                },
+                {
+                    "goalPos": [
+                        1.0,
+                        0.0,
+                        3.5
+                    ],
+                    "modelPath": "Asset/Models/Terrain/StageGimmicks/MovingWall5/MovingWall5.gltf",
+                    "movePattern": 0,
+                    "moveSpeed": 1.0,
+                    "position": [
+                        -0.06473588943481445,
+                        9.5367431640625e-07,
+                        3.543891429901123
+                    ],
                     "rotation": [
                         0.0,
                         0.0,
@@ -1163,7 +1187,14 @@
                         1.0,
                         1.0
                     ],
-                    "type": "RotatingTerrain"
+                    "startPos": [
+                        -1.0,
+                        0.0,
+                        3.5
+                    ],
+                    "stopTime": 0.5,
+                    "type": "MovingTerrain",
+                    "wayPoints": []
                 }
             ],
             "pins": [
@@ -1171,8 +1202,8 @@
                     "index": 0,
                     "position": [
                         0.0,
-                        0.0,
-                        6.75
+                        2.000000238418579,
+                        2.0
                     ],
                     "rotation": [
                         0.0,
@@ -1189,9 +1220,9 @@
                 {
                     "index": 1,
                     "position": [
-                        -0.14000000059604645,
-                        0.0,
-                        7.0
+                        0.14000000059604645,
+                        2.000000476837158,
+                        1.75
                     ],
                     "rotation": [
                         0.0,
@@ -1208,9 +1239,9 @@
                 {
                     "index": 2,
                     "position": [
-                        0.14000000059604645,
-                        2.384185791015625e-07,
-                        7.0
+                        -0.14000000059604645,
+                        2.0,
+                        1.75
                     ],
                     "rotation": [
                         0.0,
@@ -1227,9 +1258,9 @@
                 {
                     "index": 3,
                     "position": [
-                        -0.2800000011920929,
-                        -2.384185791015625e-07,
-                        7.25
+                        0.2800000011920929,
+                        2.000000238418579,
+                        1.5
                     ],
                     "rotation": [
                         0.0,
@@ -1247,8 +1278,8 @@
                     "index": 4,
                     "position": [
                         0.0,
-                        0.0,
-                        7.25
+                        2.000000238418579,
+                        1.5
                     ],
                     "rotation": [
                         0.0,
@@ -1265,9 +1296,9 @@
                 {
                     "index": 5,
                     "position": [
-                        0.2800000011920929,
-                        0.0,
-                        7.25
+                        -0.2800000011920929,
+                        2.000000476837158,
+                        1.5
                     ],
                     "rotation": [
                         0.0,
@@ -1284,9 +1315,9 @@
                 {
                     "index": 6,
                     "position": [
-                        -0.41999998688697815,
-                        0.0,
-                        7.5
+                        0.41999998688697815,
+                        2.000000476837158,
+                        1.25
                     ],
                     "rotation": [
                         0.0,
@@ -1303,9 +1334,9 @@
                 {
                     "index": 7,
                     "position": [
-                        -0.14000000059604645,
-                        -2.384185791015625e-07,
-                        7.5
+                        0.14000000059604645,
+                        2.000000238418579,
+                        1.25
                     ],
                     "rotation": [
                         0.0,
@@ -1322,9 +1353,9 @@
                 {
                     "index": 8,
                     "position": [
-                        0.14000000059604645,
-                        0.0,
-                        7.5
+                        -0.14000000059604645,
+                        2.0,
+                        1.25
                     ],
                     "rotation": [
                         0.0,
@@ -1341,9 +1372,9 @@
                 {
                     "index": 9,
                     "position": [
-                        0.41999998688697815,
-                        -1.1920928955078125e-07,
-                        7.5
+                        -0.38469886779785156,
+                        2.0,
+                        1.25
                     ],
                     "rotation": [
                         0.0,
@@ -1362,7 +1393,7 @@
                 "position": [
                     0.0,
                     0.10000000149011612,
-                    -7.699999809265137
+                    -7.800000190734863
                 ],
                 "rotation": [
                     0.0,
@@ -1370,7 +1401,7 @@
                     0.0
                 ]
             },
-            "terrainPath": "Asset/Models/Terrain/MainTerrain/Stage1/Stage1-04/Stage1-04.gltf"
+            "terrainPath": "Asset/Models/Terrain/MainTerrain/Stage2/Stage2-04/Stage2-04.gltf"
         },
         {
             "frameNumber": 5,
@@ -1392,6 +1423,57 @@
                         1.0
                     ],
                     "type": "Goal"
+                },
+                {
+                    "position": [
+                        -4.0,
+                        2.384185791015625e-07,
+                        7.400000095367432
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        3.0,
+                        2.5,
+                        4.0
+                    ],
+                    "type": "SpeedUp"
+                },
+                {
+                    "goalPos": [
+                        -4.0,
+                        -0.699999988079071,
+                        -5.199999809265137
+                    ],
+                    "modelPath": "Asset/Models/Terrain/StageGimmicks/MovingWall4/MovingWall4.gltf",
+                    "movePattern": 0,
+                    "moveSpeed": 0.5,
+                    "position": [
+                        -4.538340091705322,
+                        -0.5,
+                        -5.570223331451416
+                    ],
+                    "rotation": [
+                        0.0,
+                        270.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "startPos": [
+                        -4.0,
+                        -0.5,
+                        -5.199999809265137
+                    ],
+                    "stopTime": 3.0,
+                    "type": "MovingTerrain",
+                    "wayPoints": []
                 }
             ],
             "pins": [
@@ -1399,8 +1481,8 @@
                     "index": 0,
                     "position": [
                         0.0,
-                        2.384185791015625e-07,
-                        0.0
+                        0.5000007152557373,
+                        6.0
                     ],
                     "rotation": [
                         0.0,
@@ -1417,9 +1499,9 @@
                 {
                     "index": 1,
                     "position": [
-                        0.0,
-                        0.0,
-                        8.800000190734863
+                        -0.14000000059604645,
+                        0.5437901020050049,
+                        6.25
                     ],
                     "rotation": [
                         0.0,
@@ -1436,9 +1518,9 @@
                 {
                     "index": 2,
                     "position": [
-                        -0.11999999731779099,
-                        0.0,
-                        9.0
+                        0.14000000059604645,
+                        0.5272290706634521,
+                        6.25
                     ],
                     "rotation": [
                         0.0,
@@ -1588,9 +1670,9 @@
             ],
             "player": {
                 "position": [
-                    0.0,
+                    -4.0,
                     0.10000000149011612,
-                    -9.600000381469727
+                    -2.4000000953674316
                 ],
                 "rotation": [
                     0.0,
@@ -1598,7 +1680,7 @@
                     0.0
                 ]
             },
-            "terrainPath": "Asset/Models/Terrain/MainTerrain/Stage1/Stage1-05/Stage1-05.gltf"
+            "terrainPath": "Asset/Models/Terrain/MainTerrain/Stage2/Stage2-05/Stage2-05.gltf"
         },
         {
             "frameNumber": 6,
@@ -1622,18 +1704,10 @@
                     "type": "Goal"
                 },
                 {
-                    "goalPos": [
-                        1.7999999523162842,
-                        0.0,
-                        1.0
-                    ],
-                    "modelPath": "Asset/Models/Terrain/StageGimmicks/MovingWall1/MovingWall1.gltf",
-                    "movePattern": 1,
-                    "moveSpeed": 1.0,
                     "position": [
+                        -10.5,
                         0.0,
-                        0.0,
-                        0.0
+                        -3.5
                     ],
                     "rotation": [
                         0.0,
@@ -1641,18 +1715,47 @@
                         0.0
                     ],
                     "scale": [
-                        1.0,
-                        1.0,
+                        4.0,
+                        0.10000000149011612,
                         1.0
                     ],
-                    "startPos": [
-                        -1.7999999523162842,
+                    "type": "SpeedUp"
+                },
+                {
+                    "position": [
+                        -10.5,
+                        -4.76837158203125e-07,
+                        -4.5
+                    ],
+                    "rotation": [
                         0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        3.75,
+                        0.10000000149011612,
                         1.0
                     ],
-                    "stopTime": 0.10000000149011612,
-                    "type": "MovingTerrain",
-                    "wayPoints": []
+                    "type": "SpeedUp"
+                },
+                {
+                    "position": [
+                        -10.5,
+                        -9.5367431640625e-07,
+                        -5.5
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        3.5,
+                        0.10000000149011612,
+                        1.0
+                    ],
+                    "type": "SpeedUp"
                 }
             ],
             "pins": [
@@ -1849,9 +1952,9 @@
             ],
             "player": {
                 "position": [
-                    0.0,
+                    -10.5,
                     0.10000000149011612,
-                    -9.800000190734863
+                    -9.0
                 ],
                 "rotation": [
                     0.0,
@@ -1859,7 +1962,7 @@
                     0.0
                 ]
             },
-            "terrainPath": "Asset/Models/Terrain/MainTerrain/Stage1/Stage1-06/Stage1-06.gltf"
+            "terrainPath": "Asset/Models/Terrain/MainTerrain/Stage2/Stage2-06/Stage2-06.gltf"
         },
         {
             "frameNumber": 7,

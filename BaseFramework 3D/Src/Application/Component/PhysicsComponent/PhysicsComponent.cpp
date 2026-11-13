@@ -109,25 +109,46 @@ bool PhysicsComponent::InitTerrainModel(const std::string& path, PhysicsInitData
 		jphVertices.push_back(JPH::Float3(v.x, v.y, v.z));
 	}
 
+	// ★ 修正: 退化三角形（面積ゼロ・重複頂点の潰れたポリゴン）を除外して登録
 	JPH::IndexedTriangleList jphTriangles;
 	jphTriangles.reserve(allIndices.size() / 3);
 	for (size_t i = 0; i < allIndices.size(); i += 3)
 	{
+		uint32_t idx0 = allIndices[i];
+		uint32_t idx1 = allIndices[i + 1];
+		uint32_t idx2 = allIndices[i + 2];
+
+		// 1. 同一インデックスの重複チェック
+		if (idx0 == idx1 || idx1 == idx2 || idx2 == idx0) continue;
+
+		// 2. 3頂点から面積（外積の長さの2乗）を計算し、潰れた三角形を除外
+		JPH::Vec3 v0(allVertices[idx0].x, allVertices[idx0].y, allVertices[idx0].z);
+		JPH::Vec3 v1(allVertices[idx1].x, allVertices[idx1].y, allVertices[idx1].z);
+		JPH::Vec3 v2(allVertices[idx2].x, allVertices[idx2].y, allVertices[idx2].z);
+
+		JPH::Vec3 cross = (v1 - v0).Cross(v2 - v0);
+		if (cross.LengthSq() < 1.0e-8f)
+		{
+			continue;
+		}
+
 		uint32_t triIdx = static_cast<uint32_t>(i / 3);
 		uint32_t matIdx = (triIdx < triangleMaterialIndices.size()) ? triangleMaterialIndices[triIdx] : 0;
 
 		jphTriangles.push_back(JPH::IndexedTriangle(
-			allIndices[i],
-			allIndices[i + 1],
-			allIndices[i + 2],
+			idx0,
+			idx1,
+			idx2,
 			matIdx
 		));
 	}
 
 	JPH::ShapeRefC finalShape;
-
 	if (initData.motionType != JPH::EMotionType::Dynamic)
 	{
+		// 有効な三角形が1つも残らなかった場合は失敗とする
+		if (jphTriangles.empty()) return false;
+
 		// メッシュシェイプの生成
 		JPH::MeshShapeSettings meshSettings(jphVertices, jphTriangles, jphMaterials);
 		meshSettings.mActiveEdgeCosThresholdAngle = cosf(JPH::DegreesToRadians(60.0f));
@@ -143,7 +164,7 @@ bool PhysicsComponent::InitTerrainModel(const std::string& path, PhysicsInitData
 
 		for (const auto& node : spModel->Nodes)
 		{
-			if (!node.IsMesh || node.Mesh.Vertices.empty()) continue;
+			if (!node.IsMesh || node.Mesh.Vertices.size() < 4) continue;
 
 			std::vector<JPH::Vec3> nodeVertices;
 			nodeVertices.reserve(node.Mesh.Vertices.size());
@@ -174,7 +195,9 @@ bool PhysicsComponent::InitTerrainModel(const std::string& path, PhysicsInitData
 				convexVertices.push_back(JPH::Vec3(v.x, v.y, v.z));
 			}
 			JPH::ConvexHullShapeSettings convexSettings(convexVertices.data(), static_cast<int>(convexVertices.size()));
-			finalShape = convexSettings.Create().Get();
+			auto convexResult = convexSettings.Create();
+			if (convexResult.HasError()) return false;
+			finalShape = convexResult.Get();
 		}
 		else
 		{
