@@ -10,6 +10,9 @@ public:
 	// 2つの物体が接触し続けている間に Jolt から自動で呼ばれる
 	virtual void OnContactPersisted(const JPH::Body& inBody1, const JPH::Body& inBody2, const JPH::ContactManifold& inManifold, JPH::ContactSettings& ioSettings) override;
 
+	// そもそも当たっていないことにしたい場合
+	virtual JPH::ValidateResult OnContactValidate(const JPH::Body& inBody1, const JPH::Body& inBody2, JPH::RVec3Arg inBaseOffset, const JPH::CollideShapeResult& inCollisionResult) override;
+
 private:
 
 	const JPH::PhysicsMaterial* GetMaterialRecursively(const JPH::Shape* inShape, const JPH::SubShapeID& inSubShapeID)
