@@ -13,6 +13,7 @@ struct PhysicsInitData {
 	JPH::ObjectLayer layer = Layers::NUM_LAYERS;	//レイヤー
 	bool isStatic = false;					//静的かどうか
 	bool isSensor = false;					//センサーのみかどうか（当たり判定があるか）
+	bool allowSleeping = true;				// 止めを有効にするか
 
 	// 回転ギミック用
 	Math::Vector3 rotPivotOffset = Math::Vector3::Zero;	// 回転軸のモデルからの距離

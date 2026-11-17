@@ -3,7 +3,6 @@
 #include "../../../Framework/Direct3D/KdGLTFLoader.h"
 #include "../../Const/PhysicsMaterialConsts.h"
 
-// 地形はこれでやる
 bool PhysicsComponent::InitTerrainModel(const std::string& path, PhysicsInitData initData)
 {
 	m_isStatic = initData.isStatic;
@@ -55,11 +54,11 @@ bool PhysicsComponent::InitTerrainModel(const std::string& path, PhysicsInitData
 	}
 
 	// =========================================================
-	// ステップ 2: メッシュと面（Subsets）の構築
+	// ステップ 2: メッシュと面（Subsets）の構築（重複頂点マージ付き）
 	// =========================================================
 	std::vector<Math::Vector3> allVertices;
 	std::vector<unsigned int>  allIndices;
-	std::vector<uint32_t> triangleMaterialIndices;
+	std::vector<uint32_t>      triangleMaterialIndices;
 
 	for (const auto& node : spModel->Nodes)
 	{
@@ -102,29 +101,69 @@ bool PhysicsComponent::InitTerrainModel(const std::string& path, PhysicsInitData
 
 	if (allVertices.empty() || allIndices.empty()) return false;
 
+	// ★ 座標が一致する頂点を1つのインデックスに統合（mEnhancedInternalEdgeRemoval を正しく機能させるため）
 	JPH::VertexList jphVertices;
-	jphVertices.reserve(allVertices.size());
-	for (const auto& v : allVertices)
-	{
-		jphVertices.push_back(JPH::Float3(v.x, v.y, v.z));
-	}
-
-	// ★ 修正: 退化三角形（面積ゼロ・重複頂点の潰れたポリゴン）を除外して登録
 	JPH::IndexedTriangleList jphTriangles;
+	jphVertices.reserve(allVertices.size());
 	jphTriangles.reserve(allIndices.size() / 3);
+
+	struct QuantizedPos
+	{
+		int64_t x, y, z;
+		bool operator==(const QuantizedPos& o) const { return x == o.x && y == o.y && z == o.z; }
+	};
+	struct QuantizedPosHash
+	{
+		size_t operator()(const QuantizedPos& p) const
+		{
+			size_t h = std::hash<int64_t>()(p.x);
+			h ^= std::hash<int64_t>()(p.y) + 0x9e3779b9 + (h << 6) + (h >> 2);
+			h ^= std::hash<int64_t>()(p.z) + 0x9e3779b9 + (h << 6) + (h >> 2);
+			return h;
+		}
+	};
+
+	std::unordered_map<QuantizedPos, uint32_t, QuantizedPosHash> vertexWeldMap;
+	vertexWeldMap.reserve(allVertices.size());
+
+	auto getWeldedIndex = [&](const Math::Vector3& pos) -> uint32_t
+		{
+			// 0.0001m (0.1mm) 単位で丸めて同一座標を判定
+			QuantizedPos key{
+				static_cast<int64_t>(std::llround(pos.x * 10000.0)),
+				static_cast<int64_t>(std::llround(pos.y * 10000.0)),
+				static_cast<int64_t>(std::llround(pos.z * 10000.0))
+			};
+
+			auto it = vertexWeldMap.find(key);
+			if (it != vertexWeldMap.end())
+			{
+				return it->second;
+			}
+
+			uint32_t newIdx = static_cast<uint32_t>(jphVertices.size());
+			jphVertices.push_back(JPH::Float3(pos.x, pos.y, pos.z));
+			vertexWeldMap.emplace(key, newIdx);
+			return newIdx;
+		};
+
 	for (size_t i = 0; i < allIndices.size(); i += 3)
 	{
-		uint32_t idx0 = allIndices[i];
-		uint32_t idx1 = allIndices[i + 1];
-		uint32_t idx2 = allIndices[i + 2];
+		const Math::Vector3& p0 = allVertices[allIndices[i]];
+		const Math::Vector3& p1 = allVertices[allIndices[i + 1]];
+		const Math::Vector3& p2 = allVertices[allIndices[i + 2]];
+
+		uint32_t idx0 = getWeldedIndex(p0);
+		uint32_t idx1 = getWeldedIndex(p1);
+		uint32_t idx2 = getWeldedIndex(p2);
 
 		// 1. 同一インデックスの重複チェック
 		if (idx0 == idx1 || idx1 == idx2 || idx2 == idx0) continue;
 
 		// 2. 3頂点から面積（外積の長さの2乗）を計算し、潰れた三角形を除外
-		JPH::Vec3 v0(allVertices[idx0].x, allVertices[idx0].y, allVertices[idx0].z);
-		JPH::Vec3 v1(allVertices[idx1].x, allVertices[idx1].y, allVertices[idx1].z);
-		JPH::Vec3 v2(allVertices[idx2].x, allVertices[idx2].y, allVertices[idx2].z);
+		JPH::Vec3 v0(p0.x, p0.y, p0.z);
+		JPH::Vec3 v1(p1.x, p1.y, p1.z);
+		JPH::Vec3 v2(p2.x, p2.y, p2.z);
 
 		JPH::Vec3 cross = (v1 - v0).Cross(v2 - v0);
 		if (cross.LengthSq() < 1.0e-8f)
@@ -255,6 +294,7 @@ bool PhysicsComponent::InitTerrainModel(const std::string& path, PhysicsInitData
 	creationSettings.mLinearDamping = initData.linearDamping;
 	creationSettings.mAngularDamping = initData.angularDamping;
 	creationSettings.mEnhancedInternalEdgeRemoval = true;
+	creationSettings.mAllowSleeping = initData.allowSleeping;
 
 	m_bodyID = bodyInterface.CreateAndAddBody(
 		creationSettings,

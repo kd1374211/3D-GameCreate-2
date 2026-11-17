@@ -20,6 +20,7 @@ MovingTerrain::MovingTerrain(Math::Vector3 pos, Math::Vector3 rot, Math::Vector3
 	initData.motionType = JPH::EMotionType::Kinematic;
 	initData.isStatic = false;
 	initData.layer = Layers::TERRAIN;
+	initData.allowSleeping = false;
 	initData.userData = reinterpret_cast<JPH::uint64>(this);
 
 	// 🚀 ファイルパスを渡すだけで、ロードから Jolt への地形登録まで完結！

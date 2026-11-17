@@ -267,3 +267,42 @@ void GameContactListener::OnContactPersisted(const JPH::Body& inBody1, const JPH
 		}
 	}
 }
+
+JPH::ValidateResult GameContactListener::OnContactValidate(const JPH::Body& inBody1, const JPH::Body& inBody2, JPH::RVec3Arg inBaseOffset, const JPH::CollideShapeResult& inCollisionResult)
+{
+	// 1. ワールド空間での衝突位置（Body1側を基準に固定）
+	JPH::RVec3 worldContactPoint = inBaseOffset + inCollisionResult.mContactPointOn1;
+
+	// 2. レイヤー・ボディ・SubShapeID を取得
+	JPH::ObjectLayer layer1 = inBody1.GetObjectLayer();
+	JPH::ObjectLayer layer2 = inBody2.GetObjectLayer();
+
+	const JPH::Body* body1 = &inBody1;
+	const JPH::Body* body2 = &inBody2;
+	JPH::SubShapeID subShapeID1 = inCollisionResult.mSubShapeID1;
+	JPH::SubShapeID subShapeID2 = inCollisionResult.mSubShapeID2;
+
+	// 3. 衝突法線を算出（Body1 -> Body2 の向きに揃える）
+	JPH::Vec3 normal = JPH::Vec3::sZero();
+	float axisLen = inCollisionResult.mPenetrationAxis.Length();
+	if (axisLen > 1e-6f)
+	{
+		normal = -inCollisionResult.mPenetrationAxis / axisLen;
+	}
+
+	// 4. 番号が小さいレイヤーを基準に揃える
+	if (layer1 > layer2)
+	{
+		std::swap(layer1, layer2);
+		std::swap(body1, body2);
+		std::swap(subShapeID1, subShapeID2);
+		normal = -normal;
+	}
+
+	// 5. 事前キャスト
+	auto gameObj1 = reinterpret_cast<KdGameObject*>(body1->GetUserData());
+	auto gameObj2 = reinterpret_cast<KdGameObject*>(body2->GetUserData());
+
+	// 接触を許可
+	return JPH::ValidateResult::AcceptAllContactsForThisBodyPair;
+}
