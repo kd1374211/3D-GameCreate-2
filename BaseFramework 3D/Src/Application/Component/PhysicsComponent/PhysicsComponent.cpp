@@ -254,6 +254,7 @@ bool PhysicsComponent::InitTerrainModel(const std::string& path, PhysicsInitData
 	creationSettings.mRestitution = initData.restitution;
 	creationSettings.mLinearDamping = initData.linearDamping;
 	creationSettings.mAngularDamping = initData.angularDamping;
+	creationSettings.mEnhancedInternalEdgeRemoval = true;
 
 	m_bodyID = bodyInterface.CreateAndAddBody(
 		creationSettings,
@@ -426,7 +427,6 @@ void PhysicsComponent::Init(float radius, PhysicsInitData initData)
 		initData.layer
 	);
 
-	creationSettings.mEnhancedInternalEdgeRemoval = true;
 	creationSettings.mOverrideMassProperties = JPH::EOverrideMassProperties::CalculateInertia;
 	creationSettings.mMassPropertiesOverride.mMass = initData.mass;
 	creationSettings.mMotionQuality = initData.motionQuality;

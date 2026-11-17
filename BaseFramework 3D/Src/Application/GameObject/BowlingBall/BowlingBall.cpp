@@ -319,7 +319,7 @@ void BowlingBall::PostUpdate()
 		}
 
 		// 壁に当たったのでAngVelの補正が必要
-		if (m_isHitWall)
+		if (m_isHitWall || GetAsyncKeyState(VK_RETURN) & 0x8000)
 		{
 			// 1. 最新の線形速度（進行方向）を取得
 			JPH::Vec3 linearVel = m_cPhysics->GetLinearVelocity();
