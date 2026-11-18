@@ -73,7 +73,7 @@ public:
 	void BuildStageObjects_D(int laneNumber = BowlingSystemConsts::StartFrame, StageBuildMode mode = StageBuildMode::Full);
 
 	//ゲッター（カメラ用）
-	std::weak_ptr<KdGameObject>& GetTerrain() { return m_wpMainTerrain; }
+	std::weak_ptr<TerrainBase>& GetTerrain() { return m_wpMainTerrain; }
 
 	// モード切り替え関連
 	void SetMode(StageMode mode);
@@ -136,6 +136,9 @@ private:
 	void ResetTerrain();
 	void ResetGimmicks();
 
+	// シミュレーション用の世界にBodyIDからコピーして追加
+	void CopyBodyToSimWorld(const std::unique_ptr<PhysicsWorld>& simWorld, const JPH::BodyID& bodyID);
+
 	//ステージパス生成
 	std::string GetStagePath(int stageNo)
 	{
@@ -192,8 +195,8 @@ private:
 
 	//オブジェクトのリスト管理
 	std::weak_ptr<KdGameObject> m_wpSkySphere;
-	std::weak_ptr<KdGameObject> m_wpIsland;
-	std::weak_ptr<KdGameObject> m_wpMainTerrain;
+	std::weak_ptr<TerrainBase> m_wpIsland;
+	std::weak_ptr<TerrainBase> m_wpMainTerrain;
 	std::vector<std::weak_ptr<TerrainBase>> m_wpIslandDecorations;
 	std::vector<std::weak_ptr<TerrainBase>> m_wpStageGimmicks;
 

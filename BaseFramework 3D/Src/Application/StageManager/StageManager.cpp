@@ -29,6 +29,23 @@ void StageManager::ResetGimmicks()
 	m_wpStageGimmicks.clear();
 }
 
+void StageManager::CopyBodyToSimWorld(const std::unique_ptr<PhysicsWorld>& simWorld, const JPH::BodyID& bodyID)
+{
+	// BI用意
+	auto& mainBI = PHYSICSMGR.GetBodyInterface();
+
+	// メインワールドから「今の位置・回転・速度・形状」を取得
+	JPH::RVec3 pos = mainBI.GetPosition(bodyID);
+	JPH::Quat  rot = mainBI.GetRotation(bodyID);
+	JPH::Vec3  vel = mainBI.GetLinearVelocity(bodyID);
+	JPH::Vec3  angVel = mainBI.GetAngularVelocity(bodyID);
+	JPH::ShapeRefC shape = mainBI.GetShape(bodyID);
+	JPH::EMotionType motionType = mainBI.GetMotionType(bodyID);
+
+	// SimWorld に全く同じ状態で生成
+	JPH::BodyCreationSettings settings(shape, pos, rot, JPH::EMotionType::Static, Layers::TERRAIN);
+}
+
 void StageManager::CheckIslandDecoActive(int frameNo)
 {
 	for (const auto& deco : m_wpIslandDecorations)
@@ -810,9 +827,58 @@ void StageManager::RunSimulationWorld(const Math::Vector3& startPos, const Math:
 	const auto& simWorld = PHYSICSMGR.CreateSimulationWorld();
 
 	// 物理オブジェクトをsim世界に複製
+
+	// 島
 	if (const auto& spIsland = m_wpIsland.lock())
 	{
+		// BodyID取得
+		const JPH::BodyID& bodyID = spIsland->GetBodyID();
 
+		
+	}
+
+	// 島デコレーション
+	for (const auto& wpDeco : m_wpIslandDecorations)
+	{
+		if (const auto& spDeco = wpDeco.lock())
+		{
+
+		}
+	}
+
+	// メイン地形
+	if (const auto& spMainTerrain = m_wpMainTerrain.lock())
+	{
+
+	}
+
+	// ギミック
+	for (const auto& wpGimmick : m_wpStageGimmicks)
+	{
+		if (const auto& spGimmick = wpGimmick.lock())
+		{
+
+		}
+	}
+
+	// ピン
+	// ハンドラーからアクティブピンを持ってくる
+	if (const auto& spPinHandler = m_wpPinHandler.lock())
+	{
+		for (const auto& wpPin : spPinHandler->GetActivePins())
+		{
+			if (const auto& spPin = wpPin.lock())
+			{
+
+			}
+		}
+	}
+
+	// プレイヤー
+	// キャラハンドラーから
+	if (const auto& spCharaHandler = m_wpCharaHandler.lock())
+	{
+		
 	}
 }
 
