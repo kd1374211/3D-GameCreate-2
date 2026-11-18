@@ -699,6 +699,7 @@
     <ClInclude Include="Src\Application\Physics\GameContactListener.h" />
     <ClInclude Include="Src\Application\Physics\PhysicsLayer.h" />
     <ClInclude Include="Src\Application\Physics\PhysicsManager.h" />
+    <ClInclude Include="Src\Application\Physics\PhysicsWorld.h" />
     <ClInclude Include="Src\Application\Scene\BaseScene\BaseScene.h" />
     <ClInclude Include="Src\Application\Scene\GameScene\GameScene.h" />
     <ClInclude Include="Src\Application\Scene\ResultScene\ResultScene.h" />
@@ -954,6 +955,7 @@
     <ClCompile Include="Src\Application\main.cpp" />
     <ClCompile Include="Src\Application\Physics\GameContactListener.cpp" />
     <ClCompile Include="Src\Application\Physics\PhysicsManager.cpp" />
+    <ClCompile Include="Src\Application\Physics\PhysicsWorld.cpp" />
     <ClCompile Include="Src\Application\Scene\BaseScene\BaseScene.cpp" />
     <ClCompile Include="Src\Application\Scene\GameScene\GameScene.cpp" />
     <ClCompile Include="Src\Application\Scene\ResultScene\ResultScene.cpp" />

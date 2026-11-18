@@ -1,53 +1,44 @@
 ﻿#pragma once
-#include "PhysicsLayer.h"
-#include "GameContactListener.h"
+#include "PhysicsWorld.h"
 
-class PhysicsManager {
+class PhysicsManager
+{
 public:
 
-	// 物理エンジンの初期化
 	void Init();
-
-	// 毎フレームの更新処理
 	void Update(float deltaTime);
-
-	// 後片付け
 	void Release();
 
-	// 他のクラスから物理ワールドを操作するためのゲッター
-	JPH::PhysicsSystem& GetSystem() { return *m_physicsSystem; }
-	JPH::BodyInterface& GetBodyInterface() { return m_physicsSystem->GetBodyInterface(); }
+	// 既存コードとの完全互換アクセサ（すべてメインワールドを返す）
+	JPH::PhysicsSystem& GetSystem() { return m_mainWorld.GetSystem(); }
+	JPH::BodyInterface& GetBodyInterface() { return m_mainWorld.GetBodyInterface(); }
+	PhysicsWorld& GetMainWorld() { return m_mainWorld; }
+
+	// 裏シミュレーション用の独立したワールドを生成して返す
+	std::unique_ptr<PhysicsWorld> CreateSimulationWorld()
+	{
+		auto simWorld = std::make_unique<PhysicsWorld>();
+		simWorld->Init(true); // isSimulationOnly = true で初期化
+		return simWorld;
+	}
+
+	// 裏ワールドで Update を回す際に渡す共有 JobSystem
+	JPH::JobSystem* GetJobSystem() { return m_jobSystem; }
 
 private:
+	PhysicsManager() = default;
+	~PhysicsManager() = default;
 
-	PhysicsManager() {}
-	~PhysicsManager() {}
-
-	// コピー禁止
-	PhysicsManager(const PhysicsManager&) = delete;
-	PhysicsManager& operator=(const PhysicsManager&) = delete;
-
-	// Joltの動作に必要なメンバー変数群
-	JPH::TempAllocatorImpl* m_tempAllocator = nullptr;
 	JPH::JobSystemThreadPool* m_jobSystem = nullptr;
-	JPH::PhysicsSystem* m_physicsSystem = nullptr;
-
-	//レイヤー
-	BPLayerInterfaceImpl m_BPLayerInterface;
-	ObjectLayerPairFilterImpl m_objectLayerPairFilter;
-	ObjectVsBroadPhaseLayerFilterImpl m_objectVsBroadPhaseLayerFilter;
-
-	// 衝突判定のリスナー
-	GameContactListener m_contactListener;
+	PhysicsWorld              m_mainWorld; // 画面に映るメインの物理空間
 
 public:
 
-	// シングルトンパターン、もしくはゲームエンジンクラス内で保持する設計にします
-	static PhysicsManager& Instance() {
+	static PhysicsManager& Instance()
+	{
 		static PhysicsManager instance;
 		return instance;
 	}
-
 };
 
 #define PHYSICSMGR PhysicsManager::Instance()

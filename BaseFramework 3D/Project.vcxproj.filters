@@ -1698,6 +1698,9 @@
     <ClInclude Include="Src\Application\GameObject\Terrain\Gimmicks\SpeedUpArea\SpeedUpArea.h">
       <Filter>Src\Application\GameObject\Terrain\Gimmicks\SpeedUpArea</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\Physics\PhysicsWorld.h">
+      <Filter>Src\Application\Physics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -2449,6 +2452,9 @@
     </ClCompile>
     <ClCompile Include="Src\Application\GameObject\Terrain\Gimmicks\SpeedUpArea\SpeedUpArea.cpp">
       <Filter>Src\Application\GameObject\Terrain\Gimmicks\SpeedUpArea</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Physics\PhysicsWorld.cpp">
+      <Filter>Src\Application\Physics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

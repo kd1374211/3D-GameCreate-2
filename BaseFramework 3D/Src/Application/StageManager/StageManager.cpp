@@ -3,6 +3,7 @@
 #include "../Component/CharaHandler/CharaHandler.h"
 #include "../GameObject/Camera/CameraBase.h"
 #include "../Component/PinHandler/PinHandler.h"
+#include "../Physics/PhysicsManager.h"
 
 #include "../GameObject/BowlingBall/BowlingBall.h"
 
@@ -801,6 +802,18 @@ const JPH::BodyID& StageManager::GetBodyID(SelectedTargetCategory category, int 
 
 	// 見つからない
 	return JPH::BodyID();
+}
+
+void StageManager::RunSimulationWorld(const Math::Vector3& startPos, const Math::Vector3& direction, float power)
+{
+	// 世界の作成
+	const auto& simWorld = PHYSICSMGR.CreateSimulationWorld();
+
+	// 物理オブジェクトをsim世界に複製
+	if (const auto& spIsland = m_wpIsland.lock())
+	{
+
+	}
 }
 
 bool StageManager::LoadStageMasterData()

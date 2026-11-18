@@ -116,6 +116,9 @@ public:
 	// 選択中のオブジェクトのBodyIDを取得
 	const JPH::BodyID& GetBodyID(SelectedTargetCategory category, int index);
 
+	// シミュレーション世界の作成と実行
+	void RunSimulationWorld(const Math::Vector3& startPos, const Math::Vector3& direction, float power);
+
 private:
 
 	//いつもの
