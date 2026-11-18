@@ -303,6 +303,12 @@ JPH::ValidateResult GameContactListener::OnContactValidate(const JPH::Body& inBo
 	auto gameObj1 = reinterpret_cast<KdGameObject*>(body1->GetUserData());
 	auto gameObj2 = reinterpret_cast<KdGameObject*>(body2->GetUserData());
 
+	// 地形・プレイヤー
+	if (layer1 == Layers::TERRAIN && layer2 == Layers::BOWLINGBALL)
+	{
+		
+	}
+
 	// 接触を許可
 	return JPH::ValidateResult::AcceptAllContactsForThisBodyPair;
 }

@@ -46,6 +46,13 @@ RotatingTerrain::RotatingTerrain(Math::Vector3 pos, Math::Vector3 rot, Math::Vec
 
 		// プログレスの進行スピードを計算
 		m_progSpeed = param.m_rotateSpeed / m_bounceDeg;
+
+		// rotateSpeedが-なら反転
+		if (param.m_rotateSpeed < 0.0f)
+		{
+			m_bounceDeg *= -1.0f;
+			m_progSpeed *= -1.0f;
+		}
 	}
 
 	// 情報設定

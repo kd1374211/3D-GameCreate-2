@@ -318,34 +318,30 @@ void BowlingBall::PostUpdate()
 			}
 		}
 
-		// 壁に当たったのでAngVelの補正が必要
-		if (m_isHitWall || GetAsyncKeyState(VK_RETURN) & 0x8000)
+		// AngVel補正
+
+		// 1. 最新の線形速度（進行方向）を取得
+		JPH::Vec3 linearVel = m_cPhysics->GetLinearVelocity();
+		JPH::Vec3 planarVel = JPH::Vec3(linearVel.GetX(), 0.0f, linearVel.GetZ());
+		float moveSpeed = planarVel.Length();
+
+		// 2. 現在の「角速度の大きさ（回転速度）」を取得
+		JPH::Vec3 currentAngVel = m_cPhysics->GetAngularVelocity();
+		float currentAngSpeed = currentAngVel.Length();
+
+		// 移動中かつ回転がある場合のみ補正
+		if (moveSpeed > 0.001f && currentAngSpeed > 0.001f)
 		{
-			// 1. 最新の線形速度（進行方向）を取得
-			JPH::Vec3 linearVel = m_cPhysics->GetLinearVelocity();
-			JPH::Vec3 planarVel = JPH::Vec3(linearVel.GetX(), 0.0f, linearVel.GetZ());
-			float moveSpeed = planarVel.Length();
+			// 進行方向の単位ベクトル
+			JPH::Vec3 moveDir = planarVel / moveSpeed;
 
-			// 2. 現在の「角速度の大きさ（回転速度）」を取得
-			JPH::Vec3 currentAngVel = m_cPhysics->GetAngularVelocity();
-			float currentAngSpeed = currentAngVel.Length();
+			// 進行方向に直交する「新しい前進回転の軸」を算出
+			JPH::Vec3 forwardSpinAxis = JPH::Vec3::sAxisY().Cross(moveDir).Normalized();
 
-			// 移動中かつ回転がある場合のみ補正
-			if (moveSpeed > 0.001f && currentAngSpeed > 0.001f)
-			{
-				// 進行方向の単位ベクトル
-				JPH::Vec3 moveDir = planarVel / moveSpeed;
+			// ★ 回転速度（currentAngSpeed）はそのまま引き継ぎ、向きだけ上書き
+			JPH::Vec3 newAngVel = forwardSpinAxis * currentAngSpeed;
 
-				// 進行方向に直交する「新しい前進回転の軸」を算出
-				JPH::Vec3 forwardSpinAxis = JPH::Vec3::sAxisY().Cross(moveDir).Normalized();
-
-				// ★ 回転速度（currentAngSpeed）はそのまま引き継ぎ、向きだけ上書き
-				JPH::Vec3 newAngVel = forwardSpinAxis * currentAngSpeed;
-
-				m_cPhysics->SetAngularVelocity(newAngVel);
-			}
-
-			m_isHitWall = false;
+			m_cPhysics->SetAngularVelocity(newAngVel);
 		}
 	}
 
@@ -508,8 +504,6 @@ void BowlingBall::Reset()
 	m_canRoll = true;
 	m_isInputEnabled = false;
 	m_isDraw = true;
-	m_isHitWall = false;
-
 	// マウス関連のリセット
 	m_isShootStart = false;
 	m_speedStoreData.clear();
@@ -551,7 +545,6 @@ void BowlingBall::Respawn(const Math::Vector3& pos, const Math::Vector3& rot)
 	// 物理ボディを再度活性化
 	ActivateBody();
 
-	// ↓仮置き
 	// 位置と向きを設定
 	m_pos = pos;
 	if (auto gameCam = m_wpCamera.lock())
@@ -621,9 +614,6 @@ void BowlingBall::HitGround(const std::string& matName, float velocityY, JPH::Ve
 
 void BowlingBall::HitWall(const std::string& matName, float velocity, JPH::Vec3 pos, JPH::Vec3 normal)
 {
-	// 接壁フラグをオン
-	m_isHitWall = true;
-
 	// gdt取得
 	float gameDt = SCENEMGR.GetDeltaGameTime();
 

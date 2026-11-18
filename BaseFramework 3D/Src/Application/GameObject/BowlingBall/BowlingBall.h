@@ -227,9 +227,6 @@ private:
 	// 煙を出すための移動距離
 	float m_distToSpawnSmoke = 0.0f;
 
-	// 壁に当たったのでAngVelの補正が必要
-	bool m_isHitWall = false;
-
 	// このフレームで加速エリアに触れたか
 	bool m_isHitSpeedUpAreaThisFrame = false;
 
