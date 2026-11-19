@@ -137,7 +137,7 @@ private:
 	void ResetGimmicks();
 
 	// シミュレーション用の世界にBodyIDからコピーして追加
-	void CopyBodyToSimWorld(const std::unique_ptr<PhysicsWorld>& simWorld, const JPH::BodyID& bodyID);
+	//void CopyBodyToSimWorld(const std::unique_ptr<PhysicsWorld>& simWorld, const JPH::BodyID& bodyID);
 
 	//ステージパス生成
 	std::string GetStagePath(int stageNo)

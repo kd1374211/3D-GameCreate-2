@@ -6,7 +6,6 @@ class ShotCursor;
 class ShotPowerBar;
 class GameUIObjects;
 
-
 class BowlingBall :public KdGameObject
 {
 public:

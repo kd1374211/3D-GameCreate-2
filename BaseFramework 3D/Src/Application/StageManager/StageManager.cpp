@@ -29,22 +29,22 @@ void StageManager::ResetGimmicks()
 	m_wpStageGimmicks.clear();
 }
 
-void StageManager::CopyBodyToSimWorld(const std::unique_ptr<PhysicsWorld>& simWorld, const JPH::BodyID& bodyID)
-{
-	// BI用意
-	auto& mainBI = PHYSICSMGR.GetBodyInterface();
-
-	// メインワールドから「今の位置・回転・速度・形状」を取得
-	JPH::RVec3 pos = mainBI.GetPosition(bodyID);
-	JPH::Quat  rot = mainBI.GetRotation(bodyID);
-	JPH::Vec3  vel = mainBI.GetLinearVelocity(bodyID);
-	JPH::Vec3  angVel = mainBI.GetAngularVelocity(bodyID);
-	JPH::ShapeRefC shape = mainBI.GetShape(bodyID);
-	JPH::EMotionType motionType = mainBI.GetMotionType(bodyID);
-
-	// SimWorld に全く同じ状態で生成
-	JPH::BodyCreationSettings settings(shape, pos, rot, JPH::EMotionType::Static, Layers::TERRAIN);
-}
+//void StageManager::CopyBodyToSimWorld(const std::unique_ptr<PhysicsWorld>& simWorld, const JPH::BodyID& bodyID)
+//{
+//	// BI用意
+//	auto& mainBI = PHYSICSMGR.GetBodyInterface();
+//
+//	// メインワールドから「今の位置・回転・速度・形状」を取得
+//	JPH::RVec3 pos = mainBI.GetPosition(bodyID);
+//	JPH::Quat  rot = mainBI.GetRotation(bodyID);
+//	JPH::Vec3  vel = mainBI.GetLinearVelocity(bodyID);
+//	JPH::Vec3  angVel = mainBI.GetAngularVelocity(bodyID);
+//	JPH::ShapeRefC shape = mainBI.GetShape(bodyID);
+//	JPH::EMotionType motionType = mainBI.GetMotionType(bodyID);
+//
+//	// SimWorld に全く同じ状態で生成
+//	JPH::BodyCreationSettings settings(shape, pos, rot, JPH::EMotionType::Static, Layers::TERRAIN);
+//}
 
 void StageManager::CheckIslandDecoActive(int frameNo)
 {
@@ -880,6 +880,11 @@ void StageManager::RunSimulationWorld(const Math::Vector3& startPos, const Math:
 	{
 		
 	}
+
+	// メモ
+	// 投球時に
+	// 現在のボディーから物理状況
+	// 各オブジェクトから変数をある程度コピーする必要あり
 }
 
 bool StageManager::LoadStageMasterData()

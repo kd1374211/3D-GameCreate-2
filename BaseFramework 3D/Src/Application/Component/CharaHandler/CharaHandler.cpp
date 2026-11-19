@@ -6,6 +6,7 @@
 
 void CharaHandler::Init()
 {
+	// プレイヤーの用意
 	InitPlayerBall();
 }
 
@@ -43,9 +44,6 @@ void CharaHandler::RespawnPlayerBall(const Math::Vector3& pos, const Math::Vecto
 
 bool CharaHandler::IsBallRolling() const
 {
-	// DEBUG
-	KdDebugGUI::Instance().AddLog("IsRolling: %d\n", m_playerBall->IsRolling());
-
 	return m_playerBall->IsRolling();
 }
 

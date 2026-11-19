@@ -43,7 +43,7 @@ public:
 
 	// BodyID取得
 	const JPH::BodyID& GetBodyID(int index)const;
-	//const std::vector<std::weak_ptr<PinBase>> GetActivePins()const { return m_activePins; }
+	const std::vector<std::weak_ptr<PinBase>> GetActivePins()const { return m_activePins; }
 
 private:
 

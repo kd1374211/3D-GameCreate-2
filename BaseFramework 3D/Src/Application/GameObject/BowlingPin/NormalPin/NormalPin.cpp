@@ -3,10 +3,8 @@
 NormalPin::NormalPin(Math::Vector3 startPos, Math::Quaternion startRot)
 {
 	std::string path = "Asset/Models/Pin/Draw/pin.gltf";
-	//m_model = std::make_shared<KdModelData>();
 	m_model = KdAssets::Instance().m_modeldatas.GetData(path);
-	//m_model->Load(path);
-
+	
 	m_cPhysics = std::make_shared<PhysicsComponent>();
 
 	//物理Initに投げるパラメータ設定
