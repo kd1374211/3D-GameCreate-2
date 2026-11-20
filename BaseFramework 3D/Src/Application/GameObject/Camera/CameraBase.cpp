@@ -12,7 +12,7 @@ void CameraBase::Init()
 	m_FixMousePos.y = 0;
 
 	// HitObjList生成
-	m_hitObjList = std::make_shared<AdditionTypeBodyFilter>();
+	m_hitObjList = std::make_shared<AdditionTypeBodyFilter>(true);
 }
 
 void CameraBase::PreDraw()

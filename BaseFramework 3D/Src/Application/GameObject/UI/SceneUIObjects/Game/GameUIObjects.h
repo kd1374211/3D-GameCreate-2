@@ -17,6 +17,7 @@ struct MovingText
 enum class MouseGuideMode
 {
 	Default,
+	LookingDown,
 	ReadyThrow,
 	AfterThrow,
 	MidResult

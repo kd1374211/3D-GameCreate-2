@@ -161,6 +161,12 @@ private:
 	// 地面に触れたかどうかのフラグをオンにする
 	void OnGround() { m_isOnGroundThisFrame = true; }
 
+	// 見下ろしカメラモードへの変更
+	void ToggleLookingDownMode();
+	// 仮置き
+	// 見下ろしカメラモードフラグ
+	bool m_isLDMode = false;
+
 	//モデル
 	std::shared_ptr<KdModelData> m_model;
 

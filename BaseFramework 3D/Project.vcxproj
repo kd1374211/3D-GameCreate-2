@@ -664,6 +664,7 @@
     <ClInclude Include="Src\Application\GameObject\Camera\CameraBase.h" />
     <ClInclude Include="Src\Application\GameObject\Camera\CameraManager.h" />
     <ClInclude Include="Src\Application\GameObject\Camera\FPSCamera\FPSCamera.h" />
+    <ClInclude Include="Src\Application\GameObject\Camera\LookingDownCamera\LookingDownCamera.h" />
     <ClInclude Include="Src\Application\GameObject\Camera\PointTargetCamera\PointTargetCamera.h" />
     <ClInclude Include="Src\Application\GameObject\Camera\StageViewCamera\StageViewCamera.h" />
     <ClInclude Include="Src\Application\GameObject\Camera\TPSCamera\TPSCamera.h" />
@@ -923,6 +924,7 @@
     <ClCompile Include="Src\Application\GameObject\Camera\CameraBase.cpp" />
     <ClCompile Include="Src\Application\GameObject\Camera\CameraManager.cpp" />
     <ClCompile Include="Src\Application\GameObject\Camera\FPSCamera\FPSCamera.cpp" />
+    <ClCompile Include="Src\Application\GameObject\Camera\LookingDownCamera\LookingDownCamera.cpp" />
     <ClCompile Include="Src\Application\GameObject\Camera\PointTargetCamera\PointTargetCamera.cpp" />
     <ClCompile Include="Src\Application\GameObject\Camera\StageViewCamera\StageViewCamera.cpp" />
     <ClCompile Include="Src\Application\GameObject\Camera\TPSCamera\TPSCamera.cpp" />

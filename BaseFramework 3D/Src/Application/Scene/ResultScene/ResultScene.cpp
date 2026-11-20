@@ -33,8 +33,8 @@ void ResultScene::Init()
 	AddObject(camera);
 
 	//マネージャーに追加
-	CAMERAMGR.SetGameCamera(camera);
-	CAMERAMGR.SetDefaultCamera(CameraType::Game);
+	CAMERAMGR.SetCamera(CameraType::Game_Normal, camera);
+	CAMERAMGR.SetDefaultCamera(CameraType::Game_Normal);
 
 	//UI全般
 	std::shared_ptr<ResultUIObject> UIObj = std::make_shared<ResultUIObject>();

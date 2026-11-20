@@ -65,8 +65,8 @@ RotatingTerrain::RotatingTerrain(Math::Vector3 pos, Math::Vector3 rot, Math::Vec
 	Math::Matrix scale = Math::Matrix::CreateScale(m_scale);
 	m_mWorld = scale * rotat * trans;
 
-	// カメラに登録
-	RegistToCamera();
+	// カメラに登録(見下ろし除外にも登録)
+	RegistToCamera(true);
 }
 
 void RotatingTerrain::Update()

@@ -46,8 +46,8 @@ void TitleScene::Init()
 	AddObject(camera);
 
 	//マネージャー
-	CAMERAMGR.SetGameCamera(camera);
-	CAMERAMGR.SetDefaultCamera(CameraType::Game);
+	CAMERAMGR.SetCamera(CameraType::Game_Normal, camera);
+	CAMERAMGR.SetDefaultCamera(CameraType::Game_Normal);
 
 	//ランダムに背景ステージ読み込み
 	//読み込むステージをランダムで決定

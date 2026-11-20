@@ -13,6 +13,7 @@
 #include "../UI/SceneUIObjects/Game/GameUIObjects.h"
 #include "../../Const/DeviceAndKey.h"
 #include "../../Const/PhysicsMaterialConsts.h"
+#include "../../GameObject/Camera/LookingDownCamera/LookingDownCamera.h"
 
 BowlingBall::BowlingBall()
 {
@@ -94,114 +95,125 @@ void BowlingBall::Update()
 		//移動不可ならリターン
 		if (!m_canRoll)return;
 
-		// 操作関連
-		if (m_isInputEnabled)
+		// 右クリックで見下ろしモードに切り替え
+		if (KdInputManager::Instance().IsPress(GetKeyRegistName(VK_RBUTTON)))
 		{
-			Math::Vector2 cursorPos = CURSOR.GetFixedCursorPosVec2();
+			// 切り替え
+			ToggleLookingDownMode();
+		}
 
-			// 左クリックで準備
-			if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
+		// 見下ろしモード確認
+		if (!m_isLDMode)
+		{
+			// 操作関連
+			if (m_isInputEnabled)
 			{
-				// まだ押してなければ
-				if (!m_isShootStart)
+				Math::Vector2 cursorPos = CURSOR.GetFixedCursorPosVec2();
+
+				// 左クリックで準備
+				if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
 				{
-					// ショット開始フラグをオンに
-					m_isShootStart = true;
-					// 平均をリセット
-					m_speedStoreData.clear();
-					m_totalStoredTime = 0.0f;
-					// UIに通知
-					if (const auto& spUI = m_wpGameUI.lock())
+					// まだ押してなければ
+					if (!m_isShootStart)
 					{
-						spUI->ChangeGuideMode(MouseGuideMode::ReadyThrow);
+						// ショット開始フラグをオンに
+						m_isShootStart = true;
+						// 平均をリセット
+						m_speedStoreData.clear();
+						m_totalStoredTime = 0.0f;
+						// UIに通知
+						if (const auto& spUI = m_wpGameUI.lock())
+						{
+							spUI->ChangeGuideMode(MouseGuideMode::ReadyThrow);
+						}
+
+						// カメラの回転を固定
+						if (auto gameCam = m_wpCamera.lock())
+						{
+							gameCam->SetIsCamLocked(true);
+						}
 					}
 
-					// カメラの回転を固定
-					if (auto gameCam = m_wpCamera.lock())
-					{
-						gameCam->SetIsCamLocked(true);
-					}
-				}
-
-				// 押している間
-				// このフレームでの移動量を追加
-				m_speedStoreData.push_back(SpeedStoreData(gameDt, std::max(cursorPos.y, 0.0f)));
-				m_totalStoredTime += gameDt;
-
-				// 保持上限時間を超えなくなるまで古い記録を削除
-				while (m_totalStoredTime - m_speedStoreData.begin()->m_gameDt > BowlingBallConsts::AverageCalcTime)
-				{
-					m_totalStoredTime -= m_speedStoreData.begin()->m_gameDt;
-					m_speedStoreData.erase(m_speedStoreData.begin());
-				}
-
-				// バーに強さを設定
-				if (!m_wpPowerBar.expired())
-				{
-					m_wpPowerBar.lock()->SetPower(std::clamp(CalcAvgMoveSpeed() / BowlingBallConsts::ThrowSpeedDiv, 0.0f, BowlingBallConsts::ThrowSpeedMax));
-				}
-			}
-			// 左クリックを離す
-			else
-			{
-				// もし押している状態だったら
-				if (m_isShootStart)
-				{
+					// 押している間
 					// このフレームでの移動量を追加
 					m_speedStoreData.push_back(SpeedStoreData(gameDt, std::max(cursorPos.y, 0.0f)));
 					m_totalStoredTime += gameDt;
 
-					// ゲーム時間から1秒ごとの速度を確認
-					float mouseMoveAvg = CalcAvgMoveSpeed();
-
-					// 速度から発射速度を確定(最大値は制限)
-					float throwPower = std::min(mouseMoveAvg / BowlingBallConsts::ThrowSpeedDiv, BowlingBallConsts::ThrowSpeedMax);
-
-					// 速度が一定値以上＆上向き
-					if (throwPower > BowlingBallConsts::ThrowSpeedMin)
+					// 保持上限時間を超えなくなるまで古い記録を削除
+					while (m_totalStoredTime - m_speedStoreData.begin()->m_gameDt > BowlingBallConsts::AverageCalcTime)
 					{
-						// 角度取得
-						Math::Vector3 direction = Math::Vector3(0, 1, 0);
-						if (!m_wpCamera.expired())
-						{
-							direction = m_wpCamera.lock()->GetRotationYMatrix().Backward();
-						}
-
-						// 速度と角度をもとに投げる
-						Throw(m_pos, direction, throwPower);
-
-						// カメラアンロック時間設定
-						m_camUnlockTime = BowlingBallConsts::CameraUnlockTimeAfterThrow;
-
-						// アンロック待ち状態に
-						m_isCamUnlockWait = true;
-
-						// 操作不可に
-						m_isInputEnabled = false;
-
-						// UIに通知
-						if (const auto& spUI = m_wpGameUI.lock())
-						{
-							spUI->ChangeGuideMode(MouseGuideMode::AfterThrow);
-						}
+						m_totalStoredTime -= m_speedStoreData.begin()->m_gameDt;
+						m_speedStoreData.erase(m_speedStoreData.begin());
 					}
-					else
+
+					// バーに強さを設定
+					if (!m_wpPowerBar.expired())
 					{
-						// カメラの回転を解放(投げキャンセル)
-						if (auto gameCam = m_wpCamera.lock())
+						m_wpPowerBar.lock()->SetPower(std::clamp(CalcAvgMoveSpeed() / BowlingBallConsts::ThrowSpeedDiv, 0.0f, BowlingBallConsts::ThrowSpeedMax));
+					}
+				}
+				// 左クリックを離す
+				else
+				{
+					// もし押している状態だったら
+					if (m_isShootStart)
+					{
+						// このフレームでの移動量を追加
+						m_speedStoreData.push_back(SpeedStoreData(gameDt, std::max(cursorPos.y, 0.0f)));
+						m_totalStoredTime += gameDt;
+
+						// ゲーム時間から1秒ごとの速度を確認
+						float mouseMoveAvg = CalcAvgMoveSpeed();
+
+						// 速度から発射速度を確定(最大値は制限)
+						float throwPower = std::min(mouseMoveAvg / BowlingBallConsts::ThrowSpeedDiv, BowlingBallConsts::ThrowSpeedMax);
+
+						// 速度が一定値以上＆上向き
+						if (throwPower > BowlingBallConsts::ThrowSpeedMin)
 						{
-							gameCam->SetIsCamLocked(false);
+							// 角度取得
+							Math::Vector3 direction = Math::Vector3(0, 1, 0);
+							if (!m_wpCamera.expired())
+							{
+								direction = m_wpCamera.lock()->GetRotationYMatrix().Backward();
+							}
+
+							// 速度と角度をもとに投げる
+							Throw(m_pos, direction, throwPower);
+
+							// カメラアンロック時間設定
+							m_camUnlockTime = BowlingBallConsts::CameraUnlockTimeAfterThrow;
+
+							// アンロック待ち状態に
+							m_isCamUnlockWait = true;
+
+							// 操作不可に
+							m_isInputEnabled = false;
+
+							// UIに通知
+							if (const auto& spUI = m_wpGameUI.lock())
+							{
+								spUI->ChangeGuideMode(MouseGuideMode::AfterThrow);
+							}
+						}
+						else
+						{
+							// カメラの回転を解放(投げキャンセル)
+							if (auto gameCam = m_wpCamera.lock())
+							{
+								gameCam->SetIsCamLocked(false);
+							}
+
+							// UIに通知
+							if (const auto& spUI = m_wpGameUI.lock())
+							{
+								spUI->ChangeGuideMode(MouseGuideMode::Default);
+							}
 						}
 
-						// UIに通知
-						if (const auto& spUI = m_wpGameUI.lock())
-						{
-							spUI->ChangeGuideMode(MouseGuideMode::Default);
-						}
+						// 投げ開始フラグを戻す
+						m_isShootStart = false;
 					}
-					
-					// 投げ開始フラグを戻す
-					m_isShootStart = false;
 				}
 			}
 		}
@@ -504,6 +516,7 @@ void BowlingBall::Reset()
 	m_canRoll = true;
 	m_isInputEnabled = false;
 	m_isDraw = true;
+	m_isLDMode = false;
 	// マウス関連のリセット
 	m_isShootStart = false;
 	m_speedStoreData.clear();
@@ -658,6 +671,34 @@ void BowlingBall::HitIsland(const std::string& matName, JPH::Vec3 velocity, JPH:
 void BowlingBall::OnIsland()
 {
 	// 何もない
+}
+
+void BowlingBall::ToggleLookingDownMode()
+{
+	// フラグ反転
+	m_isLDMode = !m_isLDMode;
+
+	// これによりオンになったなら見下ろしカメラの再設定
+	if (m_isLDMode)
+	{
+		// 再設定
+		if (const auto& spLookingDownCamera = std::dynamic_pointer_cast<LookingDownCamera>(CAMERAMGR.GetCamera(CameraType::Game_LookingDown).lock()))
+		{
+			spLookingDownCamera->CalcViewPointYFromMainTerrain();
+
+			// プレイヤー座標をXZに登録
+			spLookingDownCamera->SetViewPointXZ(m_pos.x, m_pos.z);
+		}
+	}
+
+	// アクティブカメラ更新
+	CAMERAMGR.SetDefaultCamera(m_isLDMode ? CameraType::Game_LookingDown : CameraType::Game_Normal);
+
+	// UIマウスガイド更新
+	if (const auto& spGameUI = m_wpGameUI.lock())
+	{
+		spGameUI->ChangeGuideMode(m_isLDMode ? MouseGuideMode::LookingDown : MouseGuideMode::Default);
+	}
 }
 
 void BowlingBall::UpdateRollingResistance(float resistPower)

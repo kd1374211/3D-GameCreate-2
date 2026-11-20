@@ -31,6 +31,6 @@ Island::Island(const std::string& modelPath, const Math::Vector3& pos)
 	Math::Matrix rotat = Math::Matrix::CreateFromQuaternion(m_rot);
 	m_mWorld = rotat * trans;
 
-	// カメラに登録
-	RegistToCamera();
+	// カメラに登録(見下ろし除外にも登録)
+	RegistToCamera(true);
 }

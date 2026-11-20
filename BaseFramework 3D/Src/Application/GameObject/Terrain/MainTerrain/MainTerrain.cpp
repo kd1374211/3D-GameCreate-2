@@ -3,10 +3,8 @@
 
 MainTerrain::MainTerrain(std::string modelPath, Math::Vector3 pos, Math::Quaternion rot)
 {
-	//m_model = std::make_shared<KdModelData>();
 	m_model = KdAssets::Instance().m_modeldatas.GetData(modelPath);
-	//m_model->Load(modelPath);
-
+	
 	m_cPhysics = std::make_shared<PhysicsComponent>();
 
 	//物理Initに投げるパラメータ設定
@@ -31,7 +29,7 @@ MainTerrain::MainTerrain(std::string modelPath, Math::Vector3 pos, Math::Quatern
 	Math::Matrix rotat = Math::Matrix::CreateFromQuaternion(m_rot);
 	m_mWorld = rotat * trans;
 
-	// カメラに登録
-	RegistToCamera();
+	// カメラに登録(見下ろし除外にも登録)
+	RegistToCamera(true);
 }
 

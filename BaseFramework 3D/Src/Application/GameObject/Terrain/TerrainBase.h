@@ -17,10 +17,13 @@ public:
 	void SetPos(const Math::Vector3& a_pos) { m_pos = a_pos; }
 
 	// カメラに登録
-	void RegistToCamera();
+	void RegistToCamera(bool isRegistToLDCamera = false);
 
 	// BodyID取得
 	const JPH::BodyID& GetBodyID()const { return m_cPhysics->GetBodyID(); }
+
+	// 描画フラグ切り替え
+	void SetIsDraw(bool isDraw) { m_isDraw = isDraw; }
 
 protected:
 
@@ -31,4 +34,7 @@ protected:
 
 	//物理コンポーネント
 	std::shared_ptr<PhysicsComponent> m_cPhysics;
+
+	// 描画するか
+	bool m_isDraw = true;
 };

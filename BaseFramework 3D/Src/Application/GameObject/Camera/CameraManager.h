@@ -4,8 +4,10 @@ class CameraBase;
 
 enum class CameraType
 {
-	Game,
-	Debug
+	Game_Normal,
+	Game_LookingDown,
+	Debug,
+	Number
 };
 
 class CameraManager
@@ -15,34 +17,37 @@ public:
 	void Init();
 
 	// カメラセット
-	void SetGameCamera(std::shared_ptr<CameraBase> camera);
-	void SetDebugCamera(std::shared_ptr<CameraBase> camera);
+	void SetCamera(CameraType type, std::shared_ptr<CameraBase> camera);
 	
 	// 描画用のカメラセット
 	void SetDefaultCamera(CameraType type);
-
-	// カメラ破壊
-	void DeleteGameCamera();
-	void DeleteDebugCamera();
-
+	
 	// カメラ取得
-	std::weak_ptr<CameraBase> GetGameCamera() { return m_wpGameCamera; }
-	std::weak_ptr<CameraBase> GetDebugCamera() { return m_wpDebugCamera; }
-	std::weak_ptr<CameraBase> GetActiveCamera();
+	std::weak_ptr<CameraBase> GetCamera(CameraType type)const 
+	{ 
+		// 有効確認
+		if (CheckValidIndex(type))return m_wpCamera[(size_t)type];
+		// 無効なら通常カメラを返す
+		else return GetCamera(CameraType::Game_Normal);
+	}
+	std::weak_ptr<CameraBase> GetActiveCamera()const { return GetCamera(m_activeCamera); }
 
 private:
 
 	CameraManager() {}
 	~CameraManager() {}
 
-	//カメラ（ゲーム内）
-	std::weak_ptr<CameraBase> m_wpGameCamera;
+	// カメラ破壊
+	void DeleteCamera(CameraType type);
 
-	//カメラ（デバッグ）
-	std::weak_ptr<CameraBase> m_wpDebugCamera;
+	// インデックス有効確認
+	const bool CheckValidIndex(CameraType type)const { return type != CameraType::Number; }
+
+	// 各カメラ
+	std::weak_ptr<CameraBase> m_wpCamera[(size_t)CameraType::Number];
 
 	// 現在アクティブなカメラ
-	CameraType m_activeCamera = CameraType::Game;
+	CameraType m_activeCamera = CameraType::Game_Normal;
 
 public:
 

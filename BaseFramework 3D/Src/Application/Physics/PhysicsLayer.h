@@ -62,22 +62,27 @@ class AdditionTypeBodyFilter :public JPH::BodyFilter
 {
 public:
 
-	AdditionTypeBodyFilter() {}
+	AdditionTypeBodyFilter(bool isCollide) { bIsCollide = isCollide; }
 
 	void AddBody(const JPH::BodyID& id) { bodyIDList.push_back(id); }
 	virtual bool ShouldCollide(const JPH::BodyID& inBodyID) const override
 	{
-		// リストを見て見つかればtrue
+		// リストを見て見つかればフラグを返す
 		for (const auto& ID : bodyIDList)
 		{
-			if (ID == inBodyID)return true;
+			if (ID == inBodyID)return bIsCollide;
 		}
 
-		// 見つからなければfalse
-		return false;
+		// 見つからなければ反対
+		return !bIsCollide;
 	}
+
+	// 後から変更したいとき用
+	void SetIsCollide(bool isCollide) { bIsCollide = isCollide; }
+
 private:
 
+	bool bIsCollide;
 	std::vector<JPH::BodyID> bodyIDList;
 
 };

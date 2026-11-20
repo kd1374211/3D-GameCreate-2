@@ -44,6 +44,7 @@ void SpeedUpArea::Init()
 void SpeedUpArea::DrawLit()
 {
 	if (!m_model)return;
+	if (!m_isDraw)return;
 	
 	// 描画
 	KdShaderManager::Instance().m_StandardShader.DrawModel(*m_model, m_mWorld);

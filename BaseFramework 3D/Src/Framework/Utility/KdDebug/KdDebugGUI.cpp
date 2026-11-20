@@ -118,14 +118,14 @@ void KdDebugGUI::GuiProcess()
 			isEditWindow = false;
 			STAGEMGR.SetMode(StageMode::Play);
 			SCENEMGR.SetGameSpeed(1.0f);
-			CAMERAMGR.SetDefaultCamera(CameraType::Game);
+			CAMERAMGR.SetDefaultCamera(CameraType::Game_Normal);
 		}
 	}
 
 	if (isEditWindow)
 	{
 		// カメラ取得
-		std::weak_ptr<CameraBase> parent = CAMERAMGR.GetDebugCamera();
+		std::weak_ptr<CameraBase> parent = CAMERAMGR.GetCamera(CameraType::Debug);
 		std::shared_ptr<PointTargetCamera> camera;
 		static bool camCastSuccess = false;
 		if (camera = std::dynamic_pointer_cast<PointTargetCamera>(parent.lock()))
@@ -242,7 +242,7 @@ void KdDebugGUI::ToggleStageEditor(int& currentStageNo, int& currentLaneNo)
 		STAGEMGR.SetMode(StageMode::Play);
 		// プレイヤーの操作を有効に
 		STAGEMGR.BuildStageObjects_D(currentLaneNo);
-		CAMERAMGR.SetDefaultCamera(CameraType::Game);
+		CAMERAMGR.SetDefaultCamera(CameraType::Game_Normal);
 
 		// カーソルの固定を再開
 		CURSOR.LockCursor();
@@ -255,7 +255,7 @@ void KdDebugGUI::ToggleStageEditor(int& currentStageNo, int& currentLaneNo)
 
 		//ポイントターゲットカメラ
 		//今のカメラのターゲット取得
-		std::weak_ptr<CameraBase> currentCamera = CAMERAMGR.GetGameCamera();
+		std::weak_ptr<CameraBase> currentCamera = CAMERAMGR.GetCamera(CameraType::Game_Normal);
 		std::weak_ptr<KdGameObject> cameraTarget;
 		Math::Vector3 targetPos = Math::Vector3::Zero;
 		if (!currentCamera.expired())
@@ -276,7 +276,7 @@ void KdDebugGUI::ToggleStageEditor(int& currentStageNo, int& currentLaneNo)
 		camera->Init(targetPos);
 		SCENEMGR.AddObject(camera);
 
-		CAMERAMGR.SetDebugCamera(camera);
+		CAMERAMGR.SetCamera(CameraType::Debug, camera);
 		CAMERAMGR.SetDefaultCamera(CameraType::Debug);
 
 		// 選択中のindexを合わせる
@@ -1466,7 +1466,7 @@ void KdDebugGUI::MoveSelectedObjectToCursor(StageOverallData& stageData, int cur
 	auto& frameData = stageData.m_stageLaneData[currentLaneNo];
 
 	// カメラ取得
-	std::weak_ptr<CameraBase> parent = CAMERAMGR.GetDebugCamera();
+	std::weak_ptr<CameraBase> parent = CAMERAMGR.GetCamera(CameraType::Debug);
 	std::shared_ptr<PointTargetCamera> camera;
 	static bool camCastSuccess = false;
 	if (camera = std::dynamic_pointer_cast<PointTargetCamera>(parent.lock()))

@@ -1,4 +1,5 @@
 ﻿#include "StageViewCamera.h"
+#include "../../../Scene/SceneManager.h"
 
 void StageViewCamera::Init()
 {
@@ -14,11 +15,11 @@ void StageViewCamera::Init()
 
 void StageViewCamera::PostUpdate()
 {
-	//回転速度
-	float angleChange = 0.3f;
+	// gdt取得
+	float gameDt = SCENEMGR.GetDeltaGameTime();
 
 	//回転
-	m_angleDeg += angleChange;
+	m_angleDeg += StageViewCameraConsts::RotateSpeed * gameDt;
 	if (m_angleDeg >= 360.0f)m_angleDeg -= 360.0f;
 
 	// ターゲットの行列(有効な場合利用する)

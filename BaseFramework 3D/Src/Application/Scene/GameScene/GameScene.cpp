@@ -4,6 +4,7 @@
 
 #include "../../StageManager/StageManager.h"
 #include "../../GameObject/Camera/TPSCamera/TPSCamera.h"
+#include "../../GameObject/Camera/LookingDownCamera/LookingDownCamera.h"
 #include "../../GameObject/BowlingBall/BowlingBall.h"
 #include "../../Component/CharaHandler/CharaHandler.h"
 #include "../../GameObject/UI/SceneUIObjects/Game/GameUIObjects.h"
@@ -455,13 +456,20 @@ void GameScene::Init()
 	//カメラ生成
 	std::shared_ptr<TPSCamera> camera = std::make_shared<TPSCamera>();
 	camera->Init();
+	// 見下ろしカメラも生成
+	std::shared_ptr<LookingDownCamera> ldCamera = std::make_shared<LookingDownCamera>();
+	ldCamera->Init();
 
 	//追加
 	AddObject(camera);
+	AddObject(ldCamera);
 
 	//マネージャーに追加
-	CAMERAMGR.SetGameCamera(camera);
-	CAMERAMGR.SetDefaultCamera(CameraType::Game);
+	CAMERAMGR.SetCamera(CameraType::Game_Normal,camera);
+	CAMERAMGR.SetCamera(CameraType::Game_LookingDown, ldCamera);
+
+	// 通常カメラをメインに設定
+	CAMERAMGR.SetDefaultCamera(CameraType::Game_Normal);
 
 	//ステージ番号
 	int stageNumber = SCENEMGR.GetStageNo();

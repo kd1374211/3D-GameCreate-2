@@ -1,14 +1,14 @@
 ﻿#include "IslandDecoration.h"
 #include "../../../Const/Function.h"
+#include "../../../GameObject/Camera/CameraManager.h"
+#include "../../../GameObject/Camera/LookingDownCamera/LookingDownCamera.h"
 
 IslandDecoration::IslandDecoration(const std::string& modelPath, const Math::Vector3& pos, const Math::Vector3& rot, const Math::Vector3& scale)
 {
 	Math::Quaternion quat = ConvertEulerVec3ToQuat(rot);
 
-	//m_model = std::make_shared<KdModelData>();
 	m_model = KdAssets::Instance().m_modeldatas.GetData(modelPath);
-	//m_model->Load(modelPath);
-
+	
 	m_cPhysics = std::make_shared<PhysicsComponent>();
 
 	//物理Initに投げるパラメータ設定
@@ -42,8 +42,9 @@ IslandDecoration::IslandDecoration(const std::string& modelPath, const Math::Vec
 
 void IslandDecoration::DrawLit()
 {
-	// 描画フラグを確認
+	// フラグを確認
 	if (!m_isActive)return;
+	if (!m_isDraw)return;
 
 	// 描画するなら本体のDrawLitを呼ぶ
 	TerrainBase::DrawLit();
@@ -51,8 +52,9 @@ void IslandDecoration::DrawLit()
 
 void IslandDecoration::GenerateDepthMapFromLight()
 {
-	// 描画フラグを確認
+	// フラグを確認
 	if (!m_isActive)return;
+	if (!m_isDraw)return;
 
 	// 描画するなら本体のGenerateを呼ぶ
 	TerrainBase::GenerateDepthMapFromLight();

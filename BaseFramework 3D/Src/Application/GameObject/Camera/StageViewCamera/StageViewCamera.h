@@ -15,6 +15,12 @@ public:
 
 private:
 
+	// クラス内定数
+	struct StageViewCameraConsts
+	{
+		static constexpr float RotateSpeed = 18.0f;
+	};
+
 	Math::Matrix m_mLocalRot = Math::Matrix::Identity;
 
 	//どれだけ離れて見るか

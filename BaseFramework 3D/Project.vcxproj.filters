@@ -238,6 +238,9 @@
     <Filter Include="Src\Application\GameObject\Terrain\Gimmicks\RotatingTerrain">
       <UniqueIdentifier>{71dfe3d1-92f0-45ce-92cd-47b575903f12}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\GameObject\Camera\LookingDownCamera">
+      <UniqueIdentifier>{26751b22-abd6-4069-85b8-f5a4e2a864f5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -1701,6 +1704,9 @@
     <ClInclude Include="Src\Application\Physics\PhysicsWorld.h">
       <Filter>Src\Application\Physics</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\Camera\LookingDownCamera\LookingDownCamera.h">
+      <Filter>Src\Application\GameObject\Camera\LookingDownCamera</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -2455,6 +2461,9 @@
     </ClCompile>
     <ClCompile Include="Src\Application\Physics\PhysicsWorld.cpp">
       <Filter>Src\Application\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\Camera\LookingDownCamera\LookingDownCamera.cpp">
+      <Filter>Src\Application\GameObject\Camera\LookingDownCamera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
