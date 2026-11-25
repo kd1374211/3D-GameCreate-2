@@ -1,0 +1,60 @@
+{
+	"baseDecorationPath": "Asset/Models/Terrain/Decoration/",
+	"decorations": [
+		{
+			"name": "Stone1",
+			"decoType": "GrassIslandDecoration",
+			"path": "/Stone1/Stone1.gltf"
+		},
+		{
+			"name": "Stone2",
+			"decoType": "GrassIslandDecoration",
+			"path": "/Stone2/Stone2.gltf"
+		},
+		{
+			"name": "Stone3",
+			"decoType": "GrassIslandDecoration",
+			"path": "/Stone3/Stone3.gltf"
+		},
+		{
+			"name": "Tree1",
+			"decoType": "GrassIslandDecoration",
+			"path": "/Tree1/Tree1.gltf"
+		},
+		{
+			"name": "Tree2",
+			"decoType": "GrassIslandDecoration",
+			"path": "/Tree2/Tree2.gltf"
+		},
+		{
+			"name": "Cactus1",
+			"decoType": "SandIslandDecoration",
+			"path": "/Cactus1/Cactus1.gltf"
+		},
+		{
+			"name": "Cactus2",
+			"decoType": "SandIslandDecoration",
+			"path": "/Cactus2/Cactus2.gltf"
+		},
+		{
+			"name": "CactusFlat1",
+			"decoType": "SandIslandDecoration",
+			"path": "/CactusFlat1/CactusFlat1.gltf"
+		},
+		{
+			"name": "CactusSmall1",
+			"decoType": "SandIslandDecoration",
+			"path": "/CactusSmall1/CactusSmall1.gltf"
+		},
+		{
+			"name": "CactusSmall2",
+			"decoType": "SandIslandDecoration",
+			"path": "/CactusSmall2/CactusSmall2.gltf"
+		},
+		{
+			"name": "PyramidHead",
+			"decoType": "SandIslandDecoration",
+			"path": "/PyramidHead/PyramidHead.gltf"
+		}
+	]
+}

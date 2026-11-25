@@ -23,7 +23,14 @@ struct StageInfo
 	std::string m_stageListName;	//リスト上でのステージ名
 	std::string m_stageName;		//詳細上でのステージ名（本当の名前）
 	std::string m_stageThumbPath;	//サムネイル画像パス
-	float m_fallOutLine;			//落下死境界
+	float m_fallOutLine = -8.0f;	//落下死境界
+};
+
+struct DecorationPathData
+{
+	std::string m_name = "";
+	std::string m_islandType = "";
+	std::string m_path = "";
 };
 
 class PinHandler;
@@ -42,11 +49,11 @@ public:
 	void BuildAllObjects(int laneNumber = BowlingSystemConsts::StartFrame, StageBuildMode mode = StageBuildMode::Full);
 
 	// 空と島の生成
-	void BuildSkyAndIsland();
+	void BuildSkyAndIsland(int laneNumber);
 
 	// 空と島の生成(分割)
 	void BuildSky();
-	void BuildIsland();
+	void BuildIsland(int laneNumber);
 
 	// ステージの生成
 	void BuildStageObjects(int laneNumber = BowlingSystemConsts::StartFrame, StageBuildMode mode = StageBuildMode::Full);
@@ -115,6 +122,12 @@ public:
 	// エディター用
 	// 選択中のオブジェクトのBodyIDを取得
 	const JPH::BodyID& GetBodyID(SelectedTargetCategory category, int index);
+
+	// エディター用
+	// デコレーションパスデータを取得
+	const std::vector<DecorationPathData>& GetDecorationPathData()const { return m_decoPathData; }
+	const std::string GetBaseDecorationPath()const { return m_baseDecorationPath; }
+	const std::string GetDefaultDecorationPath()const;
 
 	// シミュレーション世界の作成と実行
 	void RunSimulationWorld(const Math::Vector3& startPos, const Math::Vector3& direction, float power);
@@ -219,6 +232,12 @@ private:
 
 	// キャラハンドラーweak
 	std::weak_ptr<CharaHandler> m_wpCharaHandler;
+
+	// デコレーションパスデータ
+	std::vector<DecorationPathData> m_decoPathData;
+	std::string m_baseDecorationPath = "";
+	// Jsonからロード
+	bool LoadDecorationPathData();
 
 public:
 

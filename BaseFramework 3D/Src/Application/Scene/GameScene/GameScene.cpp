@@ -482,7 +482,7 @@ void GameScene::Init()
 	// ピンプール用意
 	STAGEMGR.CreatePinPool();
 	// 空と島の作成
-	STAGEMGR.BuildSkyAndIsland();
+	STAGEMGR.BuildSkyAndIsland(BowlingSystemConsts::StartFrame);
 
 	//リンク
 	camera->SetTarget(m_cCharaHandler->GetPlayerBall());

@@ -143,7 +143,7 @@ public:
 	void UpdateSaveAndLoad(int currentStageNo, int currentLaneNo, StageOverallData& stageData);						// 1-2. セーブロード・コピー等
 	void UpdateStageEdit(int currentStageNo, int currentLaneNo, StageOverallData& stageData);							// 2. ステージ内の編集
 	void UpdateSkyAssetSettings(std::string& skyAssetPathStr, bool& isError, StageOverallData& stageData);					// 2-1. 天球アセット
-	void UpdateIslandAndDecorations(StageOverallData& stageData);				// 2-2. 島アセットとデコレーション関連
+	void UpdateIslandAndDecorations(StageOverallData& stageData, int currentLaneNumber);				// 2-2. 島アセットとデコレーション関連
 	void UpdateFrameObjectsSetting(int currentLaneNo, std::string& terrainPath_Stage, std::string& terrainPath_Frame, bool& isError, StageOverallData& stageData);				// 3. フレーム内オブジェクト編集
 	bool UpdateLaneAssetPath(std::string& terrainPath_Stage, std::string& terrainPath_Frame, bool& isError, StageLaneData& frameData);						// 3-1. レーンのアセット
 	bool UpdateIslandDecorationsVisibility(int currentLaneNo, StageOverallData& stageData);		// 3-2. 島デコレーションの表示切替

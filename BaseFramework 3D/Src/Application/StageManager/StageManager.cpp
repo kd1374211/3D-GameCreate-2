@@ -444,24 +444,29 @@ void StageManager::Init()
 	{
 		//ロード失敗時の処理があるなら書く
 	}
+
+	if (!LoadDecorationPathData())
+	{
+		//ロード失敗時の処理があるなら書く
+	}
 }
 
 void StageManager::BuildAllObjects(int laneNumber, StageBuildMode mode)
 {
 	// 空と島
-	BuildSkyAndIsland();
+	BuildSkyAndIsland(laneNumber);
 
 	// ステージ
 	BuildStageObjects(laneNumber, mode);
 }
 
-void StageManager::BuildSkyAndIsland()
+void StageManager::BuildSkyAndIsland(int laneNumber)
 {
 	// 天球
 	BuildSky();
 
 	// 島
-	BuildIsland();
+	BuildIsland(laneNumber);
 }
 
 void StageManager::BuildSky()
@@ -477,7 +482,7 @@ void StageManager::BuildSky()
 	m_wpSkySphere = sky;
 }
 
-void StageManager::BuildIsland()
+void StageManager::BuildIsland(int laneNumber)
 {
 	// リセット
 	ResetIsland();
@@ -500,6 +505,8 @@ void StageManager::BuildIsland()
 		// 後で消せるようにWP持ち
 		m_wpIslandDecorations.push_back(islandDeco);
 	}
+	// 各デコレーションの表示オン・オフ
+	CheckIslandDecoActive(laneNumber);
 }
 
 void StageManager::ResetSky()
@@ -821,6 +828,12 @@ const JPH::BodyID& StageManager::GetBodyID(SelectedTargetCategory category, int 
 	return JPH::BodyID();
 }
 
+const std::string StageManager::GetDefaultDecorationPath() const
+{
+	std::string defaultPath = m_baseDecorationPath + m_decoPathData.begin()->m_islandType + m_decoPathData.begin()->m_path;
+	return defaultPath;
+}
+
 void StageManager::RunSimulationWorld(const Math::Vector3& startPos, const Math::Vector3& direction, float power)
 {
 	// 世界の作成
@@ -988,4 +1001,46 @@ const std::string StageManager::ConvertGimmickTypeEnumToString(GimmickType type)
 
 	// エラー
 	return "Error";
+}
+
+bool StageManager::LoadDecorationPathData()
+{
+	// パスはクラス内部に直書きで保持
+	const std::string masterJsonPath = "Asset/Data/Decorations/DecorationsData.json";
+
+	std::ifstream file(masterJsonPath);
+	if (!file.is_open())
+	{
+		return false; // ファイルが開けない場合
+	}
+
+	nlohmann::json rootJson;
+	try
+	{
+		file >> rootJson;
+	}
+	catch (...)
+	{
+		file.close();
+		return false; // JSONの構文エラー等
+	}
+	file.close();
+
+	// デコレーション関係の基本パス
+	m_baseDecorationPath = Utf8ToMultiByte(rootJson.value("baseDecorationPath", "Error"));
+	// 配列要素を1つずつ走査して構造体に格納
+	for (const auto& item : rootJson["decorations"])
+	{
+		DecorationPathData decoPath;
+
+		// 各値を取得
+		decoPath.m_name = Utf8ToMultiByte(item.value("name", "Error"));
+		decoPath.m_islandType = Utf8ToMultiByte(item.value("decoType", "Error"));
+		decoPath.m_path = Utf8ToMultiByte(item.value("path", "Error"));
+
+		// 格納
+		m_decoPathData.push_back(decoPath);
+	}
+
+	return true;
 }

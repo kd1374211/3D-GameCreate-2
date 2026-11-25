@@ -591,7 +591,7 @@ void KdDebugGUI::UpdateStageEdit(int currentStageNo, int currentLaneNo, StageOve
 		ImGui::Separator();
 
 		// 島のデコレーション
-		UpdateIslandAndDecorations(stageData);
+		UpdateIslandAndDecorations(stageData, currentLaneNo);
 
 		ImGui::Separator();
 
@@ -632,7 +632,7 @@ void KdDebugGUI::UpdateSkyAssetSettings(std::string& skyAssetPathStr, bool& isEr
 	}
 }
 
-void KdDebugGUI::UpdateIslandAndDecorations(StageOverallData& stageData)
+void KdDebugGUI::UpdateIslandAndDecorations(StageOverallData& stageData, int currentLaneNumber)
 {
 	// カテゴリを定義
 	const SelectedTargetCategory category = SelectedTargetCategory::Decoration;
@@ -646,7 +646,7 @@ void KdDebugGUI::UpdateIslandAndDecorations(StageOverallData& stageData)
 		if (ImGui::Button("+ Add Decoration", ImVec2(140, 0)))
 		{
 			IslandDecorationData newDeco;
-			newDeco.m_modelPath = "Asset/Models/Terrain/Decoration/Stone1/Stone1.gltf";
+			newDeco.m_modelPath = STAGEMGR.GetDefaultDecorationPath();
 			newDeco.m_srtData = {};
 
 			decorations.push_back(newDeco);
@@ -716,10 +716,35 @@ void KdDebugGUI::UpdateIslandAndDecorations(StageOverallData& stageData)
 
 			ImGui::Text("Current Model Path: %s", decoration.m_modelPath.c_str());
 			ImGui::InputText("Model Path##DecoInput", &decoModelPathInput);
+			if (ImGui::ArrowButton("##DropdownArrow", ImGuiDir_Down))
+			{
+				ImGui::OpenPopup("##DropdownPopup");
+			}
 
 			if (isDecoModelError)
 			{
 				ImGui::TextColored(ImVec4(1.0f, 0.2f, 0.2f, 1.0f), "[Error] File does not exist!");
+			}
+
+			// リスト選択機能を追加
+			if (ImGui::BeginPopup("##DropdownPopup"))
+			{
+				for (const auto& item : STAGEMGR.GetDecorationPathData())
+				{
+					if (ImGui::Selectable(item.m_name.c_str(), false))
+					{
+						// 共通パス
+						const std::string basePath = STAGEMGR.GetBaseDecorationPath();
+
+						// 選択に合わせてパスを設定
+						decoModelPathInput = basePath + item.m_islandType + item.m_path;
+						decoration.m_modelPath = decoModelPathInput;
+
+						// 変更を取得
+						isDecorationChanged = true;
+					}
+				}
+				ImGui::EndPopup();
 			}
 
 			if (ImGui::Button("Apply Model Path", ImVec2(150, 0)))
@@ -787,7 +812,7 @@ void KdDebugGUI::UpdateIslandAndDecorations(StageOverallData& stageData)
 		// 値が更新された場合のみ再構築
 		if (isDecorationChanged)
 		{
-			STAGEMGR.BuildIsland();
+			STAGEMGR.BuildIsland(currentLaneNumber);
 		}
 	}
 }
@@ -1531,7 +1556,7 @@ void KdDebugGUI::MoveSelectedObjectToCursor(StageOverallData& stageData, int cur
 					deco.m_srtData.m_position = Math::Vector3(hitVec3Pos.x, hitVec3Pos.y, hitVec3Pos.z);
 
 					// 島の再生成
-					STAGEMGR.BuildIsland();
+					STAGEMGR.BuildIsland(currentLaneNo);
 				}
 			}
 			if (CheckCategory(SelectedTargetCategory::Gimmick))
