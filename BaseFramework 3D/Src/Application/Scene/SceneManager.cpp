@@ -54,16 +54,19 @@ void SceneManager::Update()
 void SceneManager::PostUpdate()
 {
 	// エディットモード中は物理シミュレーションの更新ステップをスキップ
+	float advanceDt = 0.0f;
 	if (!(STAGEMGR.IsEditMode() && STAGEMGR.GetIsGimmickStop()))
 	{
-		//追加7/17（仮）
-		PHYSICSMGR.Update(GetDeltaGameTime());
+		advanceDt = GetDeltaGameTime();
 	}
+	PHYSICSMGR.Update(advanceDt);
 
 	m_currentScene->PostUpdate();
 
 	//追加8/10
 	KdDebugGUI::Instance().AddLog("Object Count: %d\n", m_currentScene->GetObjList().size());
+	// DEBUG
+	KdDebugGUI::Instance().AddLog("CurrentBodyNum : %d\n", PHYSICSMGR.GetSystem().GetNumBodies());
 }
 
 void SceneManager::PreDraw()
