@@ -12,6 +12,7 @@
 #include "../../../Application/Physics/PhysicsManager.h"
 #include "../../../Application/Component/ScoreHandler/ScoreHandler.h"
 #include "../../../Application/Cursor/CursorManager.h"
+#include "../../../Application/Const/DeviceAndKey.h"
 
 KdDebugGUI::KdDebugGUI()
 {}

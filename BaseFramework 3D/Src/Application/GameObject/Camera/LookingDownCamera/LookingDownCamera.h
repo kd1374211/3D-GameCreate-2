@@ -29,7 +29,7 @@ private:
 		static constexpr float CursorSpeedLimit = 1000.0f;
 
 		// カメラ移動関連
-		static constexpr float CameraMoveSpeed = 0.01f;	// カメラ移動速度
+		static constexpr float CameraMoveSpeed = 0.015f;	// カメラ移動速度
 		static constexpr float CameraMovePosLimit = 25.0f;	// カメラ移動範囲MAX
 
 		// カメラ位置関連

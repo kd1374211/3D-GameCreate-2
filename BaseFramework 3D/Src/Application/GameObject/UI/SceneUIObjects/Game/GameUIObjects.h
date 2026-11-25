@@ -134,6 +134,12 @@ private:
 		static constexpr Math::Vector2 GuideTextPos_Default_CamMove = Math::Vector2(620.0f, -330.0f);
 		static constexpr Math::Vector2 GuideIconPos_Default_Hold = Math::Vector2(340.0f, -250.0f);
 		static constexpr Math::Vector2 GuideTextPos_Default_Hold = Math::Vector2(620.0f, -250.0f);
+		static constexpr Math::Vector2 GuideIconPos_Default_StartLDMode = Math::Vector2(260.0f, -170.0f);
+		static constexpr Math::Vector2 GuideTextPos_Default_StartLDMode = Math::Vector2(620.0f, -170.0f);
+		static constexpr Math::Vector2 GuideIconPos_LookingDown_LDCamMove = Math::Vector2(340.0f, -330.0f);
+		static constexpr Math::Vector2 GuideTextPos_LookingDown_LDCamMove = Math::Vector2(620.0f, -330.0f);
+		static constexpr Math::Vector2 GuideIconPos_LookingDown_EndLDMode = Math::Vector2(340.0f, -250.0f);
+		static constexpr Math::Vector2 GuideTextPos_LookingDown_EndLDMode = Math::Vector2(620.0f, -250.0f);
 		static constexpr Math::Vector2 GuideIconPos_Ready_Throw = Math::Vector2(340.0f, -250.0f);
 		static constexpr Math::Vector2 GuideTextPos_Ready_Throw = Math::Vector2(620.0f, -250.0f);
 		static constexpr Math::Vector2 GuideIconPos_Ready_Cancel = Math::Vector2(340.0f, -330.0f);
@@ -185,9 +191,10 @@ private:
 	// マウスガイド用アイコン
 	std::shared_ptr<KdTexture> m_mouseGuideTex_Move = nullptr;
 	std::shared_ptr<KdTexture> m_mouseGuideTex_CamMove = nullptr;
+	std::shared_ptr<KdTexture> m_mouseGuideTex_CamMove_LookingDown = nullptr;
 	std::shared_ptr<KdTexture> m_mouseGuideTex_HoldAndSelect = nullptr;
 	std::shared_ptr<KdTexture> m_mouseGuideTex_Throw = nullptr;
-	std::shared_ptr<KdTexture> m_mouseGuideTex_Skip = nullptr;
+	std::shared_ptr<KdTexture> m_mouseGuideTex_SkipAndLDMode = nullptr;
 	std::shared_ptr<KdTexture> m_mouseGuideTex_Cancel = nullptr;
 
 	// マウスガイドの状態

@@ -670,16 +670,32 @@ void PhysicsComponent::RemoveBody()const
 {
 	auto& bodyInterface = PHYSICSMGR.GetBodyInterface();
 
-	// Joltのワールドから取り除く
-	bodyInterface.RemoveBody(m_bodyID);
+	// BodyIDの有効確認
+	if (!m_bodyID.IsInvalid())
+	{
+		// 世界に存在していることを確認
+		if (bodyInterface.IsAdded(m_bodyID))
+		{
+			// Joltのワールドから取り除く
+			bodyInterface.RemoveBody(m_bodyID);
+		}
+	}
 }
 
 void PhysicsComponent::AddBody()const
 {
 	auto& bodyInterface = PHYSICSMGR.GetBodyInterface();
 
-	// Joltのワールドに追加
-	bodyInterface.AddBody(m_bodyID, m_isStatic ? JPH::EActivation::DontActivate : JPH::EActivation::Activate);
+	// BodyIDの有効確認
+	if (!m_bodyID.IsInvalid())
+	{
+		// 世界に存在していない事を確認
+		if (!bodyInterface.IsAdded(m_bodyID))
+		{
+			// Joltのワールドに追加
+			bodyInterface.AddBody(m_bodyID, m_isStatic ? JPH::EActivation::DontActivate : JPH::EActivation::Activate);
+		}
+	}
 }
 
 void PhysicsComponent::Sync(Math::Vector3& outPos, Math::Quaternion& outRot)
@@ -752,8 +768,13 @@ void PhysicsComponent::Release()
 		// PhysicsManagerやPhysicsSystemからBodyInterfaceを取得
 		auto& bodyInterface = PHYSICSMGR.GetBodyInterface();
 
-		// Joltのワールドから取り除き、メモリを解放する
-		bodyInterface.RemoveBody(m_bodyID);
+		// 世界に存在していたら削除する
+		if (bodyInterface.IsAdded(m_bodyID))
+		{
+			bodyInterface.RemoveBody(m_bodyID);
+		}
+
+		// メモリを解放する
 		bodyInterface.DestroyBody(m_bodyID);
 
 		m_bodyID = JPH::BodyID(); // IDを無効化

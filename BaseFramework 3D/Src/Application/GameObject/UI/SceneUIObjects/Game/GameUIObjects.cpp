@@ -499,6 +499,18 @@ void GameUIObjects::DrawMouseGuides()
 		// カメラ移動
 		KdShaderManager::Instance().m_spriteShader.DrawTex(m_mouseGuideTex_CamMove, GameUIConsts::GuideIconPos_Default_CamMove.x, GameUIConsts::GuideIconPos_Default_CamMove.y);
 		KdShaderManager::Instance().m_spriteShader.DrawFont(FontTypeConst::Game_Guide, GameUIConsts::GuideTextPos_Default_CamMove, &kWhiteColor, ": 方向決め", TextAlign::Right);
+		// 見下ろしモード
+		KdShaderManager::Instance().m_spriteShader.DrawTex(m_mouseGuideTex_SkipAndLDMode, GameUIConsts::GuideIconPos_Default_StartLDMode.x, GameUIConsts::GuideIconPos_Default_StartLDMode.y);
+		KdShaderManager::Instance().m_spriteShader.DrawFont(FontTypeConst::Game_Guide, GameUIConsts::GuideTextPos_Default_StartLDMode, &kWhiteColor, ": 見下ろしモード", TextAlign::Right);
+		break;
+	// 見下ろしモード時
+	case MouseGuideMode::LookingDown:
+		// カメラ移動
+		KdShaderManager::Instance().m_spriteShader.DrawTex(m_mouseGuideTex_CamMove_LookingDown, GameUIConsts::GuideIconPos_LookingDown_LDCamMove.x, GameUIConsts::GuideIconPos_LookingDown_LDCamMove.y);
+		KdShaderManager::Instance().m_spriteShader.DrawFont(FontTypeConst::Game_Guide, GameUIConsts::GuideTextPos_LookingDown_LDCamMove, &kWhiteColor, ": カメラ移動", TextAlign::Right);
+		// 戻る
+		KdShaderManager::Instance().m_spriteShader.DrawTex(m_mouseGuideTex_SkipAndLDMode, GameUIConsts::GuideIconPos_LookingDown_EndLDMode.x, GameUIConsts::GuideIconPos_LookingDown_EndLDMode.y);
+		KdShaderManager::Instance().m_spriteShader.DrawFont(FontTypeConst::Game_Guide, GameUIConsts::GuideTextPos_LookingDown_EndLDMode, &kWhiteColor, ": 戻る", TextAlign::Right);
 		break;
 	// 投球準備時
 	case MouseGuideMode::ReadyThrow:
@@ -512,7 +524,7 @@ void GameUIObjects::DrawMouseGuides()
 	// 投球後
 	case MouseGuideMode::AfterThrow:
 		// スキップ
-		KdShaderManager::Instance().m_spriteShader.DrawTex(m_mouseGuideTex_Skip, GameUIConsts::GuideIconPos_AfterThrow_Skip.x, GameUIConsts::GuideIconPos_AfterThrow_Skip.y);
+		KdShaderManager::Instance().m_spriteShader.DrawTex(m_mouseGuideTex_SkipAndLDMode, GameUIConsts::GuideIconPos_AfterThrow_Skip.x, GameUIConsts::GuideIconPos_AfterThrow_Skip.y);
 		KdShaderManager::Instance().m_spriteShader.DrawFont(FontTypeConst::Game_Guide, GameUIConsts::GuideTextPos_AfterThrow_Skip, &kWhiteColor, ": 終了", TextAlign::Right);
 		// カメラ移動
 		KdShaderManager::Instance().m_spriteShader.DrawTex(m_mouseGuideTex_CamMove, GameUIConsts::GuideIconPos_AfterThrow_CamMove.x, GameUIConsts::GuideIconPos_AfterThrow_CamMove.y);
@@ -542,14 +554,17 @@ void GameUIObjects::Init()
 	m_mouseGuideTex_CamMove = std::make_shared<KdTexture>();
 	m_mouseGuideTex_CamMove->Load(GetMouseTexPath(MouseTexturesConsts::MouseTexType::Move_Horizonal));
 
+	m_mouseGuideTex_CamMove_LookingDown = std::make_shared<KdTexture>();
+	m_mouseGuideTex_CamMove_LookingDown->Load(GetMouseTexPath(MouseTexturesConsts::MouseTexType::LeftHoldMove));
+
 	m_mouseGuideTex_HoldAndSelect = std::make_shared<KdTexture>();
 	m_mouseGuideTex_HoldAndSelect->Load(GetMouseTexPath(MouseTexturesConsts::MouseTexType::LeftClick));
 
 	m_mouseGuideTex_Throw = std::make_shared<KdTexture>();
 	m_mouseGuideTex_Throw->Load(GetMouseTexPath(MouseTexturesConsts::MouseTexType::UpAndRightClickRelease));
 
-	m_mouseGuideTex_Skip = std::make_shared<KdTexture>();
-	m_mouseGuideTex_Skip->Load(GetMouseTexPath(MouseTexturesConsts::MouseTexType::RightClick));
+	m_mouseGuideTex_SkipAndLDMode = std::make_shared<KdTexture>();
+	m_mouseGuideTex_SkipAndLDMode->Load(GetMouseTexPath(MouseTexturesConsts::MouseTexType::RightClick));
 
 	m_mouseGuideTex_Cancel = std::make_shared<KdTexture>();
 	m_mouseGuideTex_Cancel->Load(GetMouseTexPath(MouseTexturesConsts::MouseTexType::LeftClickRelease));

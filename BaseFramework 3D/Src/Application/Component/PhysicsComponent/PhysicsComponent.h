@@ -82,7 +82,7 @@ public:
 	void DeactivateBody();																	// 非活性化
 	// 当たり判定ごと操作したい時
 	void RemoveBody()const;																	// 世界から削除
-	void AddBody()const;																	// 世界に再追加
+	void AddBody()const;																// 世界に再追加
 	// 同期処理
 	void Sync(Math::Vector3& outPos, Math::Quaternion& outRot);								// Jolt世界の物理・回転を、ゲーム側に同期させる
 

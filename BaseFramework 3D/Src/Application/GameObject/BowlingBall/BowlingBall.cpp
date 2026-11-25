@@ -369,6 +369,9 @@ void BowlingBall::PostUpdate()
 	// DEBUG
 	KdDebugGUI::Instance().AddLog("Linear Velocity: %.2f,%.2f,%.2f\n", m_cPhysics->GetLinearVelocity().GetX(), m_cPhysics->GetLinearVelocity().GetY(), m_cPhysics->GetLinearVelocity().GetZ());
 	KdDebugGUI::Instance().AddLog("Angular Velocity: %.2f,%.2f,%.2f\n", m_cPhysics->GetAngularVelocity().GetX(), m_cPhysics->GetAngularVelocity().GetY(), m_cPhysics->GetAngularVelocity().GetZ());
+	
+	if (GetAsyncKeyState('L') & 0x8000 && KdInputManager::Instance().IsPress(GetKeyRegistName(VK_LBUTTON)))KdShaderManager::Instance().WorkAmbientController().AddPointLight(Math::Vector3(2.0f, 0.0f, 2.0f), 10.0f, m_pos, true);
+	else if (GetAsyncKeyState('K') & 0x8000 && KdInputManager::Instance().IsPress(GetKeyRegistName(VK_LBUTTON)))KdShaderManager::Instance().WorkAmbientController().AddPointLight(Math::Vector3(2.0f, 0.0f, 2.0f), 10.0f, m_pos, false);
 
 	// 矢印配置
 	if (m_isInputEnabled)
@@ -430,6 +433,9 @@ void BowlingBall::DrawLit()
 {
 	// 描画しないならスキップ
 	if (!m_isDraw)return;
+
+	//// TEST
+	//KdShaderManager::Instance().WorkAmbientController().SetAmbientLight(Math::Color(1.0f, 1.0f, 1.0f, 0.0f));
 
 	// トゥーン切り替え
 	KdShaderManager::Instance().m_StandardShader.SetToonEnable(true);
