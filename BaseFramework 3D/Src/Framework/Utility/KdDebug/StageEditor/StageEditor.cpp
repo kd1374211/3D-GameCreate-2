@@ -411,9 +411,9 @@ void StageEditor::UpdateIslandAndDecorations(StageOverallData& stageData, int cu
 			IslandDecorationData newDeco;
 			newDeco.m_modelPath = m_baseDecorationPath + m_decoPathData.begin()->m_islandType + m_decoPathData.begin()->m_path;
 			newDeco.m_srtData = {};
-			for (int i = 0; i < 10; i++)
+			for (int i = BowlingSystemConsts::StartFrame; i < BowlingSystemConsts::FrameCount; i++)
 			{
-				newDeco.m_isActive[i] = true;
+				newDeco.m_isActive[i] = i == currentLaneNumber;
 			}
 
 			decorations.push_back(newDeco);
