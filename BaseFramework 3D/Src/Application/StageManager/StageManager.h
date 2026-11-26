@@ -65,6 +65,7 @@ public:
 	void CheckIslandDecoActive(int frameNo);
 
 	// ステージデータの保存・読み込み
+	bool SaveStage(int stageNo);
 	bool SaveStage(const std::string& filePath);
 	bool LoadStage(int stageNo);
 	bool LoadStage(const std::string& filePath);

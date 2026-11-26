@@ -1,14 +1,14 @@
 [
-	{
-		"bestScore": 0,
-		"stageNo": 1
-	},
-	{
-		"bestScore": 0,
-		"stageNo": 2
-	},
-	{
-		"bestScore": 0,
-		"stageNo": 3
-	}
+    {
+        "bestScore": 0,
+        "stageNo": 1
+    },
+    {
+        "bestScore": 0,
+        "stageNo": 2
+    },
+    {
+        "bestScore": 133,
+        "stageNo": 3
+    }
 ]

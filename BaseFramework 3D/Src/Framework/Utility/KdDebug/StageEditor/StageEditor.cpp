@@ -133,10 +133,7 @@ void StageEditor::UpdateSaveAndLoad(int currentStageNo, int currentLaneNo, Stage
 		// --- A. セーブボタン ---
 		if (ImGui::Button("Save Stage", ImVec2(90, 30)))
 		{
-			char filePath[64];
-			snprintf(filePath, sizeof(filePath), "Asset/Data/StageData/Stage%02d.json", currentStageNo);
-
-			STAGEMGR.SaveStage(filePath);
+			STAGEMGR.SaveStage(currentStageNo);
 		}
 
 		ImGui::SameLine();
@@ -231,10 +228,7 @@ void StageEditor::UpdateSaveAndLoad(int currentStageNo, int currentLaneNo, Stage
 					stageData.m_stageLaneData[copyLaneNo] = stageData.m_stageLaneData[currentLaneNo];
 
 					// セーブ
-					char filePath[64];
-					snprintf(filePath, sizeof(filePath), "Asset/Data/StageData/Stage%02d.json", currentStageNo);
-
-					STAGEMGR.SaveStage(filePath);
+					STAGEMGR.SaveStage(currentStageNo);
 				}
 				// 別ステージ間の場合
 				else
@@ -249,10 +243,7 @@ void StageEditor::UpdateSaveAndLoad(int currentStageNo, int currentLaneNo, Stage
 						stageData.m_stageLaneData[copyLaneNo] = copyData;
 
 						// セーブ
-						char filePath[64];
-						snprintf(filePath, sizeof(filePath), "Asset/Data/StageData/Stage%02d.json", copyStageNo);
-
-						STAGEMGR.SaveStage(filePath);
+						STAGEMGR.SaveStage(copyStageNo);
 					}
 
 					// ステージを戻す

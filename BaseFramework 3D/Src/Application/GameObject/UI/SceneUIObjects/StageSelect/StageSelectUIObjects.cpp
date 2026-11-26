@@ -97,8 +97,8 @@ void StageSelectUIObject::Init()
 		// 0基準に
 		int indexNum = i - STAGEMGR.GetMinStageNo();
 		// ↑から配置する場所を決定
-		Math::Vector2 pos = Math::Vector2(StageSelectUIConsts::ListPosBase.x + StageSelectUIConsts::ListPosDiff * (indexNum % StageSelectUIConsts::ListIndexX),
-										  StageSelectUIConsts::ListPosBase.y - StageSelectUIConsts::ListPosDiff * (indexNum / StageSelectUIConsts::ListIndexX));
+		Math::Vector2 pos = Math::Vector2(StageSelectUIConsts::ListPosBase.x + StageSelectUIConsts::ListPosDiffX * (indexNum % StageSelectUIConsts::ListIndexX),
+										  StageSelectUIConsts::ListPosBase.y - StageSelectUIConsts::ListPosDiffY * (indexNum / StageSelectUIConsts::ListIndexX));
 
 		// 各値の設定
 		box->SetStageNo(i);

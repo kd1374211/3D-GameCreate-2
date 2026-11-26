@@ -69,6 +69,11 @@ void StageManager::CheckIslandDecoActive(int frameNo)
 	}
 }
 
+bool StageManager::SaveStage(int stageNo)
+{
+	return SaveStage(GetStagePath(stageNo));
+}
+
 bool StageManager::SaveStage(const std::string& filePath)
 {
 	nlohmann::json rootJson;
