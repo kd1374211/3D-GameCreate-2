@@ -738,6 +738,7 @@
     <ClInclude Include="Src\Framework\Utility\KdCSVData.h" />
     <ClInclude Include="Src\Framework\Utility\KdDebug\KdDebugGUI.h" />
     <ClInclude Include="Src\Framework\Utility\KdDebug\KdDebugWireFrame.h" />
+    <ClInclude Include="Src\Framework\Utility\KdDebug\StageEditor\StageEditor.h" />
     <ClInclude Include="Src\Framework\Utility\KdFPSController.h" />
     <ClInclude Include="Src\Framework\Utility\KdRandom.h" />
     <ClInclude Include="src\Pch.h" />
@@ -996,6 +997,7 @@
     <ClCompile Include="Src\Framework\Utility\KdCSVData.cpp" />
     <ClCompile Include="Src\Framework\Utility\KdDebug\KdDebugGUI.cpp" />
     <ClCompile Include="Src\Framework\Utility\KdDebug\KdDebugWireFrame.cpp" />
+    <ClCompile Include="Src\Framework\Utility\KdDebug\StageEditor\StageEditor.cpp" />
     <ClCompile Include="Src\Framework\Utility\KdFPSController.cpp" />
     <ClCompile Include="src\Pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

@@ -4,6 +4,7 @@
 #include "../GameObject/Camera/CameraBase.h"
 #include "../Component/PinHandler/PinHandler.h"
 #include "../Physics/PhysicsManager.h"
+#include "../Const/Function.h"
 
 #include "../GameObject/BowlingBall/BowlingBall.h"
 
@@ -444,11 +445,6 @@ void StageManager::Init()
 	{
 		//ロード失敗時の処理があるなら書く
 	}
-
-	if (!LoadDecorationPathData())
-	{
-		//ロード失敗時の処理があるなら書く
-	}
 }
 
 void StageManager::BuildAllObjects(int laneNumber, StageBuildMode mode)
@@ -828,12 +824,6 @@ const JPH::BodyID& StageManager::GetBodyID(SelectedTargetCategory category, int 
 	return JPH::BodyID();
 }
 
-const std::string StageManager::GetDefaultDecorationPath() const
-{
-	std::string defaultPath = m_baseDecorationPath + m_decoPathData.begin()->m_islandType + m_decoPathData.begin()->m_path;
-	return defaultPath;
-}
-
 void StageManager::RunSimulationWorld(const Math::Vector3& startPos, const Math::Vector3& direction, float power)
 {
 	// 世界の作成
@@ -951,27 +941,6 @@ bool StageManager::LoadStageMasterData()
 void StageManager::Release()
 {}
 
-std::string StageManager::Utf8ToMultiByte(const std::string & utf8Str)
-{
-	if (utf8Str.empty()) return "";
-
-	// 1. UTF-8 -> ワイド文字列 (UTF-16) へ変換
-	int wideLen = MultiByteToWideChar(CP_UTF8, 0, utf8Str.c_str(), -1, nullptr, 0);
-	std::wstring wstr(wideLen, 0);
-	MultiByteToWideChar(CP_UTF8, 0, utf8Str.c_str(), -1, &wstr[0], wideLen);
-
-	// 2. ワイド文字列 (UTF-16) -> Shift-JIS (CP932) へ変換
-	int ansiLen = WideCharToMultiByte(932, 0, wstr.c_str(), -1, nullptr, 0, nullptr, nullptr);
-	std::string ansiStr(ansiLen, 0);
-	WideCharToMultiByte(932, 0, wstr.c_str(), -1, &ansiStr[0], ansiLen, nullptr, nullptr);
-
-	// 末尾のヌル文字を除外して返す
-	if (!ansiStr.empty() && ansiStr.back() == '\0') {
-		ansiStr.pop_back();
-	}
-
-	return ansiStr;
-}
 
 const GimmickType StageManager::ConvertGimmickTypeStringToEnum(std::string str)
 {
@@ -1001,46 +970,4 @@ const std::string StageManager::ConvertGimmickTypeEnumToString(GimmickType type)
 
 	// エラー
 	return "Error";
-}
-
-bool StageManager::LoadDecorationPathData()
-{
-	// パスはクラス内部に直書きで保持
-	const std::string masterJsonPath = "Asset/Data/Decorations/DecorationsData.json";
-
-	std::ifstream file(masterJsonPath);
-	if (!file.is_open())
-	{
-		return false; // ファイルが開けない場合
-	}
-
-	nlohmann::json rootJson;
-	try
-	{
-		file >> rootJson;
-	}
-	catch (...)
-	{
-		file.close();
-		return false; // JSONの構文エラー等
-	}
-	file.close();
-
-	// デコレーション関係の基本パス
-	m_baseDecorationPath = Utf8ToMultiByte(rootJson.value("baseDecorationPath", "Error"));
-	// 配列要素を1つずつ走査して構造体に格納
-	for (const auto& item : rootJson["decorations"])
-	{
-		DecorationPathData decoPath;
-
-		// 各値を取得
-		decoPath.m_name = Utf8ToMultiByte(item.value("name", "Error"));
-		decoPath.m_islandType = Utf8ToMultiByte(item.value("decoType", "Error"));
-		decoPath.m_path = Utf8ToMultiByte(item.value("path", "Error"));
-
-		// 格納
-		m_decoPathData.push_back(decoPath);
-	}
-
-	return true;
 }

@@ -1,0 +1,13 @@
+{
+	"baseModelPath": "Asset/Models/Terrain/Island/",
+	"islands": [
+		{
+			"name": "GrassIsland",
+			"path": "GrassIsland/GrassIsland.gltf"
+		},
+		{
+			"name": "SandIsland",
+			"path": "SandIsland/SandIsland.gltf"
+		}
+	]
+}

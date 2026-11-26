@@ -26,13 +26,6 @@ struct StageInfo
 	float m_fallOutLine = -8.0f;	//落下死境界
 };
 
-struct DecorationPathData
-{
-	std::string m_name = "";
-	std::string m_islandType = "";
-	std::string m_path = "";
-};
-
 class PinHandler;
 class CharaHandler;
 enum class PinType;
@@ -123,12 +116,6 @@ public:
 	// 選択中のオブジェクトのBodyIDを取得
 	const JPH::BodyID& GetBodyID(SelectedTargetCategory category, int index);
 
-	// エディター用
-	// デコレーションパスデータを取得
-	const std::vector<DecorationPathData>& GetDecorationPathData()const { return m_decoPathData; }
-	const std::string GetBaseDecorationPath()const { return m_baseDecorationPath; }
-	const std::string GetDefaultDecorationPath()const;
-
 	// シミュレーション世界の作成と実行
 	void RunSimulationWorld(const Math::Vector3& startPos, const Math::Vector3& direction, float power);
 
@@ -182,9 +169,6 @@ private:
 		return defaultValue;
 	}
 
-	// UTF-8 の std::string を Shift-JIS (ANSI) の std::string に変換する関数
-	std::string Utf8ToMultiByte(const std::string& utf8Str);
-
 	struct GimmickTypeName
 	{
 		std::string m_str;
@@ -232,12 +216,6 @@ private:
 
 	// キャラハンドラーweak
 	std::weak_ptr<CharaHandler> m_wpCharaHandler;
-
-	// デコレーションパスデータ
-	std::vector<DecorationPathData> m_decoPathData;
-	std::string m_baseDecorationPath = "";
-	// Jsonからロード
-	bool LoadDecorationPathData();
 
 public:
 

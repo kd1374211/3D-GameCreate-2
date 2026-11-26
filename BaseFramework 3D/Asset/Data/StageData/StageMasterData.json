@@ -12,5 +12,12 @@
 		"stageName": "ステージ２ : 未完成",
 		"thumbnail": "Asset/Textures/StageThumbnail/Stage02.png",
 		"fallOutLine": -7.5
+	},
+	{
+		"stageNo": 3,
+		"stageListName": "ステージSP",
+		"stageName": "ステージSP : 発表用",
+		"thumbnail": "Asset/Textures/StageThumbnail/Stage01_K2.png",
+		"fallOutLine": -7.5
 	}
 ]
