@@ -33,14 +33,14 @@
         {
             "isVisible": [
                 true,
+                true,
+                true,
+                true,
+                true,
                 false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
+                true,
+                true,
+                true,
                 false
             ],
             "modelPath": "Asset/Models/Terrain/Decoration/SandIslandDecoration/Cactus1/Cactus1.gltf",
@@ -63,14 +63,14 @@
         {
             "isVisible": [
                 true,
+                true,
+                true,
+                true,
+                true,
                 false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
+                true,
+                true,
+                true,
                 false
             ],
             "modelPath": "Asset/Models/Terrain/Decoration/SandIslandDecoration/Cactus1/Cactus1.gltf",
@@ -93,14 +93,14 @@
         {
             "isVisible": [
                 true,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
                 false
             ],
             "modelPath": "Asset/Models/Terrain/Decoration/SandIslandDecoration/Cactus1/Cactus1.gltf",
@@ -123,15 +123,15 @@
         {
             "isVisible": [
                 true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
                 false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false
+                true,
+                true
             ],
             "modelPath": "Asset/Models/Terrain/Decoration/SandIslandDecoration/Cactus1/Cactus1.gltf",
             "position": [
@@ -153,14 +153,14 @@
         {
             "isVisible": [
                 true,
+                true,
+                true,
+                true,
+                true,
                 false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
+                true,
+                true,
+                true,
                 false
             ],
             "modelPath": "Asset/Models/Terrain/Decoration/SandIslandDecoration/Cactus2/Cactus2.gltf",
@@ -183,15 +183,15 @@
         {
             "isVisible": [
                 true,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true
             ],
             "modelPath": "Asset/Models/Terrain/Decoration/SandIslandDecoration/Cactus2/Cactus2.gltf",
             "position": [
@@ -208,6 +208,546 @@
                 1.0,
                 1.0,
                 1.0
+            ]
+        },
+        {
+            "isVisible": [
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true
+            ],
+            "modelPath": "Asset/Models/Terrain/Decoration/SandIslandDecoration/CactusFlat1/CactusFlat1.gltf",
+            "position": [
+                5.702764987945557,
+                -0.4999990463256836,
+                -12.784514427185059
+            ],
+            "rotation": [
+                0.0,
+                50.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ]
+        },
+        {
+            "isVisible": [
+                true,
+                true,
+                true,
+                true,
+                true,
+                false,
+                true,
+                true,
+                true,
+                true
+            ],
+            "modelPath": "Asset/Models/Terrain/Decoration/SandIslandDecoration/CactusFlat1/CactusFlat1.gltf",
+            "position": [
+                -11.182575225830078,
+                -0.5000004768371582,
+                1.2371482849121094
+            ],
+            "rotation": [
+                0.0,
+                110.0,
+                0.0
+            ],
+            "scale": [
+                1.5,
+                1.5,
+                1.5
+            ]
+        },
+        {
+            "isVisible": [
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                false
+            ],
+            "modelPath": "Asset/Models/Terrain/Decoration/SandIslandDecoration/CactusFlat1/CactusFlat1.gltf",
+            "position": [
+                -6.234124183654785,
+                -0.5,
+                -14.863759994506836
+            ],
+            "rotation": [
+                0.0,
+                123.0,
+                0.0
+            ],
+            "scale": [
+                2.0,
+                2.0,
+                2.0
+            ]
+        },
+        {
+            "isVisible": [
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                false,
+                true,
+                true,
+                false
+            ],
+            "modelPath": "Asset/Models/Terrain/Decoration/SandIslandDecoration/CactusSmall1/CactusSmall1.gltf",
+            "position": [
+                5.0109100341796875,
+                -0.5,
+                -7.450260162353516
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ]
+        },
+        {
+            "isVisible": [
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                false
+            ],
+            "modelPath": "Asset/Models/Terrain/Decoration/SandIslandDecoration/CactusSmall1/CactusSmall1.gltf",
+            "position": [
+                5.308345317840576,
+                -0.4999997615814209,
+                -7.555062294006348
+            ],
+            "rotation": [
+                0.0,
+                120.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ]
+        },
+        {
+            "isVisible": [
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                false,
+                true,
+                true,
+                false
+            ],
+            "modelPath": "Asset/Models/Terrain/Decoration/SandIslandDecoration/CactusSmall1/CactusSmall1.gltf",
+            "position": [
+                5.008194446563721,
+                -0.4999997615814209,
+                -7.829050540924072
+            ],
+            "rotation": [
+                0.0,
+                240.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ]
+        },
+        {
+            "isVisible": [
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true
+            ],
+            "modelPath": "Asset/Models/Terrain/Decoration/SandIslandDecoration/CactusSmall2/CactusSmall2.gltf",
+            "position": [
+                -11.710164070129395,
+                -0.5,
+                -7.359918594360352
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ]
+        },
+        {
+            "isVisible": [
+                true,
+                true,
+                true,
+                true,
+                true,
+                false,
+                true,
+                true,
+                true,
+                false
+            ],
+            "modelPath": "Asset/Models/Terrain/Decoration/SandIslandDecoration/CactusSmall2/CactusSmall2.gltf",
+            "position": [
+                8.404437065124512,
+                -0.5,
+                9.292874336242676
+            ],
+            "rotation": [
+                0.0,
+                194.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ]
+        },
+        {
+            "isVisible": [
+                true,
+                true,
+                true,
+                true,
+                true,
+                false,
+                true,
+                true,
+                true,
+                false
+            ],
+            "modelPath": "Asset/Models/Terrain/Decoration/SandIslandDecoration/Cactus2/Cactus2.gltf",
+            "position": [
+                -8.645203590393066,
+                -0.5,
+                8.218339920043945
+            ],
+            "rotation": [
+                0.0,
+                194.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ]
+        },
+        {
+            "isVisible": [
+                true,
+                true,
+                true,
+                true,
+                false,
+                false,
+                true,
+                true,
+                true,
+                false
+            ],
+            "modelPath": "Asset/Models/Terrain/Decoration/GrassIslandDecoration/Stone1/Stone1.gltf",
+            "position": [
+                -9.21922492980957,
+                -0.4999990463256836,
+                -3.9930858612060547
+            ],
+            "rotation": [
+                0.0,
+                20.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ]
+        },
+        {
+            "isVisible": [
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                false,
+                true,
+                false
+            ],
+            "modelPath": "Asset/Models/Terrain/Decoration/GrassIslandDecoration/Stone2/Stone2.gltf",
+            "position": [
+                2.6557888984680176,
+                -0.5000009536743164,
+                -15.831938743591309
+            ],
+            "rotation": [
+                0.0,
+                225.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ]
+        },
+        {
+            "isVisible": [
+                true,
+                true,
+                true,
+                true,
+                true,
+                false,
+                true,
+                true,
+                false,
+                false
+            ],
+            "modelPath": "Asset/Models/Terrain/Decoration/GrassIslandDecoration/Stone3/Stone3.gltf",
+            "position": [
+                12.276588439941406,
+                -0.5,
+                3.9752349853515625
+            ],
+            "rotation": [
+                0.0,
+                180.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ]
+        },
+        {
+            "isVisible": [
+                false,
+                false,
+                false,
+                false,
+                true,
+                false,
+                false,
+                false,
+                false,
+                false
+            ],
+            "modelPath": "Asset/Models/Terrain/Decoration/SandIslandDecoration/PyramidHead/PyramidHead.gltf",
+            "position": [
+                2.500361442565918,
+                -0.5000004768371582,
+                2.5601844787597656
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ]
+        },
+        {
+            "isVisible": [
+                false,
+                false,
+                false,
+                false,
+                false,
+                true,
+                false,
+                false,
+                false,
+                false
+            ],
+            "modelPath": "Asset/Models/Terrain/Decoration/GrassIslandDecoration/Stone3/Stone3.gltf",
+            "position": [
+                1.3311338424682617,
+                -0.5,
+                -8.042418479919434
+            ],
+            "rotation": [
+                0.0,
+                20.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ]
+        },
+        {
+            "isVisible": [
+                false,
+                false,
+                false,
+                false,
+                false,
+                true,
+                false,
+                false,
+                false,
+                true
+            ],
+            "modelPath": "Asset/Models/Terrain/Decoration/SandIslandDecoration/Cactus1/Cactus1.gltf",
+            "position": [
+                2.9471864700317383,
+                -0.5,
+                14.66614818572998
+            ],
+            "rotation": [
+                0.0,
+                340.0,
+                0.0
+            ],
+            "scale": [
+                4.0,
+                4.0,
+                4.0
+            ]
+        },
+        {
+            "isVisible": [
+                false,
+                false,
+                false,
+                false,
+                false,
+                true,
+                false,
+                false,
+                false,
+                true
+            ],
+            "modelPath": "Asset/Models/Terrain/Decoration/SandIslandDecoration/Cactus1/Cactus1.gltf",
+            "position": [
+                -4.632469177246094,
+                -0.5,
+                14.275707244873047
+            ],
+            "rotation": [
+                0.0,
+                340.0,
+                0.0
+            ],
+            "scale": [
+                4.0,
+                4.0,
+                4.0
+            ]
+        },
+        {
+            "isVisible": [
+                false,
+                false,
+                false,
+                false,
+                false,
+                true,
+                false,
+                false,
+                false,
+                false
+            ],
+            "modelPath": "Asset/Models/Terrain/Decoration/SandIslandDecoration/Cactus1/Cactus1.gltf",
+            "position": [
+                9.240983963012695,
+                -0.5,
+                13.81953239440918
+            ],
+            "rotation": [
+                0.0,
+                340.0,
+                0.0
+            ],
+            "scale": [
+                4.0,
+                4.0,
+                4.0
+            ]
+        },
+        {
+            "isVisible": [
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                true,
+                false
+            ],
+            "modelPath": "Asset/Models/Terrain/Decoration/SandIslandDecoration/CactusSmall1/CactusSmall1.gltf",
+            "position": [
+                0.0,
+                4.40000057220459,
+                -0.800000011920929
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.75,
+                0.75,
+                0.75
             ]
         }
     ],

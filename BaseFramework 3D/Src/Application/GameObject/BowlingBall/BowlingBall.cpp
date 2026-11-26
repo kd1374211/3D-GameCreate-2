@@ -566,6 +566,7 @@ void BowlingBall::Respawn(const Math::Vector3& pos, const Math::Vector3& rot)
 
 	// 位置と向きを設定
 	m_pos = pos;
+	m_mWorld = Math::Matrix::CreateTranslation(m_pos);
 	if (auto gameCam = m_wpCamera.lock())
 	{
 		gameCam->SetRotationYMatrix(Math::Matrix::CreateFromQuaternion(quat));

@@ -648,6 +648,10 @@ void KdDebugGUI::UpdateIslandAndDecorations(StageOverallData& stageData, int cur
 			IslandDecorationData newDeco;
 			newDeco.m_modelPath = STAGEMGR.GetDefaultDecorationPath();
 			newDeco.m_srtData = {};
+			for (int i = 0; i < 10; i++)
+			{
+				newDeco.m_isActive[i] = true;
+			}
 
 			decorations.push_back(newDeco);
 
@@ -725,7 +729,7 @@ void KdDebugGUI::UpdateIslandAndDecorations(StageOverallData& stageData, int cur
 			{
 				ImGui::TextColored(ImVec4(1.0f, 0.2f, 0.2f, 1.0f), "[Error] File does not exist!");
 			}
-
+			
 			// リスト選択機能を追加
 			if (ImGui::BeginPopup("##DropdownPopup"))
 			{

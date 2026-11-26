@@ -1,5 +1,6 @@
 ﻿#include "TPSCamera.h"
 #include "../../../Physics/PhysicsManager.h"
+#include "../../../Scene/SceneManager.h"
 
 void TPSCamera::Init()
 {
@@ -18,24 +19,54 @@ void TPSCamera::PostUpdate()
 	// 有効でないならリターン
 	if (!m_isDefault)return;
 
-	// ターゲットの行列(有効な場合利用する)
-	Math::Matrix								_targetMat = Math::Matrix::Identity;
-	const std::shared_ptr<const KdGameObject>	_spTarget = m_wpTarget.lock();
+	// ゲームデルタ取得
+	float gameDt = SCENEMGR.GetDeltaGameTime();
+
+	Math::Matrix _targetMat = Math::Matrix::CreateTranslation(m_currentPivotPos);
+	const std::shared_ptr<const KdGameObject> _spTarget = m_wpTarget.lock();
 	if (_spTarget)
 	{
-		_targetMat = Math::Matrix::CreateTranslation(_spTarget->GetPos());
-	}
+		// 目標となる中心点（ボールの現在座標）
+		Math::Vector3 goalPos = _spTarget->GetPos();
+
+		// 現在のピボット位置から目標位置への差分ベクトル
+		Math::Vector3 _distToTarget = goalPos - m_currentPivotPos;
+
+		// 補間係数
+		float lerp = 1.0f - std::exp(-TPSCameraConsts::LerpSpeed * gameDt);
+
+		// ピボット位置を更新
+		m_currentPivotPos += _distToTarget * lerp;
 	
-	// カメラの回転
+		// ピボット距離の補正
+		Math::Vector3 diff = goalPos - m_currentPivotPos;
+		float distance = diff.Length();
+
+		// 最大を超えたら最大に補正する
+		if (distance > TPSCameraConsts::MaxDistance)
+		{
+			diff.Normalize();
+			m_currentPivotPos = goalPos - (diff * TPSCameraConsts::MaxDistance);
+		}
+		// 最小を下回ったら一致させる
+		else if (distance < TPSCameraConsts::MinDistance)
+		{
+			m_currentPivotPos = goalPos;
+		}
+
+		// 更新されたピボット位置を行列化
+		_targetMat = Math::Matrix::CreateTranslation(m_currentPivotPos);
+	}
+
+	// カメラの回転（ロックされていなければマウス操作で角度を更新）
 	if (!m_isCamLocked)
 	{
-		// ロック状態にないならカメラを回転させる
 		UpdateRotateYOnlyByMouse();
 	}
-	
-	m_mRotation = GetRotationMatrix();
-	m_mWorld = m_mLocalPos * m_mRotation * _targetMat;
 
+	m_mRotation = GetRotationMatrix();
+
+	// ピボット(_targetMat)を中心に、カメラ自身の向き(m_mRotation)と距離(m_mLocalPos)を適用
 	m_mWorld = m_mLocalPos * m_mLocalRot * m_mRotation * _targetMat;
 
 	// レイ用に現在の情報を取得
@@ -79,7 +110,7 @@ void TPSCamera::PostUpdate()
 
 			float dot = rayDir.Dot(surfaceNormal);
 
-			// 同じ方向ならカメラを補正する
+			//同じ方向ならカメラを補正する
 			if (dot > 0.0f)
 			{
 				dir.Normalize();
@@ -88,61 +119,13 @@ void TPSCamera::PostUpdate()
 			}
 		}
 	}
+}
 
-	// ↓めり込み防止の為の座標補正計算↓
-	// ①当たり判定(レイ判定)用の情報作成
-	//KdCollider::RayInfo rayInfo;
-	//// レイの発射位置を設定
-	//rayInfo.m_pos = GetPos();
-
-	//// レイの発射方向を設定
-	//rayInfo.m_dir = Math::Vector3::Down;
-	//// レイの長さを設定
-	//rayInfo.m_range = 1000.f;
-	//if (_spTarget)
-	//{
-	//	Math::Vector3 _targetPos = _spTarget->GetPos();
-	//	_targetPos.y += 0.1f;
-	//	rayInfo.m_dir = _targetPos - GetPos();
-	//	rayInfo.m_range = rayInfo.m_dir.Length();
-	//	rayInfo.m_dir.Normalize();
-	//}
-
-	//// 当たり判定をしたいタイプを設定
-	//rayInfo.m_type = KdCollider::TypeGround;
-
-	//// ②HIT判定対象オブジェクトに総当たり
-	//for (std::weak_ptr<KdGameObject> wpGameObj : m_wpHitObjectList)
-	//{
-	//	std::shared_ptr<KdGameObject> spGameObj = wpGameObj.lock();
-	//	if (spGameObj)
-	//	{
-	//		std::list<KdCollider::CollisionResult> retRayList;
-	//		spGameObj->Intersects(rayInfo, &retRayList);
-
-	//		// ③ 結果を使って座標を補完する
-	//		// レイに当たったリストから一番近いオブジェクトを検出
-	//		float maxOverLap = 0;
-	//		Math::Vector3 hitPos = {};
-	//		bool hit = false;
-	//		for (auto& ret : retRayList)
-	//		{
-	//			// レイを遮断しオーバーした長さが
-	//			// 一番長いものを探す
-	//			if (maxOverLap < ret.m_overlapDistance)
-	//			{
-	//				maxOverLap = ret.m_overlapDistance;
-	//				hitPos = ret.m_hitPos;
-	//				hit = true;
-	//			}
-	//		}
-	//		if (hit)
-	//		{
-	//			// 何かしらの障害物に当たっている
-	//			Math::Vector3 _hitPos = hitPos;
-	//			_hitPos += rayInfo.m_dir * 0.4f;
-	//			SetPos(_hitPos);
-	//		}
-	//	}
-	//}
+void TPSCamera::SetPivotToCurrentTarget()
+{
+	const std::shared_ptr<const KdGameObject> _spTarget = m_wpTarget.lock();
+	if (_spTarget)
+	{
+		m_currentPivotPos = _spTarget->GetPos();
+	}
 }

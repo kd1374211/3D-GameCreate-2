@@ -43,8 +43,14 @@ void GameScene::Event()
 
 void GameScene::SetUpLane()
 {
-	//ステージ生成
+	// ステージ生成
 	STAGEMGR.BuildStageObjects(m_cScoreHandler->GetCurrentFrame());
+
+	// カメラのピボットをプレイヤーに合わせる
+	if (std::shared_ptr<TPSCamera> spGameCam = std::dynamic_pointer_cast<TPSCamera>(CAMERAMGR.GetCamera(CameraType::Game_Normal).lock()))
+	{
+		spGameCam->SetPivotToCurrentTarget();
+	}
 }
 
 void GameScene::ReadyThrow()
@@ -331,7 +337,6 @@ void GameScene::UpdateMiddleResult()
 			// 表示用番号変更
 			spUI->SetTopFrameAndThrow(m_cScoreHandler->GetCurrentFrame(), m_cScoreHandler->GetCurrentThrow());
 		}
-		
 
 		// 撤退
 		return;
