@@ -17,6 +17,7 @@ enum SoundType
 	SE_Decide,
 	SE_Throw,
 	SE_Rolling,
+	SE_SpeedUp,
 	SE_HitPin,
 	SE_WallHitAndLanding,
 	SE_Throw_Normal,

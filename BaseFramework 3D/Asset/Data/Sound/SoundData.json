@@ -49,6 +49,12 @@
 			"loop": true
 		},
 		{
+			"name": "SpeedUp",
+			"filePath": "Asset/Sounds/SE/Speed.wav",
+			"defaultVolume": 0.15,
+			"loop": false
+		},
+		{
 			"name": "HitPin",
 			"filePath": "Asset/Sounds/SE/HitPin.wav",
 			"defaultVolume": 0.15,

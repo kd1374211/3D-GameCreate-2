@@ -744,7 +744,13 @@ bool StageEditor::UpdateIslandDecorationsVisibility(int currentLaneNo, StageOver
 
 			// チェックボックスの描画
 			std::string checkboxLabel = "Object Active##" + std::to_string(i);
-			if (ImGui::Checkbox(checkboxLabel.c_str(), &decorations[i].m_isActive[currentLaneNo]))isDecorationChanged = true;
+			if (ImGui::Checkbox(checkboxLabel.c_str(), &decorations[i].m_isActive[currentLaneNo]))
+			{
+				isDecorationChanged = true;
+
+				// 選択項目の変更
+				ChangeSelectedObject(SelectedTargetCategory::Decoration, i);
+			}
 		}
 		ImGui::EndChild();
 

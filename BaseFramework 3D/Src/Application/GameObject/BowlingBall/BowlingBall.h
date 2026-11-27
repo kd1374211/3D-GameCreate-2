@@ -233,6 +233,7 @@ private:
 	float m_distToSpawnSmoke = 0.0f;
 
 	// このフレームで加速エリアに触れたか
+	bool m_isHitSpeedUpAreaLastFrame = false;
 	bool m_isHitSpeedUpAreaThisFrame = false;
 
 	//↓playerクラスから移行した

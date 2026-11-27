@@ -523,6 +523,7 @@ void BowlingBall::Reset()
 	m_isInputEnabled = false;
 	m_isDraw = true;
 	m_isLDMode = false;
+	m_isHitSpeedUpAreaLastFrame = false;
 	// マウス関連のリセット
 	m_isShootStart = false;
 	m_speedStoreData.clear();
@@ -586,6 +587,12 @@ void BowlingBall::HitFinishArea()
 
 void BowlingBall::HitSpeedUpArea()
 {
+	// 前のフレームで加速エリアに触れていなければ音を鳴らす
+	if (!m_isHitSpeedUpAreaLastFrame)
+	{
+		SOUNDMGR.Play(SoundType::SE_SpeedUp);
+	}
+
 	// このフレームで加速エリアに触れたことを通知
 	m_isHitSpeedUpAreaThisFrame = true;
 }
@@ -881,6 +888,9 @@ void BowlingBall::CheckSpeedUpArea()
 		JPH::Vec3 speedUpAngVel = angVel.Normalized() * angSpeed;
 		m_cPhysics->SetAngularVelocity(speedUpAngVel);
 	}
+
+	// 前フラグの更新
+	m_isHitSpeedUpAreaLastFrame = m_isHitSpeedUpAreaThisFrame;
 }
 
 void BowlingBall::StartRollingSound()
